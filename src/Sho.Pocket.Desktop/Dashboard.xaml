@@ -1,0 +1,63 @@
+﻿<Window x:Class="Sho.Pocket.Desktop.Dashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Dashboard" Width="1000" Height="800">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source=".\styles\CommonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <StackPanel Orientation="Horizontal" Margin="10,10,10,10">
+
+        <StackPanel Orientation="Vertical" Width="350">
+            <ListView Name="PeriodsListView" Height="500px" FontFamily="Calibri" FontSize="20" Margin="0" MouseUp="PeriodsListView_MouseUp" ></ListView>
+            <Button Name="DeletePeriodButton" Margin="10" Click="DeletePeriodButton_Click">Delete Period</Button>
+            
+            <Expander IsExpanded="True" Header="Add Period">
+                <StackPanel Name="NewPeriodPanel" Visibility="Visible" Orientation="Vertical" Margin="10">
+                    <DatePicker Name="ReportedDatePicker" BorderThickness="1" BorderBrush="Gray" Margin="0,0,0,5"></DatePicker>
+                    <TextBox Name="xRateUSDToUAHTextBox" Margin="0,0,0,5">USD x-rate</TextBox>
+                    <TextBox Name="xRateEURToUAHTextBox" Margin="0,0,0,5">EUR x-rate</TextBox>
+                    <Button Name="SavePeriodButton" Margin="10" Click="SavePeriodButton_Click">Save Period</Button>
+                </StackPanel>
+            </Expander>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" Width="600">
+
+            <StackPanel Height="550px">
+                <TextBlock Name="SummaryViewbox" FontFamily="Calibri" FontSize="20" FontWeight="Bold" Margin="10"></TextBlock>
+                <ListBox Name="AssetsListBox" FontFamily="Calibri" FontSize="20" Margin="10" MouseUp="AssetsListBox_MouseUp" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                <StackPanel Name="UpdateAssetPanel" Visibility="Visible" Orientation="Vertical" Margin="10">
+                    <TextBox Name="UpdateAssetNameTextBox" Margin="0,0,0,5">Default asset name</TextBox>
+                    <TextBox Name="UpdateAssetCurrencyTextBox" Margin="0,0,0,5">UAH</TextBox>
+                    <TextBox Name="UpdateAssetTypeTextBox" Margin="0,0,0,5">Bank account</TextBox>
+                    <TextBox Name="UpdateAssetBalanceTextBox" Margin="0,0,0,5">0</TextBox>
+                    <DockPanel Margin="10">
+                        <Button Name="UpdateAssetButton" Width="250" Click="UpdateAssetButton_Click">Update Asset</Button>
+                        <Button Name="DeleteAssetButton" Width="250" Click="DeleteAssetButton_Click">Delete Asset</Button>
+                    </DockPanel>
+                </StackPanel>
+            </StackPanel>
+            
+            <Expander IsExpanded="True" Header="Add Asset">
+                <StackPanel Name="NewAssetPanel" Visibility="Visible" Orientation="Vertical" Margin="10">
+                    <TextBox Name="AssetNameTextBox" Margin="0,0,0,5">Default asset name</TextBox>
+                    <TextBox Name="AssetCurrencyTextBox" Margin="0,0,0,5">UAH</TextBox>
+                    <TextBox Name="AssetTypeTextBox" Margin="0,0,0,5">Bank account</TextBox>
+                    <TextBox Name="AssetBalanceTextBox" Margin="0,0,0,5">0</TextBox>
+                    <Button Name="SaveAssetButton" Click="SaveAssetButton_Click">Save Asset</Button>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+        
+    </StackPanel>
+</Window>

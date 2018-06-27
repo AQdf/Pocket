@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\Asset\DeleteAsset.sql" />
+    <EmbeddedResource Include="Scripts\Asset\InsertAsset.sql" />
+    <EmbeddedResource Include="Scripts\Asset\ReadAllAssets.sql" />
+    <EmbeddedResource Include="Scripts\Asset\UpdateAsset.sql" />
+    <EmbeddedResource Include="Scripts\PeriodSummary\DeletePeriod.sql" />
+    <EmbeddedResource Include="Scripts\PeriodSummary\InsertPeriodSummary.sql" />
+    <EmbeddedResource Include="Scripts\PeriodSummary\ReadAllPeriodSummaries.sql" />
+    <EmbeddedResource Include="Scripts\PeriodSummary\UpdatePeriodSummaryTotals.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper.StrongName" Version="1.50.5" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
+  </ItemGroup>
+
+</Project>
