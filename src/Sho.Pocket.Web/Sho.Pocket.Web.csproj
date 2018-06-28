@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Sho.Pocket.BLL\Sho.Pocket.BLL.csproj" />
-    <ProjectReference Include="..\src\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.BLL\Sho.Pocket.BLL.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
   </ItemGroup>
 
 </Project>
