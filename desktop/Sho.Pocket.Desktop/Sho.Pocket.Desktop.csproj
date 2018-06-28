@@ -150,16 +150,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Sho.Pocket.BLL\Sho.Pocket.BLL.csproj">
-      <Project>{1ed7c4f7-d739-4e20-b4a5-fd2b7bf5907b}</Project>
-      <Name>Sho.Pocket.BLL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj">
-      <Project>{98737fc1-085d-4c55-b2aa-0b47b9018397}</Project>
-      <Name>Sho.Pocket.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.7.1 %28x86 and x64%29</ProductName>
@@ -178,6 +168,16 @@
     <PackageReference Include="Unity">
       <Version>5.8.6</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sho.Pocket.BLL\Sho.Pocket.BLL.csproj">
+      <Project>{c83ec54a-ce37-4ac2-b357-67c2f996c791}</Project>
+      <Name>Sho.Pocket.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Sho.Pocket.Core\Sho.Pocket.Core.csproj">
+      <Project>{bcebca6f-613d-44ab-b2ec-e1032fa2074d}</Project>
+      <Name>Sho.Pocket.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
