@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Sho.Pocket.Core.Abstractions;
 using Sho.Pocket.Core.Entities;
-using Sho.Pocket.Data.Repositories;
 
 namespace Sho.Pocket.BLL.Services
 {
@@ -11,17 +10,17 @@ namespace Sho.Pocket.BLL.Services
     {
         #region Dependencies
 
-        private readonly AssetRepository _assetRepository;
-        private readonly PeriodSummaryRepository _periodSummaryRepository;
+        private readonly IPeriodSummaryRepository _periodSummaryRepository;
+        private readonly IAssetRepository _assetRepository;
 
         #endregion Dependencies
 
         #region Constructors
 
-        public SummaryService(IDbConfiguration dbConfig)
+        public SummaryService(IPeriodSummaryRepository periodSummaryRepository, IAssetRepository assetRepository)
         {
-            _assetRepository = new AssetRepository();
-            _periodSummaryRepository = new PeriodSummaryRepository();
+            _periodSummaryRepository = periodSummaryRepository;
+            _assetRepository = assetRepository;
         }
 
         #endregion Constructors
@@ -41,7 +40,23 @@ namespace Sho.Pocket.BLL.Services
 
             return result;
         }
-        
+
+        public PeriodSummary GetPeriod(Guid id)
+        {
+            bool includeAssets = true;
+
+            PeriodSummary result = _periodSummaryRepository.GetPeriod(id);
+
+            if (includeAssets)
+            {
+                //TODO: implement more efficient way to populate assets for specific period
+                var list = new List<PeriodSummary> { result };
+                PopulateAssets(list);
+            }
+
+            return result;
+        }
+
         public PeriodSummary AddPeriod(PeriodSummary summary)
         {
             return _periodSummaryRepository.AddPeriod(summary);
@@ -49,8 +64,6 @@ namespace Sho.Pocket.BLL.Services
 
         public void DeletePeriod(Guid periodId)
         {
-            PeriodSummaryRepository repository = new PeriodSummaryRepository();
-
             _periodSummaryRepository.DeletePeriod(periodId);
         }
 

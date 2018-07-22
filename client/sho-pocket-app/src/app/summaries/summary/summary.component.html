@@ -1,0 +1,25 @@
+<form class="period-form" #periodSummaryForm="ngForm" (ngSubmit)="onSubmit(periodSummaryForm)">
+  <input type="hidden" name="EmployeeID" #EmployeeID="ngModel" [(ngModel)]="summaryService.selectedPeriodSummary.Id">
+  <div class="form-group">
+    <input type="date" class="form-control" name="ReportedDate" #ReportedDate="ngModel" [(ngModel)]="summaryService.selectedPeriodSummary.ReportedDate" placeholder="Reported date" required>
+    <div class="validation-error" *ngIf="ReportedDate.touched">This Field is Required.</div>
+  </div>
+  <div class="form-group">
+      <input type="number" class="form-control" name="ExchangeRateUSDtoUAH" #ExchangeRateUSDtoUAH="ngModel" [(ngModel)]="summaryService.selectedPeriodSummary.ExchangeRateUSDtoUAH" placeholder="USD to UAH exhange rate" required>
+      <div class="validation-error" *ngIf="ExchangeRateUSDtoUAH.touched">This Field is Required.</div>
+  </div>
+  <div class="form-group">
+      <input type="number" class="form-control" name="ExhangeRateEURtoUAH" #ExhangeRateEURtoUAH="ngModel" [(ngModel)]="summaryService.selectedPeriodSummary.ExhangeRateEURtoUAH" placeholder="EUR to UAH exhange rate" required>
+      <div class="validation-error" *ngIf="ExhangeRateEURtoUAH.touched">This Field is Required.</div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <button [disabled]="!periodSummaryForm.valid" type="submit" class="btn btn-lg btn-block btn-info">
+        <i class="fa fa-floppy-o"></i> Submit</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button type="button" class="btn btn-lg btn-block btn-secondary" (click)="resetForm(periodSummaryForm)">
+        <i class="fa fa-repeat"></i> Reset</button>
+    </div>
+  </div>
+</form>

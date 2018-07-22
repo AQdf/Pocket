@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Core.Abstractions;
+using Sho.Pocket.Core.Entities;
 
 namespace Sho.Pocket.Web.Controllers
 {
@@ -7,31 +10,46 @@ namespace Sho.Pocket.Web.Controllers
     [ApiController]
     public class SummaryController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly ISummaryService _summaryService;
+        public SummaryController(ISummaryService summaryService)
         {
-            return new string[] { "value1", "value2" };
+            _summaryService = summaryService;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<PeriodSummary>> Get()
+        {
+            IEnumerable<PeriodSummary> summaries = _summaryService.GetPeriods();
+
+            return new ActionResult<IEnumerable<PeriodSummary>>(summaries);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<PeriodSummary> Get(Guid id)
         {
-            return "value";
+            PeriodSummary summary = _summaryService.GetPeriod(id);
+
+            return new ActionResult<PeriodSummary>(summary);
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<PeriodSummary> Post([FromBody] PeriodSummary period)
         {
+            PeriodSummary newPeriod = _summaryService.AddPeriod(period);
+
+            return new ActionResult<PeriodSummary>(newPeriod);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] PeriodSummary period)
         {
+            throw new NotImplementedException();
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
+            _summaryService.DeletePeriod(id);
         }
     }
 }

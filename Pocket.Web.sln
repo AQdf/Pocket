@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.BLL", "src\Sho.P
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B6299F33-8682-478B-8C2E-A37826DC9B17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Web", "src\Sho.Pocket.Web\Sho.Pocket.Web.csproj", "{E1D355CB-D768-422D-830E-61915626767F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Api", "src\Sho.Pocket.Web\Sho.Pocket.Api.csproj", "{E1D355CB-D768-422D-830E-61915626767F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

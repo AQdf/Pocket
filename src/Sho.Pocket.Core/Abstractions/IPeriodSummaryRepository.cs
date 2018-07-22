@@ -4,20 +4,16 @@ using System.Collections.Generic;
 
 namespace Sho.Pocket.Core.Abstractions
 {
-    public interface ISummaryService
+    public interface IPeriodSummaryRepository
     {
-        List<PeriodSummary> GetPeriods();
+        List<PeriodSummary> ReadAll();
 
         PeriodSummary GetPeriod(Guid id);
 
         PeriodSummary AddPeriod(PeriodSummary summary);
 
-        Asset AddAssetToPeriod(Asset asset);
-
-        void RemoveAsset(Guid assetId, Guid periodId);
-
-        void UpdateAsset(Asset asset);
-
         void DeletePeriod(Guid periodId);
+
+        void UpdatePeriodSummaryTotals(Guid periodId);
     }
 }

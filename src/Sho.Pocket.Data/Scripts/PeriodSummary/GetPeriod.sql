@@ -1,0 +1,1 @@
+﻿select * from PeriodSummary where Id = @id

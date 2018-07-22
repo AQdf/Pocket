@@ -2,6 +2,6 @@
 {
     public interface IDbConfiguration
     {
-        string PocketDbConnectionString { get; set; }
+        string DbConnectionString { get; }
     }
 }

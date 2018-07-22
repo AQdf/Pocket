@@ -38,6 +38,19 @@ namespace Sho.Pocket.Core.Entities
             return this.ToString() == obj.ToString();
         }
 
+        public override int GetHashCode()
+        {
+            var hashCode = -1588197858;
+            hashCode = hashCode * -1521134295 + EqualityComparer<List<Asset>>.Default.GetHashCode(Assets);
+            hashCode = hashCode * -1521134295 + ReportedDate.GetHashCode();
+            hashCode = hashCode * -1521134295 + ExchangeRateUSDtoUAH.GetHashCode();
+            hashCode = hashCode * -1521134295 + ExhangeRateEURtoUAH.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalBalanceUAH.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalBalanceUSD.GetHashCode();
+            hashCode = hashCode * -1521134295 + TotalBalanceEUR.GetHashCode();
+            return hashCode;
+        }
+
         public override string ToString()
         {
             return $"{ReportedDate:dd MMM yyyy}: {TotalBalanceUAH} UAH, {TotalBalanceUSD} USD, {TotalBalanceEUR} EUR";

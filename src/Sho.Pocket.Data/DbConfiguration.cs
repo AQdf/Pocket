@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Sho.Pocket.Core;
+using Sho.Pocket.Core.Abstractions;
 
 namespace Sho.Pocket.Data
 {
-    public static class DbConfiguration
+    public class DbConfiguration : IDbConfiguration
     {
-        public static string GetConnectionString()
+        public string DbConnectionString { get; }
+
+        public DbConfiguration(GlobalSettings globalSettings)
         {
-            return @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=PocketDb;Integrated Security=SSPI;AttachDBFilename=E:\Code\Projects\Pocket\database\PocketDb.mdf";
+            DbConnectionString = globalSettings.DbConnectionString;
         }
     }
 }
