@@ -1,7 +1,0 @@
-﻿namespace Sho.Pocket.Core.Abstractions
-{
-    public interface IDbConfiguration
-    {
-        string DbConnectionString { get; }
-    }
-}

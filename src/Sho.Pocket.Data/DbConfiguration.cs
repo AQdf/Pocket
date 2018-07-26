@@ -1,5 +1,5 @@
 ﻿using Sho.Pocket.Core;
-using Sho.Pocket.Core.Abstractions;
+using Sho.Pocket.Core.Configuration;
 
 namespace Sho.Pocket.Data
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Sho.Pocket.Core.Abstractions;
 using Sho.Pocket.Core.Entities;
+using Sho.Pocket.Core.Repositories;
+using Sho.Pocket.Core.Services;
 
 namespace Sho.Pocket.BLL.Services
 {
@@ -29,30 +29,14 @@ namespace Sho.Pocket.BLL.Services
 
         public List<PeriodSummary> GetPeriods()
         {
-            bool includeAssets = true;
-
             List<PeriodSummary> result = _periodSummaryRepository.ReadAll();
-            
-            if (includeAssets)
-            {
-                PopulateAssets(result);
-            }
 
             return result;
         }
 
         public PeriodSummary GetPeriod(Guid id)
         {
-            bool includeAssets = true;
-
             PeriodSummary result = _periodSummaryRepository.GetPeriod(id);
-
-            if (includeAssets)
-            {
-                //TODO: implement more efficient way to populate assets for specific period
-                var list = new List<PeriodSummary> { result };
-                PopulateAssets(list);
-            }
 
             return result;
         }
@@ -67,43 +51,6 @@ namespace Sho.Pocket.BLL.Services
             _periodSummaryRepository.DeletePeriod(periodId);
         }
 
-        public Asset AddAssetToPeriod(Asset asset)
-        {
-            Asset result = _assetRepository.AddAsset(asset);
-
-            _periodSummaryRepository.UpdatePeriodSummaryTotals(asset.PeriodId);
-            
-            return result;
-        }
-
-        public void UpdateAsset(Asset asset)
-        {
-            _assetRepository.UpdateAsset(asset);
-
-            _periodSummaryRepository.UpdatePeriodSummaryTotals(asset.PeriodId);
-        }
-
-        public void RemoveAsset(Guid assetId, Guid periodId)
-        {
-            _assetRepository.RemoveAsset(assetId, periodId);
-
-            _periodSummaryRepository.UpdatePeriodSummaryTotals(periodId);
-        }
-
         #endregion ISummaryService implementation
-
-        #region Private methods
-
-        private void PopulateAssets(List<PeriodSummary> periods)
-        {
-            var assets = _assetRepository.GetAllAssets();
-
-            foreach (PeriodSummary period in periods)
-            {
-                period.Assets = assets.Where(a => a.PeriodId == period.Id).ToList();
-            }
-        }
-
-        #endregion Private methods
     }
 }

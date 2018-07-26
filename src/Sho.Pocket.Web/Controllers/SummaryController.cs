@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Core.Abstractions;
 using Sho.Pocket.Core.Entities;
+using Sho.Pocket.Core.Services;
 
 namespace Sho.Pocket.Web.Controllers
 {
@@ -11,6 +11,7 @@ namespace Sho.Pocket.Web.Controllers
     public class SummaryController : ControllerBase
     {
         private readonly ISummaryService _summaryService;
+
         public SummaryController(ISummaryService summaryService)
         {
             _summaryService = summaryService;

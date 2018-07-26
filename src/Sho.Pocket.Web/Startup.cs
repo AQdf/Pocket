@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.BLL.Services;
 using Sho.Pocket.Core;
-using Sho.Pocket.Core.Abstractions;
+using Sho.Pocket.Core.Configuration;
+using Sho.Pocket.Core.Repositories;
+using Sho.Pocket.Core.Services;
 using Sho.Pocket.Data;
 using Sho.Pocket.Data.Repositories;
 
@@ -26,7 +28,7 @@ namespace Sho.Pocket.Web
         {
             string connectionString = Configuration.GetConnectionString("PocketLocalDbConnection");
 
-            services.AddScoped<ISummaryService, SummaryService>();
+
 
             services.AddCors(options => options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
@@ -41,8 +43,12 @@ namespace Sho.Pocket.Web
             services.AddSingleton(s => globalSettings);
 
             services.AddScoped<IDbConfiguration, DbConfiguration>();
+
             services.AddScoped<IPeriodSummaryRepository, PeriodSummaryRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
+
+            services.AddScoped<ISummaryService, SummaryService>();
+            services.AddScoped<IAssetService, AssetService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

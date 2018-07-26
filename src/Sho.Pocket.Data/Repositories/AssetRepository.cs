@@ -1,5 +1,6 @@
-﻿using Sho.Pocket.Core.Abstractions;
+﻿using Sho.Pocket.Core.Configuration;
 using Sho.Pocket.Core.Entities;
+using Sho.Pocket.Core.Repositories;
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ namespace Sho.Pocket.Data.Repositories
         {
         }
 
-        public List<Asset> GetAllAssets()
+        public List<Asset> GetAll()
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "ReadAllAssets.sql");
 
@@ -22,7 +23,7 @@ namespace Sho.Pocket.Data.Repositories
             return result;
         }
 
-        public Asset AddAsset(Asset asset)
+        public Asset Add(Asset asset)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
 
@@ -31,8 +32,7 @@ namespace Sho.Pocket.Data.Repositories
                 name = asset.Name,
                 typeName = asset.TypeName,
                 currencyName = asset.CurrencyName,
-                balance = asset.Balance,
-                periodId = asset.PeriodId
+                balance = asset.Balance
             };
 
             Asset result = base.InsertEntity(queryText, queryParameters);
@@ -40,7 +40,7 @@ namespace Sho.Pocket.Data.Repositories
             return result;
         }
 
-        public void UpdateAsset(Asset asset)
+        public void Update(Asset asset)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
@@ -50,14 +50,13 @@ namespace Sho.Pocket.Data.Repositories
                 name = asset.Name,
                 typeName = asset.TypeName,
                 currencyName = asset.CurrencyName,
-                balance = asset.Balance,
-                periodId = asset.PeriodId
+                balance = asset.Balance
             };
 
             base.UpdateEntity(queryText, queryParameters);
         }
 
-        public void RemoveAsset(Guid assetId, Guid periodId)
+        public void Remove(Guid assetId)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeleteAsset.sql");
 

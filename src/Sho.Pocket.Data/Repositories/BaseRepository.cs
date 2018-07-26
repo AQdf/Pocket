@@ -1,6 +1,7 @@
 ﻿using Dapper;
-using Sho.Pocket.Core.Abstractions;
+using Sho.Pocket.Core.Configuration;
 using Sho.Pocket.Core.Entities;
+using Sho.Pocket.Core.Repositories;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;

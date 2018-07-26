@@ -1,24 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http'
 import { FormsModule} from '@angular/forms'
+import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
-import { SummaryComponent } from './summaries/summary/summary.component';
-import { SummaryListComponent } from './summaries/summary-list/summary-list.component';
-import { SummariesComponent } from './summaries/summaries.component';
+import { AssetsComponent } from './assets/assets.component';
+import { AssetComponent } from './assets/asset/asset.component';
+import { AssetListComponent } from './assets/asset-list/asset-list.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SummaryComponent,
-    SummaryListComponent,
-    SummariesComponent
+    AssetsComponent,
+    AssetComponent,
+    AssetListComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpModule,
-    FormsModule
+    FormsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
