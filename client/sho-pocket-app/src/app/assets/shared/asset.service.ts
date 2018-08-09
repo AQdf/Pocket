@@ -16,16 +16,6 @@ export class AssetService {
 
   constructor(public http: Http) {}
 
-  getTotalBalance() {
-    this.http.get('http://localhost:58192/api/assets/total-balance').pipe(
-      map((data : Response) =>{
-        return data.json() as number;
-      })
-    ).subscribe(x => {
-      this.totalBalance = x;
-    });
-  }
-
   postAsset(emp : Asset) {
     var body = JSON.stringify(emp);
     var headerOptions = new Headers({'Content-Type':'application/json'});
@@ -53,11 +43,38 @@ export class AssetService {
       })
     ).subscribe(x => {
       this.assetList = x;
-      this.totalBalance = this.assetList.map(a => a.balance).reduce((sum, current) => sum + current);
+      this.totalBalance = this.getTotalBalance(this.assetList);
     });
   }
  
   deleteAsset(id: string) {
     return this.http.delete('http://localhost:58192/api/assets/' + id).pipe(map(res => res.json()));
   }
+
+  private getTotalBalance(assetList: Asset[])
+  {
+    var total = 0;
+
+    assetList.forEach(asset => {
+      this.http.get('http://free.currencyconverterapi.com/api/v5/convert?q=' + asset.currencyName + '_UAH&compact=y').pipe(
+        map((data : Response) =>{
+          return data.json() as ExchangeRate;
+        })
+      ).subscribe(x => {
+        asset.exchangeRate = x[asset.currencyName + '_UAH'].val;
+        asset.baseCurrencyBalance = asset.balance * asset.exchangeRate;
+
+        this.totalBalance += asset.baseCurrencyBalance;
+      });
+    });
+
+    return total;
+    //return this.assetList.map(a => a.balance).reduce((sum, current) => sum + current);
+  }
+}
+
+export class ExchangeRate {
+  currenciesPair : {
+    val: number
+  };
 }

@@ -10,6 +10,8 @@ insert into Asset(Id, [Name], CurrencyId, TypeId, Balance) values (
 	@balance
 )
 
+insert into AssetHistory
+
 select
 	a.Id as Id,
 	a.[Name] as [Name],

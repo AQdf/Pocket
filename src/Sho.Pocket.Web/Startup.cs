@@ -44,10 +44,8 @@ namespace Sho.Pocket.Web
 
             services.AddScoped<IDbConfiguration, DbConfiguration>();
 
-            services.AddScoped<IPeriodSummaryRepository, PeriodSummaryRepository>();
             services.AddScoped<IAssetRepository, AssetRepository>();
 
-            services.AddScoped<ISummaryService, SummaryService>();
             services.AddScoped<IAssetService, AssetService>();
         }
 

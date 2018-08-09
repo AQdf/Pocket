@@ -1,0 +1,1 @@
+dotnet run --project ../src/Sho.Pocket.Web/Sho.Pocket.Api.csproj
