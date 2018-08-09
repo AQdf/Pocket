@@ -13,5 +13,7 @@ namespace Sho.Pocket.Core.Repositories
         void Update(Asset asset);
 
         void Remove(Guid assetId);
+
+        void DeactivateAsset(Guid assetId);
     }
 }

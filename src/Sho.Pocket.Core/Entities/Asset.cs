@@ -17,5 +17,7 @@ namespace Sho.Pocket.Core.Entities
         public decimal Balance { get; set; }
 
         public Guid? ExchangeRateId { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }

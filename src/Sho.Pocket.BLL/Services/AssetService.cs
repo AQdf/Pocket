@@ -9,10 +9,12 @@ namespace Sho.Pocket.BLL.Services
     public class AssetService : IAssetService
     {
         private readonly IAssetRepository _assetRepository;
+        private readonly IAssetHistoryRepository _assetHistoryRepository;
 
-        public AssetService(IAssetRepository assetRepository)
+        public AssetService(IAssetRepository assetRepository, IAssetHistoryRepository assetHistoryRepository)
         {
             _assetRepository = assetRepository;
+            _assetHistoryRepository = assetHistoryRepository;
         }
 
         public List<Asset> GetAll()
@@ -22,19 +24,36 @@ namespace Sho.Pocket.BLL.Services
 
         public Asset Add(Asset asset)
         {
-            Asset result = _assetRepository.Add(asset);
+            Asset addedAsset = _assetRepository.Add(asset);
 
-            return result;
+            InsertAssetHistoryRecord(addedAsset);
+
+            return addedAsset;
         }
 
         public void Update(Asset asset)
         {
             _assetRepository.Update(asset);
+
+            InsertAssetHistoryRecord(asset);
         }
 
-        public void Delete(Guid Id)
+        public void Delete(Guid Id, bool deactivate = true)
         {
-            _assetRepository.Remove(Id);
+            if (deactivate)
+            {
+                _assetRepository.DeactivateAsset(Id);
+            }
+            else
+            {
+                _assetHistoryRepository.Remove(Id);
+            }
+        }
+
+        private void InsertAssetHistoryRecord(Asset asset)
+        {
+            AssetHistory assetHistory = new AssetHistory(asset);
+            _assetHistoryRepository.Add(assetHistory);
         }
     }
 }

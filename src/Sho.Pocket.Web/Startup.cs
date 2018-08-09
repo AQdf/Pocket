@@ -45,8 +45,10 @@ namespace Sho.Pocket.Web
             services.AddScoped<IDbConfiguration, DbConfiguration>();
 
             services.AddScoped<IAssetRepository, AssetRepository>();
+            services.AddScoped<IAssetHistoryRepository, AssetHistoryRepository>();
 
             services.AddScoped<IAssetService, AssetService>();
+            services.AddScoped<IAssetHistoryService, AssetHistoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

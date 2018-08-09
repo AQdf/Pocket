@@ -13,6 +13,6 @@ namespace Sho.Pocket.Core.Services
 
         void Update(Asset asset);
 
-        void Delete(Guid Id);
+        void Delete(Guid Id, bool deactivate = true);
     }
 }

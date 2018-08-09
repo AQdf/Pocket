@@ -26,7 +26,7 @@ export class AssetListComponent implements OnInit {
       this.assetService.deleteAsset(id)
       .subscribe(x => {
         this.assetService.getAssetList();
-        this.toastr.warning("Deleted Successfully","Employee Register");
+        this.toastr.warning("Deleted Successfully","Asset");
       })
     }
   }

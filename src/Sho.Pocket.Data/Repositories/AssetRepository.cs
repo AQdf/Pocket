@@ -67,5 +67,17 @@ namespace Sho.Pocket.Data.Repositories
 
             base.RemoveEntity(queryText, queryParameters);
         }
+
+        public void DeactivateAsset(Guid assetId)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeactivateAsset.sql");
+
+            object queryParameters = new
+            {
+                id = assetId
+            };
+
+            base.ExecuteScript(queryText, queryParameters);
+        }
     }
 }
