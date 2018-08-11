@@ -11,6 +11,7 @@ namespace Sho.Pocket.Core.Entities
         public AssetHistory(Asset asset)
         {
             AssetId = asset.Id;
+            AssetName = asset.Name;
             EffectiveDate = DateTime.UtcNow;
             ExchangeRateId = null;
             Balance = asset.Balance;
@@ -23,5 +24,9 @@ namespace Sho.Pocket.Core.Entities
         public Guid? ExchangeRateId { get; set; }
 
         public decimal Balance { get; set; }
+
+        public virtual string AssetName { get; set; }
+
+        public virtual bool AssetIsActive { get; set; }
     }
 }

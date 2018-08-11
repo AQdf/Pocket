@@ -10,6 +10,10 @@ import { AssetsComponent } from './assets/assets.component';
 import { AssetComponent } from './assets/asset/asset.component';
 import { AssetListComponent } from './assets/asset-list/asset-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { AssetsHistoryComponent } from './assets-history/assets-history.component';
+import { AssetHistoryComponent } from './assets-history/asset-history/asset-history.component';
+import { AssetHistoryListComponent } from './assets-history/asset-history-list/asset-history-list.component';
+import { AppRoutingModule } from './/app-routing.module';
 
 @NgModule({
   declarations: [
@@ -17,14 +21,18 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AssetsComponent,
     AssetComponent,
     AssetListComponent,
-    DashboardComponent
+    DashboardComponent,
+    AssetsHistoryComponent,
+    AssetHistoryComponent,
+    AssetHistoryListComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
     FormsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

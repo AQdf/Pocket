@@ -12,6 +12,7 @@ export class DashboardComponent implements OnInit {
   constructor(public assetService : AssetService) { }
 
   ngOnInit() {
+    this.assetService.getAssetList();
   }
   
 }

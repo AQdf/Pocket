@@ -5,16 +5,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Scripts\AssetHistory\DeleteAssetHistory.sql" />
+    <None Remove="Scripts\AssetHistory\GetAllAssetHistory.sql" />
     <None Remove="Scripts\AssetHistory\InsertAssetHistory.sql" />
+    <None Remove="Scripts\AssetHistory\UpdateAssetHistory.sql" />
     <None Remove="Scripts\Asset\DeactivateAsset.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\AssetHistory\DeleteAssetHistory.sql" />
     <EmbeddedResource Include="Scripts\AssetHistory\InsertAssetHistory.sql" />
+    <EmbeddedResource Include="Scripts\AssetHistory\GetAllAssetHistory.sql" />
+    <EmbeddedResource Include="Scripts\AssetHistory\UpdateAssetHistory.sql" />
     <EmbeddedResource Include="Scripts\Asset\DeactivateAsset.sql" />
     <EmbeddedResource Include="Scripts\Asset\DeleteAsset.sql" />
     <EmbeddedResource Include="Scripts\Asset\InsertAsset.sql" />
-    <EmbeddedResource Include="Scripts\Asset\ReadAllAssets.sql" />
+    <EmbeddedResource Include="Scripts\Asset\GetAllAssets.sql" />
     <EmbeddedResource Include="Scripts\Asset\UpdateAsset.sql" />
   </ItemGroup>
 

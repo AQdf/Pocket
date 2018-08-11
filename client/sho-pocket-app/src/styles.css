@@ -12,3 +12,7 @@ div.validation-error{
 button:hover,a.btn:hover{
     cursor: pointer;
 }
+
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}

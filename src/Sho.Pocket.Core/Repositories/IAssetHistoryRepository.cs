@@ -8,10 +8,10 @@ namespace Sho.Pocket.Core.Repositories
     {
         List<AssetHistory> GetAll();
 
-        AssetHistory Add(AssetHistory asset);
+        AssetHistory Add(AssetHistory assetHistory);
 
-        void Update(AssetHistory asset);
+        void Update(AssetHistory assetHistory);
 
-        void Remove(Guid assetId);
+        void Remove(Guid assetHistoryId);
     }
 }

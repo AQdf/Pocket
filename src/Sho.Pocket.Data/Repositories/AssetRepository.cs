@@ -16,7 +16,7 @@ namespace Sho.Pocket.Data.Repositories
 
         public List<Asset> GetAll()
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "ReadAllAssets.sql");
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
 
             List<Asset> result = base.GetAll(queryText);
 

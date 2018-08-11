@@ -20,7 +20,7 @@ namespace Sho.Pocket.Data.Repositories
 
             object queryParameters = new
             {
-                assetId = assetHistory.AssetId,
+                assetName = assetHistory.AssetName,
                 effectiveDate = assetHistory.EffectiveDate,
                 exchangeRateId = assetHistory.ExchangeRateId,
                 balance = assetHistory.Balance
@@ -33,17 +33,39 @@ namespace Sho.Pocket.Data.Repositories
 
         public List<AssetHistory> GetAll()
         {
-            throw new NotImplementedException();
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssetHistory.sql");
+
+            List<AssetHistory> result = base.GetAll(queryText);
+
+            return result;
         }
 
-        public void Remove(Guid assetId)
+        public void Remove(Guid assetHistoryId)
         {
-            throw new NotImplementedException();
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeleteAssetHistory.sql");
+
+            object queryParameters = new
+            {
+                id = assetHistoryId
+            };
+
+            base.RemoveEntity(queryText, queryParameters);
         }
 
-        public void Update(AssetHistory asset)
+        public void Update(AssetHistory assetHistory)
         {
-            throw new NotImplementedException();
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAssetHistory.sql");
+
+            object queryParameters = new
+            {
+                id = assetHistory.Id,
+                assetName = assetHistory.AssetName,
+                effectiveDate = assetHistory.EffectiveDate,
+                exchangeRateId = assetHistory.ExchangeRateId,
+                balance = assetHistory.Balance
+            };
+
+            base.UpdateEntity(queryText, queryParameters);
         }
     }
 }

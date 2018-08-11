@@ -1,0 +1,26 @@
+<form class="asset-form" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+  <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="assetHistoryService.selectedAssetHistory.id">
+  <div class="form-group">
+    <input class="form-control" name="AssetName" #AssetName="ngModel" [(ngModel)]="assetHistoryService.selectedAssetHistory.assetName" placeholder="Asset name" required>
+    <div class="validation-error" *ngIf="AssetName.invalid && AssetName.touched">This Field is Required.</div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        <input type="number" class="form-control" name="Balance" #Balance="ngModel" [(ngModel)]="assetHistoryService.selectedAssetHistory.balance" placeholder="Balance" required>
+    </div>
+    <div class="form-group col-md-6">
+        <input type="datetime-local" class="form-control" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="assetHistoryService.selectedAssetHistory.effectiveDate" placeholder="Effective date" required>
+        <div class="validation-error" *ngIf="EffectiveDate.invalid && EffectiveDate.touched">This Field is Required.</div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <button [disabled]="!assetForm.valid" type="submit" class="btn btn-lg btn-block btn-info">
+        <i class="fa fa-floppy-o"></i> Submit</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button type="button" class="btn btn-lg btn-block btn-secondary" (click)="resetForm(assetForm)">
+        <i class="fa fa-repeat"></i> Reset</button>
+    </div>
+  </div>
+</form>
