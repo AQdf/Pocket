@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-12">
+      <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button class="btn btn-lg btn-info" (click)="takeSnapshot()">Take a snapshot</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+          <select class="selectpicker btn-sm btn-secondary">
+            <option *ngFor="let snapshot of snapshots" value={{snapshot}}>
+                {{snapshot}}
+            </option>
+          </select>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Third group">
+          <select class="selectpicker btn-sm btn-secondary">
+            <option *ngFor="let snapshot of snapshots" value={{snapshot}}>
+                {{snapshot}}
+            </option>
+          </select>
+        </div>
+
+    </div>
+  </div>
+</div>

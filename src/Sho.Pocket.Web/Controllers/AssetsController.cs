@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Api.ViewModels;
-using Sho.Pocket.Core.Entities;
-using Sho.Pocket.Core.Services;
+using Sho.Pocket.Application.Assets;
+using Sho.Pocket.Application.Assets.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -23,7 +22,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<Asset> GetAll()
+        public IEnumerable<AssetViewModel> GetAll()
         {
             return _assetService.GetAll();
         }
@@ -46,19 +45,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public Asset Post([FromBody] AssetViewModel newAsset)
+        public void Post([FromBody] AssetViewModel assetModel)
         {
-            Asset asset = new Asset
-            {
-                Name = newAsset.Name,
-                TypeName = newAsset.TypeName,
-                CurrencyName = newAsset.CurrencyName,
-                Balance = newAsset.Balance
-            };
-
-            Asset result = _assetService.Add(asset);
-
-            return result;
+            _assetService.Add(assetModel);
         }
 
         /// <summary>
@@ -67,18 +56,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{Id}")]
-        public bool Put(Guid id, [FromBody] AssetViewModel updatedAsset)
+        public bool Put(Guid id, [FromBody] AssetViewModel assetModel)
         {
-            Asset asset = new Asset
-            {
-                Id = id,
-                Name = updatedAsset.Name,
-                TypeName = updatedAsset.TypeName,
-                CurrencyName = updatedAsset.CurrencyName,
-                Balance = updatedAsset.Balance
-            };
-
-            _assetService.Update(asset);
+            _assetService.Update(assetModel);
 
             return true;
         }

@@ -38,7 +38,7 @@ export class AssetComponent implements OnInit {
           this.resetForm(form);
           this.assetService.getAssetList();
           this.toastr.success('New Record Added Succcessfully', 'Asset');
-        })
+        });
     }
     else {
       this.assetService.putAsset(form.value.id, form.value)

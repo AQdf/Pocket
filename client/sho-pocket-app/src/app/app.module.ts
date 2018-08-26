@@ -10,10 +10,9 @@ import { AssetsComponent } from './assets/assets.component';
 import { AssetComponent } from './assets/asset/asset.component';
 import { AssetListComponent } from './assets/asset-list/asset-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AssetsHistoryComponent } from './assets-history/assets-history.component';
-import { AssetHistoryComponent } from './assets-history/asset-history/asset-history.component';
-import { AssetHistoryListComponent } from './assets-history/asset-history-list/asset-history-list.component';
 import { AppRoutingModule } from './/app-routing.module';
+import { SnapshotComponent } from './snapshot/snapshot.component';
+import { TotalsComponent } from './totals/totals.component';
 
 @NgModule({
   declarations: [
@@ -22,9 +21,8 @@ import { AppRoutingModule } from './/app-routing.module';
     AssetComponent,
     AssetListComponent,
     DashboardComponent,
-    AssetsHistoryComponent,
-    AssetHistoryComponent,
-    AssetHistoryListComponent
+    SnapshotComponent,
+    TotalsComponent
   ],
   imports: [
     BrowserModule,

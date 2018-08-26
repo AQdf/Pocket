@@ -62,7 +62,6 @@
     <Build Include="Asset.sql" />
     <Build Include="AssetType.sql" />
     <Build Include="Currency.sql" />
-    <Build Include="AssetHistory.sql" />
     <Build Include="ExchangeRate.sql" />
   </ItemGroup>
   <ItemGroup>

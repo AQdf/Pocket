@@ -4,13 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.BLL.Services;
+using Sho.Pocket.Application;
+using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Core;
-using Sho.Pocket.Core.Configuration;
-using Sho.Pocket.Core.Repositories;
-using Sho.Pocket.Core.Services;
-using Sho.Pocket.Data;
-using Sho.Pocket.Data.Repositories;
 
 namespace Sho.Pocket.Web
 {
@@ -42,13 +38,7 @@ namespace Sho.Pocket.Web
             ConfigurationBinder.Bind(Configuration.GetSection("GlobalSettings"), globalSettings);
             services.AddSingleton(s => globalSettings);
 
-            services.AddScoped<IDbConfiguration, DbConfiguration>();
-
-            services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IAssetHistoryRepository, AssetHistoryRepository>();
-
-            services.AddScoped<IAssetService, AssetService>();
-            services.AddScoped<IAssetHistoryService, AssetHistoryService>();
+            services.AddApplicationServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router'
+import { DashboardComponent } from './dashboard/dashboard.component'
 import { AssetsComponent } from './assets/assets.component'
-import { AssetsHistoryComponent } from './assets-history/assets-history.component'
 
 const routes: Routes = [
-  { path: '', redirectTo: '/assets', pathMatch: 'full' },
-  { path: 'assets', component: AssetsComponent },
-  { path: 'assets-history', component: AssetsHistoryComponent }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'assets', component: AssetsComponent }
 ];
 
 @NgModule({

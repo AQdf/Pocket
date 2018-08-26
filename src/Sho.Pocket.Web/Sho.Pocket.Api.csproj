@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sho.Pocket.BLL\Sho.Pocket.BLL.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -43,7 +43,7 @@ export class AssetService {
       })
     ).subscribe(x => {
       this.assetList = x;
-      this.totalBalance = this.getTotalBalance(this.assetList);
+      this.getTotalBalance();
     });
   }
  
@@ -51,25 +51,15 @@ export class AssetService {
     return this.http.delete('http://localhost:58192/api/assets/' + id).pipe(map(res => res.json()));
   }
 
-  private getTotalBalance(assetList: Asset[])
+  getTotalBalance()
   {
-    var total = 0;
-
-    assetList.forEach(asset => {
-      this.http.get('http://free.currencyconverterapi.com/api/v5/convert?q=' + asset.currencyName + '_UAH&compact=y').pipe(
-        map((data : Response) =>{
-          return data.json() as ExchangeRate;
-        })
-      ).subscribe(x => {
-        asset.exchangeRate = x[asset.currencyName + '_UAH'].val;
-        asset.baseCurrencyBalance = asset.balance * asset.exchangeRate;
-
-        this.totalBalance += asset.baseCurrencyBalance;
-      });
+    this.http.get('http://localhost:58192/api/dashboard/total').pipe(
+      map((data : Response) =>{
+        return data.json() as number;
+      })
+    ).subscribe(response => {
+      this.totalBalance = response;
     });
-
-    return total;
-    //return this.assetList.map(a => a.balance).reduce((sum, current) => sum + current);
   }
 }
 
