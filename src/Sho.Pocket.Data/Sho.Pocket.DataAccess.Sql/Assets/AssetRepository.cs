@@ -35,9 +35,8 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             object queryParameters = new
             {
                 name = asset.Name,
-                typeName = asset.Type.Name,
-                currencyName = asset.Currency.Name,
-                balance = asset.Balance
+                typeId = asset.TypeId,
+                currencyId = asset.CurrencyId
             };
 
             Asset result = base.InsertEntity(queryText, queryParameters);
@@ -53,9 +52,8 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             {
                 id = asset.Id,
                 name = asset.Name,
-                typeName = asset.Type.Name,
-                currencyName = asset.Currency.Name,
-                balance = asset.Balance
+                typeId = asset.TypeId,
+                currencyId = asset.CurrencyId
             };
 
             base.UpdateEntity(queryText, queryParameters);

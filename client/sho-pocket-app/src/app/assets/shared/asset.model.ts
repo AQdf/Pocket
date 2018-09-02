@@ -3,7 +3,4 @@ export class Asset {
   name : string;
   typeName : string;
   currencyName : string;
-  balance : number;
-  exchangeRate : number;
-  baseCurrencyBalance : number;
 }

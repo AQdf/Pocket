@@ -1,6 +1,5 @@
 ﻿update Asset
 set [Name] = @name,
-	CurrencyId = (select Id from Currency where [Name] = @currencyName),
-	TypeId = (select Id from AssetType where [Name] = @typeName),
-	Balance = @balance
+	CurrencyId = @currencyId,
+	TypeId = (select Id from AssetType where [Name] = @typeId)
 where Id = @id

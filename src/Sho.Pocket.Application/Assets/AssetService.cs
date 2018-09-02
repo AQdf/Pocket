@@ -30,10 +30,8 @@ namespace Sho.Pocket.Application.Assets
             Asset asset = new Asset
             {
                 Name = assetModel.Name,
-                TypeId = assetModel.AssetTypeId,
+                TypeId = assetModel.TypeId,
                 CurrencyId = assetModel.CurrencyId,
-                Balance = assetModel.Balance,
-                ExchangeRateId = assetModel.ExchangeRateId,
                 IsActive = assetModel.IsActive
             };
 
@@ -46,10 +44,8 @@ namespace Sho.Pocket.Application.Assets
             {
                 Id = assetModel.Id,
                 Name = assetModel.Name,
-                TypeId = assetModel.AssetTypeId,
+                TypeId = assetModel.TypeId,
                 CurrencyId = assetModel.CurrencyId,
-                Balance = assetModel.Balance,
-                ExchangeRateId = assetModel.ExchangeRateId,
                 IsActive = assetModel.IsActive
             };
 

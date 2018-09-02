@@ -4,13 +4,10 @@
       <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="assetService.selectedAsset.name" placeholder="Name" required>
       <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
     </div>
-    <div class="form-group">
-        <input class="form-control" name="TypeName" #TypeName="ngModel" [(ngModel)]="assetService.selectedAsset.typeName" placeholder="Asset type" required>
-        <div class="validation-error" *ngIf="TypeName.invalid && TypeName.touched">This Field is Required.</div>
-    </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-          <input type="number" class="form-control" name="Balance" #Balance="ngModel" [(ngModel)]="assetService.selectedAsset.balance" placeholder="Balance" required>
+          <input class="form-control" name="TypeName" #TypeName="ngModel" [(ngModel)]="assetService.selectedAsset.typeName" placeholder="Asset type" required>
+          <div class="validation-error" *ngIf="TypeName.invalid && TypeName.touched">This Field is Required.</div>
       </div>
       <div class="form-group col-md-6">
           <input class="form-control" name="CurrencyName" #CurrencyName="ngModel" [(ngModel)]="assetService.selectedAsset.currencyName" placeholder="Currency" required>

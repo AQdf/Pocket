@@ -14,4 +14,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Balance" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="47aceb4e-2c79-406a-b166-fb6490af7303" ChangeDateTime="08/27/2018 17:24:22">
+    <Property Name="ElementName" Value="[dbo].[FK_Balance_ToAsset]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_Balance_Asset]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9ac2be6e-4ae1-407b-911b-f539771595ed" ChangeDateTime="08/27/2018 17:24:35">
+    <Property Name="ElementName" Value="[dbo].[FK_Balance_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_Balance_ExchangeRate]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e2e6247f-fee3-43c6-96da-ee20a370d7b6" ChangeDateTime="08/27/2018 17:27:29">
+    <Property Name="ElementName" Value="[dbo].[Balance].[IX_Balance_Column]" />
+    <Property Name="ElementType" Value="SqlIndex" />
+    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[IX_Balance_AssetId]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4df36508-75bb-48c0-97a1-a84439539602" ChangeDateTime="08/27/2018 17:45:30">
+    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[USDtoUAH]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BaseCurrencyId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e1d08a39-6480-4bc2-b5c0-7378d9931823" ChangeDateTime="08/27/2018 17:45:41">
+    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[EURtoUAH]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CounterCurrencyId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="417e6c7f-48ed-4635-a1c5-4814c5cdaa9f" ChangeDateTime="08/27/2018 18:08:28">
+    <Property Name="ElementName" Value="[dbo].[Balance].[UAH]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Value" />
+  </Operation>
 </Operations>

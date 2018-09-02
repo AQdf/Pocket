@@ -2,10 +2,7 @@
   <tr *ngFor="let asset of assetService.assetList">
     <td>{{asset.name}}</td>
     <td>{{asset.typeName}}</td>
-    <td>{{asset.balance}}</td>
     <td>{{asset.currencyName}}</td>
-    <td>{{asset.exchangeRate | number:'1.2'}}</td>
-    <td>{{asset.baseCurrencyBalance | number:'1.2'}}</td>
 
     <td>
       <a class="btn" (click)="showForEdit(asset)">

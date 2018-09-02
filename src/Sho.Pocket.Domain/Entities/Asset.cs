@@ -10,10 +10,6 @@ namespace Sho.Pocket.Domain.Entities
 
         public Guid CurrencyId { get; set; }
 
-        public decimal Balance { get; set; }
-
-        public Guid? ExchangeRateId { get; set; }
-
         public bool IsActive { get; set; }
 
         public virtual AssetType Type { get; set; }

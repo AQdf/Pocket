@@ -12,7 +12,6 @@ export class TotalsComponent implements OnInit {
   constructor(public assetService : AssetService) { }
 
   ngOnInit() {
-    this.assetService.getTotalBalance();
   }
 
 }

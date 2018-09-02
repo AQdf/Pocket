@@ -43,23 +43,11 @@ export class AssetService {
       })
     ).subscribe(x => {
       this.assetList = x;
-      this.getTotalBalance();
     });
   }
  
   deleteAsset(id: string) {
     return this.http.delete('http://localhost:58192/api/assets/' + id).pipe(map(res => res.json()));
-  }
-
-  getTotalBalance()
-  {
-    this.http.get('http://localhost:58192/api/dashboard/total').pipe(
-      map((data : Response) =>{
-        return data.json() as number;
-      })
-    ).subscribe(response => {
-      this.totalBalance = response;
-    });
   }
 }
 

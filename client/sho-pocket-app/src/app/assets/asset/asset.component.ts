@@ -24,10 +24,7 @@ export class AssetComponent implements OnInit {
       id: null,
       name: '',
       typeName: '',
-      currencyName: '',
-      exchangeRate: 0.0,
-      baseCurrencyBalance: 0.0,
-      balance: 0.0
+      currencyName: ''
     }
   }
  

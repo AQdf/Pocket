@@ -63,6 +63,7 @@
     <Build Include="AssetType.sql" />
     <Build Include="Currency.sql" />
     <Build Include="ExchangeRate.sql" />
+    <Build Include="Balance.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="PocketDb.refactorlog" />
