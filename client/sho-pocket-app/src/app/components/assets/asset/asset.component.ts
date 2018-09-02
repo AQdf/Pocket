@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
-import { AssetService } from '../shared/asset.service';
+import { AssetService } from '../../../services/asset.service';
 
 @Component({
   selector: 'app-asset',
@@ -46,4 +46,5 @@ export class AssetComponent implements OnInit {
       });
     }
   }
+  
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';   
 
-import { AssetService } from '../shared/asset.service';
-import { Asset } from '../shared/asset.model'
+import { AssetService } from '../../../services/asset.service';
+import { Asset } from '../../../models/asset.model'
 
 @Component({
   selector: 'app-asset-list',
@@ -30,4 +30,5 @@ export class AssetListComponent implements OnInit {
       })
     }
   }
+  
 }

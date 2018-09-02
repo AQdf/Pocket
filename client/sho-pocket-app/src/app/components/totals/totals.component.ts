@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AssetService } from '../assets/shared/asset.service'
+import { BalanceService } from '../../services/balance.service'
 
 @Component({
   selector: 'app-totals',
@@ -9,9 +9,10 @@ import { AssetService } from '../assets/shared/asset.service'
 })
 export class TotalsComponent implements OnInit {
 
-  constructor(public assetService : AssetService) { }
+  constructor(public balanceService : BalanceService) { }
 
   ngOnInit() {
+    this.balanceService.getTotalBalance();
   }
 
 }

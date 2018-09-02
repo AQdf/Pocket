@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Assets.Models;
+using Sho.Pocket.Application.Balances;
+using Sho.Pocket.Application.Balances.Models;
 using System;
 using System.Collections.Generic;
 
@@ -9,8 +10,11 @@ namespace Sho.Pocket.Api.Controllers
     [ApiController]
     public class BalancesController : ControllerBase
     {
-        public BalancesController()
+        private readonly IBalanceService _balanceService;
+
+        public BalancesController(IBalanceService balanceService)
         {
+            _balanceService = balanceService;
         }
 
         /// <summary>
@@ -20,7 +24,7 @@ namespace Sho.Pocket.Api.Controllers
         [HttpGet]
         public IEnumerable<BalanceViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            return _balanceService.GetAll();
         }
 
         /// <summary>
@@ -42,7 +46,7 @@ namespace Sho.Pocket.Api.Controllers
         [HttpPost]
         public void Post([FromBody] BalanceViewModel balanceModel)
         {
-            throw new NotImplementedException();
+            _balanceService.Add(balanceModel);
         }
 
         /// <summary>
@@ -51,9 +55,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
         [HttpPut("{Id}")]
-        public void Put(Guid id, [FromBody] BalanceViewModel balanceModel)
+        public bool Put(Guid id, [FromBody] BalanceViewModel balanceModel)
         {
-            throw new NotImplementedException();
+            _balanceService.Update(balanceModel);
+
+            return true;
         }
 
         /// <summary>
@@ -61,9 +67,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="Id"></param>
         [HttpDelete("{Id}")]
-        public void Delete(Guid Id)
+        public bool Delete(Guid Id)
         {
-            throw new NotImplementedException();
+            _balanceService.Delete(Id);
+
+            return true;
         }
 
         /// <summary>
@@ -73,7 +81,7 @@ namespace Sho.Pocket.Api.Controllers
         [HttpGet("total")]
         public decimal GetTotalBalance()
         {
-            throw new NotImplementedException();
+            return _balanceService.GetTotalBalance();
         }
     }
 }

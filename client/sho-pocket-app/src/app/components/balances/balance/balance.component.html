@@ -1,0 +1,41 @@
+<form class="balance-form" #balanceForm="ngForm" (ngSubmit)="onSubmit(balanceForm)">
+  <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balanceService.selectedBalance.id">
+  <div class="form-group">
+    <input class="form-control" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balanceService.selectedBalance.effectiveDate" placeholder="Effective Date" required>
+    <div class="validation-error" *ngIf="EffectiveDate.invalid && EffectiveDate.touched">This Field is Required.</div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        <input class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balanceService.selectedBalance.assetId" placeholder="Asset Id" required>
+        <div class="validation-error" *ngIf="AssetId.invalid && AssetId.touched">This Field is Required.</div>
+    </div>
+    <div class="form-group col-md-6">
+        <input class="form-control" name="AssetName" #AssetName="ngModel" [(ngModel)]="balanceService.selectedBalance.assetName" placeholder="Asset Name" required>
+        <div class="validation-error" *ngIf="AssetName.invalid && AssetName.touched">This Field is Required.</div>
+    </div>
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-6">
+          <input class="form-control" name="ExchangeRateId" #ExchangeRateId="ngModel" [(ngModel)]="balanceService.selectedBalance.exchangeRateId" placeholder="Exchange Rate Id" required>
+          <div class="validation-error" *ngIf="ExchangeRateId.invalid && ExchangeRateId.touched">This Field is Required.</div>
+      </div>
+      <div class="form-group col-md-6">
+          <input class="form-control" name="ExchangeRate" #ExchangeRate="ngModel" [(ngModel)]="balanceService.selectedBalance.exchangeRate" placeholder="Exchange Rate" required>
+          <div class="validation-error" *ngIf="ExchangeRate.invalid && ExchangeRate.touched">This Field is Required.</div>
+      </div>
+    </div>
+  <div class="form-group">
+      <input class="form-control" name="Value" #Value="ngModel" [(ngModel)]="balanceService.selectedBalance.value" placeholder="Value" required>
+      <div class="validation-error" *ngIf="Value.invalid && Value.touched">This Field is Required.</div>
+    </div>
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <button [disabled]="!balanceForm.valid" type="submit" class="btn btn-lg btn-block btn-info">
+        <i class="fa fa-floppy-o"></i> Submit</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button type="button" class="btn btn-lg btn-block btn-secondary" (click)="resetForm(balanceForm)">
+        <i class="fa fa-repeat"></i> Reset</button>
+    </div>
+  </div>
+</form>

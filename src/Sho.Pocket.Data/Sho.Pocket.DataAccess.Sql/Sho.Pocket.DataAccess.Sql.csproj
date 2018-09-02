@@ -10,6 +10,10 @@
     <None Remove="Assets\Scripts\GetAllAssets.sql" />
     <None Remove="Assets\Scripts\InsertAsset.sql" />
     <None Remove="Assets\Scripts\UpdateAsset.sql" />
+    <None Remove="Balances\Scripts\DeleteBalance.sql" />
+    <None Remove="Balances\Scripts\GetAllBalances.sql" />
+    <None Remove="Balances\Scripts\InsertBalance.sql" />
+    <None Remove="Balances\Scripts\UpdateBalance.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +22,10 @@
     <EmbeddedResource Include="Assets\Scripts\GetAllAssets.sql" />
     <EmbeddedResource Include="Assets\Scripts\InsertAsset.sql" />
     <EmbeddedResource Include="Assets\Scripts\UpdateAsset.sql" />
+    <EmbeddedResource Include="Balances\Scripts\DeleteBalance.sql" />
+    <EmbeddedResource Include="Balances\Scripts\GetAllBalances.sql" />
+    <EmbeddedResource Include="Balances\Scripts\InsertBalance.sql" />
+    <EmbeddedResource Include="Balances\Scripts\UpdateBalance.sql" />
   </ItemGroup>
 
   <ItemGroup>

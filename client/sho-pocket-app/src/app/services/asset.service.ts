@@ -3,7 +3,7 @@ import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
  
-import {Asset} from'./asset.model'
+import {Asset} from'../models/asset.model'
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,6 @@ export class AssetService {
 
   selectedAsset: Asset;
   assetList: Asset[];
-  totalBalance: number;
 
   constructor(public http: Http) {}
 
@@ -49,10 +48,4 @@ export class AssetService {
   deleteAsset(id: string) {
     return this.http.delete('http://localhost:58192/api/assets/' + id).pipe(map(res => res.json()));
   }
-}
-
-export class ExchangeRate {
-  currenciesPair : {
-    val: number
-  };
 }

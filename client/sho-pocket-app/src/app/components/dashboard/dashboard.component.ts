@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AssetService } from '../assets/shared/asset.service'
+import { BalanceService } from '../../services/balance.service'
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +9,7 @@ import { AssetService } from '../assets/shared/asset.service'
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(public assetService : AssetService) { }
+  constructor(public balanceService : BalanceService) { }
 
   ngOnInit() {
   }

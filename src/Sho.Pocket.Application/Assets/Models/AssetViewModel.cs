@@ -5,6 +5,10 @@ namespace Sho.Pocket.Application.Assets.Models
 {
     public class AssetViewModel
     {
+        public AssetViewModel()
+        {
+        }
+
         public AssetViewModel(Asset asset)
         {
             Id = asset.Id;

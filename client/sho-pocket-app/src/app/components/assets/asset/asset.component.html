@@ -1,0 +1,27 @@
+<form class="asset-form" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+  <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="assetService.selectedAsset.id">
+  <div class="form-group">
+    <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="assetService.selectedAsset.name" placeholder="Name" required>
+    <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        <input class="form-control" name="TypeName" #TypeName="ngModel" [(ngModel)]="assetService.selectedAsset.typeName" placeholder="Asset type" required>
+        <div class="validation-error" *ngIf="TypeName.invalid && TypeName.touched">This Field is Required.</div>
+    </div>
+    <div class="form-group col-md-6">
+        <input class="form-control" name="CurrencyName" #CurrencyName="ngModel" [(ngModel)]="assetService.selectedAsset.currencyName" placeholder="Currency" required>
+        <div class="validation-error" *ngIf="CurrencyName.invalid && CurrencyName.touched">This Field is Required.</div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <button [disabled]="!assetForm.valid" type="submit" class="btn btn-lg btn-block btn-info">
+        <i class="fa fa-floppy-o"></i> Submit</button>
+    </div>
+    <div class="form-group col-md-4">
+      <button type="button" class="btn btn-lg btn-block btn-secondary" (click)="resetForm(assetForm)">
+        <i class="fa fa-repeat"></i> Reset</button>
+    </div>
+  </div>
+</form>
