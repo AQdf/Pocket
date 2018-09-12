@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
 import { BalanceService } from '../../../services/balance.service';
+import { AssetService } from '../../../services/asset.service';
 
 @Component({
   selector: 'app-balance',
@@ -11,25 +12,29 @@ import { BalanceService } from '../../../services/balance.service';
 })
 export class BalanceComponent implements OnInit {
 
-  constructor(public balanceService : BalanceService, private toastr : ToastrService) { }
+  constructor(public balanceService : BalanceService, public assetService : AssetService, private toastr : ToastrService) { 
+  }
 
   ngOnInit() {
+    this.assetService.getAssetList();
     this.resetForm();
   }
 
   resetForm(form?: NgForm) {
     if (form != null)
       form.reset();
-    this.balanceService.selectedBalance = {
+
+      var now = new Date().toISOString();
+      var formattedNow = now.substring(0, now.indexOf('T'));
+
+      this.balanceService.selectedBalance = {
       id: null,
-      effectiveDate: new Date(),
+      effectiveDate: formattedNow,
       value: 0.0,
       assetId: '',
-      assetCurrencyId: '',
-      assetName: '',
-      assetTypeId: '',
       exchangeRateId: '',
-      exchangeRate: 0.0
+      exchangeRate: 0.0,
+      asset: null
     }
   }
  

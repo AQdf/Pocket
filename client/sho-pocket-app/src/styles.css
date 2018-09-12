@@ -16,3 +16,15 @@ button:hover,a.btn:hover{
 .margin-bottom-20 {
     margin-bottom: 20px;
 }
+
+.margin-20 {
+    margin: 20px;
+}
+
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="month"],
+input[type="week"] {
+    height:2.4rem;
+}

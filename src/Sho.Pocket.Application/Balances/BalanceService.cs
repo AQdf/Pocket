@@ -10,17 +10,22 @@ namespace Sho.Pocket.Application.Balances
     public class BalanceService : IBalanceService
     {
         private readonly IBalanceRepository _balanceRepository;
+        private readonly IAssetRepository _assetRepository;
 
-        public BalanceService(IBalanceRepository balanceRepository)
+        public BalanceService(IBalanceRepository balanceRepository, IAssetRepository assetRepository)
         {
             _balanceRepository = balanceRepository;
+            _assetRepository = assetRepository;
         }
 
         public IEnumerable<BalanceViewModel> GetAll()
         {
             List<Balance> balances = _balanceRepository.GetAll();
+            List<Asset> assets = _assetRepository.GetAll();
 
-            List<BalanceViewModel> result = balances.Select(b => new BalanceViewModel(b)).ToList();
+            List<BalanceViewModel> result = balances
+                .Select(b => new BalanceViewModel(b, assets.FirstOrDefault(a => b.AssetId == a.Id)))
+                .ToList();
 
             return result;
         }

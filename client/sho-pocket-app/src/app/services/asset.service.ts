@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
  
 import {Asset} from'../models/asset.model'
@@ -35,7 +34,7 @@ export class AssetService {
       );
   }
  
-  getAssetList(){
+  getAssetList() {
     this.http.get('http://localhost:58192/api/assets').pipe(
       map((data : Response) =>{
         return data.json() as Asset[];

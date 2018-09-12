@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {Balance} from'../models/balance.model'
@@ -12,17 +11,19 @@ export class BalanceService {
   selectedBalance: Balance;
   balanceList: Balance[];
   totalBalance: number;
+  effectiveDatesList: string[];
 
   constructor(public http: Http) {}
 
   getBalanceList(){
     this.http.get('http://localhost:58192/api/balances').pipe(
-      map((data : Response) =>{
+      map((data : Response) => {
         return data.json() as Balance[];
       })
     ).subscribe(x => {
       this.balanceList = x;
       this.getTotalBalance();
+      this.effectiveDatesList = Array.from(new Set(this.balanceList.map(b => b.effectiveDate)));
     });
   }
 

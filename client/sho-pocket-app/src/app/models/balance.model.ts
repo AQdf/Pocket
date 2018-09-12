@@ -1,11 +1,11 @@
+import {Asset} from'../models/asset.model'
+
 export class Balance {
   id : string;
   assetId : string;
-  assetName: string;
-  assetCurrencyId : string;
-  assetTypeId : string;
-  effectiveDate : Date;
+  effectiveDate : string;
   value: number;
   exchangeRateId : string;
   exchangeRate: number;
+  asset: Asset;
 }
