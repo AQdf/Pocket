@@ -37,8 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
-    <ProjectReference Include="..\..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />
   </ItemGroup>
 
 </Project>

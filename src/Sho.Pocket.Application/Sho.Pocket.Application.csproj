@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.Data\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />
   </ItemGroup>
 
