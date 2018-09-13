@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27625.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B6299F33-8682-478B-8C2E-A37826DC9B17}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{B6299F33-8682-478B-8C2E-A37826DC9B17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Api", "src\Sho.Pocket.Web\Sho.Pocket.Api.csproj", "{E1D355CB-D768-422D-830E-61915626767F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Api", "server\Sho.Pocket.Web\Sho.Pocket.Api.csproj", "{E1D355CB-D768-422D-830E-61915626767F}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "PocketDb", "database\PocketDb\PocketDb.sqlproj", "{65D6F198-272E-46D5-98BC-DD4503A2A873}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{88F4556E-4939-403B-8FB2-4C657B10CDE0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Application", "src\Sho.Pocket.Application\Sho.Pocket.Application.csproj", "{4308483D-F48F-43FA-8D05-EAB1EAAD8E07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Application", "server\Sho.Pocket.Application\Sho.Pocket.Application.csproj", "{4308483D-F48F-43FA-8D05-EAB1EAAD8E07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Domain", "src\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj", "{B0BEEFAB-D41B-4572-928F-B3E2717086BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Domain", "server\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj", "{B0BEEFAB-D41B-4572-928F-B3E2717086BE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Core", "src\Sho.Pocket.Core\Sho.Pocket.Core.csproj", "{D3C0A7C1-921F-4088-91D7-A4687D145D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Core", "server\Sho.Pocket.Core\Sho.Pocket.Core.csproj", "{D3C0A7C1-921F-4088-91D7-A4687D145D15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Sql", "src\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj", "{59F93148-AAE3-4C63-B904-8F5901F171A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Sql", "server\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj", "{59F93148-AAE3-4C63-B904-8F5901F171A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
