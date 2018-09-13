@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.Converters;
+using Sho.Pocket.Application.Common.Converters;
 using Sho.Pocket.Domain.Entities;
 using System;
 

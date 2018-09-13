@@ -14,6 +14,8 @@ export class AssetComponent implements OnInit {
   constructor(public assetService : AssetService, private toastr : ToastrService) { }
 
   ngOnInit() {
+    this.assetService.getAssetTypesList();
+    this.assetService.getCurrenciesList();
     this.resetForm();
   }
 
@@ -23,8 +25,10 @@ export class AssetComponent implements OnInit {
     this.assetService.selectedAsset = {
       id: null,
       name: '',
-      typeName: '',
-      currencyName: ''
+      typeId: '',
+      currencyId: '',
+      type: null,
+      currency: null
     }
   }
  

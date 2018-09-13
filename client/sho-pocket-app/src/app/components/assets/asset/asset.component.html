@@ -1,17 +1,30 @@
 <form class="asset-form" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
   <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="assetService.selectedAsset.id">
-  <div class="form-group">
-    <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="assetService.selectedAsset.name" placeholder="Name" required>
-    <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
-  </div>
   <div class="form-row">
     <div class="form-group col-md-6">
-        <input class="form-control" name="TypeName" #TypeName="ngModel" [(ngModel)]="assetService.selectedAsset.typeName" placeholder="Asset type" required>
-        <div class="validation-error" *ngIf="TypeName.invalid && TypeName.touched">This Field is Required.</div>
+      <div class="">Name</div>
+      <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="assetService.selectedAsset.name" placeholder="Name" required>
+      <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
     </div>
-    <div class="form-group col-md-6">
-        <input class="form-control" name="CurrencyName" #CurrencyName="ngModel" [(ngModel)]="assetService.selectedAsset.currencyName" placeholder="Currency" required>
-        <div class="validation-error" *ngIf="CurrencyName.invalid && CurrencyName.touched">This Field is Required.</div>
+    <div class="form-group col-md-3">
+      <div class="">Type</div>
+      <select class="form-control" name="TypeId" #TypeId="ngModel" [(ngModel)]="assetService.selectedAsset.typeId" placeholder="Type" required>
+        <option value="" disabled selected>Select type</option>
+        <option *ngFor="let type of assetService.assetTypesList" value={{type.id}}>
+            {{type.name}}
+        </option>
+      </select>
+      <div class="validation-error" *ngIf="TypeId.invalid && TypeId.touched">This Field is Required.</div>
+    </div>
+    <div class="form-group col-md-3">
+      <div class="">Currency</div>
+      <select class="form-control" name="CurrencyId" #CurrencyId="ngModel" [(ngModel)]="assetService.selectedAsset.currencyId" placeholder="Currency" required>
+        <option value="" disabled selected>Select currency</option>
+        <option *ngFor="let currency of assetService.currenciesList" value={{currency.id}}>
+            {{currency.name}}
+        </option>
+      </select>
+      <div class="validation-error" *ngIf="CurrencyId.invalid && CurrencyId.touched">This Field is Required.</div>
     </div>
   </div>
   <div class="form-row">

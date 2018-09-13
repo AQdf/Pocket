@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Application;
-using Sho.Pocket.Application.Configuration;
+using Sho.Pocket.Application.Common.Configuration;
 using Sho.Pocket.Core;
 using Swashbuckle.AspNetCore.Swagger;
 

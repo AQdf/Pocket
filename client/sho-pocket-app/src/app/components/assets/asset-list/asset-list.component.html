@@ -1,8 +1,8 @@
 <table class="table table-sm table-hover">
   <tr *ngFor="let asset of assetService.assetList">
     <td>{{asset.name}}</td>
-    <td>{{asset.typeName}}</td>
-    <td>{{asset.currencyName}}</td>
+    <td>{{asset.type.name}}</td>
+    <td>{{asset.currency.name}}</td>
 
     <td>
       <a class="btn" (click)="showForEdit(asset)">

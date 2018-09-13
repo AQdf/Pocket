@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Sho.Pocket.Application.Converters
+namespace Sho.Pocket.Application.Common.Converters
 {
     public class IsoStringDateTimeConverter : DateTimeConverterBase
     {

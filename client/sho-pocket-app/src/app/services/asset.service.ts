@@ -3,6 +3,8 @@ import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular
 import { map } from 'rxjs/operators';
  
 import {Asset} from'../models/asset.model'
+import { AssetType } from '../models/asset-type.model';
+import { Currency } from '../models/currency.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,9 @@ export class AssetService {
 
   selectedAsset: Asset;
   assetList: Asset[];
+
+  assetTypesList: AssetType[];
+  currenciesList: Currency[];
 
   constructor(public http: Http) {}
 
@@ -46,5 +51,25 @@ export class AssetService {
  
   deleteAsset(id: string) {
     return this.http.delete('http://localhost:58192/api/assets/' + id).pipe(map(res => res.json()));
+  }
+
+  getAssetTypesList() {
+    this.http.get('http://localhost:58192/api/assets/types').pipe(
+      map((data : Response) =>{
+        return data.json() as Asset[];
+      })
+    ).subscribe(x => {
+      this.assetTypesList = x;
+    });
+  }
+
+  getCurrenciesList() {
+    this.http.get('http://localhost:58192/api/assets/currencies').pipe(
+      map((data : Response) =>{
+        return data.json() as Asset[];
+      })
+    ).subscribe(x => {
+      this.currenciesList = x;
+    });
   }
 }

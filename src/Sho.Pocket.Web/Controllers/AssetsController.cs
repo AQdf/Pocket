@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
+using Sho.Pocket.Application.AssetTypes.Models;
+using Sho.Pocket.Application.Currencies.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -18,7 +20,7 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/Assets
+        /// GET: api/assets
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -29,18 +31,18 @@ namespace Sho.Pocket.Api.Controllers
 
 
         /// <summary>
-        /// GET: api/Assets/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// GET: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="Id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public string Get(Guid id)
+        [HttpGet("{Id}")]
+        public string Get(Guid Id)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// POST: api/Assets
+        /// POST: api/assets
         /// </summary>
         /// <param name="newAsset"></param>
         /// <returns></returns>
@@ -51,12 +53,12 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// PUT: api/Assets/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// PUT: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
         /// <param name="Id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{Id}")]
-        public bool Put(Guid id, [FromBody] AssetViewModel assetModel)
+        public bool Put(Guid Id, [FromBody] AssetViewModel assetModel)
         {
             _assetService.Update(assetModel);
 
@@ -64,7 +66,7 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// DELETE: api/ApiWithActions/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// DELETE: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
         /// <param name="Id"></param>
         [HttpDelete("{Id}")]
@@ -73,6 +75,26 @@ namespace Sho.Pocket.Api.Controllers
             _assetService.Delete(Id);
 
             return true;
+        }
+
+        /// <summary>
+        /// GET: api/assets/types
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("types")]
+        public IEnumerable<AssetTypeViewModel> GetTypes()
+        {
+            return _assetService.GetAssetTypes();
+        }
+
+        /// <summary>
+        /// GET: api/assets/currencies
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("currencies")]
+        public IEnumerable<CurrencyViewModel> GetCurrencies()
+        {
+            return _assetService.GetCurrencies();
         }
     }
 }

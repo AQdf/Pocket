@@ -4,9 +4,11 @@ using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
+using Sho.Pocket.DataAccess.Sql.AssetTypes;
 using Sho.Pocket.DataAccess.Sql.Balances;
+using Sho.Pocket.DataAccess.Sql.Currencies;
 
-namespace Sho.Pocket.Application.Configuration
+namespace Sho.Pocket.Application.Common.Configuration
 {
     public static class ServiceCollectionExtensions
     {
@@ -14,11 +16,13 @@ namespace Sho.Pocket.Application.Configuration
         {
             services.AddSingleton<IDbConfiguration, DbConfiguration>();
 
-            services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IAssetService, AssetService>();
-
-            services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<IBalanceService, BalanceService>();
+
+            services.AddScoped<IAssetRepository, AssetRepository>();
+            services.AddScoped<IBalanceRepository, BalanceRepository>();
+            services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
+            services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         }
     }
 }
