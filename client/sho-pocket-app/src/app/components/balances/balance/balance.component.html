@@ -12,7 +12,7 @@
       <select class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balanceService.selectedBalance.assetId" placeholder="Asset" required>
         <option value="" disabled selected>Select asset</option>
         <option *ngFor="let asset of assetService.assetList" value={{asset.id}}>
-            {{asset.name}} ({{asset.currencyName}})
+            {{asset.name}} ({{asset.currency.name}})
         </option>
       </select>
       <div class="validation-error" *ngIf="AssetId.invalid && AssetId.touched">This Field is Required.</div>

@@ -2,9 +2,9 @@
   <tr *ngFor="let balance of balanceService.balanceList">
     <td>{{balance.effectiveDate | date:'mediumDate'}}</td>
     <td>{{balance.asset.name}}</td>
-    <td>{{balance.asset.typeName}}</td>
+    <td>{{balance.asset.type.name}}</td>
     <td>{{balance.value | currency:' '}}</td>
-    <td>{{balance.asset.currencyName}}</td>
+    <td>{{balance.asset.currency.name}}</td>
     <td>{{balance.exchangeRate}}</td>
 
     <td>
