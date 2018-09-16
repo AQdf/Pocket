@@ -14,7 +14,6 @@ export class BalanceListComponent implements OnInit {
   constructor(public balanceService : BalanceService, private toastr : ToastrService) { }
 
   ngOnInit() {
-    this.balanceService.getBalanceList();
   }
 
   showForEdit(balance: Balance) {
@@ -25,7 +24,11 @@ export class BalanceListComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?') == true) {
       this.balanceService.deleteBalance(id)
       .subscribe(x => {
-        this.balanceService.getBalanceList();
+
+        let dateFilter = this.balanceService.effectiveDatesList.length > 0 ? this.balanceService.effectiveDatesList[0] : null;
+
+        this.balanceService.getBalanceList(dateFilter);
+        
         this.toastr.warning("Deleted Successfully", "Balance");
       })
     }

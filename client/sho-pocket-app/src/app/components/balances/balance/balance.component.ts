@@ -39,19 +39,21 @@ export class BalanceComponent implements OnInit {
   }
  
   onSubmit(form: NgForm) {
+    let dateFilter = this.balanceService.effectiveDatesList.length > 0 ? this.balanceService.effectiveDatesList[0] : null;
+
     if (form.value.id == null) {
       this.balanceService.postBalance(form.value)
-        .subscribe(data => {
+        .subscribe(() => {
           this.resetForm(form);
-          this.balanceService.getBalanceList();
+          this.balanceService.getBalanceList(dateFilter);
           this.toastr.success('New Record Added Succcessfully', 'Balance');
         });
     }
     else {
       this.balanceService.putBalance(form.value.id, form.value)
-      .subscribe(data => {
+      .subscribe(() => {
         this.resetForm(form);
-        this.balanceService.getBalanceList();
+        this.balanceService.getBalanceList(dateFilter);
         this.toastr.info('Record Updated Successfully!', 'Balance');
       });
     }

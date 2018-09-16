@@ -91,5 +91,19 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
 
             return result;
         }
+
+        public IEnumerable<DateTime> GetEffectiveDates()
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
+
+            List<DateTime> result;
+
+            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            {
+                result = db.Query<DateTime>(queryText).ToList();
+            }
+
+            return result;
+        }
     }
 }

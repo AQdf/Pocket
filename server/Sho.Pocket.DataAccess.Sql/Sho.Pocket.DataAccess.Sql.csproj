@@ -13,6 +13,7 @@
     <None Remove="Assets\Scripts\UpdateAsset.sql" />
     <None Remove="Balances\Scripts\DeleteBalance.sql" />
     <None Remove="Balances\Scripts\GetAllBalances.sql" />
+    <None Remove="Balances\Scripts\GetBalancesEffectiveDates.sql" />
     <None Remove="Balances\Scripts\InsertBalance.sql" />
     <None Remove="Balances\Scripts\UpdateBalance.sql" />
     <None Remove="Currencies\Scripts\GetAllCurrencies.sql" />
@@ -27,6 +28,7 @@
     <EmbeddedResource Include="Assets\Scripts\UpdateAsset.sql" />
     <EmbeddedResource Include="Balances\Scripts\DeleteBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\GetAllBalances.sql" />
+    <EmbeddedResource Include="Balances\Scripts\GetBalancesEffectiveDates.sql" />
     <EmbeddedResource Include="Balances\Scripts\InsertBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\UpdateBalance.sql" />
     <EmbeddedResource Include="Currencies\Scripts\GetAllCurrencies.sql" />

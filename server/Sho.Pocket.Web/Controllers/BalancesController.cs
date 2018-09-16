@@ -22,9 +22,9 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<BalanceViewModel> GetAll()
+        public BalancesViewModel GetAll([FromQuery] DateTime? effectiveDate)
         {
-            return _balanceService.GetAll();
+            return _balanceService.GetAll(effectiveDate);
         }
 
         /// <summary>
@@ -82,6 +82,16 @@ namespace Sho.Pocket.Api.Controllers
         public decimal GetTotalBalance()
         {
             return _balanceService.GetTotalBalance();
+        }
+
+        /// <summary>
+        /// GET: api/balances/effective-dates
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("effective-dates")]
+        public IEnumerable<DateTime> GetEffectiveDates()
+        {
+            return _balanceService.GetEffectiveDates();
         }
     }
 }

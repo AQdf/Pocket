@@ -13,5 +13,7 @@ namespace Sho.Pocket.Core.DataAccess
         void Update(Balance balance);
 
         void Remove(Guid balanceId);
+
+        IEnumerable<DateTime> GetEffectiveDates();
     }
 }

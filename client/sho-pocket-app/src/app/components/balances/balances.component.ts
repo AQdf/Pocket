@@ -13,4 +13,7 @@ export class BalancesComponent implements OnInit {
   ngOnInit() {
   }
 
+  onDateChange(value) {
+    this.balanceService.getBalanceList(value);
+  }
 }

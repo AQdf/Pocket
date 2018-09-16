@@ -6,7 +6,7 @@ namespace Sho.Pocket.Application.Balances
 {
     public interface IBalanceService
     {
-        IEnumerable<BalanceViewModel> GetAll();
+        BalancesViewModel GetAll(DateTime? effectiveDate);
 
         void Add(BalanceViewModel balanceModel);
 
@@ -15,5 +15,7 @@ namespace Sho.Pocket.Application.Balances
         void Delete(Guid Id);
 
         decimal GetTotalBalance();
+
+        IEnumerable<DateTime> GetEffectiveDates();
     }
 }

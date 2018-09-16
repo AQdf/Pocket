@@ -18,16 +18,23 @@ namespace Sho.Pocket.Application.Balances
             _assetRepository = assetRepository;
         }
 
-        public IEnumerable<BalanceViewModel> GetAll()
+        public BalancesViewModel GetAll(DateTime? effectiveDate)
         {
-            List<Balance> balances = _balanceRepository.GetAll();
+            IEnumerable<Balance> balances = _balanceRepository.GetAll();
             List<Asset> assets = _assetRepository.GetAll();
 
-            List<BalanceViewModel> result = balances
+            if (effectiveDate.HasValue)
+            {
+                balances = balances.Where(b => b.EffectiveDate.Equals(effectiveDate.Value));
+            }
+
+            List<BalanceViewModel> items = balances
                 .Select(b => new BalanceViewModel(b, assets.FirstOrDefault(a => b.AssetId == a.Id)))
                 .ToList();
 
-            return result;
+            decimal totalBalance = balances.Select(b => b.Value * b.ExchangeRate.Rate).Sum();
+
+            return new BalancesViewModel(items, items.Count, totalBalance);
         }
 
         public void Add(BalanceViewModel balanceModel)
@@ -66,13 +73,21 @@ namespace Sho.Pocket.Application.Balances
         {
             List<Balance> balances = _balanceRepository.GetAll();
 
-            DateTime latestEffectiveDate = balances.OrderByDescending(b => b.EffectiveDate).Select(b => b.EffectiveDate).FirstOrDefault();
+            DateTime latestEffectiveDate = balances
+                .OrderByDescending(b => b.EffectiveDate)
+                .Select(b => b.EffectiveDate)
+                .FirstOrDefault();
 
             IEnumerable<Balance> effectiveBalances = balances.Where(b => b.EffectiveDate.Equals(latestEffectiveDate));
 
             decimal result = effectiveBalances.Select(b => b.Value * b.ExchangeRate.Rate).Sum();
 
             return result;
+        }
+
+        public IEnumerable<DateTime> GetEffectiveDates()
+        {
+            return _balanceRepository.GetEffectiveDates();
         }
     }
 }

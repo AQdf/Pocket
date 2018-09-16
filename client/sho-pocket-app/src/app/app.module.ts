@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http'
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
 
@@ -34,6 +35,7 @@ import { BalanceListComponent } from './components/balances/balance-list/balance
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
+    HttpClientModule,
     FormsModule,
     ToastrModule.forRoot(),
     AppRoutingModule
