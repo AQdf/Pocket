@@ -11,11 +11,16 @@ namespace Sho.Pocket.Application.Balances
     {
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
+        private readonly IExchangeRateRepository _exchangeRateRepository;
 
-        public BalanceService(IBalanceRepository balanceRepository, IAssetRepository assetRepository)
+        public BalanceService(
+            IBalanceRepository balanceRepository,
+            IAssetRepository assetRepository,
+            IExchangeRateRepository exchangeRateRepository)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
+            _exchangeRateRepository = exchangeRateRepository;
         }
 
         public BalancesViewModel GetAll(DateTime? effectiveDate)
@@ -39,11 +44,13 @@ namespace Sho.Pocket.Application.Balances
 
         public void Add(BalanceViewModel balanceModel)
         {
+            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRate);
+
             Balance balance = new Balance
             {
                 AssetId = balanceModel.AssetId,
                 EffectiveDate = balanceModel.EffectiveDate,
-                ExchangeRateId = balanceModel.ExchangeRateId,
+                ExchangeRateId = exchangeRate.Id,
                 Value = balanceModel.Value
             };
 
@@ -52,12 +59,14 @@ namespace Sho.Pocket.Application.Balances
 
         public void Update(BalanceViewModel balanceModel)
         {
+            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRate);
+
             Balance balance = new Balance
             {
-                Id = balanceModel.Id,
+                Id = balanceModel.Id.Value,
                 AssetId = balanceModel.AssetId,
                 EffectiveDate = balanceModel.EffectiveDate,
-                ExchangeRateId = balanceModel.ExchangeRateId,
+                ExchangeRateId = exchangeRate.Id,
                 Value = balanceModel.Value
             };
 

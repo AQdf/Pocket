@@ -23,7 +23,7 @@ namespace Sho.Pocket.Application.Balances.Models
             Asset = new AssetViewModel(asset);
         }
 
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         public Guid AssetId { get; set; }
 

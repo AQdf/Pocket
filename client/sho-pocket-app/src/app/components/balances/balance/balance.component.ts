@@ -24,8 +24,9 @@ export class BalanceComponent implements OnInit {
     if (form != null)
       form.reset();
 
-      var now = new Date().toISOString();
-      var formattedNow = now.substring(0, now.indexOf('T'));
+      var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+      var formattedNow = localISOTime.substring(0, localISOTime.indexOf('T'));
 
       this.balanceService.selectedBalance = {
       id: null,
@@ -45,7 +46,7 @@ export class BalanceComponent implements OnInit {
       this.balanceService.postBalance(form.value)
         .subscribe(() => {
           this.resetForm(form);
-          this.balanceService.getBalanceList(dateFilter);
+          this.balanceService.getEffectiveDatesList();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
         });
     }
@@ -53,7 +54,7 @@ export class BalanceComponent implements OnInit {
       this.balanceService.putBalance(form.value.id, form.value)
       .subscribe(() => {
         this.resetForm(form);
-        this.balanceService.getBalanceList(dateFilter);
+        this.balanceService.getEffectiveDatesList();
         this.toastr.info('Record Updated Successfully!', 'Balance');
       });
     }

@@ -51,7 +51,7 @@ namespace Sho.Pocket.Application.Assets
         {
             Asset asset = new Asset
             {
-                Id = assetModel.Id,
+                Id = assetModel.Id.Value,
                 Name = assetModel.Name,
                 TypeId = assetModel.TypeId,
                 CurrencyId = assetModel.CurrencyId,

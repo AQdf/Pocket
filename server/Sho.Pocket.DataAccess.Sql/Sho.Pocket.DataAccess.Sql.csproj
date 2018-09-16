@@ -17,6 +17,7 @@
     <None Remove="Balances\Scripts\InsertBalance.sql" />
     <None Remove="Balances\Scripts\UpdateBalance.sql" />
     <None Remove="Currencies\Scripts\GetAllCurrencies.sql" />
+    <None Remove="ExchangeRates\Scripts\AlterExchangeRate.sql" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,7 @@
     <EmbeddedResource Include="Balances\Scripts\InsertBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\UpdateBalance.sql" />
     <EmbeddedResource Include="Currencies\Scripts\GetAllCurrencies.sql" />
+    <EmbeddedResource Include="ExchangeRates\Scripts\AlterExchangeRate.sql" />
   </ItemGroup>
 
   <ItemGroup>

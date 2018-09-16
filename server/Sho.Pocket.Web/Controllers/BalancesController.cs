@@ -44,9 +44,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] BalanceViewModel balanceModel)
+        public bool Post([FromBody] BalanceViewModel balanceModel)
         {
             _balanceService.Add(balanceModel);
+
+            return true;
         }
 
         /// <summary>

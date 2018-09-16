@@ -23,7 +23,7 @@ namespace Sho.Pocket.Application.Assets.Models
             Currency = new CurrencyViewModel(asset.Currency.Id, asset.Currency.Name);
         }
 
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         public string Name { get; set; }
 
