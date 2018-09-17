@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.AssetTypes.Models;
 using Sho.Pocket.Application.Currencies.Models;
@@ -14,49 +15,39 @@ namespace Sho.Pocket.Application.Assets
         private readonly IAssetRepository _assetRepository;
         private readonly IAssetTypeRepository _assetTypeRepository;
         private readonly ICurrencyRepository _currencyRepository;
+        private readonly IMapper _mapper;
 
         public AssetService(
             IAssetRepository assetRepository,
             IAssetTypeRepository assetTypeRepository,
-            ICurrencyRepository currencyRepository)
+            ICurrencyRepository currencyRepository,
+            IMapper mapper)
         {
             _assetRepository = assetRepository;
             _assetTypeRepository = assetTypeRepository;
             _currencyRepository = currencyRepository;
+            _mapper = mapper;
         }
 
         public IEnumerable<AssetViewModel> GetAll()
         {
             List<Asset> assets = _assetRepository.GetAll();
 
-            List<AssetViewModel> result = assets.Select(a => new AssetViewModel(a)).ToList();
+            List<AssetViewModel> result = assets.Select(a => _mapper.Map<AssetViewModel>(a)).ToList();
 
             return result;
         }
 
         public void Add(AssetViewModel assetModel)
         {
-            Asset asset = new Asset
-            {
-                Name = assetModel.Name,
-                TypeId = assetModel.TypeId,
-                CurrencyId = assetModel.CurrencyId,
-                IsActive = assetModel.IsActive
-            };
+            Asset asset = _mapper.Map<Asset>(assetModel);
 
             _assetRepository.Add(asset);
         }
 
         public void Update(AssetViewModel assetModel)
         {
-            Asset asset = new Asset
-            {
-                Id = assetModel.Id.Value,
-                Name = assetModel.Name,
-                TypeId = assetModel.TypeId,
-                CurrencyId = assetModel.CurrencyId,
-                IsActive = assetModel.IsActive
-            };
+            Asset asset = _mapper.Map<Asset>(assetModel);
 
             _assetRepository.Update(asset);
         }
@@ -77,7 +68,7 @@ namespace Sho.Pocket.Application.Assets
         {
             List<AssetType> assetTypes = _assetTypeRepository.GetAll();
 
-            List<AssetTypeViewModel> result = assetTypes.Select(t => new AssetTypeViewModel(t.Id, t.Name)).ToList();
+            List<AssetTypeViewModel> result = assetTypes.Select(t => _mapper.Map<AssetTypeViewModel>(t)).ToList();
 
             return result;
         }
@@ -86,7 +77,7 @@ namespace Sho.Pocket.Application.Assets
         {
             List<Currency> currencies = _currencyRepository.GetAll();
 
-            List<CurrencyViewModel> result = currencies.Select(c => new CurrencyViewModel(c.Id, c.Name)).ToList();
+            List<CurrencyViewModel> result = currencies.Select(c => _mapper.Map<CurrencyViewModel>(c)).ToList();
 
             return result;
         }

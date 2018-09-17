@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Core.DataAccess;
@@ -15,6 +16,8 @@ namespace Sho.Pocket.Application.Common.Configuration
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
+            services.AddAutoMapper();
+
             services.AddSingleton<IDbConfiguration, DbConfiguration>();
 
             services.AddScoped<IAssetService, AssetService>();

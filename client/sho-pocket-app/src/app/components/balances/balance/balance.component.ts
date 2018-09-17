@@ -34,7 +34,7 @@ export class BalanceComponent implements OnInit {
       value: 0.0,
       assetId: '',
       exchangeRateId: '',
-      exchangeRate: 0.0,
+      exchangeRateValue: 0.0,
       asset: null
     }
   }

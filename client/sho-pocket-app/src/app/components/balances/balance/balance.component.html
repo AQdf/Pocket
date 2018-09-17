@@ -19,8 +19,8 @@
     </div>
     <div class="form-group col-md-2">
       <div class="">Exchange Rate</div>
-      <input class="form-control" name="ExchangeRate" #ExchangeRate="ngModel" [(ngModel)]="balanceService.selectedBalance.exchangeRate" placeholder="Exchange Rate" required>
-      <div class="validation-error" *ngIf="ExchangeRate.invalid && ExchangeRate.touched">This Field is Required.</div>
+      <input class="form-control" name="ExchangeRateValue" #ExchangeRateValue="ngModel" [(ngModel)]="balanceService.selectedBalance.exchangeRateValue" placeholder="Exchange Rate" required>
+      <div class="validation-error" *ngIf="ExchangeRateValue.invalid && ExchangeRateValue.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-2">
       <div class="">Balance</div>
