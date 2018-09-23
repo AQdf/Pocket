@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
@@ -12,7 +12,11 @@ import { AssetService } from '../../../services/asset.service';
 })
 export class BalanceComponent implements OnInit {
 
-  constructor(public balanceService : BalanceService, public assetService : AssetService, private toastr : ToastrService) { 
+  constructor(
+    public balanceService : BalanceService,
+    public assetService : AssetService,
+    private toastr : ToastrService,
+    protected changeDetectorRef: ChangeDetectorRef) { 
   }
 
   ngOnInit() {
@@ -21,11 +25,13 @@ export class BalanceComponent implements OnInit {
   }
 
   resetForm(form?: NgForm) {
-    if (form != null)
+    if (form != null) {
       form.reset();
+      this.changeDetectorRef.detectChanges();
+    }
 
-      var tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-      var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);
+      var tzOffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+      var localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, -1);
       var formattedNow = localISOTime.substring(0, localISOTime.indexOf('T'));
 
       this.balanceService.selectedBalance = {

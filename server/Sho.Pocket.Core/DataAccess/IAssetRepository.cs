@@ -13,7 +13,5 @@ namespace Sho.Pocket.Core.DataAccess
         void Update(Asset asset);
 
         void Remove(Guid assetId);
-
-        void DeactivateAsset(Guid assetId);
     }
 }

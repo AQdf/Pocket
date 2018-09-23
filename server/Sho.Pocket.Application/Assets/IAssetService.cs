@@ -14,7 +14,7 @@ namespace Sho.Pocket.Application.Assets
 
         void Update(AssetViewModel assetModel);
 
-        void Delete(Guid Id, bool deactivate = true);
+        void Delete(Guid Id);
 
         List<AssetTypeViewModel> GetAssetTypes();
 

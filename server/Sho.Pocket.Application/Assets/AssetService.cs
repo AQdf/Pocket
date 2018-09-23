@@ -52,19 +52,12 @@ namespace Sho.Pocket.Application.Assets
             _assetRepository.Update(asset);
         }
 
-        public void Delete(Guid Id, bool deactivate = true)
+        public void Delete(Guid Id)
         {
-            if (deactivate)
-            {
-                _assetRepository.DeactivateAsset(Id);
-            }
-            else
-            {
-                _assetRepository.Remove(Id);
-            }
+            _assetRepository.Remove(Id);
         }
 
-        List<AssetTypeViewModel> IAssetService.GetAssetTypes()
+        public List<AssetTypeViewModel> GetAssetTypes()
         {
             List<AssetType> assetTypes = _assetTypeRepository.GetAll();
 

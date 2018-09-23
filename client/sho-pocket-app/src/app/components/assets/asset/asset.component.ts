@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
@@ -11,7 +11,10 @@ import { AssetService } from '../../../services/asset.service';
 })
 export class AssetComponent implements OnInit {
 
-  constructor(public assetService : AssetService, private toastr : ToastrService) { }
+  constructor(
+    public assetService : AssetService,
+    private toastr : ToastrService,
+    protected changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.assetService.getAssetTypesList();
@@ -20,13 +23,17 @@ export class AssetComponent implements OnInit {
   }
 
   resetForm(form?: NgForm) {
-    if (form != null)
+    if (form != null) {
       form.reset();
+      this.changeDetectorRef.detectChanges();
+    }
+
     this.assetService.selectedAsset = {
       id: null,
       name: '',
       typeId: '',
       currencyId: '',
+      isActive: true,
       type: null,
       currency: null
     }
@@ -36,17 +43,17 @@ export class AssetComponent implements OnInit {
     if (form.value.id == null) {
       this.assetService.postAsset(form.value)
         .subscribe(data => {
-          this.resetForm(form);
           this.assetService.getAssetList();
           this.toastr.success('New Record Added Succcessfully', 'Asset');
+          this.resetForm(form);
         });
     }
     else {
       this.assetService.putAsset(form.value.id, form.value)
       .subscribe(data => {
-        this.resetForm(form);
         this.assetService.getAssetList();
         this.toastr.info('Record Updated Successfully!', 'Asset');
+        this.resetForm(form);
       });
     }
   }

@@ -6,6 +6,7 @@ export class Asset {
   name : string;
   typeId : string;
   currencyId : string;
+  isActive: boolean;
   type: AssetType;
   currency: Currency;
 }

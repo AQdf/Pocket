@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { from, of } from 'rxjs';
+import { map, filter, flatMap } from 'rxjs/operators';
  
 import {Asset} from'../models/asset.model'
 import { AssetType } from '../models/asset-type.model';
 import { Currency } from '../models/currency.model';
+
+const baseUrl = 'http://localhost:58192/api/assets/';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +17,12 @@ export class AssetService {
 
   selectedAsset: Asset;
   assetList: Asset[];
+  activeAssets: Asset[];
 
   assetTypesList: AssetType[];
   currenciesList: Currency[];
 
-  constructor(public http: Http) {}
+  constructor(public http: Http, public client: HttpClient) {}
 
   postAsset(emp : Asset) {
     var body = JSON.stringify(emp);
@@ -40,12 +45,18 @@ export class AssetService {
   }
  
   getAssetList() {
-    this.http.get('http://localhost:58192/api/assets').pipe(
-      map((data : Response) =>{
-        return data.json() as Asset[];
+    this.client.get<Asset[]>(baseUrl).pipe(
+      map((data : Asset[]) => {
+        return data;
       })
-    ).subscribe(x => {
-      this.assetList = x;
+    ).subscribe(assets => {
+        this.assetList = assets;
+
+        of(assets).pipe(
+          map((result: Asset[]) =>
+            result.filter(asset => asset.isActive)
+          )
+        ).subscribe(result => this.activeAssets = result);
     });
   }
  

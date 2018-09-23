@@ -47,7 +47,7 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public void Post([FromBody] AssetViewModel assetModel)
+        public void Add([FromBody] AssetViewModel assetModel)
         {
             _assetService.Add(assetModel);
         }
@@ -58,7 +58,7 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{Id}")]
-        public bool Put(Guid Id, [FromBody] AssetViewModel assetModel)
+        public bool Update(Guid Id, [FromBody] AssetViewModel assetModel)
         {
             _assetService.Update(assetModel);
 

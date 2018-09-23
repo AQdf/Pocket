@@ -53,7 +53,8 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
                 id = asset.Id,
                 name = asset.Name,
                 typeId = asset.TypeId,
-                currencyId = asset.CurrencyId
+                currencyId = asset.CurrencyId,
+                isActive = asset.IsActive
             };
 
             base.UpdateEntity(queryText, queryParameters);
@@ -69,18 +70,6 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             };
 
             base.RemoveEntity(queryText, queryParameters);
-        }
-
-        public void DeactivateAsset(Guid assetId)
-        {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeactivateAsset.sql");
-
-            object queryParameters = new
-            {
-                id = assetId
-            };
-
-            base.ExecuteScript(queryText, queryParameters);
         }
 
         private List<Asset> GetAllWithRelatedEntities(string queryText)
