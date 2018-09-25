@@ -8,6 +8,8 @@ namespace Sho.Pocket.Application.Balances
     {
         BalancesViewModel GetAll(DateTime? effectiveDate);
 
+        BalanceViewModel GetById(Guid id);
+
         void Add(BalanceViewModel balanceModel);
 
         void Update(BalanceViewModel balanceModel);

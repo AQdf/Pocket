@@ -3,6 +3,7 @@ using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -33,9 +34,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public string Get(Guid id)
+        public BalanceViewModel Get(Guid id)
         {
-            throw new NotImplementedException();
+            BalanceViewModel balance = _balanceService.GetById(id);
+
+            return balance;
         }
 
         /// <summary>
@@ -95,5 +98,7 @@ namespace Sho.Pocket.Api.Controllers
         {
             return _balanceService.GetEffectiveDates();
         }
+
+
     }
 }

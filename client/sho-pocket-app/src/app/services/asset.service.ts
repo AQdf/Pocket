@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { from, of } from 'rxjs';
-import { map, filter, flatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, } from 'rxjs/operators';
  
 import {Asset} from'../models/asset.model'
 import { AssetType } from '../models/asset-type.model';

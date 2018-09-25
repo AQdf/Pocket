@@ -1,21 +1,40 @@
-<h3 class="mt-2 text-right">{{balanceService.totalBalance | number:'1.2' }} UAH</h3>
 
-<table class="table table-sm table-hover">
-  <tr *ngFor="let balance of balanceService.balances">
-    <td>{{balance.effectiveDate | date:'mediumDate'}}</td>
-    <td>{{balance.asset.name}}</td>
-    <td>{{balance.asset.type.name}}</td>
-    <td>{{balance.value | currency:' '}}</td>
-    <td>{{balance.asset.currency.name}}</td>
-    <td>{{balance.exchangeRateValue}}</td>
+<div class="col-auto mt-2">
+  <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addBalance()">Add</button>
+</div>
 
-    <td>
-      <a class="btn" (click)="showForEdit(balance)">
-        <i class="fa fa-pencil-square-o"></i>
-      </a>
-      <a class="btn text-danger" (click)="onDelete(balance.id)">
-        <i class="fa fa-trash-o"></i>
-      </a>
-    </td>
-  </tr>
-</table>
+<div *ngFor="let balance of balanceService.balances">
+  <form class="m-2" #balanceForm="ngForm" (ngSubmit)="onSubmit(balanceForm)">
+
+      <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balance.id">
+
+      <div class="form-row align-items-center p-2">
+        <div class="col-md-2">
+          <input [disabled]="balance.id !== currentEditRecordId" type="date" [ngClass]="{'input-invalid': EffectiveDate.invalid && EffectiveDate.touched }" class="form-control" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate" placeholder="Effective Date" required>
+        </div>
+        <div class="col-md-4">
+          <select [disabled]="balance.id !== currentEditRecordId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched }" class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balance.assetId" placeholder="Asset" required>
+            <option value="" disabled selected>Select asset</option>
+            <option *ngFor="let asset of assetService.assetList" value={{asset.id}}>
+                {{asset.name}} ({{asset.currency.name}})
+            </option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': ExchangeRateValue.invalid && ExchangeRateValue.touched }" name="ExchangeRateValue" #ExchangeRateValue="ngModel" [(ngModel)]="balance.exchangeRateValue" placeholder="Exchange Rate" required>
+        </div>
+        <div class="col-md-2">
+          <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': Value.invalid && Value.touched }" name="Value" #Value="ngModel" [(ngModel)]="balance.value" placeholder="Balance" required>
+        </div>
+        <div class="col-md-2">
+          <button type="button" [disabled]="isAddMode && currentEditRecordId !== balance.id" class="btn btn-outline-info ml-1" (click)="showForEdit(balance)"><i class="fa fa-pencil-square-o"></i></button>
+          <button [disabled]="!balanceForm.valid || currentEditRecordId !== balance.id" type="submit" class="btn btn-outline-info ml-1"><i class="fa fa-floppy-o"></i></button>
+          <button [disabled]="currentEditRecordId !== balance.id" type="button" class="btn btn-outline-info ml-1" (click)="resetRecord(balance.id)"><i class="fa fa-repeat"></i></button>
+          <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(balance.id)"><i class="fa fa-trash-o"></i></button>
+        </div>
+      </div>
+
+  </form>
+</div>
+
+<h3 class="col-auto mt-2">{{balanceService.totalBalance | number:'1.2' }} UAH</h3>

@@ -29,6 +29,11 @@ input[type="week"] {
     height:2.4rem;
 }
 
+.input-invalid
+{
+  border:1px solid #f00;
+}
+
 /* Checkbox toogle swith */
 /* The switch - the box around the slider */
 .switch {

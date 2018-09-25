@@ -37,7 +37,7 @@ namespace Sho.Pocket.DataAccess.Sql
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.QueryFirst<T>(queryText);
+                result = db.QueryFirst<T>(queryText, queryParameters);
             }
 
             return result;

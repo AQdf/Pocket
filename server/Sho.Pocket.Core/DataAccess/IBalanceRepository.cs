@@ -8,6 +8,8 @@ namespace Sho.Pocket.Core.DataAccess
     {
         List<Balance> GetAll(bool includeRelated = true);
 
+        Balance GetById(Guid id);
+
         Balance Add(Balance balance);
 
         void Update(Balance balance);

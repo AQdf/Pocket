@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
+
+import { of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Balance } from'../models/balance.model'
@@ -16,7 +18,6 @@ export class BalanceService {
   balances: Balance[];
   totalBalance: number;
   effectiveDatesList: string[];
-  selectedEffectiveDate: string;
 
   constructor(public http: Http, public client: HttpClient) {
     this.getEffectiveDatesList();
@@ -33,6 +34,12 @@ export class BalanceService {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
     });
+  }
+
+  getBalance(id: string) {
+    return this.client.get<Balance>(baseUrl + id).pipe(
+      map((data : Balance) => data)
+    );
   }
 
   postBalance(emp : Balance) {
@@ -74,5 +81,9 @@ export class BalanceService {
         this.getBalanceList(this.effectiveDatesList[0]);
       }
     });
+  }
+
+  reload() {
+    this.getEffectiveDatesList();
   }
 }

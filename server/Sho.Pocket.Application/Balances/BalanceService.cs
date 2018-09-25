@@ -48,6 +48,15 @@ namespace Sho.Pocket.Application.Balances
             return new BalancesViewModel(items, items.Count, totalBalance);
         }
 
+        public BalanceViewModel GetById(Guid id)
+        {
+            Balance balance = _balanceRepository.GetById(id);
+
+            BalanceViewModel result = _mapper.Map<BalanceViewModel>(balance);
+
+            return result;
+        }
+
         public void Add(BalanceViewModel balanceModel)
         {
             ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRateValue);

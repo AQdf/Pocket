@@ -28,6 +28,32 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
+        public Balance GetById(Guid id)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
+
+            object queryParameters = new
+            {
+                id
+            };
+
+            Balance result;
+
+            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            {
+                result = db.Query<Balance, Asset, ExchangeRate, Balance>(queryText, 
+                    (balance, asset, rate) =>
+                    {
+                        balance.Asset = asset;
+                        balance.ExchangeRate = rate;
+
+                        return balance;
+                    }, queryParameters).FirstOrDefault();
+            }
+
+            return result;
+        }
+
         public Balance Add(Balance balance)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
