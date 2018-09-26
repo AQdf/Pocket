@@ -12,11 +12,13 @@ namespace Sho.Pocket.Application.Balances
 
         void Add(BalanceViewModel balanceModel);
 
+        bool AddEffectiveBalancesTemplate();
+
         void Update(BalanceViewModel balanceModel);
 
         void Delete(Guid Id);
 
-        decimal GetTotalBalance();
+        decimal GetCurrentTotalBalance();
 
         IEnumerable<DateTime> GetEffectiveDates();
     }

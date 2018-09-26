@@ -43,7 +43,7 @@ namespace Sho.Pocket.Application.Balances
                 .Select(b => _mapper.Map<BalanceViewModel>(b))
                 .ToList();
 
-            decimal totalBalance = balances.Select(b => b.Value * b.ExchangeRate.Rate).Sum();
+            decimal totalBalance = CalculateTotal(balances);
 
             return new BalancesViewModel(items, items.Count, totalBalance);
         }
@@ -68,6 +68,21 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository.Add(balance);
         }
 
+        public bool AddEffectiveBalancesTemplate()
+        {
+            IEnumerable<DateTime> effectiveDates = GetEffectiveDates();
+            DateTime today = DateTime.UtcNow.Date;
+            bool todayBalancesExists = effectiveDates.Any(date => date.Equals(today));
+
+            if (!todayBalancesExists)
+            {
+                _balanceRepository.AddEffectiveBalancesTemplate(today);
+                return true;
+            }
+
+            return false;
+        }
+
         public void Update(BalanceViewModel balanceModel)
         {
             ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRateValue);
@@ -84,7 +99,7 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository.Remove(Id);
         }
 
-        public decimal GetTotalBalance()
+        public decimal GetCurrentTotalBalance()
         {
             List<Balance> balances = _balanceRepository.GetAll();
 
@@ -95,7 +110,7 @@ namespace Sho.Pocket.Application.Balances
 
             IEnumerable<Balance> effectiveBalances = balances.Where(b => b.EffectiveDate.Equals(latestEffectiveDate));
 
-            decimal result = effectiveBalances.Select(b => b.Value * b.ExchangeRate.Rate).Sum();
+            decimal result = CalculateTotal(effectiveBalances);
 
             return result;
         }
@@ -103,6 +118,13 @@ namespace Sho.Pocket.Application.Balances
         public IEnumerable<DateTime> GetEffectiveDates()
         {
             return _balanceRepository.GetEffectiveDates();
+        }
+
+        private decimal CalculateTotal(IEnumerable<Balance> balances)
+        {
+            decimal result = balances.Select(b => b.Value * b.ExchangeRate?.Rate ?? 0).Sum();
+
+            return result;
         }
     }
 }

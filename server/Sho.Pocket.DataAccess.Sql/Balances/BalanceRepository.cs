@@ -71,6 +71,18 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
+        public void AddEffectiveBalancesTemplate(DateTime currentEffectiveDate)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
+
+            object queryParameters = new
+            {
+                effectiveDate = currentEffectiveDate,
+            };
+
+            base.ExecuteScript(queryText, queryParameters);
+        }
+
         public void Update(Balance balance)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");

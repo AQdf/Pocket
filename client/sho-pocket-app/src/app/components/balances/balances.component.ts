@@ -7,7 +7,6 @@ import { BalanceService } from '../../services/balance.service';
   styleUrls: ['./balances.component.css']
 })
 export class BalancesComponent implements OnInit {
-  selectedEffectiveDate: string;
 
   constructor(public balanceService : BalanceService) { }
 
@@ -16,5 +15,9 @@ export class BalancesComponent implements OnInit {
 
   onDateChange(value) {
     this.balanceService.getBalanceList(value);
+  }
+
+  addBalances() {
+    this.balanceService.addBalancesByTemplate();
   }
 }

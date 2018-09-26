@@ -47,11 +47,22 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public bool Post([FromBody] BalanceViewModel balanceModel)
+        public bool Add([FromBody] BalanceViewModel balanceModel)
         {
             _balanceService.Add(balanceModel);
 
             return true;
+        }
+
+        /// <summary>
+        /// POST: api/balances/template
+        /// </summary>
+        /// <param name="balanceModel"></param>
+        /// <returns></returns>
+        [HttpPost("template")]
+        public bool AddBalancesTemplate()
+        {
+            return _balanceService.AddEffectiveBalancesTemplate();
         }
 
         /// <summary>
@@ -60,7 +71,7 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
         [HttpPut("{Id}")]
-        public bool Put(Guid id, [FromBody] BalanceViewModel balanceModel)
+        public bool Update(Guid id, [FromBody] BalanceViewModel balanceModel)
         {
             _balanceService.Update(balanceModel);
 
@@ -84,9 +95,9 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("total")]
-        public decimal GetTotalBalance()
+        public decimal GetCurrentTotalBalance()
         {
-            return _balanceService.GetTotalBalance();
+            return _balanceService.GetCurrentTotalBalance();
         }
 
         /// <summary>

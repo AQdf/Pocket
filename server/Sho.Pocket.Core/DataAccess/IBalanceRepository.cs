@@ -12,6 +12,8 @@ namespace Sho.Pocket.Core.DataAccess
 
         Balance Add(Balance balance);
 
+        void AddEffectiveBalancesTemplate(DateTime currentEffectiveDate);
+
         void Update(Balance balance);
 
         void Remove(Guid balanceId);
