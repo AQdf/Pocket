@@ -1,50 +1,26 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Application.Common.Configuration;
-using Sho.Pocket.Core;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace Sho.Pocket.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("PocketLocalDbConnection");
-
-
+            services.AddMvc();
 
             services.AddCors(options => options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
-            services.AddMvc();
-            services.Configure<MvcOptions>(options =>
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
             {
-                options.Filters.Add(new CorsAuthorizationFilterFactory("AllowAll"));
+                configuration.RootPath = "wwwroot";
             });
-
-            GlobalSettings globalSettings = new GlobalSettings();
-            ConfigurationBinder.Bind(Configuration.GetSection("GlobalSettings"), globalSettings);
-            services.AddSingleton(s => globalSettings);
-
-            services.AddApplicationServices();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Pocket API", Version = "v1" });
-            });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,22 +32,27 @@ namespace Sho.Pocket.Web
             }
             else
             {
-                app.UseHsts();
-                app.UseHttpsRedirection();
+                app.UseExceptionHandler("/Error");
             }
 
-            app.UseMvc();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseCors("AllowAll");
 
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
+            app.UseMvc(routes =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pocket v1");
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+
+            app.UseSpa(spa =>
+            {
+                // To learn more about options for serving an Angular SPA from ASP.NET Core,
+                // see https://go.microsoft.com/fwlink/?linkid=864501
+
+                spa.Options.SourcePath = "wwwroot";
             });
         }
     }

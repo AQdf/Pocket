@@ -1,1 +1,1 @@
-dotnet run --project ../src/Sho.Pocket.Web/Sho.Pocket.Api.csproj
+dotnet run --project ../server/Sho.Pocket.Web/Sho.Pocket.Api.csproj
