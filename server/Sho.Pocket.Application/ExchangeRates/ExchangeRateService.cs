@@ -1,12 +1,36 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
+using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Application.ExchangeRates
 {
-    public class ExchangeRateService
+    public class ExchangeRateService : IExchangeRateService
     {
+        private readonly IExchangeRateRepository _exchangeRateRepository;
+        private readonly IMapper _mapper;
+
+        public ExchangeRateService(
+            IExchangeRateRepository exchangeRateRepository,
+            IMapper mapper)
+        {
+            _exchangeRateRepository = exchangeRateRepository;
+            _mapper = mapper;
+        }
+
+        public ExchangeRateModel AddExchangeRate(ExchangeRateModel model)
+        {
+            ExchangeRate rateToAdd = _mapper.Map<ExchangeRate>(model);
+            ExchangeRate exchangeRate = _exchangeRateRepository.Add(rateToAdd);
+            ExchangeRateModel result = _mapper.Map<ExchangeRateModel>(exchangeRate);
+
+            return result;
+        }
+
         private async Task<Dictionary<string, decimal>> GetExchangeRates(IEnumerable<string> currencies)
         {
             Dictionary<string, decimal> result = new Dictionary<string, decimal>();

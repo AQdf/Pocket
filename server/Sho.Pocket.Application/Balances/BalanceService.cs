@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Sho.Pocket.Application.Balances.Models;
+using Sho.Pocket.Application.Common.Comparers;
+using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
@@ -39,13 +42,20 @@ namespace Sho.Pocket.Application.Balances
 
             balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
 
-            List<BalanceViewModel> items = balances
-                .Select(b => _mapper.Map<BalanceViewModel>(b))
-                .ToList();
+            List<BalanceViewModel> items = _mapper.Map<List<BalanceViewModel>>(balances);
 
             decimal totalBalance = CalculateTotal(balances);
 
-            return new BalancesViewModel(items, items.Count, totalBalance);
+            List<ExchangeRateModel> rates = balances
+                .Select(b => _mapper.Map<ExchangeRateModel>(b.ExchangeRate))
+                .Where(r => r.BaseCurrencyName != CurrencyConstants.DEFAULT_CURRENCY_NAME)
+                .Distinct(new ExchangeRateComparer())
+                .OrderBy(r => r.BaseCurrencyName)
+                .ToList();
+
+            items = items.OrderBy(i => i.Asset.Name).ToList();
+
+            return new BalancesViewModel(items, items.Count, totalBalance, rates);
         }
 
         public BalanceViewModel GetById(Guid id)
@@ -59,7 +69,7 @@ namespace Sho.Pocket.Application.Balances
 
         public void Add(BalanceViewModel balanceModel)
         {
-            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRateValue);
+            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.Asset.CurrencyId, balanceModel.ExchangeRateValue);
 
             balanceModel.ExchangeRateId = exchangeRate.Id;
 
@@ -85,10 +95,6 @@ namespace Sho.Pocket.Application.Balances
 
         public void Update(BalanceViewModel balanceModel)
         {
-            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.AssetId, balanceModel.ExchangeRateValue);
-
-            balanceModel.ExchangeRateId = exchangeRate.Id;
-
             Balance balance = _mapper.Map<Balance>(balanceModel);
 
             _balanceRepository.Update(balance);
@@ -118,6 +124,13 @@ namespace Sho.Pocket.Application.Balances
         public IEnumerable<DateTime> GetEffectiveDates()
         {
             return _balanceRepository.GetEffectiveDates();
+        }
+
+        public void ApplyExchangeRate(ExchangeRateModel model)
+        {
+            _exchangeRateRepository.Update(model.Id, model.Value);
+
+            _balanceRepository.ApplyExchangeRate(model.Id, model.BaseCurrencyId, model.EffectiveDate);
         }
 
         private decimal CalculateTotal(IEnumerable<Balance> balances)

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Sho.Pocket.Application.ExchangeRates.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -55,22 +55,11 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// POST: api/balances/template
-        /// </summary>
-        /// <param name="balanceModel"></param>
-        /// <returns></returns>
-        [HttpPost("template")]
-        public bool AddBalancesTemplate()
-        {
-            return _balanceService.AddEffectiveBalancesTemplate();
-        }
-
-        /// <summary>
         /// PUT: api/balances/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
-        [HttpPut("{Id}")]
+        [HttpPut("{id}")]
         public bool Update(Guid id, [FromBody] BalanceViewModel balanceModel)
         {
             _balanceService.Update(balanceModel);
@@ -101,6 +90,17 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
+        /// POST: api/balances/template
+        /// </summary>
+        /// <param name="balanceModel"></param>
+        /// <returns></returns>
+        [HttpPost("template")]
+        public bool AddBalancesTemplate()
+        {
+            return _balanceService.AddEffectiveBalancesTemplate();
+        }
+
+        /// <summary>
         /// GET: api/balances/effective-dates
         /// </summary>
         /// <returns></returns>
@@ -110,6 +110,12 @@ namespace Sho.Pocket.Api.Controllers
             return _balanceService.GetEffectiveDates();
         }
 
+        [HttpPut("exchange-rate")]
+        public bool ApplyExchangeRate([FromBody]ExchangeRateModel model)
+        {
+            _balanceService.ApplyExchangeRate(model);
 
+            return true;
+        }
     }
 }

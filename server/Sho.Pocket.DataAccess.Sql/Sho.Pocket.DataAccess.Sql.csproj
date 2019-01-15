@@ -1,26 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Assets\Scripts\DeactivateAsset.sql" />
-    <None Remove="Assets\Scripts\DeleteAsset.sql" />
-    <None Remove="Assets\Scripts\GetAllAssets.sql" />
-    <None Remove="Assets\Scripts\GetAllAssetTypes.sql" />
-    <None Remove="Assets\Scripts\InsertAsset.sql" />
-    <None Remove="Assets\Scripts\UpdateAsset.sql" />
-    <None Remove="Balances\Scripts\DeleteBalance.sql" />
-    <None Remove="Balances\Scripts\GetAllBalances.sql" />
-    <None Remove="Balances\Scripts\GetBalance.sql" />
-    <None Remove="Balances\Scripts\GetBalancesEffectiveDates.sql" />
-    <None Remove="Balances\Scripts\InsertBalance.sql" />
-    <None Remove="Balances\Scripts\InsertBalancesTemplate.sql" />
-    <None Remove="Balances\Scripts\UpdateBalance.sql" />
-    <None Remove="Currencies\Scripts\GetAllCurrencies.sql" />
-    <None Remove="ExchangeRates\Scripts\AlterExchangeRate.sql" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Assets\Scripts\DeactivateAsset.sql" />
@@ -29,6 +11,7 @@
     <EmbeddedResource Include="AssetTypes\Scripts\GetAllAssetTypes.sql" />
     <EmbeddedResource Include="Assets\Scripts\InsertAsset.sql" />
     <EmbeddedResource Include="Assets\Scripts\UpdateAsset.sql" />
+    <EmbeddedResource Include="Balances\Scripts\ApplyExchangeRate.sql" />
     <EmbeddedResource Include="Balances\Scripts\DeleteBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\GetBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\GetAllBalances.sql" />
@@ -38,6 +21,8 @@
     <EmbeddedResource Include="Balances\Scripts\UpdateBalance.sql" />
     <EmbeddedResource Include="Currencies\Scripts\GetAllCurrencies.sql" />
     <EmbeddedResource Include="ExchangeRates\Scripts\AlterExchangeRate.sql" />
+    <EmbeddedResource Include="ExchangeRates\Scripts\InsertExchangeRate.sql" />
+    <EmbeddedResource Include="ExchangeRates\Scripts\UpdateExchangeRate.sql" />
   </ItemGroup>
 
   <ItemGroup>

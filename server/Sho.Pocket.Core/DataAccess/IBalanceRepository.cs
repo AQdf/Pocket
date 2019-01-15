@@ -19,5 +19,7 @@ namespace Sho.Pocket.Core.DataAccess
         void Remove(Guid balanceId);
 
         IEnumerable<DateTime> GetEffectiveDates();
+
+        void ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate);
     }
 }

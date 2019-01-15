@@ -1,4 +1,3 @@
-
 <div class="col-auto mt-2">
   <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addBalance()">New record</button>
 </div>
@@ -7,6 +6,7 @@
   <form class="m-2" #balanceForm="ngForm" (ngSubmit)="onSubmit(balanceForm)">
 
       <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balance.id">
+      <input type="hidden" name="exchangeRateId" #ExchangeRateValue="ngModel" [(ngModel)]="balance.exchangeRateId">
 
       <div class="form-row align-items-center p-2">
         <div class="col-md-2">
@@ -16,15 +16,15 @@
           <select [disabled]="balance.id !== currentEditRecordId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched }" class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balance.assetId" placeholder="Asset" required>
             <option value="" disabled selected>Select asset</option>
             <option *ngFor="let asset of assetService.assetList" value={{asset.id}}>
-                {{asset.name}} ({{asset.currency.name}})
+                {{asset.name}}
             </option>
           </select>
         </div>
         <div class="col-md-2">
-          <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': ExchangeRateValue.invalid && ExchangeRateValue.touched }" name="ExchangeRateValue" #ExchangeRateValue="ngModel" [(ngModel)]="balance.exchangeRateValue" placeholder="Exchange Rate" required>
+          <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': Value.invalid && Value.touched }" name="Value" #Value="ngModel" [(ngModel)]="balance.value" placeholder="Balance" required>
         </div>
         <div class="col-md-2">
-          <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': Value.invalid && Value.touched }" name="Value" #Value="ngModel" [(ngModel)]="balance.value" placeholder="Balance" required>
+          <input class="form-control" [disabled]="true" value="{{balance.asset.currency.name}}">
         </div>
         <div class="col-md-2">
           <button type="button" [disabled]="isAddMode && currentEditRecordId !== balance.id" class="btn btn-outline-info ml-1" (click)="showForEdit(balance)"><i class="fa fa-pencil-square-o"></i></button>

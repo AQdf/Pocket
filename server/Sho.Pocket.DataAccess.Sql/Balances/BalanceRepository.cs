@@ -111,25 +111,6 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             base.RemoveEntity(queryText, queryParameters);
         }
 
-        private List<Balance> GetAllWithRelatedEntities(string queryText)
-        {
-            List<Balance> result;
-
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
-            {
-                result = db.Query<Balance, Asset, ExchangeRate, Balance>(queryText,
-                    (balance, asset, rate) =>
-                    {
-                        balance.Asset = asset;
-                        balance.ExchangeRate = rate;
-
-                        return balance;
-                    }).ToList();
-            }
-
-            return result;
-        }
-
         public IEnumerable<DateTime> GetEffectiveDates()
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
@@ -139,6 +120,44 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
                 result = db.Query<DateTime>(queryText).ToList();
+            }
+
+            return result;
+        }
+
+        public void ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "ApplyExchangeRate.sql");
+
+            object queryParameters = new {
+                exchangeRateId,
+                currencyId = counterCurrencyId,
+                effectiveDate
+            };
+
+            base.ExecuteScript(queryText, queryParameters);
+        }
+
+        private List<Balance> GetAllWithRelatedEntities(string queryText)
+        {
+            List<Balance> result;
+
+            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            {
+                result = db.Query<Balance, Asset, ExchangeRate, Currency, Currency, Balance>(queryText,
+                    (balance, asset, rate, baseCurrency, counterCurrency) =>
+                    {
+                        balance.Asset = asset;
+                        balance.ExchangeRate = rate;
+
+                        if (balance.ExchangeRate != null)
+                        {
+                            balance.ExchangeRate.BaseCurrency = baseCurrency;
+                            balance.ExchangeRate.CounterCurrency = counterCurrency;
+                        }
+
+                        return balance;
+                    }).ToList();
             }
 
             return result;

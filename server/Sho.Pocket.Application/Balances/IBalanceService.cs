@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sho.Pocket.Application.Balances.Models;
+using Sho.Pocket.Application.ExchangeRates.Models;
 
 namespace Sho.Pocket.Application.Balances
 {
@@ -21,5 +22,7 @@ namespace Sho.Pocket.Application.Balances
         decimal GetCurrentTotalBalance();
 
         IEnumerable<DateTime> GetEffectiveDates();
+
+        void ApplyExchangeRate(ExchangeRateModel model);
     }
 }

@@ -70,7 +70,7 @@ namespace Sho.Pocket.Application.Assets
         {
             List<Currency> currencies = _currencyRepository.GetAll();
 
-            List<CurrencyViewModel> result = currencies.Select(c => _mapper.Map<CurrencyViewModel>(c)).ToList();
+            List<CurrencyViewModel> result = _mapper.Map<List<CurrencyViewModel>>(currencies);
 
             return result;
         }

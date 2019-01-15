@@ -1,4 +1,5 @@
 ﻿using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 using System;
 
@@ -8,28 +9,51 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
     {
         private const string SCRIPTS_DIR_NAME = "ExchangeRates.Scripts";
 
-        // TODO: Remove hard-coded default currency
-        private const string DEFAULT_CURRENCY_NAME = "UAH";
-
         public ExchangeRateRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
         {
         }
 
-        public ExchangeRate Alter(DateTime effectiveDate, Guid assetId, decimal rate)
+        public ExchangeRate Add(ExchangeRate exchangeRate)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertExchangeRate.sql");
+
+            object queryParameters = new
+            {
+                effectiveDate = exchangeRate.EffectiveDate,
+                baseCurrencyId = exchangeRate.BaseCurrencyId,
+                counterCurrencyId = exchangeRate.CounterCurrencyId,
+                rate = exchangeRate.Rate
+            };
+
+            ExchangeRate result = base.InsertEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, decimal rate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
 
             object queryParameters = new
             {
                 effectiveDate,
-                assetId,
-                counterCurrencyName = DEFAULT_CURRENCY_NAME,
+                baseCurrencyId,
+                counterCurrencyName = CurrencyConstants.DEFAULT_CURRENCY_NAME,
                 rate
             };
 
             ExchangeRate result = base.InsertEntity(queryText, queryParameters);
 
             return result;
+        }
+
+        public void Update(Guid id, decimal rate)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateExchangeRate.sql");
+
+            object queryParameters = new { id, rate };
+
+            base.UpdateEntity(queryText, queryParameters);
         }
     }
 }

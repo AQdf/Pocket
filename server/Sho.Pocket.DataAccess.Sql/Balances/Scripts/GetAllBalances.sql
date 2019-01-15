@@ -1,4 +1,6 @@
-﻿select * from Balance b 
-join Asset a on a.Id = b.AssetId
-left join ExchangeRate r on r.Id = b.ExchangeRateId
-order by b.EffectiveDate desc
+﻿select * from Balance
+join Asset on Asset.Id = Balance.AssetId
+left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
+left join Currency BaseCurrency on BaseCurrency.Id = ExchangeRate.BaseCurrencyId
+left join Currency CounterCurrency on CounterCurrency.Id = ExchangeRate.CounterCurrencyId
+order by Balance.EffectiveDate desc

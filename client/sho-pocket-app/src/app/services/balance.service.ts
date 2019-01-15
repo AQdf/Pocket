@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { Balance } from'../models/balance.model'
 import { Balances } from'../models/balances.model'
+import { ExchangeRate } from '../models/exchange-rate.model';
 
 const baseUrl = 'http://localhost:58192/api/balances/';
 
@@ -19,6 +20,7 @@ export class BalanceService {
   totalBalance: number;
   effectiveDatesList: string[];
   selectedEffectiveDate: string;
+  exchangeRates: ExchangeRate[];
 
   constructor(public http: Http, public client: HttpClient) {
     this.getEffectiveDatesList();
@@ -34,6 +36,7 @@ export class BalanceService {
     ).subscribe(balances => {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
+      this.exchangeRates = balances.exchangeRates;
     });
   }
 
@@ -98,6 +101,21 @@ export class BalanceService {
         this.reload();
       }
     });    
+  }
+
+  applyExchangeRate(model: ExchangeRate) {
+    var body = JSON.stringify(model);
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    this.client.put(baseUrl + 'exchange-rate', body, {headers}).pipe(
+      map((data : boolean) => {
+        return data;
+      })
+    ).subscribe(success => {
+      if (success) {
+        this.reload();
+      }
+    });   
   }
 
   reload() {
