@@ -16,7 +16,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public BalanceService(
             IBalanceRepository balanceRepository,

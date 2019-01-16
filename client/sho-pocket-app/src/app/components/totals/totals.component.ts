@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment'
+
+const balancesApiUrl = environment.baseApiUrl + 'balances/';
+
 @Component({
   selector: 'app-totals',
   templateUrl: './totals.component.html',
@@ -18,7 +22,7 @@ export class TotalsComponent implements OnInit {
 
   getCurrentTotalBalance()
   {
-    this.client.get<number>('http://localhost:58192/api/balances/total').pipe(
+    this.client.get<number>(balancesApiUrl + 'total').pipe(
       map((data : number) =>{
         return data;
       })
