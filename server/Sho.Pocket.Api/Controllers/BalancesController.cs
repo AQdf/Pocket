@@ -22,8 +22,8 @@ namespace Sho.Pocket.Api.Controllers
         /// GET: api/balances
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public BalancesViewModel GetAll([FromQuery] DateTime? effectiveDate)
+        [HttpGet("{effectiveDate}")]
+        public BalancesViewModel GetAll(DateTime effectiveDate)
         {
             return _balanceService.GetAll(effectiveDate);
         }
@@ -84,7 +84,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("total")]
-        public decimal GetCurrentTotalBalance()
+        public IEnumerable<BalanceTotalModel> GetCurrentTotalBalance()
         {
             return _balanceService.GetCurrentTotalBalance();
         }

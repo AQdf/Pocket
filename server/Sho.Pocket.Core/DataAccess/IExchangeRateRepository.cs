@@ -10,5 +10,7 @@ namespace Sho.Pocket.Core.DataAccess
         ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, decimal rate);
 
         void Update(Guid id, decimal rate);
+
+        ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate);
     }
 }

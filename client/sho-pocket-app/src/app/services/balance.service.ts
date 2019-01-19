@@ -10,6 +10,7 @@ import { Balances } from'../models/balances.model'
 import { ExchangeRate } from '../models/exchange-rate.model';
 
 import { environment } from '../../environments/environment';
+import { BalanceTotal } from '../models/balance-total.model';
 
 const balancesApiUrl = environment.baseApiUrl + 'balances/';
 
@@ -19,7 +20,7 @@ const balancesApiUrl = environment.baseApiUrl + 'balances/';
 export class BalanceService {
   selectedBalance: Balance;
   balances: Balance[];
-  totalBalance: number;
+  totalBalance: BalanceTotal[];
   effectiveDatesList: string[];
   selectedEffectiveDate: string;
   exchangeRates: ExchangeRate[];
@@ -29,9 +30,10 @@ export class BalanceService {
   }
 
   getBalanceList(effectiveDate: string){
-    let params = new HttpParams().set('effectiveDate', effectiveDate || '');
+    //let params = new HttpParams().set('effectiveDate', effectiveDate || '');
+    //this.client.get<Balances>(balancesApiUrl, { params }).pipe(
 
-    this.client.get<Balances>(balancesApiUrl, { params }).pipe(
+    this.client.get<Balances>(balancesApiUrl + effectiveDate).pipe(
       map((data : Balances) => {
         return data;
       })

@@ -38,7 +38,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             {
                 effectiveDate,
                 baseCurrencyId,
-                counterCurrencyName = CurrencyConstants.DEFAULT_CURRENCY_NAME,
+                counterCurrencyName = CurrencyConstants.UAH,
                 rate
             };
 
@@ -54,6 +54,17 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             object queryParameters = new { id, rate };
 
             base.UpdateEntity(queryText, queryParameters);
+        }
+
+        public ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate)
+        {
+            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetCurrencyExchangeRate.sql");
+
+            object queryParameters = new { baseCurrencyId, effectiveDate };
+
+            ExchangeRate result = base.GetEntity(queryText, queryParameters);
+
+            return result;
         }
     }
 }

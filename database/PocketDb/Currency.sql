@@ -2,5 +2,6 @@
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(), 
     [Name] NVARCHAR(10) NOT NULL, 
-    [Description] NVARCHAR(50) NULL
+    [Description] NVARCHAR(50) NULL, 
+    [IsDefault] BIT NOT NULL DEFAULT 0
 )

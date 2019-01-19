@@ -14,15 +14,5 @@ namespace Sho.Pocket.Api.Controllers
         {
             _balanceService = balancesService;
         }
-
-        /// <summary>
-        /// GET: api/dashboard/balance-difference
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("total")]
-        public decimal GetBalancesDifference(DateTime baseEffectiveDate, DateTime comparativeEffectiveDate)
-        {
-            return _balanceService.GetCurrentTotalBalance();
-        }
     }
 }

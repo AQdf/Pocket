@@ -37,4 +37,10 @@
   </form>
 </div>
 
-<h3 class="col-auto mt-2">{{balanceService.totalBalance | number:'1.2' }} UAH</h3>
+<div class="col-auto input-group">
+  <div *ngFor="let total of balanceService.totalBalance">
+      <div class="input-group pl-3">
+    <h4>{{total.value | number:'1.0-0' }} {{total.currency}}</h4>
+  </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment'
+import { BalanceTotal } from 'src/app/models/balance-total.model';
 
 const balancesApiUrl = environment.baseApiUrl + 'balances/';
 
@@ -12,7 +13,7 @@ const balancesApiUrl = environment.baseApiUrl + 'balances/';
   styleUrls: ['./totals.component.css']
 })
 export class TotalsComponent implements OnInit {
-  totalBalance: number;
+  totalBalance: BalanceTotal[];
 
   constructor(public client : HttpClient) { }
 
@@ -22,8 +23,8 @@ export class TotalsComponent implements OnInit {
 
   getCurrentTotalBalance()
   {
-    this.client.get<number>(balancesApiUrl + 'total').pipe(
-      map((data : number) =>{
+    this.client.get<BalanceTotal[]>(balancesApiUrl + 'total').pipe(
+      map((data : BalanceTotal[]) =>{
         return data;
       })
     ).subscribe(response => {

@@ -1,1 +1,7 @@
-<h1>{{totalBalance | number:'1.2' }} UAH</h1>
+<div class="input-group">
+  <div *ngFor="let total of totalBalance">
+      <div class="input-group pl-3">
+    <h4>{{total.value | number:'1.0-0' }} {{total.currency}}</h4>
+  </div>
+  </div>
+</div>

@@ -5,15 +5,15 @@ namespace Sho.Pocket.Application.Balances.Models
 {
     public class BalancesViewModel
     {
-        public BalancesViewModel(List<BalanceViewModel> items, int count, decimal totalBalance, List<ExchangeRateModel> rates)
+        public BalancesViewModel(List<BalanceViewModel> items, int count, IEnumerable<BalanceTotalModel> totals, List<ExchangeRateModel> rates)
         {
             Items = items;
             Count = count;
-            TotalBalance = totalBalance;
+            TotalBalance = totals;
             ExchangeRates = rates;
         }
 
-        public decimal TotalBalance { get; set; }
+        public IEnumerable<BalanceTotalModel> TotalBalance { get; set; }
 
         public int Count { get; set; }
 

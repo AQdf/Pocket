@@ -2,6 +2,8 @@
 {
     public static class CurrencyConstants
     {
-        public const string DEFAULT_CURRENCY_NAME = "UAH";
+        public const string UAH = "UAH";
+
+        public const string USD = "USD";
     }
 }

@@ -17,45 +17,45 @@ namespace Sho.Pocket.Application.Balances
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IMapper _mapper;
+        private readonly ICurrencyRepository _currencyRepository;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
+            ICurrencyRepository currencyRepository,
             IMapper mapper)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
+            _currencyRepository = currencyRepository;
             _mapper = mapper;
         }
 
-        public BalancesViewModel GetAll(DateTime? effectiveDate)
+        public BalancesViewModel GetAll(DateTime effectiveDate)
         {
             List<Balance> balances = _balanceRepository.GetAll();
             List<Asset> assets = _assetRepository.GetAll();
 
-            if (effectiveDate.HasValue)
-            {
-                balances = balances.Where(b => b.EffectiveDate.Equals(effectiveDate.Value)).ToList();
-            }
+            balances = balances.Where(b => b.EffectiveDate.Equals(effectiveDate)).ToList();
 
             balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
 
             List<BalanceViewModel> items = _mapper.Map<List<BalanceViewModel>>(balances);
 
-            decimal totalBalance = CalculateTotal(balances);
-
             List<ExchangeRateModel> rates = balances
                 .Select(b => _mapper.Map<ExchangeRateModel>(b.ExchangeRate))
-                .Where(r => r.BaseCurrencyName != CurrencyConstants.DEFAULT_CURRENCY_NAME)
+                .Where(r => r.BaseCurrencyName != CurrencyConstants.UAH)
                 .Distinct(new ExchangeRateComparer())
                 .OrderBy(r => r.BaseCurrencyName)
                 .ToList();
 
+            IEnumerable<BalanceTotalModel> totals = CalculateTotal(balances, effectiveDate);
+
             items = items.OrderBy(i => i.Asset.Name).ToList();
 
-            return new BalancesViewModel(items, items.Count, totalBalance, rates);
+            return new BalancesViewModel(items, items.Count, totals, rates);
         }
 
         public BalanceViewModel GetById(Guid id)
@@ -105,7 +105,7 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository.Remove(Id);
         }
 
-        public decimal GetCurrentTotalBalance()
+        public IEnumerable<BalanceTotalModel> GetCurrentTotalBalance()
         {
             List<Balance> balances = _balanceRepository.GetAll();
 
@@ -116,7 +116,9 @@ namespace Sho.Pocket.Application.Balances
 
             IEnumerable<Balance> effectiveBalances = balances.Where(b => b.EffectiveDate.Equals(latestEffectiveDate));
 
-            decimal result = CalculateTotal(effectiveBalances);
+            IEnumerable<BalanceTotalModel> result = CalculateTotal(effectiveBalances, latestEffectiveDate);
+
+            result = result.Where(t => t.Currency == CurrencyConstants.UAH || t.Currency == CurrencyConstants.USD).ToList();
 
             return result;
         }
@@ -133,9 +135,42 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository.ApplyExchangeRate(model.Id, model.BaseCurrencyId, model.EffectiveDate);
         }
 
-        private decimal CalculateTotal(IEnumerable<Balance> balances)
+        private IEnumerable<BalanceTotalModel> CalculateTotal(IEnumerable<Balance> balances, DateTime latestEffectiveDate)
         {
-            decimal result = balances.Select(b => b.Value * b.ExchangeRate?.Rate ?? 0).Sum();
+            List<BalanceTotalModel> result = new List<BalanceTotalModel>();
+
+            List<Currency> currencies = _currencyRepository.GetAll();
+            Guid defaultCurrencyId = currencies.Where(c => c.IsDefault).Select(c => c.Id).FirstOrDefault();
+            
+            foreach (Currency currency in currencies)
+            {
+                decimal value = 0;
+
+                if (currency.IsDefault)
+                {
+                    value = balances.Select(b => b.Value * b.ExchangeRate?.Rate ?? 0).Sum();
+                }
+                else
+                {
+                    List<Balance> currentCurrencyBalances = balances.Where(b => b.Asset.CurrencyId == currency.Id).ToList();
+                    List<Balance> defaultCurrencyBalances = balances.Where(b => b.Asset.CurrencyId == defaultCurrencyId).ToList();
+                    List<Balance> otherCurrenciesBalances = balances.Where(b => b.Asset.CurrencyId != currency.Id && b.Asset.CurrencyId != defaultCurrencyId).ToList();
+
+                    ExchangeRate currentCurrencyExchangeRate = _exchangeRateRepository.GetCurrencyExchangeRate(currency.Id, latestEffectiveDate);
+
+                    value = currentCurrencyBalances.Select(b => b.Value).Sum()
+                        + defaultCurrencyBalances.Select(b => b.Value / currentCurrencyExchangeRate.Rate).Sum()
+                        + otherCurrenciesBalances.Select(b => b.Value * b.ExchangeRate.Rate / currentCurrencyExchangeRate.Rate).Sum();
+
+                    var test = otherCurrenciesBalances.FirstOrDefault();
+                    var testRest = test.Value * test.ExchangeRate.Rate / currentCurrencyExchangeRate.Rate;
+                }
+
+                BalanceTotalModel balanceTotal = new BalanceTotalModel(currency.Name, value);
+                result.Add(balanceTotal);
+            }
+
+            result = result.OrderBy(t => t.Currency).ToList();
 
             return result;
         }
