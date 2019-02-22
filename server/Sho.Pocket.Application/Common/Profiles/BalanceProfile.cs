@@ -15,7 +15,8 @@ namespace Sho.Pocket.Application.Common.Profiles
                 .ForMember(dest => dest.Value, options => options.MapFrom(src => src.Value))
                 .ForMember(dest => dest.ExchangeRateId, options => options.MapFrom(src => src.ExchangeRateId))
                 .ForMember(dest => dest.ExchangeRateValue, options => options.MapFrom(src => src.ExchangeRate.Rate))
-                .ForMember(dest => dest.Asset, options => options.MapFrom(src => src.Asset));
+                .ForMember(dest => dest.Asset, options => options.MapFrom(src => src.Asset))
+                .ForMember(dest => dest.DefaultCurrencyValue, options => options.MapFrom(src => src.Value * src.ExchangeRate.Rate));
 
             CreateMap<BalanceViewModel, Balance>()
                 .ForMember(dest => dest.Id, options => options.MapFrom(src => src.Id))

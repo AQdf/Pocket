@@ -12,6 +12,13 @@ namespace Sho.Pocket.DataAccess.Sql.Currencies
         {
         }
 
+        public Currency GetByName(string name)
+        {
+            string queryText = $"select * from Currency where Name = {name}";
+
+            return base.GetEntity(queryText);
+        }
+
         public List<Currency> GetAll()
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllCurrencies.sql");

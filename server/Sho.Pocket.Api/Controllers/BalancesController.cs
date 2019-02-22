@@ -117,5 +117,13 @@ namespace Sho.Pocket.Api.Controllers
 
             return true;
         }
+
+        [HttpGet("currency-totals/{currencyId}")]
+        public IEnumerable<BalanceTotalModel> GetCurrencyTotals(Guid currencyId, [FromQuery] int count = 10)
+        {
+            var result = _balanceService.GetCurrencyTotals(currencyId, count);
+
+            return result;
+        }
     }
 }

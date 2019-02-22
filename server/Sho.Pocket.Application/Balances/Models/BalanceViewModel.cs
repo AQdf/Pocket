@@ -20,6 +20,8 @@ namespace Sho.Pocket.Application.Balances.Models
 
         public decimal ExchangeRateValue { get; set; }
 
+        public decimal DefaultCurrencyValue { get; set; }
+
         public AssetViewModel Asset { get; set; }
     }
 }

@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http'
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
+import { ChartModule } from 'angular-highcharts';  
 
 import { AppComponent } from './app.component';
 import { AssetsComponent } from './components/assets/assets.component';
@@ -17,6 +18,7 @@ import { TotalsComponent } from './components/totals/totals.component';
 import { BalancesComponent } from './components/balances/balances.component';
 import { BalanceComponent } from './components/balances/balance/balance.component';
 import { BalanceListComponent } from './components/balances/balance-list/balance-list.component';
+import { BalancesChartComponent } from './components/balances-chart/balances-chart.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { BalanceListComponent } from './components/balances/balance-list/balance
     TotalsComponent,
     BalancesComponent,
     BalanceComponent,
-    BalanceListComponent
+    BalanceListComponent,
+    BalancesChartComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,8 @@ import { BalanceListComponent } from './components/balances/balance-list/balance
     HttpClientModule,
     FormsModule,
     ToastrModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    ChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -11,6 +11,7 @@ import { ExchangeRate } from '../models/exchange-rate.model';
 
 import { environment } from '../../environments/environment';
 import { BalanceTotal } from '../models/balance-total.model';
+import { Chart } from 'angular-highcharts';
 
 const balancesApiUrl = environment.baseApiUrl + 'balances/';
 
@@ -24,6 +25,11 @@ export class BalanceService {
   effectiveDatesList: string[];
   selectedEffectiveDate: string;
   exchangeRates: ExchangeRate[];
+  chart: Chart;
+
+  uahTotalHistory: BalanceTotal[];
+  uahBalanceChangeChart: Chart;
+  usdBalanceChangeChart: Chart;
 
   constructor(public http: Http, public client: HttpClient) {
     this.getEffectiveDatesList();
@@ -41,6 +47,7 @@ export class BalanceService {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
       this.exchangeRates = balances.exchangeRates;
+      this.createBalanceChart(this.balances);
     });
   }
 
@@ -122,7 +129,123 @@ export class BalanceService {
     });   
   }
 
+  createBalanceChart(balances: Balance[])
+  {
+    let chartData = [];  
+    for (var i = 0; i < balances.length; i++) {  
+        chartData.push({  
+            "name": balances[i].asset.name,  
+            "y": balances[i].defaultCurrencyValue,  
+            sliced: true,  
+            selected: true  
+        })  
+    }
+
+    let effectiveDate = balances[0].effectiveDate;
+
+    this.chart = new Chart({  
+        chart: {  
+            plotBackgroundColor: null,  
+            plotBorderWidth: null,  
+            plotShadow: false,  
+            type: 'pie',  
+            backgroundColor: null,  
+            options3d: {  
+                enabled: true,  
+                alpha: 45,  
+                beta: 0  
+            },
+            height: 700
+        },  
+        title: {  
+            text: 'Latest balances',  
+        },  
+        subtitle: {  
+            text: effectiveDate  
+        },  
+        tooltip: {  
+            pointFormat: '{series.name}: <b>{point.y}</b>'  
+        },  
+        plotOptions: {  
+            pie: {  
+                allowPointSelect: true,  
+                cursor: 'pointer',  
+                depth: 35,  
+                dataLabels: {  
+                    enabled: true,  
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'  
+                },
+                showInLegend: true
+            }  
+        },  
+        series: [{  
+            name: 'Total balances',  
+            type: "pie",
+            data: chartData  
+        }]  
+    });
+  }
+
+  setBalanceCurrencyTotal(currencyId: string) {
+    let queryParams = new HttpParams().set('count', '100');
+    this.client.get<BalanceTotal[]>(balancesApiUrl + 'currency-totals/' + currencyId, { params: queryParams }).pipe(
+      map((data : BalanceTotal[]) => {
+        return data;
+      })
+    ).subscribe(totals => {
+      if (totals[0].currency === 'UAH') {
+        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
+      } else {
+        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
+      }
+    });
+  }
+
+  createBalanceChangeChart(totals: BalanceTotal[], currencyColor: string)
+  {
+    let chartData = [];  
+    for (var i = 0; i < totals.length; i++) {
+      var formattedDate = new Date(totals[i].effectiveDate);
+      var ticks = Date.UTC(formattedDate.getUTCFullYear(), formattedDate.getUTCMonth(), formattedDate.getUTCDate())
+      var formattedValue = Number.parseFloat(totals[i].value.toFixed(2));
+      chartData.push([ticks, formattedValue]);
+    }
+
+    let currency = totals[0].currency;
+
+    return new Chart({  
+        chart: {
+          type: 'line',
+        },
+        title: {
+            text: 'Balances change'
+        },
+        subtitle: {
+            text: currency
+        },
+        xAxis: {
+            type: 'datetime',
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                color: currencyColor,
+                enableMouseTracking: true
+            }
+        },
+        series: [{  
+          name: 'Total balances',
+          type: 'line',
+          data: chartData
+      }]  
+    })
+  }
+
   reload() {
     this.getEffectiveDatesList();
+    this.setBalanceCurrencyTotal("5e28d490-961f-4251-816c-e467450a2499");
+    this.setBalanceCurrencyTotal("8d51fd2c-1ab6-4f07-a2c0-1ea4ed5a12fc");
   }
 }

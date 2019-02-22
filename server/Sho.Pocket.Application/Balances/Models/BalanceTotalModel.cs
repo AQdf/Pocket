@@ -1,12 +1,17 @@
-﻿namespace Sho.Pocket.Application.Balances.Models
+﻿using System;
+
+namespace Sho.Pocket.Application.Balances.Models
 {
     public class BalanceTotalModel
     {
-        public BalanceTotalModel(string currency, decimal value)
+        public BalanceTotalModel(DateTime effectiveDate, string currency, decimal value)
         {
+            EffectiveDate = effectiveDate;
             Currency = currency;
             Value = value;
         }
+
+        public DateTime EffectiveDate { get; set; }
 
         public string Currency { get; set; }
 

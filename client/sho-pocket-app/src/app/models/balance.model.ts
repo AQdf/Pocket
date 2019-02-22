@@ -7,5 +7,6 @@ export class Balance {
   value: number;
   exchangeRateId : string;
   exchangeRateValue: number;
+  defaultCurrencyValue: number;
   asset: Asset;
 }

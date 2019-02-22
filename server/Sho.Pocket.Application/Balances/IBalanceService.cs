@@ -24,5 +24,7 @@ namespace Sho.Pocket.Application.Balances
         IEnumerable<DateTime> GetEffectiveDates();
 
         void ApplyExchangeRate(ExchangeRateModel model);
+
+        IEnumerable<BalanceTotalModel> GetCurrencyTotals(Guid currencyId, int count);
     }
 }

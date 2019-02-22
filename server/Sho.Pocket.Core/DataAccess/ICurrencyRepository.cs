@@ -6,5 +6,7 @@ namespace Sho.Pocket.Core.DataAccess
     public interface ICurrencyRepository
     {
         List<Currency> GetAll();
+
+        Currency GetByName(string name);
     }
 }
