@@ -1,5 +1,4 @@
 ﻿using System;
-using Sho.Pocket.Application.Currencies.Models;
 
 namespace Sho.Pocket.Application.Assets.Models
 {
@@ -8,8 +7,6 @@ namespace Sho.Pocket.Application.Assets.Models
         public Guid? Id { get; set; }
 
         public string Name { get; set; }
-
-        public Guid TypeId { get; set; }
 
         public Guid CurrencyId { get; set; }
 

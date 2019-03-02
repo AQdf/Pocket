@@ -28,18 +28,6 @@ namespace Sho.Pocket.Api.Controllers
             return _assetService.GetAll();
         }
 
-
-        /// <summary>
-        /// GET: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        [HttpGet("{Id}")]
-        public string Get(Guid Id)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// POST: api/assets
         /// </summary>

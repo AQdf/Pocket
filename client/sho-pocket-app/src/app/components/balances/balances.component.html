@@ -4,7 +4,7 @@
     <button type="button" class="btn btn-md btn-info" (click)="addBalances()">Add balances</button>
   </div>
   <div class="col-auto">
-    <select class="form-control" placeholder="Date" [(ngModel)]="balanceService.selectedEffectiveDate" (change)="this.onDateChange($event.target.value)" required>
+    <select class="form-control" placeholder="Date" [hidden]="!balanceService.effectiveDatesList || balanceService.effectiveDatesList.length === 0" [(ngModel)]="balanceService.selectedEffectiveDate" (change)="this.onDateChange($event.target.value)" required>
       <option *ngFor="let effectiveDate of balanceService.effectiveDatesList" value={{effectiveDate}}>
           {{effectiveDate | date:'mediumDate'}}
       </option>

@@ -24,7 +24,7 @@
           <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': Value.invalid && Value.touched }" name="Value" #Value="ngModel" [(ngModel)]="balance.value" placeholder="Balance" required>
         </div>
         <div class="col-md-2">
-          <input class="form-control" [disabled]="true" value="{{balance.asset.currency.name}}">
+          <input class="form-control" [disabled]="true" value="{{balance.asset.currencyName}}">
         </div>
         <div class="col-md-2">
           <button type="button" [disabled]="isAddMode && currentEditRecordId !== balance.id" class="btn btn-outline-info ml-1" (click)="showForEdit(balance)"><i class="fa fa-pencil-square-o"></i></button>

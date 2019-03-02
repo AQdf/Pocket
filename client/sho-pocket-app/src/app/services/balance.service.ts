@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
-import { of, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Balance } from'../models/balance.model'
@@ -193,6 +192,10 @@ export class BalanceService {
         return data;
       })
     ).subscribe(totals => {
+      if (!totals || totals.length == 0) {
+        return;
+      }
+
       if (totals[0].currency === 'UAH') {
         this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
       } else {

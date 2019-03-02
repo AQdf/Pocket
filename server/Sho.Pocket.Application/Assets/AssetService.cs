@@ -29,7 +29,7 @@ namespace Sho.Pocket.Application.Assets
         {
             List<Asset> assets = _assetRepository.GetAll();
 
-            List<AssetViewModel> result = assets.Select(a => _mapper.Map<AssetViewModel>(a)).ToList();
+            List<AssetViewModel> result = _mapper.Map<List<AssetViewModel>>(assets);
 
             return result;
         }

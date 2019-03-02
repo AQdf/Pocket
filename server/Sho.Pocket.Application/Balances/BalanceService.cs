@@ -109,6 +109,11 @@ namespace Sho.Pocket.Application.Balances
         {
             List<Balance> balances = _balanceRepository.GetAll();
 
+            if (balances.Count == 0)
+            {
+                return null;
+            }
+
             DateTime latestEffectiveDate = balances
                 .OrderByDescending(b => b.EffectiveDate)
                 .Select(b => b.EffectiveDate)

@@ -6,15 +6,6 @@
       <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-3">
-      <select class="form-control" name="TypeId" #TypeId="ngModel" [(ngModel)]="assetService.selectedAsset.typeId" placeholder="Type" required>
-        <option value="" disabled selected>Select type</option>
-        <option *ngFor="let type of assetService.assetTypesList" value={{type.id}}>
-            {{type.name}}
-        </option>
-      </select>
-      <div class="validation-error" *ngIf="TypeId.invalid && TypeId.touched">This Field is Required.</div>
-    </div>
-    <div class="form-group col-md-3">
       <select class="form-control" name="CurrencyId" #CurrencyId="ngModel" [(ngModel)]="assetService.selectedAsset.currencyId" placeholder="Currency" required>
         <option value="" disabled selected>Select currency</option>
         <option *ngFor="let currency of assetService.currenciesList" value={{currency.id}}>
@@ -24,9 +15,6 @@
       <div class="validation-error" *ngIf="CurrencyId.invalid && CurrencyId.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-1">
-      <!-- <div class="btn-group-toggle" data-toggle="buttons">
-        <input type="checkbox" checked data-toggle="toggle" name="IsActive" #IsActive="ngModel" [(ngModel)]="assetService.selectedAsset.isActive" >
-      </div> -->
       <label class="switch">
           <input type="checkbox" checked data-toggle="toggle" name="IsActive" #IsActive="ngModel" [(ngModel)]="assetService.selectedAsset.isActive">
           <span class="slider"></span>
