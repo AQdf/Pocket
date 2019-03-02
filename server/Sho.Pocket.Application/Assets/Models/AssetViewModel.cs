@@ -1,5 +1,4 @@
 ﻿using System;
-using Sho.Pocket.Application.AssetTypes.Models;
 using Sho.Pocket.Application.Currencies.Models;
 
 namespace Sho.Pocket.Application.Assets.Models
@@ -14,10 +13,8 @@ namespace Sho.Pocket.Application.Assets.Models
 
         public Guid CurrencyId { get; set; }
 
+        public string CurrencyName { get; set; }
+
         public bool IsActive { get; set; }
-
-        public AssetTypeViewModel Type { get; set; }
-
-        public CurrencyViewModel Currency { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.AssetTypes.Models;
 using Sho.Pocket.Application.Currencies.Models;
 
 namespace Sho.Pocket.Api.Controllers
@@ -75,16 +74,6 @@ namespace Sho.Pocket.Api.Controllers
             _assetService.Delete(Id);
 
             return true;
-        }
-
-        /// <summary>
-        /// GET: api/assets/types
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("types")]
-        public IEnumerable<AssetTypeViewModel> GetTypes()
-        {
-            return _assetService.GetAssetTypes();
         }
 
         /// <summary>

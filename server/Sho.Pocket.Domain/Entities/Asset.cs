@@ -6,14 +6,10 @@ namespace Sho.Pocket.Domain.Entities
     {
         public string Name { get; set; }
 
-        public Guid TypeId { get; set; }
-
         public Guid CurrencyId { get; set; }
 
+        public string CurrencyName { get; set; }
+
         public bool IsActive { get; set; }
-
-        public virtual AssetType Type { get; set; }
-
-        public virtual Currency Currency { get; set; }
     }
 }

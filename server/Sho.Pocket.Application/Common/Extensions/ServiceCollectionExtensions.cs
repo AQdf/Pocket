@@ -5,7 +5,6 @@ using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
-using Sho.Pocket.DataAccess.Sql.AssetTypes;
 using Sho.Pocket.DataAccess.Sql.Balances;
 using Sho.Pocket.DataAccess.Sql.Currencies;
 using Sho.Pocket.DataAccess.Sql.ExchangeRates;
@@ -25,7 +24,6 @@ namespace Sho.Pocket.Application.Common.Configuration
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
-            services.AddScoped<IAssetTypeRepository, AssetTypeRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
         }

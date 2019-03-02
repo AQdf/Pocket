@@ -3,9 +3,6 @@ using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 
 namespace Sho.Pocket.DataAccess.Sql.Assets
 {
@@ -21,9 +18,7 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
 
-            List<Asset> result = includeRelated
-                ? GetAllWithRelatedEntities(queryText)
-                : base.GetAll(queryText);
+            List<Asset> result = base.GetAll(queryText);
 
             return result;
         }
@@ -35,7 +30,6 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             object queryParameters = new
             {
                 name = asset.Name,
-                typeId = asset.TypeId,
                 currencyId = asset.CurrencyId
             };
 
@@ -52,7 +46,6 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             {
                 id = asset.Id,
                 name = asset.Name,
-                typeId = asset.TypeId,
                 currencyId = asset.CurrencyId,
                 isActive = asset.IsActive
             };
@@ -70,25 +63,6 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             };
 
             base.RemoveEntity(queryText, queryParameters);
-        }
-
-        private List<Asset> GetAllWithRelatedEntities(string queryText)
-        {
-            List<Asset> result;
-
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
-            {
-                result = db.Query<Asset, AssetType, Currency, Asset>(queryText,
-                    (asset, type, currency) =>
-                    {
-                        asset.Type = type;
-                        asset.Currency = currency;
-
-                        return asset;
-                    }).ToList();
-            }
-
-            return result;
         }
     }
 }

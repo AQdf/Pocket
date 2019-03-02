@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Asset.sql" />
-    <Build Include="AssetType.sql" />
     <Build Include="Currency.sql" />
     <Build Include="ExchangeRate.sql" />
     <Build Include="Balance.sql" />
