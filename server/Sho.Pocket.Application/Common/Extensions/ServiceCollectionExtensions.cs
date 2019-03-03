@@ -26,6 +26,8 @@ namespace Sho.Pocket.Application.Common.Configuration
             services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
+
+            services.AddScoped<IBalanceExporter, BalanceExporter>();
         }
     }
 }

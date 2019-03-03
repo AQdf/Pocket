@@ -20,4 +20,7 @@ export class BalancesComponent implements OnInit {
   addBalances() {
     this.balanceService.addBalancesByTemplate();
   }
+  downloadCsv() {
+    this.balanceService.downloadCsv();
+  }
 }

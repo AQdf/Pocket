@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { saveAs } from 'file-saver';
 
 import { Balance } from'../models/balance.model'
 import { Balances } from'../models/balances.model'
@@ -111,6 +112,38 @@ export class BalanceService {
         this.reload();
       }
     });    
+  }
+
+
+
+  downloadCsv() {
+    const headers = new HttpHeaders().set('Content-Type', 'blob');
+    const options: {
+      headers?: HttpHeaders,
+      observe?: 'body',
+      params?: HttpParams,
+      reportProgress?: boolean,
+      responseType: 'blob',
+      withCredentials?: boolean
+    } = {
+        headers: headers,
+        responseType: 'blob'
+    };
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    this.client.get(balancesApiUrl + 'csv', options).subscribe(response => {
+      if (response) {
+        debugger;
+        var currentDate = new Date();
+        var day = currentDate.getDate(); //Date of the month: 2 in our example
+        var month = monthNames[currentDate.getMonth()]; //Month of the Year: 0-based index, so 1 in our example
+        var year = currentDate.getFullYear() //Year: 2013
+        let name = 'Balances_' + day + '_' + month + '_' + year + '.csv';
+        saveAs(response, name);
+        return response;
+      }
+    });
   }
 
   applyExchangeRate(model: ExchangeRate) {

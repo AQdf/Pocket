@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using AutoMapper;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.Common.Comparers;
@@ -16,20 +18,23 @@ namespace Sho.Pocket.Application.Balances
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
-        private readonly IMapper _mapper;
         private readonly ICurrencyRepository _currencyRepository;
+        private readonly IBalanceExporter _balanceExporter;
+        private readonly IMapper _mapper;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
             ICurrencyRepository currencyRepository,
+            IBalanceExporter balanceExporter,
             IMapper mapper)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
+            _balanceExporter = balanceExporter;
             _mapper = mapper;
         }
 
@@ -165,6 +170,28 @@ namespace Sho.Pocket.Application.Balances
             result = result.OrderBy(x => x.EffectiveDate).ToList();
 
             return result;
+        }
+
+        public byte[] ExportBalancesToCsv()
+        {
+            List<Balance> balances = _balanceRepository.GetAll();
+            List<Asset> assets = _assetRepository.GetAll();
+
+            balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
+
+            List<BalanceExportModel> items = _mapper.Map<List<BalanceExportModel>>(balances);
+
+            string csv = _balanceExporter.ExportToCsv(items);
+            byte[] bytes = Encoding.ASCII.GetBytes(csv);
+
+            //using (var stream = new MemoryStream())
+            //{
+            //    var writeFile = new StreamWriter(stream);
+            //    writeFile.Write(csv);
+            //    bytes = stream.ToArray();
+            //}
+
+            return bytes;
         }
 
         private IEnumerable<BalanceTotalModel> CalculateTotals(IEnumerable<Balance> balances, DateTime effectiveDate)

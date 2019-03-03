@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
@@ -124,6 +128,14 @@ namespace Sho.Pocket.Api.Controllers
             var result = _balanceService.GetCurrencyTotals(currencyId, count);
 
             return result;
+        }
+
+        [HttpGet("csv")]
+        public IActionResult DownloadCsv()
+        {
+            byte[] bytes = _balanceService.ExportBalancesToCsv();
+
+            return File(bytes, "application/csv");
         }
     }
 }
