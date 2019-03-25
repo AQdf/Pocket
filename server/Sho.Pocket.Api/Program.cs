@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Sho.Pocket.Web
+namespace Sho.Pocket.Api
 {
     public class Program
     {

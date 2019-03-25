@@ -1,9 +1,10 @@
 ﻿declare @id uniqueidentifier = NEWID()
 
-insert into Asset(Id, [Name], CurrencyId) values (
+insert into Asset([Id], [Name], [CurrencyId], [IsActive]) values (
 	@id,
 	@name,
-	@currencyId
+	@currencyId,
+	@isActive
 )
 
 SELECT [Asset].[Id] AS [ID]
@@ -13,4 +14,4 @@ SELECT [Asset].[Id] AS [ID]
 	  ,[Currency].[Name] AS CurrencyName
 FROM [dbo].[Asset]
 JOIN [dbo].[Currency] ON [Currency].[Id] = [Asset].[CurrencyId]
-WHERE Id = @id
+WHERE [Asset].[Id] = @id

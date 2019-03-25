@@ -8,5 +8,7 @@ namespace Sho.Pocket.Core.DataAccess
         List<Currency> GetAll();
 
         Currency GetByName(string name);
+
+        Currency Add(string name);
     }
 }

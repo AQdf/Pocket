@@ -4,6 +4,25 @@ namespace Sho.Pocket.Domain.Entities
 {
     public class Balance : BaseEntity
     {
+        public Balance() {}
+
+        public Balance(Guid id, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        {
+            Id = id;
+            AssetId = assetId;
+            EffectiveDate = effectiveDate;
+            Value = value;
+            ExchangeRateId = exchangeRateId;
+        }
+
+        public Balance(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        {
+            AssetId = assetId;
+            EffectiveDate = effectiveDate;
+            Value = value;
+            ExchangeRateId = exchangeRateId;
+        }
+
         public Guid AssetId { get; set; }
 
         public DateTime EffectiveDate { get; set; }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Currencies.Models;
 using Sho.Pocket.Core.DataAccess;
@@ -13,37 +12,32 @@ namespace Sho.Pocket.Application.Assets
     {
         private readonly IAssetRepository _assetRepository;
         private readonly ICurrencyRepository _currencyRepository;
-        private readonly IMapper _mapper;
 
         public AssetService(
             IAssetRepository assetRepository,
-            ICurrencyRepository currencyRepository,
-            IMapper mapper)
+            ICurrencyRepository currencyRepository)
         {
             _assetRepository = assetRepository;
             _currencyRepository = currencyRepository;
-            _mapper = mapper;
         }
 
         public IEnumerable<AssetViewModel> GetAll()
         {
             List<Asset> assets = _assetRepository.GetAll();
 
-            List<AssetViewModel> result = _mapper.Map<List<AssetViewModel>>(assets);
+            List<AssetViewModel> result = assets.Select(a => new AssetViewModel(a)).ToList();
 
             return result;
         }
 
-        public void Add(AssetViewModel assetModel)
+        public void Add(AssetCreateModel createModel)
         {
-            Asset asset = _mapper.Map<Asset>(assetModel);
-
-            _assetRepository.Add(asset);
+            _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
         }
 
-        public void Update(AssetViewModel assetModel)
+        public void Update(AssetViewModel model)
         {
-            Asset asset = _mapper.Map<Asset>(assetModel);
+            Asset asset = new Asset(model.Id.Value, model.Name, model.CurrencyId, model.IsActive);
 
             _assetRepository.Update(asset);
         }
@@ -57,7 +51,7 @@ namespace Sho.Pocket.Application.Assets
         {
             List<Currency> currencies = _currencyRepository.GetAll();
 
-            List<CurrencyViewModel> result = _mapper.Map<List<CurrencyViewModel>>(currencies);
+            List<CurrencyViewModel> result = currencies.Select(c => new CurrencyViewModel(c)).ToList();
 
             return result;
         }

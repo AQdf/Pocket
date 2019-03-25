@@ -8,7 +8,7 @@ using Sho.Pocket.Application.Common.Configuration;
 using Sho.Pocket.Core;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace Sho.Pocket.Web
+namespace Sho.Pocket.Api
 {
     public class Startup
     {
@@ -22,8 +22,6 @@ namespace Sho.Pocket.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("PocketLocalDbConnection");
-
             services.AddCors(options => options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
             services.AddMvc();

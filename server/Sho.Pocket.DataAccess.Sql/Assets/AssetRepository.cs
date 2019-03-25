@@ -23,15 +23,11 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             return result;
         }
 
-        public Asset Add(Asset asset)
+        public Asset Add(string name, Guid currencyId, bool isActive)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
 
-            object queryParameters = new
-            {
-                name = asset.Name,
-                currencyId = asset.CurrencyId
-            };
+            object queryParameters = new { name, currencyId, isActive };
 
             Asset result = base.InsertEntity(queryText, queryParameters);
 

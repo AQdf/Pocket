@@ -1,11 +1,27 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Sho.Pocket.Application.Common.Converters;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.ExchangeRates.Models
 {
     public class ExchangeRateModel
     {
+        public ExchangeRateModel()
+        {
+        }
+
+        public ExchangeRateModel(ExchangeRate exchangeRate)
+        {
+            Id = exchangeRate.Id;
+            EffectiveDate = exchangeRate.EffectiveDate;
+            BaseCurrencyId = exchangeRate.BaseCurrencyId;
+            BaseCurrencyName = exchangeRate.BaseCurrency.Name;
+            CounterCurrencyId = exchangeRate.CounterCurrencyId;
+            CounterCurrencyName = exchangeRate.CounterCurrency.Name;
+            Value = exchangeRate.Rate;
+        }
+
         public Guid Id { get; set; }
 
         [JsonConverter(typeof(IsoStringDateTimeConverter))]

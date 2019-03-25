@@ -60,8 +60,8 @@ export class BalanceListComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    if (form.value.id == null) {
-      this.balanceService.postBalance(form.value)
+    if (form.value.id === null) {
+      this.balanceService.postBalance(this.balanceService.selectedBalance)
         .subscribe(() => {
           this.balanceService.reload();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
@@ -96,7 +96,16 @@ export class BalanceListComponent implements OnInit {
     }
 
     this.balanceService.balances.unshift(newBalance);
+    this.balanceService.selectedBalance = newBalance;
     this.currentEditRecordId = null;
     this.isAddMode = true;
+  }
+
+  onAssetAdded(value) {
+    let asset = this.assetService.assetList.find(a => a.id == value);
+    let exchangeRate = this.balanceService.exchangeRates.find(rate => rate.baseCurrencyName == asset.currencyName);
+    this.balanceService.selectedBalance.assetId = asset.id;
+    this.balanceService.selectedBalance.exchangeRateId = exchangeRate.id;
+    this.balanceService.selectedBalance.asset = asset;
   }
 }

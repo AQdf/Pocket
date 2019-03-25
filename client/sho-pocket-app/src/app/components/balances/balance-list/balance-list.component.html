@@ -13,7 +13,7 @@
           <input [disabled]="balance.id !== currentEditRecordId" type="date" [ngClass]="{'input-invalid': EffectiveDate.invalid && EffectiveDate.touched }" class="form-control" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate" placeholder="Effective Date" required>
         </div>
         <div class="col-md-4">
-          <select [disabled]="balance.id !== currentEditRecordId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched }" class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balance.assetId" placeholder="Asset" required>
+          <select [disabled]="balance.id !== currentEditRecordId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched }" (change)="this.onAssetAdded($event.target.value)" class="form-control" name="AssetId" #AssetId="ngModel" [(ngModel)]="balance.assetId" placeholder="Asset" required>
             <option value="" disabled selected>Select asset</option>
             <option *ngFor="let asset of assetService.assetList" value={{asset.id}}>
                 {{asset.name}}
@@ -24,7 +24,7 @@
           <input [disabled]="balance.id !== currentEditRecordId" class="form-control" [ngClass]="{'input-invalid': Value.invalid && Value.touched }" name="Value" #Value="ngModel" [(ngModel)]="balance.value" placeholder="Balance" required>
         </div>
         <div class="col-md-2">
-          <input class="form-control" [disabled]="true" value="{{balance.asset.currencyName}}">
+          <input class="form-control" [disabled]="true" value="{{(balance.asset && balance.asset.currencyName) || '-'}}">
         </div>
         <div class="col-md-2">
           <button type="button" [disabled]="isAddMode && currentEditRecordId !== balance.id" class="btn btn-outline-info ml-1" (click)="showForEdit(balance)"><i class="fa fa-pencil-square-o"></i></button>

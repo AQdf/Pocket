@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
@@ -12,21 +11,17 @@ namespace Sho.Pocket.Application.ExchangeRates
     public class ExchangeRateService : IExchangeRateService
     {
         private readonly IExchangeRateRepository _exchangeRateRepository;
-        private readonly IMapper _mapper;
 
-        public ExchangeRateService(
-            IExchangeRateRepository exchangeRateRepository,
-            IMapper mapper)
+        public ExchangeRateService(IExchangeRateRepository exchangeRateRepository)
         {
             _exchangeRateRepository = exchangeRateRepository;
-            _mapper = mapper;
         }
 
         public ExchangeRateModel AddExchangeRate(ExchangeRateModel model)
         {
-            ExchangeRate rateToAdd = _mapper.Map<ExchangeRate>(model);
+            ExchangeRate rateToAdd = new ExchangeRate(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
             ExchangeRate exchangeRate = _exchangeRateRepository.Add(rateToAdd);
-            ExchangeRateModel result = _mapper.Map<ExchangeRateModel>(exchangeRate);
+            ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;
         }

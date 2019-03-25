@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using AutoMapper;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.Common.Comparers;
 using Sho.Pocket.Application.ExchangeRates.Models;
@@ -20,22 +18,19 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly ICurrencyRepository _currencyRepository;
         private readonly IBalanceExporter _balanceExporter;
-        private readonly IMapper _mapper;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
             ICurrencyRepository currencyRepository,
-            IBalanceExporter balanceExporter,
-            IMapper mapper)
+            IBalanceExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
             _balanceExporter = balanceExporter;
-            _mapper = mapper;
         }
 
         public BalancesViewModel GetAll(DateTime effectiveDate)
@@ -47,10 +42,10 @@ namespace Sho.Pocket.Application.Balances
 
             balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
 
-            List<BalanceViewModel> items = _mapper.Map<List<BalanceViewModel>>(balances);
+            List<BalanceViewModel> items = balances.Select(b => new BalanceViewModel(b)).ToList();
 
             List<ExchangeRateModel> rates = balances
-                .Select(b => _mapper.Map<ExchangeRateModel>(b.ExchangeRate))
+                .Select(b => new ExchangeRateModel(b.ExchangeRate))
                 .Where(r => r.BaseCurrencyName != CurrencyConstants.UAH)
                 .Distinct(new ExchangeRateComparer())
                 .OrderBy(r => r.BaseCurrencyName)
@@ -67,18 +62,14 @@ namespace Sho.Pocket.Application.Balances
         {
             Balance balance = _balanceRepository.GetById(id);
 
-            BalanceViewModel result = _mapper.Map<BalanceViewModel>(balance);
+            BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;
         }
 
-        public void Add(BalanceViewModel balanceModel)
+        public void Add(BalanceCreateModel createModel)
         {
-            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(balanceModel.EffectiveDate, balanceModel.Asset.CurrencyId, balanceModel.ExchangeRateValue);
-
-            balanceModel.ExchangeRateId = exchangeRate.Id;
-
-            Balance balance = _mapper.Map<Balance>(balanceModel);
+            Balance balance = new Balance(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
 
             _balanceRepository.Add(balance);
         }
@@ -98,9 +89,9 @@ namespace Sho.Pocket.Application.Balances
             return false;
         }
 
-        public void Update(BalanceViewModel balanceModel)
+        public void Update(BalanceViewModel model)
         {
-            Balance balance = _mapper.Map<Balance>(balanceModel);
+            Balance balance = new Balance(model.Id.Value, model.AssetId, model.EffectiveDate, model.Value, model.ExchangeRateId);
 
             _balanceRepository.Update(balance);
         }
@@ -179,17 +170,13 @@ namespace Sho.Pocket.Application.Balances
 
             balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
 
-            List<BalanceExportModel> items = _mapper.Map<List<BalanceExportModel>>(balances);
+            List<BalanceExportModel> items = balances
+                .Select(b => new BalanceExportModel
+                    (b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.CurrencyName, b.ExchangeRate.Rate))
+                .ToList();
 
             string csv = _balanceExporter.ExportToCsv(items);
             byte[] bytes = Encoding.ASCII.GetBytes(csv);
-
-            //using (var stream = new MemoryStream())
-            //{
-            //    var writeFile = new StreamWriter(stream);
-            //    writeFile.Write(csv);
-            //    bytes = stream.ToArray();
-            //}
 
             return bytes;
         }

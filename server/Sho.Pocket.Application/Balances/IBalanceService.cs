@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.ExchangeRates.Models;
 
@@ -12,7 +11,7 @@ namespace Sho.Pocket.Application.Balances
 
         BalanceViewModel GetById(Guid id);
 
-        void Add(BalanceViewModel balanceModel);
+        void Add(BalanceCreateModel createModel);
 
         bool AddEffectiveBalancesTemplate();
 

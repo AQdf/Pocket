@@ -9,7 +9,7 @@ namespace Sho.Pocket.Application.Assets
     {
         IEnumerable<AssetViewModel> GetAll();
 
-        void Add(AssetViewModel assetModel);
+        void Add(AssetCreateModel createModel);
 
         void Update(AssetViewModel assetModel);
 

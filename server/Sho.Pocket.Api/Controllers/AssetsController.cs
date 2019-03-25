@@ -34,9 +34,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public void Add([FromBody] AssetViewModel assetModel)
+        public void Add([FromBody] AssetCreateModel createModel)
         {
-            _assetService.Add(assetModel);
+            _assetService.Add(createModel);
         }
 
         /// <summary>

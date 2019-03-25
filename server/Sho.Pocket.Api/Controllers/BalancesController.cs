@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
@@ -51,9 +47,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public bool Add([FromBody] BalanceViewModel balanceModel)
+        public bool Add([FromBody] BalanceCreateModel createModel)
         {
-            _balanceService.Add(balanceModel);
+            _balanceService.Add(createModel);
 
             return true;
         }
