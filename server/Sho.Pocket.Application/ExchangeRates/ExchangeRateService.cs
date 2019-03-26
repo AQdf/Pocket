@@ -19,8 +19,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         public ExchangeRateModel AddExchangeRate(ExchangeRateModel model)
         {
-            ExchangeRate rateToAdd = new ExchangeRate(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
-            ExchangeRate exchangeRate = _exchangeRateRepository.Add(rateToAdd);
+            ExchangeRate exchangeRate = _exchangeRateRepository.Add(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;

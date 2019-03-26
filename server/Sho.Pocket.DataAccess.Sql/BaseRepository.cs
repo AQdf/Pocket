@@ -71,6 +71,18 @@ namespace Sho.Pocket.DataAccess.Sql
             }
         }
 
+        public bool Exists(string queryText, object queryParameters = null)
+        {
+            bool result;
+
+            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            {
+                result = db.ExecuteScalar<bool>(queryText, queryParameters);
+            }
+
+            return result;
+        }
+
         public void ExecuteScript(string queryText, object queryParameters = null)
         {
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))

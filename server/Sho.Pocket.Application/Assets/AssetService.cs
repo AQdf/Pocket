@@ -11,6 +11,7 @@ namespace Sho.Pocket.Application.Assets
     public class AssetService : IAssetService
     {
         private readonly IAssetRepository _assetRepository;
+
         private readonly ICurrencyRepository _currencyRepository;
 
         public AssetService(
@@ -30,21 +31,32 @@ namespace Sho.Pocket.Application.Assets
             return result;
         }
 
-        public void Add(AssetCreateModel createModel)
+        public Asset Add(AssetCreateModel createModel)
         {
-            _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
+            Asset asset = _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
+
+            return asset;
         }
 
         public void Update(AssetViewModel model)
         {
             Asset asset = new Asset(model.Id.Value, model.Name, model.CurrencyId, model.IsActive);
 
-            _assetRepository.Update(asset);
+            _assetRepository.Update(model.Id.Value, model.Name, model.IsActive);
         }
 
-        public void Delete(Guid Id)
+        public bool Delete(Guid id)
         {
-            _assetRepository.Remove(Id);
+            bool isSuccess = false;
+            bool exists = _assetRepository.ExistsAssetBalance(id);
+
+            if (!exists)
+            {
+                _assetRepository.Remove(id);
+                isSuccess = true;
+            }
+
+            return isSuccess;
         }
 
         public List<CurrencyViewModel> GetCurrencies()

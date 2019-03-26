@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Sho.Pocket.Core.DataAccess;
+﻿using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -34,17 +33,11 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             return result;
         }
 
-        public void Update(Asset asset)
+        public void Update(Guid id, string name, bool isActive)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
-            object queryParameters = new
-            {
-                id = asset.Id,
-                name = asset.Name,
-                currencyId = asset.CurrencyId,
-                isActive = asset.IsActive
-            };
+            object queryParameters = new { id, name, isActive };
 
             base.UpdateEntity(queryText, queryParameters);
         }
@@ -59,6 +52,18 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             };
 
             base.RemoveEntity(queryText, queryParameters);
+        }
+
+        public bool ExistsAssetBalance(Guid id)
+        {
+            string queryText = @"
+                if exists (select * from Balance)
+                select 1
+                else select 0";
+
+            bool result = base.Exists(queryText);
+
+            return result;
         }
     }
 }

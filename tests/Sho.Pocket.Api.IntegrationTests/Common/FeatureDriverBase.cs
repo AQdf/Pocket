@@ -9,13 +9,11 @@ using System.Linq;
 
 namespace Sho.Pocket.Api.IntegrationTests.Common
 {
-    public abstract class TestDriverBase
+    internal abstract class FeatureDriverBase
     {
         protected ServiceProvider _serviceProvider;
 
-        private string _dbConnectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=PocketDb-Test;Integrated Security=true;";
-
-        public TestDriverBase()
+        public FeatureDriverBase()
         {
             Configure();
         }
@@ -26,7 +24,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Common
 
             GlobalSettings globalSettings = new GlobalSettings
             {
-                DbConnectionString = _dbConnectionString
+                DbConnectionString = ConfigurationConstants.DB_CONNECTION
             };
 
             services.AddSingleton(s => globalSettings);
@@ -38,9 +36,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Common
 
         protected void ExecuteScript(string queryText, object queryParameters = null)
         {
-            using (IDbConnection db = new SqlConnection(_dbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConfigurationConstants.DB_CONNECTION))
             {
-                var result = db.ExecuteScalar(queryText, queryParameters);
+                db.ExecuteScalar(queryText, queryParameters);
             }
         }
 
@@ -48,7 +46,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Common
         {
             List<T> result;
 
-            using (IDbConnection db = new SqlConnection(_dbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConfigurationConstants.DB_CONNECTION))
             {
                 result = db.Query<T>(queryText).ToList();
             }

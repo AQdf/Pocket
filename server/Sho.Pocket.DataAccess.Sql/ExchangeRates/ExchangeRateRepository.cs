@@ -13,17 +13,11 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public ExchangeRate Add(ExchangeRate exchangeRate)
+        public ExchangeRate Add(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertExchangeRate.sql");
 
-            object queryParameters = new
-            {
-                effectiveDate = exchangeRate.EffectiveDate,
-                baseCurrencyId = exchangeRate.BaseCurrencyId,
-                counterCurrencyId = exchangeRate.CounterCurrencyId,
-                rate = exchangeRate.Rate
-            };
+            object queryParameters = new { effectiveDate, baseCurrencyId, counterCurrencyId, rate };
 
             ExchangeRate result = base.InsertEntity(queryText, queryParameters);
 

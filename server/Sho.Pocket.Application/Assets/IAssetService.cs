@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Currencies.Models;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Assets
 {
@@ -9,11 +10,11 @@ namespace Sho.Pocket.Application.Assets
     {
         IEnumerable<AssetViewModel> GetAll();
 
-        void Add(AssetCreateModel createModel);
+        Asset Add(AssetCreateModel createModel);
 
         void Update(AssetViewModel assetModel);
 
-        void Delete(Guid Id);
+        bool Delete(Guid Id);
 
         List<CurrencyViewModel> GetCurrencies();
     }

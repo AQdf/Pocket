@@ -5,7 +5,7 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IExchangeRateRepository
     {
-        ExchangeRate Add(ExchangeRate exchangeRate);
+        ExchangeRate Add(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate);
 
         ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, decimal rate);
 

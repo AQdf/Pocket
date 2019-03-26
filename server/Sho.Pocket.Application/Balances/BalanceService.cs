@@ -69,9 +69,7 @@ namespace Sho.Pocket.Application.Balances
 
         public void Add(BalanceCreateModel createModel)
         {
-            Balance balance = new Balance(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
-
-            _balanceRepository.Add(balance);
+            _balanceRepository.Add(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
         }
 
         public bool AddEffectiveBalancesTemplate()

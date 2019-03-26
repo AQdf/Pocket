@@ -54,17 +54,11 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
-        public Balance Add(Balance balance)
+        public Balance Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
 
-            object queryParameters = new
-            {
-                assetId = balance.AssetId,
-                effectiveDate = balance.EffectiveDate,
-                value = balance.Value,
-                exchangeRateId = balance.ExchangeRateId
-            };
+            object queryParameters = new { assetId, effectiveDate, value, exchangeRateId };
 
             Balance result = base.InsertEntity(queryText, queryParameters);
 

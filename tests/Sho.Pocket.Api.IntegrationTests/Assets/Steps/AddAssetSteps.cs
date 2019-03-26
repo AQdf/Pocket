@@ -1,19 +1,23 @@
 ﻿using FluentAssertions;
+using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets
 {
     [Binding]
-    public class AddAssetFeatureSteps
+    internal class AddAssetSteps : FeatureStepsBase
     {
         private AssetCreateModel _assetCreateModel;
 
-        private readonly AssetDriver _assetDriver;
+        private Asset _createdAsset;
 
-        public AddAssetFeatureSteps(AssetDriver assetDriver)
+        private AssetDriver _assetDriver;
+
+        public AddAssetSteps(AssetDriver assetDriver)
         {
             _assetDriver = assetDriver;
         }
@@ -34,21 +38,17 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
         [When(@"I add the asset")]
         public void WhenIAddNewAsset()
         {
-            _assetDriver.InsertAssetToStorage(_assetCreateModel);
+            _createdAsset = _assetDriver.InsertAssetToStorage(_assetCreateModel);
         }
         
         [Then(@"asset created with name (.*) and currency (.*)")]
         public void AssetAddedToStorage(string assetName, string currencyName)
         {
             List<AssetViewModel> assets = _assetDriver.GetAssets();
+            AssetViewModel newAsset = assets.FirstOrDefault(a => a.Id == _createdAsset.Id);
 
-            assets.Should().Contain(a => a.Name == assetName && a.CurrencyName == currencyName);
-        }
-
-        [AfterScenario]
-        public void CleanupStorage()
-        {
-            _assetDriver.Cleanup();
+            newAsset.Should().NotBeNull();
+            newAsset.Should().Match<AssetViewModel>(a => a.Name == assetName && a.CurrencyName == currencyName);
         }
     }
 }
