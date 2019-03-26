@@ -10,24 +10,24 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Sho.Pocket.Api.IntegrationTests.Features
+namespace Sho.Pocket.Api.IntegrationTests.Assets
 {
     using TechTalk.SpecFlow;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class AssetFeatureFeature : Xunit.IClassFixture<AssetFeatureFeature.FixtureData>, System.IDisposable
+    public partial class AddAssetFeatureFeature : Xunit.IClassFixture<AddAssetFeatureFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "AssetFeature.feature"
+#line 1 "AddAssetFeature.feature"
 #line hidden
         
-        public AssetFeatureFeature(AssetFeatureFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public AddAssetFeatureFeature(AddAssetFeatureFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -36,8 +36,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Features
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "AssetFeature", "\tIn order to avoid silly mistakes\r\n\tAs a math idiot\r\n\tI want to be told the sum o" +
-                    "f two numbers", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "AddAssetFeature", "\tAs a user\r\n\tI want to add new asset", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,25 +76,23 @@ namespace Sho.Pocket.Api.IntegrationTests.Features
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="Add new asset")]
-        [Xunit.TraitAttribute("FeatureTitle", "AssetFeature")]
-        [Xunit.TraitAttribute("Description", "Add new asset")]
+        [Xunit.FactAttribute(DisplayName="User adds new asset")]
+        [Xunit.TraitAttribute("FeatureTitle", "AddAssetFeature")]
+        [Xunit.TraitAttribute("Description", "User adds new asset")]
         [Xunit.TraitAttribute("Category", "mytag")]
-        public virtual void AddNewAsset()
+        public virtual void UserAddsNewAsset()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Add new asset", null, new string[] {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User adds new asset", null, new string[] {
                         "mytag"});
-#line 7
+#line 6
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
+#line 7
+ testRunner.Given("asset with name Bank account and currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
- testRunner.Given("I have entered 50 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.When("I add the asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 9
- testRunner.And("I have entered 70 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 10
- testRunner.When("I press add", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 11
- testRunner.Then("the result should be 120 on the screen", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("my asset created with name Bank account and currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -107,12 +104,12 @@ this.ScenarioInitialize(scenarioInfo);
             
             public FixtureData()
             {
-                AssetFeatureFeature.FeatureSetup();
+                AddAssetFeatureFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                AssetFeatureFeature.FeatureTearDown();
+                AddAssetFeatureFeature.FeatureTearDown();
             }
         }
     }

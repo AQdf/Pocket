@@ -5,6 +5,10 @@ namespace Sho.Pocket.Application.Assets.Models
 {
     public class AssetViewModel
     {
+        public AssetViewModel()
+        {
+        }
+
         public AssetViewModel(Guid id, string name, Guid currencyId, bool isActive)
         {
             Id = id;
