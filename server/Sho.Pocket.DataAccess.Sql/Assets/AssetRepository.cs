@@ -33,13 +33,15 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             return result;
         }
 
-        public void Update(Guid id, string name, bool isActive)
+        public Asset Update(Guid id, string name, bool isActive)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
             object queryParameters = new { id, name, isActive };
 
-            base.UpdateEntity(queryText, queryParameters);
+            Asset result = base.UpdateEntity(queryText, queryParameters);
+
+            return result;
         }
 
         public void Remove(Guid assetId)
@@ -57,11 +59,13 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         public bool ExistsAssetBalance(Guid id)
         {
             string queryText = @"
-                if exists (select * from Balance)
+                if exists (select * from Balance where AssetId = @id)
                 select 1
                 else select 0";
 
-            bool result = base.Exists(queryText);
+            object queryParams = new { id };
+
+            bool result = base.Exists(queryText, queryParams);
 
             return result;
         }

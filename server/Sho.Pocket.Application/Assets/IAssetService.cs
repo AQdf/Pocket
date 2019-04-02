@@ -8,11 +8,11 @@ namespace Sho.Pocket.Application.Assets
 {
     public interface IAssetService
     {
-        IEnumerable<AssetViewModel> GetAll();
+        List<AssetViewModel> GetAll();
 
         Asset Add(AssetCreateModel createModel);
 
-        void Update(AssetViewModel assetModel);
+        Asset Update(Guid id, AssetUpdateModel updateModel);
 
         bool Delete(Guid Id);
 

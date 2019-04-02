@@ -2,53 +2,82 @@
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using TechTalk.SpecFlow;
 
-namespace Sho.Pocket.Api.IntegrationTests.Assets
+namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 {
     [Binding]
-    internal class AddAssetSteps : FeatureStepsBase
+    public class AddAssetSteps
     {
+        private AssetFeatureManager _assetFeatureManager;
+
+        private CreateCurrencyStep _createCurrencyStep;
+
         private AssetCreateModel _assetCreateModel;
 
-        private Asset _createdAsset;
+        public Asset CreatedAsset = null;
 
-        private AssetDriver _assetDriver;
-
-        public AddAssetSteps(AssetDriver assetDriver)
+        public AddAssetSteps(AssetFeatureManager assetFeatureManager, CreateCurrencyStep createCurrencyStep)
         {
-            _assetDriver = assetDriver;
+            _assetFeatureManager = assetFeatureManager;
+            _createCurrencyStep = createCurrencyStep;
         }
 
-        [Given(@"asset with name (.*) and currency (.*)")]
-        public void GivenAssetWithParameters(string assetName, string currencyName)
+        [BeforeTestRun]
+        public static void Cleanup()
         {
-            Currency currency = _assetDriver.InsertCurrencyToStorage(currencyName);
+            StorageCleaner.Cleanup();
+        }
 
-            _assetCreateModel = new AssetCreateModel
-            {
-                Name = assetName,
-                CurrencyId = currency.Id,
-                IsActive = true
-            };
+        [Given(@"I have active asset (.*) with currency (.*)")]
+        public void GivenAsset(string assetName, string currencyName)
+        {
+            _createCurrencyStep.GivenCurrency(currencyName);
+            GivenAssetCreateModel(assetName, currencyName, true);
+            WhenIAddNewAsset();
+        }
+
+        [Given(@"I specified asset name (.*), currency (.*), is active (.*)")]
+        public void GivenAssetCreateModel(string assetName, string currencyName, bool isActive)
+        {
+            Guid currencyId = _assetFeatureManager.Currencies[currencyName].Id;
+
+            _assetCreateModel = new AssetCreateModel(assetName, currencyId, isActive);
         }
 
         [When(@"I add the asset")]
         public void WhenIAddNewAsset()
         {
-            _createdAsset = _assetDriver.InsertAssetToStorage(_assetCreateModel);
+            CreatedAsset = _assetFeatureManager.AddAsset(_assetCreateModel);
         }
         
-        [Then(@"asset created with name (.*) and currency (.*)")]
-        public void AssetAddedToStorage(string assetName, string currencyName)
+        [Then(@"asset created")]
+        public void ThenAssetCreated()
         {
-            List<AssetViewModel> assets = _assetDriver.GetAssets();
-            AssetViewModel newAsset = assets.FirstOrDefault(a => a.Id == _createdAsset.Id);
+            CreatedAsset.Should().NotBeNull();
+        }
 
-            newAsset.Should().NotBeNull();
-            newAsset.Should().Match<AssetViewModel>(a => a.Name == assetName && a.CurrencyName == currencyName);
+        [Then(@"asset created with name (.*)")]
+        public void ThenAssetName(string assetName)
+        {
+            CreatedAsset.Name.Should().Be(assetName);
+        }
+
+        [Then(@"asset created with currency (.*)")]
+        public void ThenAssetCurrency(string currencyName)
+        {
+            Currency currency = _assetFeatureManager.Currencies[currencyName];
+
+            CreatedAsset.CurrencyId.Should().Be(currency.Id);
+            currency.Name.Should().Be(currencyName);
+        }
+
+        [Then(@"asset created with is active (.*)")]
+        public void ThenAssetIsActive(bool isActive)
+        {
+            CreatedAsset.IsActive.Should().Be(isActive);
         }
     }
 }

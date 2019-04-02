@@ -17,17 +17,17 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class UpdateAssetFeature : Xunit.IClassFixture<UpdateAssetFeature.FixtureData>, System.IDisposable
+    public partial class GetAssetsFeature : Xunit.IClassFixture<GetAssetsFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "UpdateAsset.feature"
+#line 1 "GetAssets.feature"
 #line hidden
         
-        public UpdateAssetFeature(UpdateAssetFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public GetAssetsFeature(GetAssetsFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -36,7 +36,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "UpdateAsset", "\tAs a user\r\n\tI want to update my asset", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "GetAssets", "\tAs a user\r\n\tI want to get my assets", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -71,40 +71,20 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
-        {
-#line 5
-#line 6
- testRunner.Given("currency USD exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-        }
-        
         void System.IDisposable.Dispose()
         {
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="User updates asset")]
-        [Xunit.TraitAttribute("FeatureTitle", "UpdateAsset")]
-        [Xunit.TraitAttribute("Description", "User updates asset")]
-        public virtual void UserUpdatesAsset()
+        [Xunit.FactAttribute(DisplayName="User gets assets")]
+        [Xunit.TraitAttribute("FeatureTitle", "GetAssets")]
+        [Xunit.TraitAttribute("Description", "User gets assets")]
+        public virtual void UserGetsAssets()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User updates asset", null, ((string[])(null)));
-#line 8
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User gets assets", null, ((string[])(null)));
+#line 5
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 5
-this.FeatureBackground();
-#line 9
- testRunner.Given("I have active asset Updating asset with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 10
-  testRunner.And("I set asset name to Updated asset, is active false", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 11
- testRunner.When("I update asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 12
- testRunner.Then("asset name updated to Updated asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 13
-  testRunner.And("asset is active flag updated to false", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -116,12 +96,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                UpdateAssetFeature.FeatureSetup();
+                GetAssetsFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                UpdateAssetFeature.FeatureTearDown();
+                GetAssetsFeature.FeatureTearDown();
             }
         }
     }

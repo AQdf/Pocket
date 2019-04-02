@@ -1,65 +1,63 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
-using System.Collections.Generic;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 {
     [Binding]
-    internal class DeleteAssetSteps : FeatureStepsBase
+    public class DeleteAssetSteps
     {
-        private Asset _asset;
+        private Asset _assetToDelete;
 
-        private AssetDriver _assetDriver;
+        private AssetFeatureManager _assetFeatureManager;
 
-        public DeleteAssetSteps(AssetDriver assetDriver)
+        private AddAssetSteps _addAssetSteps;
+
+        public DeleteAssetSteps(AssetFeatureManager assetFeatureManager, AddAssetSteps addAssetSteps)
         {
-            _assetDriver = assetDriver;
+            _assetFeatureManager = assetFeatureManager;
+            _addAssetSteps = addAssetSteps;
         }
 
-        [Given(@"asset to delete with name (.*) exists in the storage")]
-        public void GivenAssetWithParameters(string name)
+        [BeforeTestRun]
+        public static void Cleanup()
         {
-            Currency currency = _assetDriver.InsertCurrencyToStorage("USD");
+            StorageCleaner.Cleanup();
+        }
 
-            AssetCreateModel createModel = new AssetCreateModel
-            {
-                Name = name,
-                CurrencyId = currency.Id,
-                IsActive = true
-            };
-
-            _asset = _assetDriver.InsertAssetToStorage(createModel);
+        [Given(@"I specified asset to delete (.*)")]
+        public void GivenSpecifiedAssetToDelete(string assetName)
+        {
+            _assetToDelete = _addAssetSteps.CreatedAsset;
         }
 
         [Given(@"balance of asset exists in the storage")]
         public void GivenBalanceOfAssetExistsInTheStorage()
         {
-            _assetDriver.InsertAssetBalance(_asset.Id, _asset.CurrencyId);
+            _assetFeatureManager.InsertAssetBalance(_assetToDelete.Id, _assetToDelete.CurrencyId);
         }
 
-        [When(@"I delete asset")]
-        public void WhenIDeleteAsset()
+        [When(@"I delete asset (.*)")]
+        public void WhenIDeleteAsset(string assetName)
         {
-            _assetDriver.DeleteAssetFromStorage(_asset.Id);
+            _assetFeatureManager.DeleteAsset(_assetToDelete.Id);
         }
         
         [Then(@"asset deleted")]
         public void ThenAssetDeleted()
         {
-            List<AssetViewModel> assets = _assetDriver.GetAssets();
+            bool exists = _assetFeatureManager.Assets.ContainsKey(_assetToDelete.Id);
 
-            assets.Should().NotContain(a => a.Id == _asset.Id);
+            exists.Should().Be(false);
         }
 
         [Then(@"asset not deleted")]
         public void ThenAssetNotDeleted()
         {
-            List<AssetViewModel> assets = _assetDriver.GetAssets();
+            bool exists = _assetFeatureManager.Assets.ContainsKey(_assetToDelete.Id);
 
-            assets.Should().Contain(a => a.Id == _asset.Id);
+            exists.Should().Be(true);
         }
     }
 }

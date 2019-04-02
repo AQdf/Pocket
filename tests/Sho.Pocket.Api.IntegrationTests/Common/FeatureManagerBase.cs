@@ -9,11 +9,11 @@ using System.Linq;
 
 namespace Sho.Pocket.Api.IntegrationTests.Common
 {
-    internal abstract class FeatureDriverBase
+    public abstract class FeatureManagerBase
     {
         protected ServiceProvider _serviceProvider;
 
-        public FeatureDriverBase()
+        public FeatureManagerBase()
         {
             Configure();
         }

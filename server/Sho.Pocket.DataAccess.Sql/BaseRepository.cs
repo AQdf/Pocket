@@ -55,19 +55,23 @@ namespace Sho.Pocket.DataAccess.Sql
             return result;
         }
 
-        public void UpdateEntity(string queryText, object queryParameters = null)
+        public T UpdateEntity(string queryText, object queryParameters = null)
         {
+            T result;
+
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                db.ExecuteScalar<T>(queryText, queryParameters);
+                result = db.QueryFirst<T>(queryText, queryParameters);
             }
+
+            return result;
         }
 
         public void RemoveEntity(string queryText, object queryParameters = null)
         {
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                db.ExecuteScalar<T>(queryText, queryParameters);
+                db.ExecuteScalar(queryText, queryParameters);
             }
         }
 

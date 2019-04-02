@@ -22,7 +22,7 @@ namespace Sho.Pocket.Application.Assets
             _currencyRepository = currencyRepository;
         }
 
-        public IEnumerable<AssetViewModel> GetAll()
+        public List<AssetViewModel> GetAll()
         {
             List<Asset> assets = _assetRepository.GetAll();
 
@@ -38,11 +38,11 @@ namespace Sho.Pocket.Application.Assets
             return asset;
         }
 
-        public void Update(AssetViewModel model)
+        public Asset Update(Guid id, AssetUpdateModel model)
         {
-            Asset asset = new Asset(model.Id.Value, model.Name, model.CurrencyId, model.IsActive);
+            Asset asset = _assetRepository.Update(id, model.Name, model.IsActive);
 
-            _assetRepository.Update(model.Id.Value, model.Name, model.IsActive);
+            return asset;
         }
 
         public bool Delete(Guid id)

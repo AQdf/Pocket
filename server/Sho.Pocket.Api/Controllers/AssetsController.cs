@@ -42,12 +42,12 @@ namespace Sho.Pocket.Api.Controllers
         /// <summary>
         /// PUT: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <param name="updatedAsset"></param>
-        [HttpPut("{Id}")]
-        public bool Update(Guid Id, [FromBody] AssetViewModel assetModel)
+        [HttpPut("{id}")]
+        public bool Update(Guid id, [FromBody] AssetUpdateModel updateModel)
         {
-            _assetService.Update(assetModel);
+            _assetService.Update(id, updateModel);
 
             return true;
         }
@@ -55,11 +55,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <summary>
         /// DELETE: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
-        /// <param name="Id"></param>
-        [HttpDelete("{Id}")]
-        public bool Delete(Guid Id)
+        /// <param name="id"></param>
+        [HttpDelete("{id}")]
+        public bool Delete(Guid id)
         {
-            _assetService.Delete(Id);
+            _assetService.Delete(id);
 
             return true;
         }

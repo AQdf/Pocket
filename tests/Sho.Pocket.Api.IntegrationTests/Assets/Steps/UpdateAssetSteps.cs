@@ -3,55 +3,57 @@ using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 {
     [Binding]
-    internal class UpdateAssetSteps : FeatureStepsBase
+    public class UpdateAssetSteps
     {
-        private Asset _asset;
+        private AssetFeatureManager _assetFeatureManager;
 
-        private AssetDriver _assetDriver;
+        private AddAssetSteps _addAssetSteps;
 
-        public UpdateAssetSteps(AssetDriver assetDriver)
+        AssetUpdateModel _updateModel;
+
+        Asset _updatedAsset;
+
+        public UpdateAssetSteps(AssetFeatureManager assetFeatureManager, AddAssetSteps addAssetSteps)
         {
-            _assetDriver = assetDriver;
+            _assetFeatureManager = assetFeatureManager;
+            _addAssetSteps = addAssetSteps;
         }
 
-        [Given(@"asset with name (.*) exists in the storage")]
-        public void GivenAssetWithParameters(string name)
+        [BeforeTestRun]
+        public static void Cleanup()
         {
-            Currency currency = _assetDriver.InsertCurrencyToStorage("USD");
-
-            AssetCreateModel createModel = new AssetCreateModel
-            {
-                Name = name,
-                CurrencyId = currency.Id,
-                IsActive = true
-            };
-
-            _asset = _assetDriver.InsertAssetToStorage(createModel);
+            StorageCleaner.Cleanup();
         }
-        
-        [When(@"I update asset name to (.*)")]
-        public void WhenIUpdateAssetName(string assetName)
+
+        [Given(@"I set asset name to (.*), is active (.*)")]
+        public void GivenSetAssetName(string assetName, bool isActive)
         {
-            AssetViewModel viewModel = new AssetViewModel(_asset.Id, assetName, _asset.CurrencyId, _asset.IsActive);
-
-            _assetDriver.UpdateAssetInStorage(viewModel);
+            _updateModel = new AssetUpdateModel(assetName, isActive);
         }
-        
+
+        [When(@"I update asset")]
+        public void WhenIUpdateAsset()
+        {
+            Guid assetId = _addAssetSteps.CreatedAsset.Id;
+
+            _updatedAsset = _assetFeatureManager.UpdateAsset(assetId, _updateModel);
+        }
+
         [Then(@"asset name updated to (.*)")]
         public void ThenAssetNameUpdated(string assetName)
         {
-            List<AssetViewModel> assets = _assetDriver.GetAssets();
-            AssetViewModel updatedAsset = assets.FirstOrDefault(a => a.Id == _asset.Id);
+            _updatedAsset.Name.Should().Be(assetName);
+        }
 
-            updatedAsset.Should().NotBeNull();
-            updatedAsset.Name.Should().Be(assetName);
+        [Then(@"asset is active flag updated to (.*)")]
+        public void ThenAssetBecomeNotActive(bool isActive)
+        {
+            _updatedAsset.IsActive.Should().Be(isActive);
         }
     }
 }

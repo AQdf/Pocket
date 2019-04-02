@@ -11,7 +11,7 @@ namespace Sho.Pocket.Core.DataAccess
 
         T InsertEntity(string queryText, object queryParameters = null);
 
-        void UpdateEntity(string queryText, object queryParameters = null);
+        T UpdateEntity(string queryText, object queryParameters = null);
 
         void RemoveEntity(string queryText, object queryParameters = null);
 

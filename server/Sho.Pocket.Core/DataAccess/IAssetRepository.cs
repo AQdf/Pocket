@@ -10,7 +10,7 @@ namespace Sho.Pocket.Core.DataAccess
 
         Asset Add(string name, Guid currencyId, bool isActive);
 
-        void Update(Guid id, string name, bool isActive);
+        Asset Update(Guid id, string name, bool isActive);
 
         void Remove(Guid assetId);
 
