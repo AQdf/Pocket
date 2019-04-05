@@ -2,8 +2,11 @@
 	As a user
 	I want to get my assets
 
+Background: 
+	Given currency USD exists
+
 Scenario: User gets assets
-	#Given asset with name Bank account exists in the storage
-	#And asset with name USD Cash exists in the storage
-	#When I get assets
-	#Then my assets returned
+	Given I have active asset My first asset with currency USD
+		And I have active asset My second asset with currency USD
+	When I get assets
+	Then my 2 assets returned

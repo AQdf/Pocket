@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;

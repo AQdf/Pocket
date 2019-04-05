@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Assets;
@@ -7,7 +8,7 @@ using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Api.IntegrationTests.Assets
+namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
 {
     public class AssetFeatureManager : FeatureManagerBase
     {
@@ -31,6 +32,15 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
             _currencyRepository = _serviceProvider.GetRequiredService<ICurrencyRepository>();
             _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
             _balanceRepository = _serviceProvider.GetRequiredService<IBalanceRepository>();
+        }
+
+        public List<AssetViewModel> GetAssets()
+        {
+            List<AssetViewModel> storageAssets = _assetService.GetAll();
+
+            List<AssetViewModel> contextAssets = storageAssets.Where(sa => Assets.ContainsKey(sa.Id.Value)).ToList();
+
+            return contextAssets;
         }
 
         public Asset AddAsset(AssetCreateModel createModel)

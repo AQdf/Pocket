@@ -33,25 +33,5 @@ namespace Sho.Pocket.Api.IntegrationTests.Common
 
             _serviceProvider = services.BuildServiceProvider();
         }
-
-        protected void ExecuteScript(string queryText, object queryParameters = null)
-        {
-            using (IDbConnection db = new SqlConnection(ConfigurationConstants.DB_CONNECTION))
-            {
-                db.ExecuteScalar(queryText, queryParameters);
-            }
-        }
-
-        protected List<T> GetList<T>(string queryText, object queryParameters = null)
-        {
-            List<T> result;
-
-            using (IDbConnection db = new SqlConnection(ConfigurationConstants.DB_CONNECTION))
-            {
-                result = db.Query<T>(queryText).ToList();
-            }
-
-            return result;
-        }
     }
 }
