@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Sho.Pocket.Application.Balances
+namespace Sho.Pocket.Application.DataExport
 {
     public class CsvWriter
     {
@@ -22,12 +22,12 @@ namespace Sho.Pocket.Application.Balances
 
             if (includeHeader)
             {
-                sb.AppendLine(this.CreateCsvHeaderLine(properties));
+                sb.AppendLine(CreateCsvHeaderLine(properties));
             }
 
             foreach (var item in list)
             {
-                sb.AppendLine(this.CreateCsvLine(item, properties));
+                sb.AppendLine(CreateCsvLine(item, properties));
             }
 
             return sb.ToString();
@@ -35,9 +35,9 @@ namespace Sho.Pocket.Application.Balances
 
         public string Write<T>(IList<T> list, string fileName, bool includeHeader = true)
         {
-            string csv = this.Write(list, includeHeader);
+            string csv = Write(list, includeHeader);
 
-            this.WriteFile(fileName, csv);
+            WriteFile(fileName, csv);
 
             return csv;
         }
@@ -57,10 +57,10 @@ namespace Sho.Pocket.Application.Balances
                     value = (attribute as DisplayAttribute).Name;
                 }
 
-                this.CreateCsvStringItem(propertyValues, value);
+                CreateCsvStringItem(propertyValues, value);
             }
 
-            return this.CreateCsvLine(propertyValues);
+            return CreateCsvLine(propertyValues);
         }
 
         private string CreateCsvLine<T>(T item, PropertyInfo[] properties)
@@ -74,28 +74,28 @@ namespace Sho.Pocket.Application.Balances
 
                 if (prop.PropertyType == typeof(string))
                 {
-                    this.CreateCsvStringItem(propertyValues, value);
+                    CreateCsvStringItem(propertyValues, value);
                 }
                 else if (prop.PropertyType == typeof(string[]))
                 {
-                    this.CreateCsvStringArrayItem(propertyValues, value);
+                    CreateCsvStringArrayItem(propertyValues, value);
                 }
                 else if (prop.PropertyType == typeof(List<string>))
                 {
-                    this.CreateCsvStringListItem(propertyValues, value);
+                    CreateCsvStringListItem(propertyValues, value);
                 }
                 else
                 {
-                    this.CreateCsvItem(propertyValues, value);
+                    CreateCsvItem(propertyValues, value);
                 }
             }
 
-            return this.CreateCsvLine(propertyValues);
+            return CreateCsvLine(propertyValues);
         }
 
         private string CreateCsvLine(IList<string> list)
         {
-            return string.Join(CsvWriter.DELIMITER, list);
+            return string.Join(DELIMITER, list);
         }
 
         private void CreateCsvItem(List<string> propertyValues, object value)
@@ -115,8 +115,8 @@ namespace Sho.Pocket.Application.Balances
             string formatString = "\"{0}\"";
             if (value != null)
             {
-                value = this.CreateCsvLine((List<string>)value);
-                propertyValues.Add(string.Format(formatString, this.ProcessStringEscapeSequence(value)));
+                value = CreateCsvLine((List<string>)value);
+                propertyValues.Add(string.Format(formatString, ProcessStringEscapeSequence(value)));
             }
             else
             {
@@ -129,8 +129,8 @@ namespace Sho.Pocket.Application.Balances
             string formatString = "\"{0}\"";
             if (value != null)
             {
-                value = this.CreateCsvLine(((string[])value).ToList());
-                propertyValues.Add(string.Format(formatString, this.ProcessStringEscapeSequence(value)));
+                value = CreateCsvLine(((string[])value).ToList());
+                propertyValues.Add(string.Format(formatString, ProcessStringEscapeSequence(value)));
             }
             else
             {
@@ -143,7 +143,7 @@ namespace Sho.Pocket.Application.Balances
             string formatString = "\"{0}\"";
             if (value != null)
             {
-                propertyValues.Add(string.Format(formatString, this.ProcessStringEscapeSequence(value)));
+                propertyValues.Add(string.Format(formatString, ProcessStringEscapeSequence(value)));
             }
             else
             {

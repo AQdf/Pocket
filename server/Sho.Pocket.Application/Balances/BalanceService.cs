@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.Common.Comparers;
+using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Constants;
@@ -17,20 +18,20 @@ namespace Sho.Pocket.Application.Balances
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly ICurrencyRepository _currencyRepository;
-        private readonly IBalanceExporter _balanceExporter;
+        private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
             ICurrencyRepository currencyRepository,
-            IBalanceExporter balanceExporter)
+            ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
-            _balanceExporter = balanceExporter;
+            _csvExporter = balanceExporter;
         }
 
         public BalancesViewModel GetAll(DateTime effectiveDate)
@@ -173,7 +174,7 @@ namespace Sho.Pocket.Application.Balances
                     (b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.CurrencyName, b.ExchangeRate.Rate))
                 .ToList();
 
-            string csv = _balanceExporter.ExportToCsv(items);
+            string csv = _csvExporter.ExportToCsv(items);
             byte[] bytes = Encoding.ASCII.GetBytes(csv);
 
             return bytes;
