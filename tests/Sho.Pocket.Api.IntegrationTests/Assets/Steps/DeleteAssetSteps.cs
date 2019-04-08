@@ -33,12 +33,6 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
             _assetToDelete = _addAssetSteps.CreatedAsset;
         }
 
-        [Given(@"balance of asset exists in the storage")]
-        public void GivenBalanceOfAssetExistsInTheStorage()
-        {
-            _assetFeatureManager.InsertAssetBalance(_assetToDelete.Id, _assetToDelete.CurrencyId);
-        }
-
         [When(@"I delete asset (.*)")]
         public void WhenIDeleteAsset(string assetName)
         {

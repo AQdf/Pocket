@@ -10,24 +10,24 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace Sho.Pocket.Api.IntegrationTests.Assets
+namespace Sho.Pocket.Api.IntegrationTests.Balances
 {
     using TechTalk.SpecFlow;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class DeleteAssetFeature : Xunit.IClassFixture<DeleteAssetFeature.FixtureData>, System.IDisposable
+    public partial class AddBalanceFeature : Xunit.IClassFixture<AddBalanceFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "DeleteAsset.feature"
+#line 1 "AddBalance.feature"
 #line hidden
         
-        public DeleteAssetFeature(DeleteAssetFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public AddBalanceFeature(AddBalanceFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -36,7 +36,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "DeleteAsset", "\tAs a user\r\n\tI want to delete my asset", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "AddBalance", "\tAs a user\r\n\tI want to add new balance of asset", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -78,6 +78,8 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
  testRunner.Given("currency USD exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 7
  testRunner.And("exchange rate USD to USD with value 1 for today", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 8
+ testRunner.And("I have active asset Active asset with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -86,50 +88,29 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="User deletes asset that is not associated with any balance")]
-        [Xunit.TraitAttribute("FeatureTitle", "DeleteAsset")]
-        [Xunit.TraitAttribute("Description", "User deletes asset that is not associated with any balance")]
-        public virtual void UserDeletesAssetThatIsNotAssociatedWithAnyBalance()
+        [Xunit.FactAttribute(DisplayName="User adds new balance of asset")]
+        [Xunit.TraitAttribute("FeatureTitle", "AddBalance")]
+        [Xunit.TraitAttribute("Description", "User adds new balance of asset")]
+        public virtual void UserAddsNewBalanceOfAsset()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User deletes asset that is not associated with any balance", null, ((string[])(null)));
-#line 9
-this.ScenarioInitialize(scenarioInfo);
-            this.ScenarioStart();
-#line 5
-this.FeatureBackground();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User adds new balance of asset", null, ((string[])(null)));
 #line 10
- testRunner.Given("I have active asset Asset without balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 11
-  testRunner.And("I specified asset to delete Asset without balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 12
- testRunner.When("I delete asset Asset without balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
- testRunner.Then("asset deleted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [Xunit.FactAttribute(DisplayName="User deletes asset that is associated with balance")]
-        [Xunit.TraitAttribute("FeatureTitle", "DeleteAsset")]
-        [Xunit.TraitAttribute("Description", "User deletes asset that is associated with balance")]
-        public virtual void UserDeletesAssetThatIsAssociatedWithBalance()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User deletes asset that is associated with balance", null, ((string[])(null)));
-#line 15
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 5
 this.FeatureBackground();
+#line 11
+ testRunner.Given("I specified today balance of asset Active asset, amount 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 12
+ testRunner.When("I add new balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 13
+ testRunner.Then("balance exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 14
+  testRunner.And("balance asset is Active asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 15
+  testRunner.And("balance amount is 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 16
- testRunner.Given("I have active asset Asset with balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 17
-  testRunner.And("I have balance of asset Asset with balance, amount 200 for today", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 18
-  testRunner.And("I specified asset to delete Asset with balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 19
- testRunner.When("I delete asset Asset with balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 20
- testRunner.Then("asset not deleted", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.And("balance effective date is today", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -141,12 +122,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                DeleteAssetFeature.FeatureSetup();
+                AddBalanceFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                DeleteAssetFeature.FeatureTearDown();
+                AddBalanceFeature.FeatureTearDown();
             }
         }
     }

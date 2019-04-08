@@ -6,6 +6,18 @@ namespace Sho.Pocket.Application.Balances.Models
 {
     public class BalanceCreateModel
     {
+        public BalanceCreateModel()
+        {
+        }
+
+        public BalanceCreateModel(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        {
+            AssetId = assetId;
+            EffectiveDate = effectiveDate;
+            Value = value;
+            ExchangeRateId = exchangeRateId;
+        }
+
         public Guid AssetId { get; set; }
 
         [JsonConverter(typeof(IsoStringDateTimeConverter))]

@@ -1,6 +1,6 @@
 ﻿update Balance
-set AssetId = @assetId,
-	EffectiveDate = @effectiveDate,
-	[Value] = @value,
-	ExchangeRateId = @exchangeRateId
+set [Value] = @value
+where Id = @id
+
+select * from Balance
 where Id = @id

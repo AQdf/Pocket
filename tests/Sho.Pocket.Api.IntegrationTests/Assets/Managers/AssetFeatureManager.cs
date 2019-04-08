@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Currencies.Managers;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Core.DataAccess;
@@ -14,22 +15,19 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
     {
         public Dictionary<Guid, Asset> Assets { get; set; } = new Dictionary<Guid, Asset>();
 
-        public Dictionary<string, Currency> Currencies { get; set; } = new Dictionary<string, Currency>();
-
-        public Dictionary<Guid, Balance> Balances { get; set; } = new Dictionary<Guid, Balance>();
-
         private readonly IAssetService _assetService;
 
-        private readonly ICurrencyRepository _currencyRepository;
+        private readonly CurrencyFeatureManager _currencyFeatureManager;
 
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
         private readonly IBalanceRepository _balanceRepository;
 
-        public AssetFeatureManager() : base()
+        public AssetFeatureManager(CurrencyFeatureManager currencyFeatureManager) : base()
         {
+            _currencyFeatureManager = currencyFeatureManager;
+
             _assetService = _serviceProvider.GetRequiredService<IAssetService>();
-            _currencyRepository = _serviceProvider.GetRequiredService<ICurrencyRepository>();
             _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
             _balanceRepository = _serviceProvider.GetRequiredService<IBalanceRepository>();
         }
@@ -67,28 +65,6 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
             Assets[id] = result;
 
             return result;
-        }
-
-        public Currency AddCurrency(string currencyName)
-        {
-            if (!Currencies.ContainsKey(currencyName))
-            {
-                Currency currency = _currencyRepository.Add(currencyName);
-                Currencies.Add(currencyName, currency);
-            }
-
-            Currency result = Currencies[currencyName];
-
-            return result;
-        }
-
-        public void InsertAssetBalance(Guid assetId, Guid currencyId)
-        {
-            DateTime effectiveDate = DateTime.UtcNow;
-            ExchangeRate exchangeRate = _exchangeRateRepository.Add(effectiveDate, currencyId, currencyId, 1.0M);
-            Balance balance = _balanceRepository.Add(assetId, effectiveDate, 200M, exchangeRate.Id);
-
-            Balances.Add(balance.Id, balance);
         }
     }
 }

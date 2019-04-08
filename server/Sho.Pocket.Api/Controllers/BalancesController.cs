@@ -60,9 +60,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
         [HttpPut("{id}")]
-        public bool Update(Guid id, [FromBody] BalanceViewModel balanceModel)
+        public bool Update(Guid id, [FromBody] BalanceUpdateModel updateModel)
         {
-            _balanceService.Update(balanceModel);
+            _balanceService.Update(id, updateModel);
 
             return true;
         }

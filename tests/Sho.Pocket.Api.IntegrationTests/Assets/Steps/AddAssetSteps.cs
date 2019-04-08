@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Currencies.Managers;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -13,16 +14,18 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private AssetFeatureManager _assetFeatureManager;
 
-        private CreateCurrencyStep _createCurrencyStep;
+        private readonly CurrencyFeatureManager _currencyFatureManager;
 
         private AssetCreateModel _assetCreateModel;
 
         public Asset CreatedAsset = null;
 
-        public AddAssetSteps(AssetFeatureManager assetFeatureManager, CreateCurrencyStep createCurrencyStep)
+        public AddAssetSteps(
+            AssetFeatureManager assetFeatureManager,
+            CurrencyFeatureManager currencyFatureManager)
         {
             _assetFeatureManager = assetFeatureManager;
-            _createCurrencyStep = createCurrencyStep;
+            _currencyFatureManager = currencyFatureManager;
         }
 
         [BeforeTestRun]
@@ -34,7 +37,6 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I have active asset (.*) with currency (.*)")]
         public void GivenAsset(string assetName, string currencyName)
         {
-            _createCurrencyStep.GivenCurrency(currencyName);
             GivenAssetCreateModel(assetName, currencyName, true);
             WhenIAddNewAsset();
         }
@@ -42,7 +44,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I specified asset name (.*), currency (.*), is active (.*)")]
         public void GivenAssetCreateModel(string assetName, string currencyName, bool isActive)
         {
-            Guid currencyId = _assetFeatureManager.Currencies[currencyName].Id;
+            Guid currencyId = _currencyFatureManager.Currencies[currencyName].Id;
 
             _assetCreateModel = new AssetCreateModel(assetName, currencyId, isActive);
         }
@@ -68,7 +70,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Then(@"asset created with currency (.*)")]
         public void ThenAssetCurrency(string currencyName)
         {
-            Currency currency = _assetFeatureManager.Currencies[currencyName];
+            Currency currency = _currencyFatureManager.Currencies[currencyName];
 
             CreatedAsset.CurrencyId.Should().Be(currency.Id);
             currency.Name.Should().Be(currencyName);

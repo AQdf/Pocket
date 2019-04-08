@@ -68,9 +68,9 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public void Add(BalanceCreateModel createModel)
+        public Balance Add(BalanceCreateModel createModel)
         {
-            _balanceRepository.Add(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
+            return _balanceRepository.Add(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
         }
 
         public bool AddEffectiveBalancesTemplate()
@@ -88,11 +88,9 @@ namespace Sho.Pocket.Application.Balances
             return false;
         }
 
-        public void Update(BalanceViewModel model)
+        public Balance Update(Guid id, BalanceUpdateModel updateModel)
         {
-            Balance balance = new Balance(model.Id.Value, model.AssetId, model.EffectiveDate, model.Value, model.ExchangeRateId);
-
-            _balanceRepository.Update(balance);
+            return _balanceRepository.Update(id, updateModel.Amount);
         }
 
         public void Delete(Guid Id)

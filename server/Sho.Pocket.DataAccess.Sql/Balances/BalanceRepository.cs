@@ -77,20 +77,13 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             base.ExecuteScript(queryText, queryParameters);
         }
 
-        public void Update(Balance balance)
+        public Balance Update(Guid id, decimal value)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");
 
-            object queryParameters = new
-            {
-                id = balance.Id,
-                assetId = balance.AssetId,
-                effectiveDate = balance.EffectiveDate,
-                value = balance.Value,
-                exchangeRateId = balance.ExchangeRateId
-            };
+            object queryParameters = new { id, value };
 
-            base.UpdateEntity(queryText, queryParameters);
+            return base.UpdateEntity(queryText, queryParameters);
         }
 
         public void Remove(Guid balanceId)
