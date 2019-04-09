@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
+using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -44,7 +45,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         public void WhenIUpdateBalanceOfAsset(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
-            Asset asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
             Balance balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);

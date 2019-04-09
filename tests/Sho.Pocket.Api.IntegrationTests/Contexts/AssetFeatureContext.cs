@@ -11,7 +11,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
     public class AssetFeatureContext : FeatureContextBase
     {
-        public Dictionary<string, Asset> Assets { get; set; }
+        public Dictionary<string, AssetViewModel> Assets { get; set; }
 
         private readonly IAssetService _assetService;
 
@@ -23,7 +23,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public AssetFeatureContext(CurrencyFeatureContext currencyFeatureManager) : base()
         {
-            Assets = new Dictionary<string, Asset>();
+            Assets = new Dictionary<string, AssetViewModel>();
 
             _currencyFeatureContext = currencyFeatureManager;
 
@@ -41,9 +41,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             return contextAssets;
         }
 
-        public Asset AddAsset(AssetCreateModel createModel)
+        public AssetViewModel AddAsset(AssetCreateModel createModel)
         {
-            Asset asset = _assetService.Add(createModel);
+            AssetViewModel asset = _assetService.Add(createModel);
             Assets.Add(asset.Name, asset);
 
             return asset;
@@ -59,9 +59,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             }
         }
 
-        public Asset UpdateAsset(Guid id, AssetUpdateModel updateModel)
+        public AssetViewModel UpdateAsset(Guid id, AssetUpdateModel updateModel)
         {
-            Asset result = _assetService.Update(id, updateModel);
+            AssetViewModel result = _assetService.Update(id, updateModel);
             Assets[updateModel.Name] = result;
 
             return result;

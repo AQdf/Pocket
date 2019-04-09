@@ -98,7 +98,7 @@ this.FeatureBackground();
 #line 9
  testRunner.Given("I have active asset Updating asset with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 10
-  testRunner.And("I set asset name to Updated asset, is active false", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I set asset name to Updated asset, currency USD, is active false", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 11
  testRunner.When("I update asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 12

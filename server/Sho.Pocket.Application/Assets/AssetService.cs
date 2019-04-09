@@ -31,18 +31,34 @@ namespace Sho.Pocket.Application.Assets
             return result;
         }
 
-        public Asset Add(AssetCreateModel createModel)
+        public AssetViewModel Add(AssetCreateModel createModel)
         {
             Asset asset = _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
 
-            return asset;
+            AssetViewModel result = new AssetViewModel(asset);
+
+            return result;
         }
 
-        public Asset Update(Guid id, AssetUpdateModel model)
+        public AssetViewModel Update(Guid id, AssetUpdateModel model)
         {
-            Asset asset = _assetRepository.Update(id, model.Name, model.IsActive);
+            bool balanceExists = _assetRepository.ExistsAssetBalance(id);
 
-            return asset;
+            if (balanceExists)
+            {
+                Asset asset = _assetRepository.GetById(id);
+
+                if (asset.CurrencyId != model.CurrencyId)
+                {
+                    return null;
+                }
+            }
+
+            Asset result = _assetRepository.Update(id, model.Name, model.CurrencyId, model.IsActive);
+
+            AssetViewModel viewModel = new AssetViewModel(result);
+
+            return viewModel;
         }
 
         public bool Delete(Guid id)

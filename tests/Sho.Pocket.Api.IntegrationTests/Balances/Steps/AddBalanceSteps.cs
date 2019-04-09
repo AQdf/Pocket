@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
+using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -49,7 +50,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         public void GivenBalanceCreateModel(string assetName, decimal amount, int dayShift)
         {
             DateTime effectiveDate = DateTime.UtcNow.Date.AddDays(dayShift);
-            Asset asset = _assetFeatureContext.Assets[assetName];
+            AssetViewModel asset = _assetFeatureContext.Assets[assetName];
             ExchangeRate exchangeRate = _exchangeRateFeatureContext.ExchangeRates.Values.First(r => r.EffectiveDate == effectiveDate);
 
             _balanceCreateModel = new BalanceCreateModel(asset.Id, effectiveDate, amount, exchangeRate.Id);
@@ -70,7 +71,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [Then(@"balance asset is (.*)")]
         public void ThenBalanceAssetIs(string assetName)
         {
-            Asset asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
             _createdBalance.AssetId.Should().Be(asset.Id);
         }

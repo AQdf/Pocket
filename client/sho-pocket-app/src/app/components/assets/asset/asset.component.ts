@@ -39,18 +39,23 @@ export class AssetComponent implements OnInit {
   onSubmit(form: NgForm) {
     if (form.value.id == null) {
       this.assetService.postAsset(form.value)
-        .subscribe(data => {
-          this.assetService.getAssetList();
+        .subscribe(asset => {
+          this.assetService.assetList.unshift(asset);
           this.toastr.success('New Record Added Succcessfully', 'Asset');
           this.resetForm(form);
         });
     }
     else {
       this.assetService.putAsset(form.value.id, form.value)
-      .subscribe(data => {
-        this.assetService.getAssetList();
-        this.toastr.info('Record Updated Successfully!', 'Asset');
-        this.resetForm(form);
+      .subscribe(asset => {
+        if(asset) {
+          var listIndex = this.assetService.assetList.findIndex(a => a.id === asset.id);
+          this.assetService.assetList[listIndex] = asset;
+          this.toastr.success('Updated Successfully!', 'Asset');
+          this.resetForm(form);
+        } else {
+          this.toastr.error('Update failed! Possibly, cannot update asset currency because balance for asset exists', 'Asset');
+        }
       });
     }
   }

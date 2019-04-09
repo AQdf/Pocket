@@ -6,11 +6,13 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IAssetRepository
     {
+        Asset GetById(Guid id);
+
         List<Asset> GetAll(bool includeRelated = true);
 
         Asset Add(string name, Guid currencyId, bool isActive);
 
-        Asset Update(Guid id, string name, bool isActive);
+        Asset Update(Guid id, string name, Guid currencyId, bool isActive);
 
         void Remove(Guid assetId);
 

@@ -17,7 +17,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 
         private AssetCreateModel _assetCreateModel;
 
-        public Asset CreatedAsset = null;
+        public AssetViewModel CreatedAsset = null;
 
         public AddAssetSteps(
             AssetFeatureContext assetFeatureContext,

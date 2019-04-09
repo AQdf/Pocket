@@ -34,9 +34,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public void Add([FromBody] AssetCreateModel createModel)
+        public AssetViewModel Add([FromBody] AssetCreateModel createModel)
         {
-            _assetService.Add(createModel);
+            return _assetService.Add(createModel);
         }
 
         /// <summary>
@@ -45,11 +45,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{id}")]
-        public bool Update(Guid id, [FromBody] AssetUpdateModel updateModel)
+        public ActionResult<AssetViewModel> Update(Guid id, [FromBody] AssetUpdateModel updateModel)
         {
-            _assetService.Update(id, updateModel);
+            AssetViewModel result = _assetService.Update(id, updateModel);
 
-            return true;
+            return Ok(result);
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public bool Delete(Guid id)
+        public ActionResult<bool> Delete(Guid id)
         {
-            _assetService.Delete(id);
+            var result = _assetService.Delete(id);
 
-            return true;
+            return Ok(result);
         }
 
         /// <summary>

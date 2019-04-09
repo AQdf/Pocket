@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
-using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Application.Assets.Models;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -9,7 +9,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class DeleteAssetSteps
     {
-        private Asset _assetToDelete;
+        private AssetViewModel _assetToDelete;
 
         private AssetFeatureContext _assetFeatureContext;
 

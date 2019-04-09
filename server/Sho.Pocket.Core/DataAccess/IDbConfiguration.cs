@@ -3,5 +3,7 @@
     public interface IDbConfiguration
     {
         string DbConnectionString { get; }
+
+        void SeedStorageData();
     }
 }

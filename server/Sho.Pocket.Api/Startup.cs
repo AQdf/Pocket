@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Common.Configuration;
+using Sho.Pocket.Application.Common.Extensions;
 using Sho.Pocket.Core;
+using Sho.Pocket.Core.DataAccess;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Sho.Pocket.Api
@@ -44,7 +46,7 @@ namespace Sho.Pocket.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbConfiguration dbConfiguration)
         {
             if (env.IsDevelopment())
             {
@@ -55,6 +57,8 @@ namespace Sho.Pocket.Api
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
+
+            app.SeedData(dbConfiguration);
 
             app.UseMvc();
 

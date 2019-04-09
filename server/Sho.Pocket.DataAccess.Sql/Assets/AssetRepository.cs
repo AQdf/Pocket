@@ -22,6 +22,17 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             return result;
         }
 
+        public Asset GetById(Guid id)
+        {
+            string queryText = @"select top 1 * from Asset where Id = @id";
+
+            object queryParams = new { id };
+
+            Asset result = base.GetEntity(queryText, queryParams);
+
+            return result;
+        }
+
         public Asset Add(string name, Guid currencyId, bool isActive)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
@@ -33,11 +44,11 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
             return result;
         }
 
-        public Asset Update(Guid id, string name, bool isActive)
+        public Asset Update(Guid id, string name, Guid currencyId, bool isActive)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
-            object queryParameters = new { id, name, isActive };
+            object queryParameters = new { id, name, currencyId, isActive };
 
             Asset result = base.UpdateEntity(queryText, queryParameters);
 
@@ -59,9 +70,8 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         public bool ExistsAssetBalance(Guid id)
         {
             string queryText = @"
-                if exists (select * from Balance where AssetId = @id)
-                select 1
-                else select 0";
+                if exists (select top 1 1 from Balance where AssetId = @id)
+                select 1 else select 0";
 
             object queryParams = new { id };
 

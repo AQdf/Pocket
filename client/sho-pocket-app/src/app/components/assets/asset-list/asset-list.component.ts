@@ -22,11 +22,15 @@ export class AssetListComponent implements OnInit {
   }
 
   onDelete(id: string) {
-    if (confirm('Are you sure to delete this record ?') == true) {
+    if (confirm('Are you sure to delete this record?') == true) {
       this.assetService.deleteAsset(id)
-      .subscribe(x => {
-        this.assetService.getAssetList();
-        this.toastr.warning("Deleted Successfully","Asset");
+      .subscribe(result => {
+        if (result) {
+          this.assetService.getAssetList();
+          this.toastr.success("Deleted Successfully","Asset");
+        } else {
+          this.toastr.error("Delete failed! Possibly, cannot delete asset because balance for asset exists","Asset");
+        }
       })
     }
   }

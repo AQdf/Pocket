@@ -26,7 +26,7 @@ namespace Sho.Pocket.Application.Assets.Models
             IsActive = asset.IsActive;
         }
 
-        public Guid? Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 

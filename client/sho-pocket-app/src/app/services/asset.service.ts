@@ -26,7 +26,9 @@ export class AssetService {
     var headerOptions = new Headers({'Content-Type':'application/json'});
     var requestOptions = new RequestOptions({method : RequestMethod.Post, headers : headerOptions});
     return this.http.post(assetsApiUrl, body, requestOptions).pipe(
-      map(x => x.json())
+      map((data : Response) =>{
+        return data.json() as Asset;
+      })
     );
   }
  
@@ -35,7 +37,7 @@ export class AssetService {
     var headerOptions = new Headers({ 'Content-Type': 'application/json' });
     var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headerOptions });
     return this.http.put(assetsApiUrl + id, body, requestOptions).pipe(
-        map(res => res.json())
+        map(response => response.json())
       );
   }
  
@@ -50,7 +52,9 @@ export class AssetService {
   }
  
   deleteAsset(id: string) {
-    return this.http.delete(assetsApiUrl + id).pipe(map(res => res.json()));
+    return this.http.delete(assetsApiUrl + id).pipe(
+        map(response => response.json())
+      );
   }
 
   getCurrenciesList() {

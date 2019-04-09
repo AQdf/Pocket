@@ -11,17 +11,23 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class UpdateAssetSteps
     {
+        AssetUpdateModel _updateModel;
+
+        AssetViewModel _updatedAsset;
+
         private AssetFeatureContext _assetFeatureContext;
+
+        private CurrencyFeatureContext _currencyFeatureContext;
 
         private AddAssetSteps _addAssetSteps;
 
-        AssetUpdateModel _updateModel;
-
-        Asset _updatedAsset;
-
-        public UpdateAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
+        public UpdateAssetSteps(
+            AssetFeatureContext assetFeatureContext,
+            CurrencyFeatureContext currencyFeatureContext,
+            AddAssetSteps addAssetSteps)
         {
             _assetFeatureContext = assetFeatureContext;
+            _currencyFeatureContext = currencyFeatureContext;
             _addAssetSteps = addAssetSteps;
         }
 
@@ -31,10 +37,12 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
             StorageCleaner.Cleanup();
         }
 
-        [Given(@"I set asset name to (.*), is active (.*)")]
-        public void GivenSetAssetName(string assetName, bool isActive)
+        [Given(@"I set asset name to (.*), currency (.*), is active (.*)")]
+        public void GivenSetAssetName(string assetName, string currencyName, bool isActive)
         {
-            _updateModel = new AssetUpdateModel(assetName, isActive);
+            var currency = _currencyFeatureContext.Currencies[currencyName];
+
+            _updateModel = new AssetUpdateModel(assetName, currency.Id, isActive);
         }
 
         [When(@"I update asset")]
