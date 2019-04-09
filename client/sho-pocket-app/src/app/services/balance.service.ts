@@ -117,8 +117,6 @@ export class BalanceService {
     });    
   }
 
-
-
   downloadCsv() {
     const headers = new HttpHeaders().set('Content-Type', 'blob');
     const options: {
@@ -138,10 +136,10 @@ export class BalanceService {
     this.client.get(balancesApiUrl + 'csv', options).subscribe(response => {
       if (response) {
         debugger;
-        var currentDate = new Date();
-        var day = currentDate.getDate(); //Date of the month: 2 in our example
-        var month = monthNames[currentDate.getMonth()]; //Month of the Year: 0-based index, so 1 in our example
-        var year = currentDate.getFullYear() //Year: 2013
+        var currentDate = new Date(this.selectedEffectiveDate);
+        var day = currentDate.getDate();
+        var month = monthNames[currentDate.getMonth()];
+        var year = currentDate.getFullYear();
         let name = 'Balances_' + day + '_' + month + '_' + year + '.csv';
         saveAs(response, name);
         return response;
