@@ -45,18 +45,15 @@ namespace Sho.Pocket.Application.Balances
 
             List<BalanceViewModel> items = balances.Select(b => new BalanceViewModel(b)).ToList();
 
-            List<ExchangeRateModel> rates = balances
-                .Select(b => new ExchangeRateModel(b.ExchangeRate))
-                .Where(r => r.BaseCurrencyName != CurrencyConstants.UAH)
-                .Distinct(new ExchangeRateComparer())
-                .OrderBy(r => r.BaseCurrencyName)
-                .ToList();
+            List<ExchangeRate> rates = _exchangeRateRepository.GetByEffectiveDate(effectiveDate);
+
+            List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
 
             IEnumerable<BalanceTotalModel> totals = CalculateTotals(balances, effectiveDate);
 
             items = items.OrderBy(i => i.Asset.Name).ToList();
 
-            return new BalancesViewModel(items, items.Count, totals, rates);
+            return new BalancesViewModel(items, items.Count, totals, ratesModels);
         }
 
         public BalanceViewModel GetById(Guid id)
@@ -133,7 +130,7 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository.ApplyExchangeRate(model.Id, model.BaseCurrencyId, model.EffectiveDate);
         }
 
-        public IEnumerable<BalanceTotalModel> GetCurrencyTotals(Guid currencyId, int count)
+        public IEnumerable<BalanceTotalModel> GetCurrencyTotals(string currencyName, int count)
         {
             List<Balance> balances = _balanceRepository.GetAll();
             List<Asset> assets = _assetRepository.GetAll();
@@ -141,7 +138,7 @@ namespace Sho.Pocket.Application.Balances
 
             List<DateTime> effectivateDates = _balanceRepository.GetEffectiveDates().Take(count).ToList();
             List<Currency> currencies = _currencyRepository.GetAll();
-            Currency currency = currencies.FirstOrDefault(c => c.Id == currencyId);
+            Currency currency = currencies.FirstOrDefault(c => c.Name == currencyName);
             Guid defaultCurrencyId = currencies.Where(c => c.IsDefault).Select(c => c.Id).FirstOrDefault();
 
             var result = new List<BalanceTotalModel>();

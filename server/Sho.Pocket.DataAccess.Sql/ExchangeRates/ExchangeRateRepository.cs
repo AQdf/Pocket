@@ -2,6 +2,7 @@
 using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
 {
@@ -57,6 +58,28 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             object queryParameters = new { baseCurrencyId, effectiveDate };
 
             ExchangeRate result = base.GetEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public List<ExchangeRate> GetByEffectiveDate(DateTime effectiveDate)
+        {
+            string queryText = @"
+                select	ExchangeRate.Id,
+		                ExchangeRate.EffectiveDate,
+		                ExchangeRate.BaseCurrencyId,
+		                ExchangeRate.CounterCurrencyId,
+                        ExchangeRate.Rate,
+		                baseCurrency.[Name] as BaseCurrencyName,
+		                counterCurrency.[Name] as CounterCurrencyName
+                from ExchangeRate
+                join Currency baseCurrency on ExchangeRate.BaseCurrencyId = baseCurrency.Id
+                join Currency counterCurrency on ExchangeRate.CounterCurrencyId = counterCurrency.Id
+                where EffectiveDate = @effectiveDate";
+
+            object queryParameters = new { effectiveDate };
+
+            List<ExchangeRate> result = base.GetAll(queryText, queryParameters);
 
             return result;
         }

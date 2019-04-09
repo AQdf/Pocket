@@ -1,5 +1,6 @@
 ﻿using Sho.Pocket.Domain.Entities;
 using System;
+using System.Collections.Generic;
 
 namespace Sho.Pocket.Core.DataAccess
 {
@@ -12,5 +13,7 @@ namespace Sho.Pocket.Core.DataAccess
         void Update(Guid id, decimal rate);
 
         ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate);
+
+        List<ExchangeRate> GetByEffectiveDate(DateTime effectiveDate);
     }
 }

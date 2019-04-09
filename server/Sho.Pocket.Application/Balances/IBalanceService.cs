@@ -26,7 +26,7 @@ namespace Sho.Pocket.Application.Balances
 
         void ApplyExchangeRate(ExchangeRateModel model);
 
-        IEnumerable<BalanceTotalModel> GetCurrencyTotals(Guid currencyId, int count);
+        IEnumerable<BalanceTotalModel> GetCurrencyTotals(string currencyName, int count);
 
         byte[] ExportBalancesToCsv();
     }

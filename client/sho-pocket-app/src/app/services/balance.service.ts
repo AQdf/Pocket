@@ -162,6 +162,31 @@ export class BalanceService {
     });   
   }
 
+  reload() {
+    this.getEffectiveDatesList();
+    this.setBalanceCurrencyTotal("UAH");
+    this.setBalanceCurrencyTotal("USD");
+  }
+
+  setBalanceCurrencyTotal(currencyName: string) {
+    let queryParams = new HttpParams().set('count', '100');
+    this.client.get<BalanceTotal[]>(balancesApiUrl + 'currency-totals/' + currencyName, { params: queryParams }).pipe(
+      map((data : BalanceTotal[]) => {
+        return data;
+      })
+    ).subscribe(totals => {
+      if (!totals || totals.length === 0) {
+        return;
+      }
+
+      if (totals[0].currency === 'UAH') {
+        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
+      } else {
+        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
+      }
+    });
+  }
+
   createBalanceChart(balances: Balance[])
   {
     let chartData = [];  
@@ -219,25 +244,6 @@ export class BalanceService {
     });
   }
 
-  setBalanceCurrencyTotal(currencyId: string) {
-    let queryParams = new HttpParams().set('count', '100');
-    this.client.get<BalanceTotal[]>(balancesApiUrl + 'currency-totals/' + currencyId, { params: queryParams }).pipe(
-      map((data : BalanceTotal[]) => {
-        return data;
-      })
-    ).subscribe(totals => {
-      if (!totals || totals.length == 0) {
-        return;
-      }
-
-      if (totals[0].currency === 'UAH') {
-        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
-      } else {
-        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
-      }
-    });
-  }
-
   createBalanceChangeChart(totals: BalanceTotal[], currencyColor: string)
   {
     let chartData = [];  
@@ -278,11 +284,5 @@ export class BalanceService {
           data: chartData
       }]  
     })
-  }
-
-  reload() {
-    this.getEffectiveDatesList();
-    this.setBalanceCurrencyTotal("5e28d490-961f-4251-816c-e467450a2499");
-    this.setBalanceCurrencyTotal("8d51fd2c-1ab6-4f07-a2c0-1ea4ed5a12fc");
   }
 }

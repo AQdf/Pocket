@@ -16,9 +16,9 @@ namespace Sho.Pocket.Application.ExchangeRates.Models
             Id = exchangeRate.Id;
             EffectiveDate = exchangeRate.EffectiveDate;
             BaseCurrencyId = exchangeRate.BaseCurrencyId;
-            BaseCurrencyName = exchangeRate.BaseCurrency.Name;
+            BaseCurrencyName = exchangeRate.BaseCurrencyName;
             CounterCurrencyId = exchangeRate.CounterCurrencyId;
-            CounterCurrencyName = exchangeRate.CounterCurrency.Name;
+            CounterCurrencyName = exchangeRate.CounterCurrencyName;
             Value = exchangeRate.Rate;
         }
 

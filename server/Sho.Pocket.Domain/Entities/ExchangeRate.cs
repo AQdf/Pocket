@@ -22,6 +22,10 @@ namespace Sho.Pocket.Domain.Entities
 
         public decimal Rate { get; set; }
 
+        public virtual string BaseCurrencyName { get; set; }
+
+        public virtual string CounterCurrencyName { get; set; }
+
         public virtual Currency BaseCurrency { get; set; }
 
         public virtual Currency CounterCurrency { get; set; }
