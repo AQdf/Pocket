@@ -12,7 +12,7 @@ namespace Sho.Pocket.Core.DataAccess
 
         Balance Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);
 
-        void AddEffectiveBalancesTemplate(DateTime currentEffectiveDate);
+        List<Balance> AddEffectiveBalancesTemplate(DateTime currentEffectiveDate);
 
         Balance Update(Guid id, decimal value);
 

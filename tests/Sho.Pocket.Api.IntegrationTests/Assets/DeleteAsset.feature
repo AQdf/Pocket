@@ -4,7 +4,7 @@
 
 Background: 
 	Given currency USD exists
-	And exchange rate USD to USD with value 1 for today
+	And exchange rate USD to USD with value 1, day shift 0
 
 Scenario: User deletes asset that is not associated with any balance
 	Given I have active asset Asset without balance with currency USD
@@ -14,7 +14,7 @@ Scenario: User deletes asset that is not associated with any balance
 
 Scenario: User deletes asset that is associated with balance
 	Given I have active asset Asset with balance with currency USD
-		And I have balance of asset Asset with balance, amount 200 for today
+		And I have balance of asset Asset with balance, amount 200, day shift 0
 		And I specified asset to delete Asset with balance
 	When I delete asset Asset with balance
 	Then asset not deleted

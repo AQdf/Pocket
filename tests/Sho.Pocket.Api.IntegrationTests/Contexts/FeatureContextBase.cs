@@ -1,19 +1,15 @@
-﻿using Dapper;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Common.Configuration;
 using Sho.Pocket.Core;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
 
-namespace Sho.Pocket.Api.IntegrationTests.Common
+namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
-    public abstract class FeatureManagerBase
+    public abstract class FeatureContextBase
     {
         protected ServiceProvider _serviceProvider;
 
-        public FeatureManagerBase()
+        public FeatureContextBase()
         {
             Configure();
         }

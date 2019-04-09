@@ -17,17 +17,17 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.0.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class GetBalancesFeature : Xunit.IClassFixture<GetBalancesFeature.FixtureData>, System.IDisposable
+    public partial class AddEffectiveBalancesFeature : Xunit.IClassFixture<AddEffectiveBalancesFeature.FixtureData>, System.IDisposable
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
         private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
-#line 1 "GetAllBalances.feature"
+#line 1 "AddEffectiveBalances.feature"
 #line hidden
         
-        public GetBalancesFeature(GetBalancesFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
+        public AddEffectiveBalancesFeature(AddEffectiveBalancesFeature.FixtureData fixtureData, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
         {
             this._testOutputHelper = testOutputHelper;
             this.TestInitialize();
@@ -36,7 +36,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances
         public static void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "GetBalances", "\tAs a user\r\n\tI want to get my today balances", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "AddEffectiveBalances", "\tAs a user\r\n\tI want to add effective balances", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -77,11 +77,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances
 #line 6
  testRunner.Given("currency USD exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 7
- testRunner.And("exchange rate USD to USD with value 1, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("exchange rate USD to USD with value 1, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 8
- testRunner.And("I have active asset First Asset with balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("exchange rate USD to USD with value 1, day shift -1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 9
- testRunner.And("I have active asset Second Asset with balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I have active asset First asset with effective balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("I have active asset Second asset with effective balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -90,25 +92,27 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances
             this.ScenarioTearDown();
         }
         
-        [Xunit.FactAttribute(DisplayName="User gets today balances")]
-        [Xunit.TraitAttribute("FeatureTitle", "GetBalances")]
-        [Xunit.TraitAttribute("Description", "User gets today balances")]
-        public virtual void UserGetsTodayBalances()
+        [Xunit.FactAttribute(DisplayName="User adds effective balances")]
+        [Xunit.TraitAttribute("FeatureTitle", "AddEffectiveBalances")]
+        [Xunit.TraitAttribute("Description", "User adds effective balances")]
+        public virtual void UserAddsEffectiveBalances()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User gets today balances", null, ((string[])(null)));
-#line 11
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User adds effective balances", null, ((string[])(null)));
+#line 12
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 5
 this.FeatureBackground();
-#line 12
- testRunner.Given("I have balance of asset First Asset with balance, amount 100, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13
-  testRunner.And("I have balance of asset Second Asset with balance, amount 200, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("I have balance of asset First asset with effective balance, amount 100, day shift" +
+                    " -1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 14
- testRunner.When("I get today balances", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.And("I have balance of asset Second asset with effective balance, amount 200, day shif" +
+                    "t -1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 15
- testRunner.Then("my 2 balances returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("I add effective balances", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 16
+ testRunner.Then("balances for today exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -120,12 +124,12 @@ this.FeatureBackground();
             
             public FixtureData()
             {
-                GetBalancesFeature.FeatureSetup();
+                AddEffectiveBalancesFeature.FeatureSetup();
             }
             
             void System.IDisposable.Dispose()
             {
-                GetBalancesFeature.FeatureTearDown();
+                AddEffectiveBalancesFeature.FeatureTearDown();
             }
         }
     }

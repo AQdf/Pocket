@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -11,7 +11,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class UpdateAssetSteps
     {
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
         private AddAssetSteps _addAssetSteps;
 
@@ -19,9 +19,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 
         Asset _updatedAsset;
 
-        public UpdateAssetSteps(AssetFeatureManager assetFeatureManager, AddAssetSteps addAssetSteps)
+        public UpdateAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
         {
-            _assetFeatureManager = assetFeatureManager;
+            _assetFeatureContext = assetFeatureContext;
             _addAssetSteps = addAssetSteps;
         }
 
@@ -42,7 +42,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         {
             Guid assetId = _addAssetSteps.CreatedAsset.Id;
 
-            _updatedAsset = _assetFeatureManager.UpdateAsset(assetId, _updateModel);
+            _updatedAsset = _assetFeatureContext.UpdateAsset(assetId, _updateModel);
         }
 
         [Then(@"asset name updated to (.*)")]

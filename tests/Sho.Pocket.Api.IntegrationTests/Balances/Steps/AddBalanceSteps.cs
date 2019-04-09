@@ -1,8 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
-using Sho.Pocket.Api.IntegrationTests.Balances.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Api.IntegrationTests.ExchangeRates.Managers;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -18,20 +16,20 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
         private Balance _createdBalance;
 
-        private BalanceFeatureManager _balanceFeatureManager;
+        private BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
-        private ExchangeRateFeatureManager _exchangeRateFeatureManager;
+        private ExchangeRateFeatureContext _exchangeRateFeatureContext;
 
         public AddBalanceSteps(
-            BalanceFeatureManager balanceFeatureManager,
-            AssetFeatureManager assetFeatureManager,
-            ExchangeRateFeatureManager exchangeRateFeatureManager)
+            BalanceFeatureContext balanceFeatureContext,
+            AssetFeatureContext assetFeatureContext,
+            ExchangeRateFeatureContext exchangeRateFeatureContext)
         {
-            _balanceFeatureManager = balanceFeatureManager;
-            _assetFeatureManager = assetFeatureManager;
-            _exchangeRateFeatureManager = exchangeRateFeatureManager;
+            _balanceFeatureContext = balanceFeatureContext;
+            _assetFeatureContext = assetFeatureContext;
+            _exchangeRateFeatureContext = exchangeRateFeatureContext;
         }
 
         [BeforeTestRun]
@@ -40,26 +38,27 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             StorageCleaner.Cleanup();
         }
 
-        [Given(@"I have balance of asset (.*), amount (.*) for today")]
-        public void GivenIHaveForTodayBalanceOfAssetActiveAssetAmount(string assetName, decimal amount)
+        [Given(@"I have balance of asset (.*), amount (.*), day shift (.*)")]
+        public void GivenIHaveForTodayBalanceOfAssetActiveAssetAmount(string assetName, decimal amount, int dayShift)
         {
-            GivenBalanceCreateModel(assetName, amount);
+            GivenBalanceCreateModel(assetName, amount, dayShift);
             WhenIAddNewBalance();
         }
 
-        [Given(@"I specified today balance of asset (.*), amount (.*)")]
-        public void GivenBalanceCreateModel(string assetName, decimal amount)
+        [Given(@"I specified balance of asset (.*), amount (.*), day shift (.*)")]
+        public void GivenBalanceCreateModel(string assetName, decimal amount, int dayShift)
         {
-            Asset asset = _assetFeatureManager.Assets.Values.First(a => a.Name == assetName);
-            ExchangeRate exchangeRate = _exchangeRateFeatureManager.ExchangeRates.Values.First();
+            DateTime effectiveDate = DateTime.UtcNow.Date.AddDays(dayShift);
+            Asset asset = _assetFeatureContext.Assets[assetName];
+            ExchangeRate exchangeRate = _exchangeRateFeatureContext.ExchangeRates.Values.First(r => r.EffectiveDate == effectiveDate);
 
-            _balanceCreateModel = new BalanceCreateModel(asset.Id, exchangeRate.EffectiveDate, amount, exchangeRate.Id);
+            _balanceCreateModel = new BalanceCreateModel(asset.Id, effectiveDate, amount, exchangeRate.Id);
         }
 
         [When(@"I add new balance")]
         public void WhenIAddNewBalance()
         {
-            _createdBalance = _balanceFeatureManager.AddBalance(_balanceCreateModel);
+            _createdBalance = _balanceFeatureContext.AddBalance(_balanceCreateModel);
         }
 
         [Then(@"balance exists")]
@@ -71,7 +70,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [Then(@"balance asset is (.*)")]
         public void ThenBalanceAssetIs(string assetName)
         {
-            Asset asset = _assetFeatureManager.Assets.Values.First(a => a.Name == assetName);
+            Asset asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
             _createdBalance.AssetId.Should().Be(asset.Id);
         }
@@ -82,8 +81,8 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             _createdBalance.Value.Should().Be(amount);
         }
 
-        [Then(@"balance effective date is today")]
-        public void ThenBalanceEffectiveDateIsToday()
+        [Then(@"balance of (.*) effective date is today")]
+        public void ThenBalanceEffectiveDateIsToday(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
             _createdBalance.EffectiveDate.Should().Be(today);

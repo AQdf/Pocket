@@ -25,7 +25,7 @@ namespace Sho.Pocket.DataAccess.Sql
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.Query<T>(queryText).ToList();
+                result = db.Query<T>(queryText, queryParameters).ToList();
             }
 
             return result;

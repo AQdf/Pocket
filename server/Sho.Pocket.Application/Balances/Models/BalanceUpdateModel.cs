@@ -8,9 +8,9 @@
 
         public BalanceUpdateModel(decimal value)
         {
-            Amount = value;
+            Value = value;
         }
 
-        public decimal Amount { get; set; }
+        public decimal Value { get; set; }
     }
 }

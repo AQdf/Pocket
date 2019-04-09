@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
-using Sho.Pocket.Api.IntegrationTests.Balances.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -17,16 +16,16 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
         private Balance _updatedBalance;
 
-        private BalanceFeatureManager _balanceFeatureManager;
+        private BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
         public UpdateBalanceSteps(
-            BalanceFeatureManager balanceFeatureManager,
-            AssetFeatureManager assetFeatureManager)
+            BalanceFeatureContext balanceFeatureContext,
+            AssetFeatureContext assetFeatureManager)
         {
-            _assetFeatureManager = assetFeatureManager;
-            _balanceFeatureManager = balanceFeatureManager;
+            _assetFeatureContext = assetFeatureManager;
+            _balanceFeatureContext = balanceFeatureContext;
         }
 
         [BeforeTestRun]
@@ -45,12 +44,12 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         public void WhenIUpdateBalanceOfAsset(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
-            Asset asset = _assetFeatureManager.Assets.Values.First(a => a.Name == assetName);
+            Asset asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
-            Balance balance = _balanceFeatureManager.Balances.Values
+            Balance balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
 
-            _updatedBalance = _balanceFeatureManager.UpdateBalance(balance.Id, _balanceUpdateModel);
+            _updatedBalance = _balanceFeatureContext.UpdateBalance(balance.Id, _balanceUpdateModel);
         }
         
         [Then(@"balance amount updated to (.*)")]

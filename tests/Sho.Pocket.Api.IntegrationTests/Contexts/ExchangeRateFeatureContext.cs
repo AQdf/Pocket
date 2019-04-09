@@ -1,33 +1,31 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Api.IntegrationTests.Currencies.Managers;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace Sho.Pocket.Api.IntegrationTests.ExchangeRates.Managers
+namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
-    public class ExchangeRateFeatureManager : FeatureManagerBase
+    public class ExchangeRateFeatureContext : FeatureContextBase
     {
         public Dictionary<Guid, ExchangeRate> ExchangeRates { get; set; }
 
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
-        private readonly CurrencyFeatureManager _currencyFeatureManager;
+        private readonly CurrencyFeatureContext _currencyFeatureContext;
 
-        public ExchangeRateFeatureManager(CurrencyFeatureManager currencyFeatureManager) : base()
+        public ExchangeRateFeatureContext(CurrencyFeatureContext currencyFeatureManager) : base()
         {
             ExchangeRates = new Dictionary<Guid, ExchangeRate>();
 
             _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
-            _currencyFeatureManager = currencyFeatureManager;
+            _currencyFeatureContext = currencyFeatureManager;
         }
 
         public ExchangeRate AddExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, int value)
         {
-            Guid baseCurrencyId = _currencyFeatureManager.Currencies[baseCurrency].Id;
-            Guid counterCurrencyId = _currencyFeatureManager.Currencies[counterCurrency].Id;
+            Guid baseCurrencyId = _currencyFeatureContext.Currencies[baseCurrency].Id;
+            Guid counterCurrencyId = _currencyFeatureContext.Currencies[counterCurrency].Id;
 
             ExchangeRate exchangeRate = _exchangeRateRepository.Add(effectiveDate, baseCurrencyId, counterCurrencyId, value);
             ExchangeRates.Add(exchangeRate.Id, exchangeRate);

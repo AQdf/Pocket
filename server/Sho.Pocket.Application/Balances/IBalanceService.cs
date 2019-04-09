@@ -14,7 +14,7 @@ namespace Sho.Pocket.Application.Balances
 
         Balance Add(BalanceCreateModel createModel);
 
-        bool AddEffectiveBalancesTemplate();
+        List<Balance> AddEffectiveBalancesTemplate();
 
         Balance Update(Guid id, BalanceUpdateModel updateModel);
 

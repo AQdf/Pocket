@@ -65,7 +65,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
-        public void AddEffectiveBalancesTemplate(DateTime currentEffectiveDate)
+        public List<Balance> AddEffectiveBalancesTemplate(DateTime currentEffectiveDate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
 
@@ -74,7 +74,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
                 effectiveDate = currentEffectiveDate,
             };
 
-            base.ExecuteScript(queryText, queryParameters);
+            return base.GetAll(queryText, queryParameters);
         }
 
         public Balance Update(Guid id, decimal value)
@@ -125,7 +125,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             base.ExecuteScript(queryText, queryParameters);
         }
 
-        private List<Balance> GetAllWithRelatedEntities(string queryText)
+        private List<Balance> GetAllWithRelatedEntities(string queryText, string queryParams = null)
         {
             List<Balance> result;
 
@@ -144,7 +144,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
                         }
 
                         return balance;
-                    }).ToList();
+                    }, queryParams).ToList();
             }
 
             return result;

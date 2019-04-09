@@ -67,8 +67,11 @@ export class BalanceService {
       );
   }
  
-  putBalance(id, emp) {
-    var body = JSON.stringify(emp);
+  putBalance(id, balance) {
+    var updateModel = {
+      value: balance.Value
+    };
+    var body = JSON.stringify(updateModel);
     var headerOptions = new Headers({ 'Content-Type': 'application/json' });
     var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headerOptions });
 

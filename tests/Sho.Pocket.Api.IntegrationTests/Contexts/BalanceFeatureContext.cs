@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
@@ -7,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sho.Pocket.Api.IntegrationTests.Balances.Managers
+namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
-    public class BalanceFeatureManager : FeatureManagerBase
+    public class BalanceFeatureContext : FeatureContextBase
     {
         public Dictionary<Guid, Asset> Assets { get; set; } = new Dictionary<Guid, Asset>();
 
@@ -19,7 +18,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Managers
 
         private readonly IBalanceService _balanceService;
 
-        public BalanceFeatureManager() : base()
+        public BalanceFeatureContext() : base()
         {
             _balanceService = _serviceProvider.GetRequiredService<IBalanceService>();
         }
@@ -63,17 +62,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Managers
             Balances.Remove(id);
         }
 
+        public List<Balance> AddEffectiveBalances()
+        {
+            List<Balance> balances = _balanceService.AddEffectiveBalancesTemplate();
 
-        //bool AddEffectiveBalancesTemplate();
-
-        //IEnumerable<BalanceTotalModel> GetCurrentTotalBalance();
-
-        //IEnumerable<DateTime> GetEffectiveDates();
-
-        //void ApplyExchangeRate(ExchangeRateModel model);
-
-        //IEnumerable<BalanceTotalModel> GetCurrencyTotals(Guid currencyId, int count);
-
-        //byte[] ExportBalancesToCsv();
+            return balances;
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets
 #line 6
  testRunner.Given("currency USD exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 7
- testRunner.And("exchange rate USD to USD with value 1 for today", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("exchange rate USD to USD with value 1, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -123,7 +123,7 @@ this.FeatureBackground();
 #line 16
  testRunner.Given("I have active asset Asset with balance with currency USD", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 17
-  testRunner.And("I have balance of asset Asset with balance, amount 200 for today", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I have balance of asset Asset with balance, amount 200, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 18
   testRunner.And("I specified asset to delete Asset with balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 19

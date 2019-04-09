@@ -1,18 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
 
-namespace Sho.Pocket.Api.IntegrationTests.Currencies.Managers
+namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
-    public class CurrencyFeatureManager : FeatureManagerBase
+    public class CurrencyFeatureContext : FeatureContextBase
     {
         public Dictionary<string, Currency> Currencies { get; set; }
 
         private readonly ICurrencyRepository _currencyRepository;
 
-        public CurrencyFeatureManager() : base()
+        public CurrencyFeatureContext() : base()
         {
             Currencies = new Dictionary<string, Currency>();
 

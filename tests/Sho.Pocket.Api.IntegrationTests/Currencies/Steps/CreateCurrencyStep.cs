@@ -1,5 +1,5 @@
 ﻿using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Api.IntegrationTests.Currencies.Managers;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Currencies.Steps
@@ -7,11 +7,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Currencies.Steps
     [Binding]
     public class CreateCurrencyStep
     {
-        private CurrencyFeatureManager _currencyFeatureManager;
+        private CurrencyFeatureContext _currencyFeatureContext;
 
-        public CreateCurrencyStep(CurrencyFeatureManager currencyFeatureManager)
+        public CreateCurrencyStep(CurrencyFeatureContext currencyFeatureContext)
         {
-            _currencyFeatureManager = currencyFeatureManager;
+            _currencyFeatureContext = currencyFeatureContext;
         }
 
         [BeforeTestRun]
@@ -23,7 +23,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Currencies.Steps
         [Given(@"currency (.*) exists")]
         public void GivenCurrency(string currencyName)
         {
-            _currencyFeatureManager.AddCurrency(currencyName);
+            _currencyFeatureContext.AddCurrency(currencyName);
         }
     }
 }

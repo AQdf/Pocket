@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Balances.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Balances.Models;
 using System;
 using System.Collections.Generic;
@@ -13,11 +13,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private List<BalanceViewModel> _balances;
 
-        private readonly BalanceFeatureManager _balanceFeatureManager;
+        private readonly BalanceFeatureContext _balanceFeatureContext;
 
-        public GetBalancesSteps(BalanceFeatureManager balanceFeatureManager)
+        public GetBalancesSteps(BalanceFeatureContext balanceFeatureContext)
         {
-            _balanceFeatureManager = balanceFeatureManager;
+            _balanceFeatureContext = balanceFeatureContext;
         }
 
         [BeforeTestRun]
@@ -31,7 +31,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         {
             DateTime today = DateTime.UtcNow.Date;
 
-            _balances = _balanceFeatureManager.GetAllBalances(today);
+            _balances = _balanceFeatureContext.GetAllBalances(today);
         }
         
         [Then(@"my (.*) balances returned")]

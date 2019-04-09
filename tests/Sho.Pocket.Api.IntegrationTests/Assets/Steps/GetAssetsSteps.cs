@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
 using System.Collections.Generic;
 using TechTalk.SpecFlow;
@@ -12,11 +12,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private List<AssetViewModel> _assets;
 
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
-        public GetAssetsSteps(AssetFeatureManager assetFeatureManager)
+        public GetAssetsSteps(AssetFeatureContext assetFeatureContext)
         {
-            _assetFeatureManager = assetFeatureManager;
+            _assetFeatureContext = assetFeatureContext;
         }
 
         [BeforeTestRun]
@@ -28,7 +28,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [When(@"I get assets")]
         public void WhenIGetAssets()
         {
-            _assets = _assetFeatureManager.GetAssets();
+            _assets = _assetFeatureContext.GetAssets();
         }
         
         [Then(@"my (.*) assets returned")]

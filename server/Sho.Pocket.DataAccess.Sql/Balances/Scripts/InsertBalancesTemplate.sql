@@ -80,3 +80,5 @@ ELSE BEGIN
 	from #TempExchangeRate
 	where IsActive = 1
 END
+
+select * from Balance where EffectiveDate = @effectiveDate

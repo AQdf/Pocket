@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
-using Sho.Pocket.Api.IntegrationTests.Balances.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Linq;
@@ -14,16 +13,16 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private Guid _balanceToDeleteId;
 
-        private BalanceFeatureManager _balanceFeatureManager;
+        private BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
         public DeleteBalanceSteps(
-            BalanceFeatureManager balanceFeatureManager,
-            AssetFeatureManager assetFeatureManager)
+            BalanceFeatureContext balanceFeatureContext,
+            AssetFeatureContext assetFeatureManager)
         {
-            _assetFeatureManager = assetFeatureManager;
-            _balanceFeatureManager = balanceFeatureManager;
+            _assetFeatureContext = assetFeatureManager;
+            _balanceFeatureContext = balanceFeatureContext;
         }
 
         [BeforeTestRun]
@@ -36,9 +35,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         public void GivenISpecifiedBalanceToDelete(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
-            Asset asset = _assetFeatureManager.Assets.Values.First(a => a.Name == assetName);
+            Asset asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
-            Balance balance = _balanceFeatureManager.Balances.Values
+            Balance balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
 
             _balanceToDeleteId = balance.Id;
@@ -47,13 +46,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [When(@"I delete balance")]
         public void WhenIDeleteBalance()
         {
-            _balanceFeatureManager.DeleteBalance(_balanceToDeleteId);
+            _balanceFeatureContext.DeleteBalance(_balanceToDeleteId);
         }
         
         [Then(@"balance deleted")]
         public void ThenBalanceDeleted()
         {
-            bool exists = _balanceFeatureManager.Balances.ContainsKey(_balanceToDeleteId);
+            bool exists = _balanceFeatureContext.Balances.ContainsKey(_balanceToDeleteId);
 
             exists.Should().Be(false);
         }

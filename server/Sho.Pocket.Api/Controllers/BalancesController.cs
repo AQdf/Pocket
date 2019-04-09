@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -95,7 +96,7 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost("template")]
-        public bool AddBalancesTemplate()
+        public IEnumerable<Balance> AddBalancesTemplate()
         {
             return _balanceService.AddEffectiveBalancesTemplate();
         }

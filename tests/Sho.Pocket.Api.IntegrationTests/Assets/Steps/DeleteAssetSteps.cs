@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Assets.Managers;
 using Sho.Pocket.Api.IntegrationTests.Common;
+using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Domain.Entities;
 using TechTalk.SpecFlow;
 
@@ -11,13 +11,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private Asset _assetToDelete;
 
-        private AssetFeatureManager _assetFeatureManager;
+        private AssetFeatureContext _assetFeatureContext;
 
         private AddAssetSteps _addAssetSteps;
 
-        public DeleteAssetSteps(AssetFeatureManager assetFeatureManager, AddAssetSteps addAssetSteps)
+        public DeleteAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
         {
-            _assetFeatureManager = assetFeatureManager;
+            _assetFeatureContext = assetFeatureContext;
             _addAssetSteps = addAssetSteps;
         }
 
@@ -36,13 +36,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [When(@"I delete asset (.*)")]
         public void WhenIDeleteAsset(string assetName)
         {
-            _assetFeatureManager.DeleteAsset(_assetToDelete.Id);
+            _assetFeatureContext.DeleteAsset(_assetToDelete.Id, assetName);
         }
         
         [Then(@"asset deleted")]
         public void ThenAssetDeleted()
         {
-            bool exists = _assetFeatureManager.Assets.ContainsKey(_assetToDelete.Id);
+            bool exists = _assetFeatureContext.Assets.ContainsKey(_assetToDelete.Name);
 
             exists.Should().Be(false);
         }
@@ -50,7 +50,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Then(@"asset not deleted")]
         public void ThenAssetNotDeleted()
         {
-            bool exists = _assetFeatureManager.Assets.ContainsKey(_assetToDelete.Id);
+            bool exists = _assetFeatureContext.Assets.ContainsKey(_assetToDelete.Name);
 
             exists.Should().Be(true);
         }

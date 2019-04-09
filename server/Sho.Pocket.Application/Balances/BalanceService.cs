@@ -73,7 +73,7 @@ namespace Sho.Pocket.Application.Balances
             return _balanceRepository.Add(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
         }
 
-        public bool AddEffectiveBalancesTemplate()
+        public List<Balance> AddEffectiveBalancesTemplate()
         {
             IEnumerable<DateTime> effectiveDates = GetEffectiveDates();
             DateTime today = DateTime.UtcNow.Date;
@@ -81,16 +81,16 @@ namespace Sho.Pocket.Application.Balances
 
             if (!todayBalancesExists)
             {
-                _balanceRepository.AddEffectiveBalancesTemplate(today);
-                return true;
+                return _balanceRepository.AddEffectiveBalancesTemplate(today);
             }
 
-            return false;
+            List<Balance> balances = _balanceRepository.GetAll(false);
+            return balances.Where(b => b.EffectiveDate == today).ToList();
         }
 
         public Balance Update(Guid id, BalanceUpdateModel updateModel)
         {
-            return _balanceRepository.Update(id, updateModel.Amount);
+            return _balanceRepository.Update(id, updateModel.Value);
         }
 
         public void Delete(Guid Id)

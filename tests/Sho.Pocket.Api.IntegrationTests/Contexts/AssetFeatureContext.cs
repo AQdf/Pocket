@@ -2,30 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Api.IntegrationTests.Currencies.Managers;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
+namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
-    public class AssetFeatureManager : FeatureManagerBase
+    public class AssetFeatureContext : FeatureContextBase
     {
-        public Dictionary<Guid, Asset> Assets { get; set; } = new Dictionary<Guid, Asset>();
+        public Dictionary<string, Asset> Assets { get; set; }
 
         private readonly IAssetService _assetService;
 
-        private readonly CurrencyFeatureManager _currencyFeatureManager;
+        private readonly CurrencyFeatureContext _currencyFeatureContext;
 
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
         private readonly IBalanceRepository _balanceRepository;
 
-        public AssetFeatureManager(CurrencyFeatureManager currencyFeatureManager) : base()
+        public AssetFeatureContext(CurrencyFeatureContext currencyFeatureManager) : base()
         {
-            _currencyFeatureManager = currencyFeatureManager;
+            Assets = new Dictionary<string, Asset>();
+
+            _currencyFeatureContext = currencyFeatureManager;
 
             _assetService = _serviceProvider.GetRequiredService<IAssetService>();
             _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
@@ -36,7 +36,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
         {
             List<AssetViewModel> storageAssets = _assetService.GetAll();
 
-            List<AssetViewModel> contextAssets = storageAssets.Where(sa => Assets.ContainsKey(sa.Id.Value)).ToList();
+            List<AssetViewModel> contextAssets = storageAssets.Where(sa => Assets.ContainsKey(sa.Name)).ToList();
 
             return contextAssets;
         }
@@ -44,25 +44,25 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Managers
         public Asset AddAsset(AssetCreateModel createModel)
         {
             Asset asset = _assetService.Add(createModel);
-            Assets.Add(asset.Id, asset);
+            Assets.Add(asset.Name, asset);
 
             return asset;
         }
 
-        public void DeleteAsset(Guid id)
+        public void DeleteAsset(Guid id, string assetName)
         {
             bool isSuccess = _assetService.Delete(id);
 
             if (isSuccess)
             {
-                Assets.Remove(id);
+                Assets.Remove(assetName);
             }
         }
 
         public Asset UpdateAsset(Guid id, AssetUpdateModel updateModel)
         {
             Asset result = _assetService.Update(id, updateModel);
-            Assets[id] = result;
+            Assets[updateModel.Name] = result;
 
             return result;
         }
