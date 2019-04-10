@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
+using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     [Binding]
     public class AddEffectiveBalancesSteps
     {
-        private List<Balance> _balances;
+        private List<BalanceViewModel> _balances;
 
         private BalanceFeatureContext _balanceFeatureContext;
 

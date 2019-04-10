@@ -28,14 +28,30 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
+        public List<Balance> GetByEffectiveDate(DateTime effectiveDate, bool includeRelated = true)
+        {
+            string queryText = @"
+                select * from Balance
+                join Asset on Asset.Id = Balance.AssetId
+                left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
+                left join Currency BaseCurrency on BaseCurrency.Id = ExchangeRate.BaseCurrencyId
+                left join Currency CounterCurrency on CounterCurrency.Id = ExchangeRate.CounterCurrencyId
+                where Balance.EffectiveDate = @effectiveDate";
+
+            object queryParams = new { effectiveDate };
+
+            List<Balance> result = includeRelated
+                ? GetAllWithRelatedEntities(queryText, queryParams)
+                : base.GetAll(queryText, queryParams);
+
+            return result;
+        }
+
         public Balance GetById(Guid id)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
 
-            object queryParameters = new
-            {
-                id
-            };
+            object queryParameters = new { id };
 
             Balance result;
 
@@ -65,7 +81,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
-        public List<Balance> AddEffectiveBalancesTemplate(DateTime currentEffectiveDate)
+        public List<Balance> AddEffectiveBalances(DateTime currentEffectiveDate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
 
@@ -98,7 +114,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             base.RemoveEntity(queryText, queryParameters);
         }
 
-        public IEnumerable<DateTime> GetEffectiveDates()
+        public List<DateTime> GetOrderedEffectiveDates()
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
 
@@ -125,7 +141,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             base.ExecuteScript(queryText, queryParameters);
         }
 
-        private List<Balance> GetAllWithRelatedEntities(string queryText, string queryParams = null)
+        private List<Balance> GetAllWithRelatedEntities(string queryText, object queryParams = null)
         {
             List<Balance> result;
 

@@ -13,11 +13,29 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         {
         }
 
-        public List<Asset> GetAll(bool includeRelated = true)
+        public List<Asset> GetAll()
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
 
             List<Asset> result = base.GetAll(queryText);
+
+            return result;
+        }
+
+        public List<Asset> GetActiveAssets()
+        {
+            string query = @"
+                SELECT [Asset].[Id] AS [ID]
+                      ,[Asset].[Name] AS [Name]
+                      ,[Asset].[IsActive] AS [IsActive]
+                      ,[Asset].[CurrencyId] AS [CurrencyId]
+	                  ,[Currency].[Name] AS CurrencyName
+                FROM [dbo].[Asset]
+                JOIN [dbo].[Currency] ON [Currency].[Id] = [Asset].[CurrencyId]
+                WHERE [Asset].[IsActive] = 1
+                ORDER BY [Asset].[Name] ASC";
+
+            List<Asset> result = base.GetAll(query);
 
             return result;
         }

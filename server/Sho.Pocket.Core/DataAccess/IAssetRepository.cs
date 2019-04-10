@@ -8,7 +8,9 @@ namespace Sho.Pocket.Core.DataAccess
     {
         Asset GetById(Guid id);
 
-        List<Asset> GetAll(bool includeRelated = true);
+        List<Asset> GetAll();
+
+        List<Asset> GetActiveAssets();
 
         Asset Add(string name, Guid currencyId, bool isActive);
 

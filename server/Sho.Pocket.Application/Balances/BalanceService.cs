@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Application.Common.Comparers;
 using Sho.Pocket.Application.DataExport;
+using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Constants;
@@ -18,6 +19,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly ICurrencyRepository _currencyRepository;
+        private readonly IExchangeRateService _exchangeRateService;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
@@ -25,12 +27,14 @@ namespace Sho.Pocket.Application.Balances
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
             ICurrencyRepository currencyRepository,
+            IExchangeRateService exchangeRateService,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
+            _exchangeRateService = exchangeRateService;
             _csvExporter = balanceExporter;
         }
 
@@ -47,7 +51,10 @@ namespace Sho.Pocket.Application.Balances
 
             List<ExchangeRate> rates = _exchangeRateRepository.GetByEffectiveDate(effectiveDate);
 
-            List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
+            List<ExchangeRateModel> ratesModels = rates
+                .Where(r => r.BaseCurrencyName != CurrencyConstants.UAH)
+                .Select(r => new ExchangeRateModel(r))
+                .ToList();
 
             IEnumerable<BalanceTotalModel> totals = CalculateTotals(balances, effectiveDate);
 
@@ -70,19 +77,37 @@ namespace Sho.Pocket.Application.Balances
             return _balanceRepository.Add(createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
         }
 
-        public List<Balance> AddEffectiveBalancesTemplate()
+        public List<BalanceViewModel> AddEffectiveBalancesTemplate()
         {
-            IEnumerable<DateTime> effectiveDates = GetEffectiveDates();
+            List<DateTime> effectiveDates = _balanceRepository.GetOrderedEffectiveDates();
             DateTime today = DateTime.UtcNow.Date;
-            bool todayBalancesExists = effectiveDates.Any(date => date.Equals(today));
+            bool todayBalancesExists = effectiveDates.Contains(today);
+
+            List<BalanceViewModel> result = new List<BalanceViewModel>();
 
             if (!todayBalancesExists)
             {
-                return _balanceRepository.AddEffectiveBalancesTemplate(today);
+                List<ExchangeRateModel> todayExchangeRates = _exchangeRateService.AddDefaultExchangeRates(today);
+
+                if (effectiveDates.Any())
+                {
+                    DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
+                    List<Balance> latestBalances = _balanceRepository.GetByEffectiveDate(latestEffectiveDate);
+
+                    result = AddBalancesByTemplate(latestBalances, todayExchangeRates, today);
+                }
+                else
+                {
+                    result = AddAssetsBalances(todayExchangeRates, today);
+                }
+            }
+            else
+            {
+                List<Balance> balances = _balanceRepository.GetByEffectiveDate(today);
+                result = balances.Select(b => new BalanceViewModel(b)).ToList();
             }
 
-            List<Balance> balances = _balanceRepository.GetAll(false);
-            return balances.Where(b => b.EffectiveDate == today).ToList();
+            return result;
         }
 
         public Balance Update(Guid id, BalanceUpdateModel updateModel)
@@ -93,6 +118,11 @@ namespace Sho.Pocket.Application.Balances
         public void Delete(Guid Id)
         {
             _balanceRepository.Remove(Id);
+        }
+
+        public IEnumerable<DateTime> GetEffectiveDates()
+        {
+            return _balanceRepository.GetOrderedEffectiveDates();
         }
 
         public IEnumerable<BalanceTotalModel> GetCurrentTotalBalance()
@@ -118,11 +148,6 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public IEnumerable<DateTime> GetEffectiveDates()
-        {
-            return _balanceRepository.GetEffectiveDates();
-        }
-
         public void ApplyExchangeRate(ExchangeRateModel model)
         {
             _exchangeRateRepository.Update(model.Id, model.Value);
@@ -136,7 +161,7 @@ namespace Sho.Pocket.Application.Balances
             List<Asset> assets = _assetRepository.GetAll();
             balances.ForEach(b => b.Asset = assets.FirstOrDefault(a => b.AssetId == a.Id));
 
-            List<DateTime> effectivateDates = _balanceRepository.GetEffectiveDates().Take(count).ToList();
+            List<DateTime> effectivateDates = _balanceRepository.GetOrderedEffectiveDates().Take(count).ToList();
             List<Currency> currencies = _currencyRepository.GetAll();
             Currency currency = currencies.FirstOrDefault(c => c.Name == currencyName);
             Guid defaultCurrencyId = currencies.Where(c => c.IsDefault).Select(c => c.Id).FirstOrDefault();
@@ -215,6 +240,42 @@ namespace Sho.Pocket.Application.Balances
             }
 
             BalanceTotalModel result = new BalanceTotalModel(effectiveDate, currency.Name, value);
+
+            return result;
+        }
+
+        private List<BalanceViewModel> AddBalancesByTemplate(List<Balance> balances, List<ExchangeRateModel> exchangeRates, DateTime effectiveDate)
+        {
+            var result = new List<BalanceViewModel>();
+
+            foreach (Balance balance in balances)
+            {
+                ExchangeRateModel balanceExchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrencyId == balance.Asset.CurrencyId);
+                Balance newBalance = _balanceRepository.Add(balance.AssetId, effectiveDate, balance.Value, balanceExchangeRate.Id);
+
+                var assetModel = new AssetViewModel(balance.Asset);
+                var model = new BalanceViewModel(newBalance, balanceExchangeRate, assetModel);
+                result.Add(model);
+            }
+
+            return result;
+        }
+
+        private List<BalanceViewModel> AddAssetsBalances(List<ExchangeRateModel> exchangeRates, DateTime effectiveDate)
+        {
+            var result = new List<BalanceViewModel>();
+
+            List<Asset> activeAssets = _assetRepository.GetActiveAssets();
+
+            foreach (Asset asset in activeAssets)
+            {
+                ExchangeRateModel exchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrencyId == asset.CurrencyId);
+                Balance newBalance = _balanceRepository.Add(asset.Id, effectiveDate, 0.0M, exchangeRate.Id);
+
+                var assetModel = new AssetViewModel(asset);
+                var balanceModel = new BalanceViewModel(newBalance, exchangeRate, assetModel);
+                result.Add(balanceModel);
+            }
 
             return result;
         }

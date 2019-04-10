@@ -62,9 +62,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             Balances.Remove(id);
         }
 
-        public List<Balance> AddEffectiveBalances()
+        public List<BalanceViewModel> AddEffectiveBalances()
         {
-            List<Balance> balances = _balanceService.AddEffectiveBalancesTemplate();
+            List<BalanceViewModel> balances = _balanceService.AddEffectiveBalancesTemplate();
 
             return balances;
         }

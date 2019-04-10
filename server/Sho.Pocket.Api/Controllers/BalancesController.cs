@@ -96,7 +96,7 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost("template")]
-        public IEnumerable<Balance> AddBalancesTemplate()
+        public List<BalanceViewModel> AddBalancesTemplate()
         {
             return _balanceService.AddEffectiveBalancesTemplate();
         }

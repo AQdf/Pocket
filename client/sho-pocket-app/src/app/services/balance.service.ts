@@ -98,6 +98,8 @@ export class BalanceService {
       {
         this.getBalanceList(this.effectiveDatesList[0]);
         this.selectedEffectiveDate = this.effectiveDatesList[0];
+      } else {
+        this.balances = null;
       }
     });
   }

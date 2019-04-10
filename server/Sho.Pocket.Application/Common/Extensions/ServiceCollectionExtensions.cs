@@ -2,6 +2,7 @@
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.DataExport;
+using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
@@ -17,6 +18,7 @@ namespace Sho.Pocket.Application.Common.Configuration
         {
             services.AddSingleton<IDbConfiguration, DbConfiguration>();
 
+            services.AddScoped<IExchangeRateService, ExchangeRateService>();
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
 

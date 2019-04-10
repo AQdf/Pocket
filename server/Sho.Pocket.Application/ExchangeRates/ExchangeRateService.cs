@@ -2,7 +2,9 @@
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -12,14 +14,37 @@ namespace Sho.Pocket.Application.ExchangeRates
     {
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
-        public ExchangeRateService(IExchangeRateRepository exchangeRateRepository)
+        private readonly ICurrencyRepository _currencyRepository;
+
+        public ExchangeRateService(
+            IExchangeRateRepository exchangeRateRepository,
+            ICurrencyRepository currencyRepository)
         {
             _exchangeRateRepository = exchangeRateRepository;
+            _currencyRepository = currencyRepository;
         }
 
-        public ExchangeRateModel AddExchangeRate(ExchangeRateModel model)
+        public List<ExchangeRateModel> AddDefaultExchangeRates(DateTime effectiveDate)
         {
-            ExchangeRate exchangeRate = _exchangeRateRepository.Add(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
+            List<ExchangeRateModel> result = new List<ExchangeRateModel>();
+
+            List<Currency> currencies = _currencyRepository.GetAll();
+            Currency defaultCurrency = currencies.First(c => c.IsDefault);
+
+            foreach (var currency in currencies)
+            {
+                ExchangeRate exchangeRate = _exchangeRateRepository.Alter(effectiveDate, currency.Id, defaultCurrency.Id, 1.0M);
+
+                ExchangeRateModel model = new ExchangeRateModel(exchangeRate);
+                result.Add(model);
+            }
+
+            return result;
+        }
+
+        public ExchangeRateModel AlterExchangeRate(ExchangeRateModel model)
+        {
+            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;

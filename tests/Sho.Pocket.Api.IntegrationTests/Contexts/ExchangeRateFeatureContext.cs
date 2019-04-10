@@ -27,7 +27,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             Guid baseCurrencyId = _currencyFeatureContext.Currencies[baseCurrency].Id;
             Guid counterCurrencyId = _currencyFeatureContext.Currencies[counterCurrency].Id;
 
-            ExchangeRate exchangeRate = _exchangeRateRepository.Add(effectiveDate, baseCurrencyId, counterCurrencyId, value);
+            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(effectiveDate, baseCurrencyId, counterCurrencyId, value);
             ExchangeRates.Add(exchangeRate.Id, exchangeRate);
 
             return exchangeRate;

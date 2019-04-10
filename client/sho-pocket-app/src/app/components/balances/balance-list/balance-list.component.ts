@@ -53,9 +53,17 @@ export class BalanceListComponent implements OnInit {
     if (confirm('Are you sure to delete this record ?') == true) {
       this.balanceService.deleteBalance(id)
       .subscribe(x => {
-        this.balanceService.reload();
-        this.toastr.warning("Deleted Successfully", "Balance");
+        this.balanceService.getEffectiveDatesList();
+        this.toastr.success("Deleted Successfully", "Balance");
       })
+    }
+  }
+
+  removeItemFromBalancesListById(id: string)
+  {
+    let index = this.balanceService.balances.findIndex(f => f.id === id)
+    if (index > -1) {
+      this.balanceService.balances.splice(index, 1);
     }
   }
 

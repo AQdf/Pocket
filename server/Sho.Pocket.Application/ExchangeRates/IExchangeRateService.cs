@@ -1,9 +1,13 @@
 ﻿using Sho.Pocket.Application.ExchangeRates.Models;
+using System;
+using System.Collections.Generic;
 
 namespace Sho.Pocket.Application.ExchangeRates
 {
     public interface IExchangeRateService
     {
-        ExchangeRateModel AddExchangeRate(ExchangeRateModel model);
+        List<ExchangeRateModel> AddDefaultExchangeRates(DateTime effectiveDate);
+
+        ExchangeRateModel AlterExchangeRate(ExchangeRateModel model);
     }
 }

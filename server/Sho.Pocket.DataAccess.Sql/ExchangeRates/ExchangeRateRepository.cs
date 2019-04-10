@@ -1,5 +1,4 @@
 ﻿using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -14,18 +13,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public ExchangeRate Add(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
-        {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertExchangeRate.sql");
-
-            object queryParameters = new { effectiveDate, baseCurrencyId, counterCurrencyId, rate };
-
-            ExchangeRate result = base.InsertEntity(queryText, queryParameters);
-
-            return result;
-        }
-
-        public ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, decimal rate)
+        public ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
 
@@ -33,7 +21,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             {
                 effectiveDate,
                 baseCurrencyId,
-                counterCurrencyName = CurrencyConstants.UAH,
+                counterCurrencyId,
                 rate
             };
 
@@ -42,13 +30,13 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             return result;
         }
 
-        public void Update(Guid id, decimal rate)
+        public ExchangeRate Update(Guid id, decimal rate)
         {
             string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateExchangeRate.sql");
 
             object queryParameters = new { id, rate };
 
-            base.UpdateEntity(queryText, queryParameters);
+            return base.UpdateEntity(queryText, queryParameters);
         }
 
         public ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate)

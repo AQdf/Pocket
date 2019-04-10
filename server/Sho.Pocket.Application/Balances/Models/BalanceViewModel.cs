@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Common.Converters;
+using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 
@@ -21,6 +22,17 @@ namespace Sho.Pocket.Application.Balances.Models
             ExchangeRateId = balance.ExchangeRateId;
             ExchangeRateValue = balance.ExchangeRate.Rate;
             Asset = new AssetViewModel(balance.Asset);
+        }
+
+        public BalanceViewModel(Balance balance, ExchangeRateModel exchangeRate, AssetViewModel asset)
+        {
+            Id = balance.Id;
+            AssetId = balance.AssetId;
+            EffectiveDate = balance.EffectiveDate;
+            Value = balance.Value;
+            ExchangeRateId = balance.ExchangeRateId;
+            ExchangeRateValue = exchangeRate.Value;
+            Asset = asset;
         }
 
         public Guid? Id { get; set; }

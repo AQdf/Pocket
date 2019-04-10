@@ -1,6 +1,8 @@
-﻿DECLARE @baseCurrencyId uniqueidentifier = (select CurrencyId from Asset where Id = @assetId)
-DECLARE @counterCurrencyId uniqueidentifier = (select Id from Currency where [Name] = @counterCurrencyName)
-DECLARE @id uniqueidentifier = (select top 1 Id from ExchangeRate where BaseCurrencyId = @baseCurrencyId and CounterCurrencyId = @counterCurrencyId and EffectiveDate = @effectiveDate)
+﻿DECLARE @id uniqueidentifier = (
+	select top 1 Id from ExchangeRate
+	where BaseCurrencyId = @baseCurrencyId
+		and CounterCurrencyId = @counterCurrencyId
+		and EffectiveDate = @effectiveDate)
 
 IF @id IS NULL
 	BEGIN
