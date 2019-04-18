@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.Application.ExchangeRates
 {
@@ -16,12 +15,17 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         private readonly ICurrencyRepository _currencyRepository;
 
+        private readonly IExchangeRateProvider _exchangeRateProvider;
+
         public ExchangeRateService(
             IExchangeRateRepository exchangeRateRepository,
-            ICurrencyRepository currencyRepository)
+            ICurrencyRepository currencyRepository,
+            IExchangeRateProviderFactory exchangeRateProviderFactory)
         {
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
+
+            _exchangeRateProvider = exchangeRateProviderFactory.GetProvider(ProviderConstants.DEFAULT_PROVIDER);
         }
 
         public List<ExchangeRateModel> AddDefaultExchangeRates(DateTime effectiveDate)
@@ -31,9 +35,20 @@ namespace Sho.Pocket.Application.ExchangeRates
             List<Currency> currencies = _currencyRepository.GetAll();
             Currency defaultCurrency = currencies.First(c => c.IsDefault);
 
-            foreach (var currency in currencies)
+            foreach (Currency currency in currencies)
             {
-                ExchangeRate exchangeRate = _exchangeRateRepository.Alter(effectiveDate, currency.Id, defaultCurrency.Id, 1.0M);
+                bool exists = _exchangeRateRepository.Exists(currency.Id, effectiveDate);
+                ExchangeRate exchangeRate;
+
+                if (!exists)
+                {
+                    ExchangeRateProviderModel providerRate = _exchangeRateProvider.FetchRate(currency.Name, defaultCurrency.Name);
+                    exchangeRate = _exchangeRateRepository.Alter(effectiveDate, currency.Id, defaultCurrency.Id, providerRate.Value);
+                }
+                else
+                {
+                    exchangeRate = _exchangeRateRepository.GetCurrencyExchangeRate(currency.Id, effectiveDate);
+                }
 
                 ExchangeRateModel model = new ExchangeRateModel(exchangeRate);
                 result.Add(model);
@@ -46,29 +61,6 @@ namespace Sho.Pocket.Application.ExchangeRates
         {
             ExchangeRate exchangeRate = _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
-
-            return result;
-        }
-
-        private async Task<Dictionary<string, decimal>> GetExchangeRates(IEnumerable<string> currencies)
-        {
-            Dictionary<string, decimal> result = new Dictionary<string, decimal>();
-
-            using (HttpClient client = new HttpClient())
-            {
-                foreach (string currency in currencies)
-                {
-                    string requestUri = $"http://free.currencyconverterapi.com/api/v5/convert?q={currency}_UAH&compact=y";
-
-                    string json = await client.GetStringAsync(requestUri);
-
-                    object rateObject = JsonConvert.DeserializeObject<object>(json);
-                    string rateString = ((Newtonsoft.Json.Linq.JValue)((Newtonsoft.Json.Linq.JProperty)((Newtonsoft.Json.Linq.JContainer)((Newtonsoft.Json.Linq.JProperty)((Newtonsoft.Json.Linq.JContainer)rateObject).First).Value).First).Value).Value.ToString();
-                    decimal rate = decimal.Parse(rateString);
-
-                    result.Add(currency, rate);
-                }
-            }
 
             return result;
         }

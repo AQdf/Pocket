@@ -50,6 +50,21 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             return result;
         }
 
+        public bool Exists(Guid baseCurrencyId, DateTime effectiveDate)
+        {
+            string queryText = @"
+                if exists ( select top 1 1 from ExchangeRate
+                            where BaseCurrencyId = @baseCurrencyId
+                            and EffectiveDate = @effectiveDate )
+                select 1 else select 0";
+
+            object queryParams = new { baseCurrencyId, effectiveDate };
+
+            bool result = base.Exists(queryText, queryParams);
+
+            return result;
+        }
+
         public List<ExchangeRate> GetByEffectiveDate(DateTime effectiveDate)
         {
             string queryText = @"
@@ -63,7 +78,8 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 from ExchangeRate
                 join Currency baseCurrency on ExchangeRate.BaseCurrencyId = baseCurrency.Id
                 join Currency counterCurrency on ExchangeRate.CounterCurrencyId = counterCurrency.Id
-                where EffectiveDate = @effectiveDate";
+                where EffectiveDate = @effectiveDate
+                order by BaseCurrencyName";
 
             object queryParameters = new { effectiveDate };
 

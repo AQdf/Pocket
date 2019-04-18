@@ -5,7 +5,7 @@ using System.Text;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.DataExport;
-using Sho.Pocket.Application.ExchangeRates;
+using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Constants;
@@ -52,7 +52,6 @@ namespace Sho.Pocket.Application.Balances
             List<ExchangeRate> rates = _exchangeRateRepository.GetByEffectiveDate(effectiveDate);
 
             List<ExchangeRateModel> ratesModels = rates
-                .Where(r => r.BaseCurrencyName != CurrencyConstants.UAH)
                 .Select(r => new ExchangeRateModel(r))
                 .ToList();
 

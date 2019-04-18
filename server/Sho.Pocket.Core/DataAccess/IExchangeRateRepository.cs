@@ -13,5 +13,7 @@ namespace Sho.Pocket.Core.DataAccess
         ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate);
 
         List<ExchangeRate> GetByEffectiveDate(DateTime effectiveDate);
+
+        bool Exists(Guid baseCurrencyId, DateTime effectiveDate);
     }
 }

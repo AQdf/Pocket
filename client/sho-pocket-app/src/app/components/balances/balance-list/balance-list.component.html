@@ -9,13 +9,9 @@
 
     <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balance.id">
     <input type="hidden" name="exchangeRateId" #ExchangeRateValue="ngModel" [(ngModel)]="balance.exchangeRateId">
+    <input type="hidden" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
 
     <div class="form-row align-items-center p-2">
-      <div class="col-md-2">
-        <input name="EffectiveDate" type="date" class="form-control" placeholder="Effective Date" required
-          [disabled]="balance.id !== currentEditRecordId" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate"
-          [ngClass]="{'input-invalid': EffectiveDate.invalid && EffectiveDate.touched }">
-      </div>
       <div class="col-md-4">
         <select name="AssetId" class="form-control" placeholder="Asset" required
           [disabled]="balance.id !== currentEditRecordId" #AssetId="ngModel" [(ngModel)]="balance.assetId"
@@ -37,7 +33,7 @@
       <div class="col-md-2">
         <input class="form-control" value="{{(balance.asset && balance.asset.currencyName) || '-'}}" [disabled]="true">
       </div>
-      <div class="col-md-2">
+      <div class="col-md-4">
         <button type="button" class="btn btn-outline-info ml-1"
           [disabled]="isAddMode && currentEditRecordId !== balance.id" (click)="showForEdit(balance)">
           <i class="fa fa-pencil-square-o"></i>

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Sho.Pocket.Application.ExchangeRates
+namespace Sho.Pocket.Application.ExchangeRates.Abstractions
 {
     public interface IExchangeRateService
     {

@@ -74,6 +74,7 @@ export class BalanceListComponent implements OnInit {
           this.balanceService.reload();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
           this.currentEditRecordId = null;
+          this.isAddMode = false;
         });
     }
     else {
@@ -88,13 +89,12 @@ export class BalanceListComponent implements OnInit {
   }
 
   addBalance() {
-    var tzOffset = (new Date().getTimezoneOffset()) * 60000; //offset in milliseconds
-    var localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, -1);
-    var formattedNow = localISOTime.substring(0, localISOTime.indexOf('T'));
+    var balanceDate = this.balanceService.selectedEffectiveDate;
+    var formattedDate = balanceDate.substring(0, balanceDate.indexOf('T'));
 
     let newBalance =  {
       id: null,
-      effectiveDate: formattedNow,
+      effectiveDate: formattedDate,
       value: 0.0,
       assetId: '',
       exchangeRateId: '',
