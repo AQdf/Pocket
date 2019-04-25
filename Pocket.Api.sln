@@ -17,13 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Domain", "server
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Core", "server\Sho.Pocket.Core\Sho.Pocket.Core.csproj", "{D3C0A7C1-921F-4088-91D7-A4687D145D15}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Dapper", "server\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Dapper.csproj", "{59F93148-AAE3-4C63-B904-8F5901F171A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Sql", "server\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj", "{59F93148-AAE3-4C63-B904-8F5901F171A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Web", "server\Sho.Pocket.Web\Sho.Pocket.Web.csproj", "{B63ABD2F-B86B-4937-8BD1-3A71978427C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D14B7495-CD18-439B-9D37-50E9B134C1F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Api.IntegrationTests", "tests\Sho.Pocket.Api.IntegrationTests\Sho.Pocket.Api.IntegrationTests.csproj", "{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sho.Pocket.Auth.IdentityServer", "server\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj", "{5BC06275-EA46-4190-A0D0-9841F0EBAE27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,22 @@ Global
 		{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0}.Release|x64.Build.0 = Release|Any CPU
 		{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0}.Release|x86.Build.0 = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|x64.Build.0 = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Debug|x86.Build.0 = Debug|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|ARM.Build.0 = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|x64.ActiveCfg = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|x64.Build.0 = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +204,7 @@ Global
 		{59F93148-AAE3-4C63-B904-8F5901F171A0} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
 		{B63ABD2F-B86B-4937-8BD1-3A71978427C4} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
 		{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0} = {D14B7495-CD18-439B-9D37-50E9B134C1F8}
+		{5BC06275-EA46-4190-A0D0-9841F0EBAE27} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {376A0018-D67B-4B42-8296-68CACB7FEFC5}

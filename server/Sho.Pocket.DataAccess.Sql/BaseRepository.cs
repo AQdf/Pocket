@@ -100,7 +100,7 @@ namespace Sho.Pocket.DataAccess.Sql
             string result;
 
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = $"Sho.Pocket.DataAccess.Dapper.{dirPath}.{fileName}";
+            var resourceName = $"Sho.Pocket.DataAccess.Sql.{dirPath}.{fileName}";
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             using (StreamReader reader = new StreamReader(stream))

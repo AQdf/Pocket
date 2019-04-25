@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>469d443e-9d9e-4e30-bb2d-abded78a709c</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,12 +11,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj" />
   </ItemGroup>
 
 </Project>

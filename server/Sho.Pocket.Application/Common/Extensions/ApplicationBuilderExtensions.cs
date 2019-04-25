@@ -5,7 +5,7 @@ namespace Sho.Pocket.Application.Common.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void SeedData(this IApplicationBuilder app, IDbConfiguration dbConfiguration)
+        public static void SeedApplicationData(this IApplicationBuilder app, IDbConfiguration dbConfiguration)
         {
             dbConfiguration.SeedStorageData();
         }

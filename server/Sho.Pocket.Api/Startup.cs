@@ -37,6 +37,7 @@ namespace Sho.Pocket.Api
             services.AddSingleton(s => globalSettings);
 
             services.AddApplicationServices();
+            //services.AddApplicationIdentityServer(globalSettings);
 
             services.AddSwaggerGen(c =>
             {
@@ -46,7 +47,10 @@ namespace Sho.Pocket.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDbConfiguration dbConfiguration)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            IDbConfiguration dbConfiguration)
         {
             if (env.IsDevelopment())
             {
@@ -58,9 +62,12 @@ namespace Sho.Pocket.Api
                 app.UseHttpsRedirection();
             }
 
-            app.SeedData(dbConfiguration);
+            app.SeedApplicationData(dbConfiguration);
 
             app.UseMvc();
+
+            //app.UseAuthentication();
+            //app.SeedApplicationAuthData(authDbConfiguration);
 
             app.UseCors("AllowAll");
 
