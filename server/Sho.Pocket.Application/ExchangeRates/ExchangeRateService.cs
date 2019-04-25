@@ -6,6 +6,7 @@ using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.Application.ExchangeRates
 {
@@ -28,26 +29,26 @@ namespace Sho.Pocket.Application.ExchangeRates
             _exchangeRateProvider = exchangeRateProviderFactory.GetProvider(ProviderConstants.DEFAULT_PROVIDER);
         }
 
-        public List<ExchangeRateModel> AddDefaultExchangeRates(DateTime effectiveDate)
+        public async Task<IEnumerable<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate)
         {
             List<ExchangeRateModel> result = new List<ExchangeRateModel>();
 
-            List<Currency> currencies = _currencyRepository.GetAll();
+            IEnumerable<Currency> currencies = await _currencyRepository.GetAll();
             Currency defaultCurrency = currencies.First(c => c.IsDefault);
 
             foreach (Currency currency in currencies)
             {
-                bool exists = _exchangeRateRepository.Exists(currency.Id, effectiveDate);
+                bool exists = await _exchangeRateRepository.Exists(currency.Id, effectiveDate);
                 ExchangeRate exchangeRate;
 
                 if (!exists)
                 {
                     ExchangeRateProviderModel providerRate = _exchangeRateProvider.FetchRate(currency.Name, defaultCurrency.Name);
-                    exchangeRate = _exchangeRateRepository.Alter(effectiveDate, currency.Id, defaultCurrency.Id, providerRate.Value);
+                    exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, currency.Id, defaultCurrency.Id, providerRate.Value);
                 }
                 else
                 {
-                    exchangeRate = _exchangeRateRepository.GetCurrencyExchangeRate(currency.Id, effectiveDate);
+                    exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(currency.Id, effectiveDate);
                 }
 
                 ExchangeRateModel model = new ExchangeRateModel(exchangeRate);
@@ -57,9 +58,9 @@ namespace Sho.Pocket.Application.ExchangeRates
             return result;
         }
 
-        public ExchangeRateModel AlterExchangeRate(ExchangeRateModel model)
+        public async Task<ExchangeRateModel> AlterExchangeRate(ExchangeRateModel model)
         {
-            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrencyId, model.CounterCurrencyId, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;

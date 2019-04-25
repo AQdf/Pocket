@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Currencies.Models;
 
@@ -7,14 +8,14 @@ namespace Sho.Pocket.Application.Assets
 {
     public interface IAssetService
     {
-        List<AssetViewModel> GetAll();
+        Task<IEnumerable<AssetViewModel>> GetAll();
 
-        AssetViewModel Add(AssetCreateModel createModel);
+        Task<AssetViewModel> Add(AssetCreateModel createModel);
 
-        AssetViewModel Update(Guid id, AssetUpdateModel updateModel);
+        Task<AssetViewModel> Update(Guid id, AssetUpdateModel updateModel);
 
-        bool Delete(Guid Id);
+        Task<bool> Delete(Guid Id);
 
-        List<CurrencyViewModel> GetCurrencies();
+        Task<IEnumerable<CurrencyViewModel>> GetCurrencies();
     }
 }

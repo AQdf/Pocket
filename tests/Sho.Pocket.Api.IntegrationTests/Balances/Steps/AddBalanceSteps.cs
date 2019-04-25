@@ -6,6 +6,7 @@ using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -17,11 +18,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
         private Balance _createdBalance;
 
-        private BalanceFeatureContext _balanceFeatureContext;
+        private readonly BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
-        private ExchangeRateFeatureContext _exchangeRateFeatureContext;
+        private readonly ExchangeRateFeatureContext _exchangeRateFeatureContext;
 
         public AddBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
@@ -40,10 +41,10 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [Given(@"I have balance of asset (.*), amount (.*), day shift (.*)")]
-        public void GivenIHaveForTodayBalanceOfAssetActiveAssetAmount(string assetName, decimal amount, int dayShift)
+        public async Task GivenIHaveForTodayBalanceOfAssetActiveAssetAmount(string assetName, decimal amount, int dayShift)
         {
             GivenBalanceCreateModel(assetName, amount, dayShift);
-            WhenIAddNewBalance();
+            await WhenIAddNewBalance();
         }
 
         [Given(@"I specified balance of asset (.*), amount (.*), day shift (.*)")]
@@ -57,9 +58,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [When(@"I add new balance")]
-        public void WhenIAddNewBalance()
+        public async Task WhenIAddNewBalance()
         {
-            _createdBalance = _balanceFeatureContext.AddBalance(_balanceCreateModel);
+            _createdBalance = await _balanceFeatureContext.AddBalance(_balanceCreateModel);
         }
 
         [Then(@"balance exists")]

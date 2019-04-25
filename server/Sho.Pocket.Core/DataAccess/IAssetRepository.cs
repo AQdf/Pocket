@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Core.DataAccess
 {
     public interface IAssetRepository
     {
-        Asset GetById(Guid id);
+        Task<Asset> GetById(Guid id);
 
-        List<Asset> GetAll();
+        Task<IEnumerable<Asset>> GetAll();
 
-        List<Asset> GetActiveAssets();
+        Task<IEnumerable<Asset>> GetActiveAssets();
 
-        Asset Add(string name, Guid currencyId, bool isActive);
+        Task<Asset> Add(string name, Guid currencyId, bool isActive);
 
-        Asset Update(Guid id, string name, Guid currencyId, bool isActive);
+        Task<Asset> Update(Guid id, string name, Guid currencyId, bool isActive);
 
-        void Remove(Guid assetId);
+        Task Remove(Guid assetId);
 
-        bool ExistsAssetBalance(Guid id);
+        Task<bool> ExistsAssetBalance(Guid id);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -15,43 +14,33 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         private readonly IAssetService _assetService;
 
-        private readonly CurrencyFeatureContext _currencyFeatureContext;
-
-        private readonly IExchangeRateRepository _exchangeRateRepository;
-
-        private readonly IBalanceRepository _balanceRepository;
-
-        public AssetFeatureContext(CurrencyFeatureContext currencyFeatureManager) : base()
+        public AssetFeatureContext() : base()
         {
             Assets = new Dictionary<string, AssetViewModel>();
 
-            _currencyFeatureContext = currencyFeatureManager;
-
             _assetService = _serviceProvider.GetRequiredService<IAssetService>();
-            _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
-            _balanceRepository = _serviceProvider.GetRequiredService<IBalanceRepository>();
         }
 
-        public List<AssetViewModel> GetAssets()
+        public async Task<List<AssetViewModel>> GetAssets()
         {
-            List<AssetViewModel> storageAssets = _assetService.GetAll();
+            IEnumerable<AssetViewModel> storageAssets = await _assetService.GetAll();
 
             List<AssetViewModel> contextAssets = storageAssets.Where(sa => Assets.ContainsKey(sa.Name)).ToList();
 
             return contextAssets;
         }
 
-        public AssetViewModel AddAsset(AssetCreateModel createModel)
+        public async Task<AssetViewModel> AddAsset(AssetCreateModel createModel)
         {
-            AssetViewModel asset = _assetService.Add(createModel);
+            AssetViewModel asset = await _assetService.Add(createModel);
             Assets.Add(asset.Name, asset);
 
             return asset;
         }
 
-        public void DeleteAsset(Guid id, string assetName)
+        public async Task DeleteAsset(Guid id, string assetName)
         {
-            bool isSuccess = _assetService.Delete(id);
+            bool isSuccess = await _assetService.Delete(id);
 
             if (isSuccess)
             {
@@ -59,9 +48,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             }
         }
 
-        public AssetViewModel UpdateAsset(Guid id, AssetUpdateModel updateModel)
+        public async Task<AssetViewModel> UpdateAsset(Guid id, AssetUpdateModel updateModel)
         {
-            AssetViewModel result = _assetService.Update(id, updateModel);
+            AssetViewModel result = await _assetService.Update(id, updateModel);
             Assets[updateModel.Name] = result;
 
             return result;

@@ -2,6 +2,7 @@
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
 {
@@ -13,9 +14,9 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public ExchangeRate Alter(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
+        public async Task<ExchangeRate> Alter(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
 
             object queryParameters = new
             {
@@ -25,32 +26,34 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 rate
             };
 
-            ExchangeRate result = base.InsertEntity(queryText, queryParameters);
+            ExchangeRate result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public ExchangeRate Update(Guid id, decimal rate)
+        public async Task<ExchangeRate> Update(Guid id, decimal rate)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateExchangeRate.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateExchangeRate.sql");
 
             object queryParameters = new { id, rate };
 
-            return base.UpdateEntity(queryText, queryParameters);
-        }
-
-        public ExchangeRate GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate)
-        {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetCurrencyExchangeRate.sql");
-
-            object queryParameters = new { baseCurrencyId, effectiveDate };
-
-            ExchangeRate result = base.GetEntity(queryText, queryParameters);
+            ExchangeRate result = await base.UpdateEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public bool Exists(Guid baseCurrencyId, DateTime effectiveDate)
+        public async Task<ExchangeRate> GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate)
+        {
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetCurrencyExchangeRate.sql");
+
+            object queryParameters = new { baseCurrencyId, effectiveDate };
+
+            ExchangeRate result = await base.GetEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public async Task<bool> Exists(Guid baseCurrencyId, DateTime effectiveDate)
         {
             string queryText = @"
                 if exists ( select top 1 1 from ExchangeRate
@@ -60,12 +63,12 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
 
             object queryParams = new { baseCurrencyId, effectiveDate };
 
-            bool result = base.Exists(queryText, queryParams);
+            bool result = await base.Exists(queryText, queryParams);
 
             return result;
         }
 
-        public List<ExchangeRate> GetByEffectiveDate(DateTime effectiveDate)
+        public async Task<IEnumerable<ExchangeRate>> GetByEffectiveDate(DateTime effectiveDate)
         {
             string queryText = @"
                 select	ExchangeRate.Id,
@@ -83,7 +86,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
 
             object queryParameters = new { effectiveDate };
 
-            List<ExchangeRate> result = base.GetAll(queryText, queryParameters);
+            IEnumerable<ExchangeRate> result = await base.GetAll(queryText, queryParameters);
 
             return result;
         }

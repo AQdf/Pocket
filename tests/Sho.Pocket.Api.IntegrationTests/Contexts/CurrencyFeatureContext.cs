@@ -2,6 +2,7 @@
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -18,11 +19,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             _currencyRepository = _serviceProvider.GetRequiredService<ICurrencyRepository>();
         }
 
-        public Currency AddCurrency(string currencyName)
+        public async Task<Currency> AddCurrency(string currencyName)
         {
             if (!Currencies.ContainsKey(currencyName))
             {
-                Currency currency = _currencyRepository.Add(currencyName);
+                Currency currency = await _currencyRepository.Add(currencyName);
                 Currencies.Add(currencyName, currency);
             }
 

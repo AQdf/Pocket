@@ -1,7 +1,6 @@
 ﻿using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Linq;
@@ -12,16 +11,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     [Binding]
     public class GetBalanceSteps
     {
-        private BalanceViewModel _balanceViewModel;
-
         private readonly BalanceFeatureContext _balanceFeatureContext;
 
         private readonly AssetFeatureContext _assetFeatureContext;
 
-        public GetBalanceSteps(
-            BalanceFeatureContext balanceFeatureContext,
-            AssetFeatureContext assetFeatureManager,
-            AddBalanceSteps addBalanceSteps)
+        public GetBalanceSteps(BalanceFeatureContext balanceFeatureContext, AssetFeatureContext assetFeatureManager)
         {
             _balanceFeatureContext = balanceFeatureContext;
             _assetFeatureContext = assetFeatureManager;
@@ -41,8 +35,6 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
             Balance balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
-
-            _balanceViewModel = _balanceFeatureContext.GetBalance(balance.Id);
         }
     }
 }

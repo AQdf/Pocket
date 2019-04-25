@@ -4,6 +4,7 @@ using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -11,7 +12,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class AddAssetSteps
     {
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
         private readonly CurrencyFeatureContext _currencyFatureContext;
 
@@ -34,10 +35,10 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         }
 
         [Given(@"I have active asset (.*) with currency (.*)")]
-        public void GivenAsset(string assetName, string currencyName)
+        public async Task GivenAsset(string assetName, string currencyName)
         {
             GivenAssetCreateModel(assetName, currencyName, true);
-            WhenIAddNewAsset();
+            await WhenIAddNewAsset();
         }
 
         [Given(@"I specified asset name (.*), currency (.*), is active (.*)")]
@@ -49,9 +50,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         }
 
         [When(@"I add the asset")]
-        public void WhenIAddNewAsset()
+        public async Task WhenIAddNewAsset()
         {
-            CreatedAsset = _assetFeatureContext.AddAsset(_assetCreateModel);
+            CreatedAsset = await _assetFeatureContext.AddAsset(_assetCreateModel);
         }
         
         [Then(@"asset created")]

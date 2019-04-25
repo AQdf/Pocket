@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
@@ -24,9 +25,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{effectiveDate}")]
-        public BalancesViewModel GetAll(DateTime effectiveDate)
+        public async Task<BalancesViewModel> GetAll(DateTime effectiveDate)
         {
-            return _balanceService.GetAll(effectiveDate);
+            BalancesViewModel result = await _balanceService.GetAll(effectiveDate);
+
+            return result;
         }
 
         /// <summary>
@@ -35,9 +38,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public BalanceViewModel Get(Guid id)
+        public async Task<BalanceViewModel> Get(Guid id)
         {
-            BalanceViewModel balance = _balanceService.GetById(id);
+            BalanceViewModel balance = await _balanceService.GetById(id);
 
             return balance;
         }
@@ -48,9 +51,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public bool Add([FromBody] BalanceCreateModel createModel)
+        public async Task<bool> Add([FromBody] BalanceCreateModel createModel)
         {
-            _balanceService.Add(createModel);
+            await _balanceService.Add(createModel);
 
             return true;
         }
@@ -61,9 +64,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
         [HttpPut("{id}")]
-        public bool Update(Guid id, [FromBody] BalanceUpdateModel updateModel)
+        public async Task<bool> Update(Guid id, [FromBody] BalanceUpdateModel updateModel)
         {
-            _balanceService.Update(id, updateModel);
+            await _balanceService.Update(id, updateModel);
 
             return true;
         }
@@ -73,9 +76,9 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="Id"></param>
         [HttpDelete("{Id}")]
-        public bool Delete(Guid Id)
+        public async Task<bool> Delete(Guid Id)
         {
-            _balanceService.Delete(Id);
+            await _balanceService.Delete(Id);
 
             return true;
         }
@@ -85,9 +88,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("total")]
-        public IEnumerable<BalanceTotalModel> GetCurrentTotalBalance()
+        public async Task<IEnumerable<BalanceTotalModel>> GetCurrentTotalBalance()
         {
-            return _balanceService.GetCurrentTotalBalance();
+            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrentTotalBalance();
+
+            return result;
         }
 
         /// <summary>
@@ -96,9 +101,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost("template")]
-        public List<BalanceViewModel> AddBalancesTemplate()
+        public async Task<IEnumerable<BalanceViewModel>> AddBalancesTemplate()
         {
-            return _balanceService.AddEffectiveBalancesTemplate();
+            IEnumerable<BalanceViewModel> result = await _balanceService.AddEffectiveBalancesTemplate();
+
+            return result;
         }
 
         /// <summary>
@@ -106,31 +113,33 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("effective-dates")]
-        public IEnumerable<DateTime> GetEffectiveDates()
+        public async Task<IEnumerable<DateTime>> GetEffectiveDates()
         {
-            return _balanceService.GetEffectiveDates();
+            IEnumerable<DateTime> result = await _balanceService.GetEffectiveDates();
+
+            return result;
         }
 
         [HttpPut("exchange-rate")]
-        public bool ApplyExchangeRate([FromBody]ExchangeRateModel model)
+        public async Task<bool> ApplyExchangeRate([FromBody]ExchangeRateModel model)
         {
-            _balanceService.ApplyExchangeRate(model);
+            await _balanceService.ApplyExchangeRate(model);
 
             return true;
         }
 
         [HttpGet("currency-totals/{currencyName}")]
-        public IEnumerable<BalanceTotalModel> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
+        public async Task<IEnumerable<BalanceTotalModel>> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
         {
-            var result = _balanceService.GetCurrencyTotals(currencyName, count);
+            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrencyTotals(currencyName, count);
 
             return result;
         }
 
         [HttpGet("csv")]
-        public IActionResult DownloadCsv()
+        public async Task<IActionResult> DownloadCsv()
         {
-            byte[] bytes = _balanceService.ExportBalancesToCsv();
+            byte[] bytes = await _balanceService.ExportBalancesToCsv();
 
             return File(bytes, "application/csv");
         }

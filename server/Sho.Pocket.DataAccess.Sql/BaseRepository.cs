@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql
 {
@@ -19,83 +19,83 @@ namespace Sho.Pocket.DataAccess.Sql
             DbConfiguration = dbConfiguration;
         }
 
-        public List<T> GetAll(string queryText, object queryParameters = null)
+        public async Task<IEnumerable<T>> GetAll(string queryText, object queryParameters = null)
         {
-            List<T> result;
+            IEnumerable<T> result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.Query<T>(queryText, queryParameters).ToList();
+                result = await db.QueryAsync<T>(queryText, queryParameters);
             }
 
             return result;
         }
 
-        public T GetEntity(string queryText, object queryParameters = null)
+        public async Task<T> GetEntity(string queryText, object queryParameters = null)
         {
             T result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.QueryFirst<T>(queryText, queryParameters);
+                result = await db.QueryFirstOrDefaultAsync<T>(queryText, queryParameters);
             }
 
             return result;
         }
 
-        public T InsertEntity(string queryText, object queryParameters = null)
+        public async Task<T> InsertEntity(string queryText, object queryParameters = null)
         {
             T result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.QueryFirst<T>(queryText, queryParameters);
+                result = await db.QueryFirstOrDefaultAsync<T>(queryText, queryParameters);
             }
 
             return result;
         }
 
-        public T UpdateEntity(string queryText, object queryParameters = null)
+        public async Task<T> UpdateEntity(string queryText, object queryParameters = null)
         {
             T result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.QueryFirst<T>(queryText, queryParameters);
+                result = await db.QueryFirstAsync<T>(queryText, queryParameters);
             }
 
             return result;
         }
 
-        public void RemoveEntity(string queryText, object queryParameters = null)
+        public async Task RemoveEntity(string queryText, object queryParameters = null)
         {
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                db.ExecuteScalar(queryText, queryParameters);
+                await db.ExecuteScalarAsync(queryText, queryParameters);
             }
         }
 
-        public bool Exists(string queryText, object queryParameters = null)
+        public async Task<bool> Exists(string queryText, object queryParameters = null)
         {
             bool result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.ExecuteScalar<bool>(queryText, queryParameters);
+                result = await db.ExecuteScalarAsync<bool>(queryText, queryParameters);
             }
 
             return result;
         }
 
-        public void ExecuteScript(string queryText, object queryParameters = null)
+        public async Task ExecuteScript(string queryText, object queryParameters = null)
         {
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                db.ExecuteScalar(queryText, queryParameters);
+                await db.ExecuteScalarAsync(queryText, queryParameters);
             }
         }
 
-        public string GetQueryText(string dirPath, string fileName)
+        public async Task<string> GetQueryText(string dirPath, string fileName)
         {
             string result;
 
@@ -105,7 +105,7 @@ namespace Sho.Pocket.DataAccess.Sql
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             using (StreamReader reader = new StreamReader(stream))
             {
-                result = reader.ReadToEnd();
+                result = await reader.ReadToEndAsync();
             }
 
             return result;

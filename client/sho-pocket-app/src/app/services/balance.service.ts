@@ -137,7 +137,6 @@ export class BalanceService {
 
     this.client.get(balancesApiUrl + 'csv', options).subscribe(response => {
       if (response) {
-        debugger;
         var currentDate = new Date(this.selectedEffectiveDate);
         var day = currentDate.getDate();
         var month = monthNames[currentDate.getMonth()];

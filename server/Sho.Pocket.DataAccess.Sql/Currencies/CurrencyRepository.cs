@@ -1,6 +1,7 @@
 ﻿using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql.Currencies
 {
@@ -12,34 +13,37 @@ namespace Sho.Pocket.DataAccess.Sql.Currencies
         {
         }
 
-        public Currency Add(string name)
+        public async Task<Currency> Add(string name)
         {
-            object queryParameters = new
-            {
-                name
-            };
-
             string queryText = @"
                 declare @currencyId uniqueidentifier = newid();
                 insert into Currency (Id, Name, Description, IsDefault)
                 values (@currencyId, @name, NULL, 1);
                 select * from Currency where Id = @currencyId";
 
-            return base.InsertEntity(queryText, queryParameters);
+            object queryParameters = new { name };
+
+            Currency result = await base.InsertEntity(queryText, queryParameters);
+
+            return result;
         }
 
-        public Currency GetByName(string name)
+        public async Task<Currency> GetByName(string name)
         {
             string queryText = $"select * from Currency where Name = {name}";
 
-            return base.GetEntity(queryText);
+            Currency result = await base.GetEntity(queryText);
+
+            return result;
         }
 
-        public List<Currency> GetAll()
+        public async Task<IEnumerable<Currency>> GetAll()
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllCurrencies.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllCurrencies.sql");
 
-            return base.GetAll(queryText);
+            IEnumerable<Currency> result = await base.GetAll(queryText);
+
+            return result;
         }
     }
 }

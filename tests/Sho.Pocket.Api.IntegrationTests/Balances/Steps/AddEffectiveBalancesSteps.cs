@@ -6,6 +6,7 @@ using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -15,7 +16,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private List<BalanceViewModel> _balances;
 
-        private BalanceFeatureContext _balanceFeatureContext;
+        private readonly BalanceFeatureContext _balanceFeatureContext;
 
         public AddEffectiveBalancesSteps(BalanceFeatureContext balanceFeatureContext)
         {
@@ -29,9 +30,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [When(@"I add effective balances")]
-        public void WhenIAddEffectiveBalances()
+        public async Task WhenIAddEffectiveBalances()
         {
-            _balances = _balanceFeatureContext.AddEffectiveBalances();
+            _balances = await _balanceFeatureContext.AddEffectiveBalances();
         }
 
         [Then(@"balances for today exists")]

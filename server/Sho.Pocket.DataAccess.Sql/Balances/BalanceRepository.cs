@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
@@ -17,18 +18,18 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
         {
         }
 
-        public List<Balance> GetAll(bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAll(bool includeRelated = true)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllBalances.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllBalances.sql");
 
-            List<Balance> result = includeRelated
-                ? GetAllWithRelatedEntities(queryText)
-                : base.GetAll(queryText);
+            IEnumerable<Balance> result = includeRelated
+                ? await GetAllWithRelatedEntities(queryText)
+                : await base.GetAll(queryText);
 
             return result;
         }
 
-        public List<Balance> GetByEffectiveDate(DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDate(DateTime effectiveDate, bool includeRelated = true)
         {
             string queryText = @"
                 select * from Balance
@@ -40,97 +41,101 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
 
             object queryParams = new { effectiveDate };
 
-            List<Balance> result = includeRelated
-                ? GetAllWithRelatedEntities(queryText, queryParams)
-                : base.GetAll(queryText, queryParams);
+            IEnumerable<Balance> result = includeRelated
+                ? await GetAllWithRelatedEntities(queryText, queryParams)
+                : await base.GetAll(queryText, queryParams);
 
             return result;
         }
 
-        public Balance GetById(Guid id)
+        public async Task<Balance> GetById(Guid id)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
 
             object queryParameters = new { id };
 
-            Balance result;
+            IEnumerable<Balance> resultItems;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.Query<Balance, Asset, ExchangeRate, Balance>(queryText, 
+                resultItems = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
                     (balance, asset, rate) =>
                     {
                         balance.Asset = asset;
                         balance.ExchangeRate = rate;
 
                         return balance;
-                    }, queryParameters).FirstOrDefault();
+                    }, queryParameters);
             }
 
-            return result;
+            return resultItems.FirstOrDefault();
         }
 
-        public Balance Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
 
             object queryParameters = new { assetId, effectiveDate, value, exchangeRateId };
 
-            Balance result = base.InsertEntity(queryText, queryParameters);
+            Balance result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public List<Balance> AddEffectiveBalances(DateTime currentEffectiveDate)
+        public async Task<IEnumerable<Balance>> AddEffectiveBalances(DateTime currentEffectiveDate)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
 
             object queryParameters = new
             {
                 effectiveDate = currentEffectiveDate,
             };
 
-            return base.GetAll(queryText, queryParameters);
+            IEnumerable<Balance> result = await base.GetAll(queryText, queryParameters);
+
+            return result;
         }
 
-        public Balance Update(Guid id, decimal value)
+        public async Task<Balance> Update(Guid id, decimal value)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");
 
             object queryParameters = new { id, value };
 
-            return base.UpdateEntity(queryText, queryParameters);
+            Balance result = await base.UpdateEntity(queryText, queryParameters);
+
+            return result;
         }
 
-        public void Remove(Guid balanceId)
+        public async Task Remove(Guid balanceId)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
 
             object queryParameters = new
             {
                 id = balanceId
             };
 
-            base.RemoveEntity(queryText, queryParameters);
+            await base.RemoveEntity(queryText, queryParameters);
         }
 
-        public List<DateTime> GetOrderedEffectiveDates()
+        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDates()
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
 
-            List<DateTime> result;
+            IEnumerable<DateTime> result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.Query<DateTime>(queryText).ToList();
+                result = await db.QueryAsync<DateTime>(queryText);
             }
 
             return result;
         }
 
-        public void ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate)
+        public async Task ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "ApplyExchangeRate.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "ApplyExchangeRate.sql");
 
             object queryParameters = new {
                 exchangeRateId,
@@ -138,16 +143,16 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
                 effectiveDate
             };
 
-            base.ExecuteScript(queryText, queryParameters);
+            await base.ExecuteScript(queryText, queryParameters);
         }
 
-        private List<Balance> GetAllWithRelatedEntities(string queryText, object queryParams = null)
+        private async Task<IEnumerable<Balance>> GetAllWithRelatedEntities(string queryText, object queryParams = null)
         {
-            List<Balance> result;
+            IEnumerable<Balance> result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = db.Query<Balance, Asset, ExchangeRate, Currency, Currency, Balance>(queryText,
+                result = await db.QueryAsync<Balance, Asset, ExchangeRate, Currency, Currency, Balance>(queryText,
                     (balance, asset, rate, baseCurrency, counterCurrency) =>
                     {
                         balance.Asset = asset;
@@ -160,7 +165,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
                         }
 
                         return balance;
-                    }, queryParams).ToList();
+                    }, queryParams);
             }
 
             return result;

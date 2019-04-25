@@ -1,14 +1,15 @@
 ﻿using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.Core.DataAccess
 {
     public interface ICurrencyRepository
     {
-        List<Currency> GetAll();
+        Task<IEnumerable<Currency>> GetAll();
 
-        Currency GetByName(string name);
+        Task<Currency> GetByName(string name);
 
-        Currency Add(string name);
+        Task<Currency> Add(string name);
     }
 }

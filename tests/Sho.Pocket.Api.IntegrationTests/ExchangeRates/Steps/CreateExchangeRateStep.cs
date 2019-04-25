@@ -1,6 +1,7 @@
 ﻿using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using System;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.ExchangeRates.Steps
@@ -8,7 +9,7 @@ namespace Sho.Pocket.Api.IntegrationTests.ExchangeRates.Steps
     [Binding]
     public class CreateExchangeRateStep
     {
-        private ExchangeRateFeatureContext _exchangeRateFeatureContext;
+        private readonly ExchangeRateFeatureContext _exchangeRateFeatureContext;
 
         public CreateExchangeRateStep(ExchangeRateFeatureContext exchangeRateFeatureContext)
         {
@@ -22,11 +23,11 @@ namespace Sho.Pocket.Api.IntegrationTests.ExchangeRates.Steps
         }
 
         [Given(@"exchange rate (.*) to (.*) with value (.*), day shift (.*)")]
-        public void GivenExchangeRateExistsForTodayWithValue(string baseCurrency, string counterCurrency, int value, int dayShift)
+        public async Task GivenExchangeRateExistsForTodayWithValue(string baseCurrency, string counterCurrency, int value, int dayShift)
         {
             DateTime effectiveDate = DateTime.UtcNow.Date.AddDays(dayShift);
 
-            _exchangeRateFeatureContext.AddExchangeRate(effectiveDate, baseCurrency, counterCurrency, value);
+            await _exchangeRateFeatureContext.AddExchangeRate(effectiveDate, baseCurrency, counterCurrency, value);
         }
 
     }

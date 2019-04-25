@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Currencies.Models;
 using Sho.Pocket.Core.DataAccess;
@@ -22,31 +23,31 @@ namespace Sho.Pocket.Application.Assets
             _currencyRepository = currencyRepository;
         }
 
-        public List<AssetViewModel> GetAll()
+        public async Task<IEnumerable<AssetViewModel>> GetAll()
         {
-            List<Asset> assets = _assetRepository.GetAll();
+            IEnumerable<Asset> assets = await _assetRepository.GetAll();
 
-            List<AssetViewModel> result = assets.Select(a => new AssetViewModel(a)).ToList();
+            IEnumerable<AssetViewModel> result = assets.Select(a => new AssetViewModel(a));
 
             return result;
         }
 
-        public AssetViewModel Add(AssetCreateModel createModel)
+        public async Task<AssetViewModel> Add(AssetCreateModel createModel)
         {
-            Asset asset = _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
+            Asset asset = await _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
 
             AssetViewModel result = new AssetViewModel(asset);
 
             return result;
         }
 
-        public AssetViewModel Update(Guid id, AssetUpdateModel model)
+        public async Task<AssetViewModel> Update(Guid id, AssetUpdateModel model)
         {
-            bool balanceExists = _assetRepository.ExistsAssetBalance(id);
+            bool balanceExists = await _assetRepository.ExistsAssetBalance(id);
 
             if (balanceExists)
             {
-                Asset asset = _assetRepository.GetById(id);
+                Asset asset = await _assetRepository.GetById(id);
 
                 if (asset.CurrencyId != model.CurrencyId)
                 {
@@ -54,32 +55,32 @@ namespace Sho.Pocket.Application.Assets
                 }
             }
 
-            Asset result = _assetRepository.Update(id, model.Name, model.CurrencyId, model.IsActive);
+            Asset result = await _assetRepository.Update(id, model.Name, model.CurrencyId, model.IsActive);
 
             AssetViewModel viewModel = new AssetViewModel(result);
 
             return viewModel;
         }
 
-        public bool Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             bool isSuccess = false;
-            bool exists = _assetRepository.ExistsAssetBalance(id);
+            bool exists = await _assetRepository.ExistsAssetBalance(id);
 
             if (!exists)
             {
-                _assetRepository.Remove(id);
+                await _assetRepository.Remove(id);
                 isSuccess = true;
             }
 
             return isSuccess;
         }
 
-        public List<CurrencyViewModel> GetCurrencies()
+        public async Task<IEnumerable<CurrencyViewModel>> GetCurrencies()
         {
-            List<Currency> currencies = _currencyRepository.GetAll();
+            IEnumerable<Currency> currencies = await _currencyRepository.GetAll();
 
-            List<CurrencyViewModel> result = currencies.Select(c => new CurrencyViewModel(c)).ToList();
+            IEnumerable<CurrencyViewModel> result = currencies.Select(c => new CurrencyViewModel(c));
 
             return result;
         }

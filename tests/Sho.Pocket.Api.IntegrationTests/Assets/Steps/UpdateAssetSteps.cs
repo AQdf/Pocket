@@ -4,6 +4,7 @@ using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -15,11 +16,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 
         AssetViewModel _updatedAsset;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
-        private CurrencyFeatureContext _currencyFeatureContext;
+        private readonly CurrencyFeatureContext _currencyFeatureContext;
 
-        private AddAssetSteps _addAssetSteps;
+        private readonly AddAssetSteps _addAssetSteps;
 
         public UpdateAssetSteps(
             AssetFeatureContext assetFeatureContext,
@@ -46,11 +47,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         }
 
         [When(@"I update asset")]
-        public void WhenIUpdateAsset()
+        public async Task WhenIUpdateAsset()
         {
             Guid assetId = _addAssetSteps.CreatedAsset.Id;
 
-            _updatedAsset = _assetFeatureContext.UpdateAsset(assetId, _updateModel);
+            _updatedAsset = await _assetFeatureContext.UpdateAsset(assetId, _updateModel);
         }
 
         [Then(@"asset name updated to (.*)")]

@@ -3,6 +3,7 @@ using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -22,12 +23,12 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             _currencyFeatureContext = currencyFeatureManager;
         }
 
-        public ExchangeRate AddExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, int value)
+        public async Task<ExchangeRate> AddExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, int value)
         {
             Guid baseCurrencyId = _currencyFeatureContext.Currencies[baseCurrency].Id;
             Guid counterCurrencyId = _currencyFeatureContext.Currencies[counterCurrency].Id;
 
-            ExchangeRate exchangeRate = _exchangeRateRepository.Alter(effectiveDate, baseCurrencyId, counterCurrencyId, value);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, baseCurrencyId, counterCurrencyId, value);
             ExchangeRates.Add(exchangeRate.Id, exchangeRate);
 
             return exchangeRate;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
@@ -8,26 +9,26 @@ namespace Sho.Pocket.Application.Balances
 {
     public interface IBalanceService
     {
-        BalancesViewModel GetAll(DateTime effectiveDate);
+        Task<BalancesViewModel> GetAll(DateTime effectiveDate);
 
-        BalanceViewModel GetById(Guid id);
+        Task<BalanceViewModel> GetById(Guid id);
 
-        Balance Add(BalanceCreateModel createModel);
+        Task<Balance> Add(BalanceCreateModel createModel);
 
-        List<BalanceViewModel> AddEffectiveBalancesTemplate();
+        Task<IEnumerable<BalanceViewModel>> AddEffectiveBalancesTemplate();
 
-        Balance Update(Guid id, BalanceUpdateModel updateModel);
+        Task<Balance> Update(Guid id, BalanceUpdateModel updateModel);
 
-        void Delete(Guid Id);
+        Task Delete(Guid Id);
 
-        IEnumerable<BalanceTotalModel> GetCurrentTotalBalance();
+        Task<IEnumerable<BalanceTotalModel>> GetCurrentTotalBalance();
 
-        IEnumerable<DateTime> GetEffectiveDates();
+        Task<IEnumerable<DateTime>> GetEffectiveDates();
 
-        void ApplyExchangeRate(ExchangeRateModel model);
+        Task ApplyExchangeRate(ExchangeRateModel model);
 
-        IEnumerable<BalanceTotalModel> GetCurrencyTotals(string currencyName, int count);
+        Task<IEnumerable<BalanceTotalModel>> GetCurrencyTotals(string currencyName, int count);
 
-        byte[] ExportBalancesToCsv();
+        Task<byte[]> ExportBalancesToCsv();
     }
 }

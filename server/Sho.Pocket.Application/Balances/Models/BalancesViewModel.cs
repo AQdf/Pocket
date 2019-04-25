@@ -5,7 +5,7 @@ namespace Sho.Pocket.Application.Balances.Models
 {
     public class BalancesViewModel
     {
-        public BalancesViewModel(List<BalanceViewModel> items, int count, IEnumerable<BalanceTotalModel> totals, List<ExchangeRateModel> rates)
+        public BalancesViewModel(IEnumerable<BalanceViewModel> items, int count, IEnumerable<BalanceTotalModel> totals, IEnumerable<ExchangeRateModel> rates)
         {
             Items = items;
             Count = count;
@@ -17,8 +17,8 @@ namespace Sho.Pocket.Application.Balances.Models
 
         public int Count { get; set; }
 
-        public List<ExchangeRateModel> ExchangeRates { get; set; }
+        public IEnumerable<ExchangeRateModel> ExchangeRates { get; set; }
 
-        public List<BalanceViewModel> Items { get; set; }
+        public IEnumerable<BalanceViewModel> Items { get; set; }
     }
 }

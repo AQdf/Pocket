@@ -6,6 +6,7 @@ using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -17,9 +18,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
         private Balance _updatedBalance;
 
-        private BalanceFeatureContext _balanceFeatureContext;
+        private readonly BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
         public UpdateBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
@@ -42,7 +43,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
         
         [When(@"I update balance for today of (.*)")]
-        public void WhenIUpdateBalanceOfAsset(string assetName)
+        public async Task WhenIUpdateBalanceOfAsset(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
             AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
@@ -50,7 +51,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             Balance balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
 
-            _updatedBalance = _balanceFeatureContext.UpdateBalance(balance.Id, _balanceUpdateModel);
+            _updatedBalance = await _balanceFeatureContext.UpdateBalance(balance.Id, _balanceUpdateModel);
         }
         
         [Then(@"balance amount updated to (.*)")]

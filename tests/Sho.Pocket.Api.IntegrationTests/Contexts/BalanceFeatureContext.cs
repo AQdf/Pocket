@@ -5,6 +5,7 @@ using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -23,50 +24,50 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             _balanceService = _serviceProvider.GetRequiredService<IBalanceService>();
         }
 
-        public BalanceViewModel GetBalance(Guid id)
+        public async Task<BalanceViewModel> GetBalance(Guid id)
         {
-            return _balanceService.GetById(id);
+            return await _balanceService.GetById(id);
         }
 
-        public List<BalanceViewModel> GetAllBalances(DateTime effectiveDate)
+        public async Task<List<BalanceViewModel>> GetAllBalances(DateTime effectiveDate)
         {
-            BalancesViewModel storageBalances = _balanceService.GetAll(effectiveDate);
+            BalancesViewModel storageBalances = await _balanceService.GetAll(effectiveDate);
 
             List<BalanceViewModel> contextBalances = storageBalances.Items.Where(b => Balances.ContainsKey(b.Id.Value)).ToList();
 
             return contextBalances;
         }
 
-        public Balance AddBalance(BalanceCreateModel createModel)
+        public async Task<Balance> AddBalance(BalanceCreateModel createModel)
         {
-            Balance newBalance = _balanceService.Add(createModel);
+            Balance newBalance = await _balanceService.Add(createModel);
 
             Balances.Add(newBalance.Id, newBalance);
 
             return newBalance;
         }
 
-        public Balance UpdateBalance(Guid id, BalanceUpdateModel updateModel)
+        public async Task<Balance> UpdateBalance(Guid id, BalanceUpdateModel updateModel)
         {
-            Balance updateBalance = _balanceService.Update(id, updateModel);
+            Balance updateBalance = await _balanceService.Update(id, updateModel);
 
             Balances[id] = updateBalance;
 
             return updateBalance;
         }
 
-        public void DeleteBalance(Guid id)
+        public async Task DeleteBalance(Guid id)
         {
-            _balanceService.Delete(id);
+            await _balanceService.Delete(id);
 
             Balances.Remove(id);
         }
 
-        public List<BalanceViewModel> AddEffectiveBalances()
+        public async Task<List<BalanceViewModel>> AddEffectiveBalances()
         {
-            List<BalanceViewModel> balances = _balanceService.AddEffectiveBalancesTemplate();
+            IEnumerable<BalanceViewModel> balances = await _balanceService.AddEffectiveBalancesTemplate();
 
-            return balances;
+            return balances.ToList();
         }
     }
 }

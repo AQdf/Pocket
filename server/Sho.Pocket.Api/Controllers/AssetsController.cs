@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
@@ -23,9 +24,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<AssetViewModel> GetAll()
+        public async Task<IEnumerable<AssetViewModel>> GetAll()
         {
-            return _assetService.GetAll();
+            IEnumerable<AssetViewModel> result = await _assetService.GetAll();
+
+            return result;
         }
 
         /// <summary>
@@ -34,9 +37,11 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public AssetViewModel Add([FromBody] AssetCreateModel createModel)
+        public async Task<AssetViewModel> Add([FromBody] AssetCreateModel createModel)
         {
-            return _assetService.Add(createModel);
+            AssetViewModel result = await _assetService.Add(createModel);
+
+            return result;
         }
 
         /// <summary>
@@ -45,9 +50,9 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{id}")]
-        public ActionResult<AssetViewModel> Update(Guid id, [FromBody] AssetUpdateModel updateModel)
+        public async Task<ActionResult<AssetViewModel>> Update(Guid id, [FromBody] AssetUpdateModel updateModel)
         {
-            AssetViewModel result = _assetService.Update(id, updateModel);
+            AssetViewModel result = await _assetService.Update(id, updateModel);
 
             return Ok(result);
         }
@@ -57,9 +62,9 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(Guid id)
+        public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            var result = _assetService.Delete(id);
+            bool result = await _assetService.Delete(id);
 
             return Ok(result);
         }
@@ -69,9 +74,11 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("currencies")]
-        public IEnumerable<CurrencyViewModel> GetCurrencies()
+        public async Task<IEnumerable<CurrencyViewModel>> GetCurrencies()
         {
-            return _assetService.GetCurrencies();
+            var result = await _assetService.GetCurrencies();
+
+            return result;
         }
     }
 }

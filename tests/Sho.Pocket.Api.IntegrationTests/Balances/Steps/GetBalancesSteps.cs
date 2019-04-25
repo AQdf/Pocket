@@ -4,6 +4,7 @@ using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Balances.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -27,11 +28,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [When(@"I get today balances")]
-        public void WhenIGetTodayBalances()
+        public async Task WhenIGetTodayBalances()
         {
             DateTime today = DateTime.UtcNow.Date;
 
-            _balances = _balanceFeatureContext.GetAllBalances(today);
+            _balances = await _balanceFeatureContext.GetAllBalances(today);
         }
         
         [Then(@"my (.*) balances returned")]

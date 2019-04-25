@@ -2,6 +2,7 @@
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -11,9 +12,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private AssetViewModel _assetToDelete;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
-        private AddAssetSteps _addAssetSteps;
+        private readonly AddAssetSteps _addAssetSteps;
 
         public DeleteAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
         {
@@ -34,9 +35,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         }
 
         [When(@"I delete asset (.*)")]
-        public void WhenIDeleteAsset(string assetName)
+        public async Task WhenIDeleteAsset(string assetName)
         {
-            _assetFeatureContext.DeleteAsset(_assetToDelete.Id, assetName);
+            await _assetFeatureContext.DeleteAsset(_assetToDelete.Id, assetName);
         }
         
         [Then(@"asset deleted")]

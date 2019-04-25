@@ -5,6 +5,7 @@ using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -14,9 +15,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private Guid _balanceToDeleteId;
 
-        private BalanceFeatureContext _balanceFeatureContext;
+        private readonly BalanceFeatureContext _balanceFeatureContext;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
         public DeleteBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
@@ -45,9 +46,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
         
         [When(@"I delete balance")]
-        public void WhenIDeleteBalance()
+        public async Task WhenIDeleteBalance()
         {
-            _balanceFeatureContext.DeleteBalance(_balanceToDeleteId);
+            await _balanceFeatureContext.DeleteBalance(_balanceToDeleteId);
         }
         
         [Then(@"balance deleted")]

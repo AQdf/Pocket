@@ -3,6 +3,7 @@ using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -12,7 +13,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private List<AssetViewModel> _assets;
 
-        private AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _assetFeatureContext;
 
         public GetAssetsSteps(AssetFeatureContext assetFeatureContext)
         {
@@ -26,9 +27,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         }
 
         [When(@"I get assets")]
-        public void WhenIGetAssets()
+        public async Task WhenIGetAssets()
         {
-            _assets = _assetFeatureContext.GetAssets();
+            _assets = await _assetFeatureContext.GetAssets();
         }
         
         [Then(@"my (.*) assets returned")]

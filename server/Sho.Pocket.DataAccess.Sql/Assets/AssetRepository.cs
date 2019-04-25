@@ -2,6 +2,7 @@
 using Sho.Pocket.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql.Assets
 {
@@ -13,16 +14,16 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         {
         }
 
-        public List<Asset> GetAll()
+        public async Task<IEnumerable<Asset>> GetAll()
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
 
-            List<Asset> result = base.GetAll(queryText);
+            IEnumerable<Asset> result = await base.GetAll(queryText);
 
             return result;
         }
 
-        public List<Asset> GetActiveAssets()
+        public async Task<IEnumerable<Asset>> GetActiveAssets()
         {
             string query = @"
                 SELECT [Asset].[Id] AS [ID]
@@ -35,57 +36,57 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
                 WHERE [Asset].[IsActive] = 1
                 ORDER BY [Asset].[Name] ASC";
 
-            List<Asset> result = base.GetAll(query);
+            IEnumerable<Asset> result = await base.GetAll(query);
 
             return result;
         }
 
-        public Asset GetById(Guid id)
+        public async Task<Asset> GetById(Guid id)
         {
             string queryText = @"select top 1 * from Asset where Id = @id";
 
             object queryParams = new { id };
 
-            Asset result = base.GetEntity(queryText, queryParams);
+            Asset result = await base.GetEntity(queryText, queryParams);
 
             return result;
         }
 
-        public Asset Add(string name, Guid currencyId, bool isActive)
+        public async Task<Asset> Add(string name, Guid currencyId, bool isActive)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
 
             object queryParameters = new { name, currencyId, isActive };
 
-            Asset result = base.InsertEntity(queryText, queryParameters);
+            Asset result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public Asset Update(Guid id, string name, Guid currencyId, bool isActive)
+        public async Task<Asset> Update(Guid id, string name, Guid currencyId, bool isActive)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
             object queryParameters = new { id, name, currencyId, isActive };
 
-            Asset result = base.UpdateEntity(queryText, queryParameters);
+            Asset result = await base.UpdateEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public void Remove(Guid assetId)
+        public async Task Remove(Guid assetId)
         {
-            string queryText = GetQueryText(SCRIPTS_DIR_NAME, "DeleteAsset.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteAsset.sql");
 
             object queryParameters = new
             {
                 id = assetId
             };
 
-            base.RemoveEntity(queryText, queryParameters);
+            await base.RemoveEntity(queryText, queryParameters);
         }
 
-        public bool ExistsAssetBalance(Guid id)
+        public async Task<bool> ExistsAssetBalance(Guid id)
         {
             string queryText = @"
                 if exists (select top 1 1 from Balance where AssetId = @id)
@@ -93,7 +94,7 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
 
             object queryParams = new { id };
 
-            bool result = base.Exists(queryText, queryParams);
+            bool result = await base.Exists(queryText, queryParams);
 
             return result;
         }
