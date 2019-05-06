@@ -32,6 +32,19 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
+        /// GET: api/assets/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<AssetViewModel> Get(Guid id)
+        {
+            AssetViewModel asset = await _assetService.GetById(id);
+
+            return asset;
+        }
+
+        /// <summary>
         /// POST: api/assets
         /// </summary>
         /// <param name="newAsset"></param>

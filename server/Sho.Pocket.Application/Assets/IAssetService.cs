@@ -10,6 +10,8 @@ namespace Sho.Pocket.Application.Assets
     {
         Task<IEnumerable<AssetViewModel>> GetAll();
 
+        Task<AssetViewModel> GetById(Guid id);
+
         Task<AssetViewModel> Add(AssetCreateModel createModel);
 
         Task<AssetViewModel> Update(Guid id, AssetUpdateModel updateModel);

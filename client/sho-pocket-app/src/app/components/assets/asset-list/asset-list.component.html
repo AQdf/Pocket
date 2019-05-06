@@ -1,15 +1,63 @@
-<table class="table table-sm table-hover">
-  <tr *ngFor="let asset of assetService.assetList">
-    <td>{{asset.name}}</td>
-    <td>{{asset.currencyName}}</td>
+<div class="col-auto mt-2">
+    <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addAsset()">
+      New record
+    </button>
+  </div>
 
-    <td>
-      <a class="btn" (click)="showForEdit(asset)">
-        <i class="fa fa-pencil-square-o"></i>
-      </a>
-      <a class="btn text-danger" (click)="onDelete(asset.id)">
-        <i class="fa fa-trash-o"></i>
-      </a>
-    </td>
-  </tr>
-</table>
+<div *ngFor="let asset of assetService.assetList">
+  <form class="m-2" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+
+    <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
+
+    <div class="form-row align-items-center p-2">
+      <div class="col-md-4">
+        <input name="Name" class="form-control" placeholder="Name" required
+          [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
+          [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
+      </div>
+      <div class="col-md-2">
+        <select name="CurrencyId" class="form-control" placeholder="Currency" required
+          [disabled]="asset.id !== currentEditRecordId" #CurrencyId="ngModel" [(ngModel)]="asset.currencyId"
+          [ngClass]="{'input-invalid': CurrencyId.invalid && CurrencyId.touched}"
+          (change)="this.onCurrencyAdded($event.target.value)">
+          <option value="" disabled selected>
+            Select asset
+          </option>
+          <option *ngFor="let currency of assetService.currenciesList" value={{currency.id}}>
+            {{currency.name}}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-2">
+          <select name="IsActive" class="form-control" placeholder="Active" required
+          [disabled]="asset.id !== currentEditRecordId" #IsActive="ngModel" [(ngModel)]="asset.isActive"
+          [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
+          <option value="true" selected>
+            Active
+          </option>
+          <option value="false">
+            Inactive
+          </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-outline-info ml-1"
+          [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)">
+          <i class="fa fa-pencil-square-o"></i>
+        </button>
+        <button type="submit" class="btn btn-outline-info ml-1"
+          [disabled]="!assetForm.valid || currentEditRecordId !== asset.id">
+          <i class="fa fa-floppy-o"></i>
+        </button>
+        <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== asset.id"
+          (click)="resetRecord(asset.id)">
+          <i class="fa fa-repeat"></i>
+        </button>
+        <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
+          <i class="fa fa-trash-o"></i>
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>

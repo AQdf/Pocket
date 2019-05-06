@@ -14,12 +14,19 @@ const assetsApiUrl = environment.baseApiUrl + 'assets/';
   providedIn: 'root'
 })
 export class AssetService {
-
   selectedAsset: Asset;
   assetList: Asset[];
   currenciesList: Currency[];
 
-  constructor(public http: Http, public client: HttpClient) {}
+  constructor(public http: Http, public client: HttpClient) {
+    this.getAssetList();
+  }
+
+  getAsset(id: string) {
+    return this.client.get<Asset>(assetsApiUrl + id).pipe(
+      map((data : Asset) => data)
+    );
+  }
 
   postAsset(emp : Asset) {
     var body = JSON.stringify(emp);
@@ -60,7 +67,7 @@ export class AssetService {
   getCurrenciesList() {
     this.http.get(assetsApiUrl + 'currencies').pipe(
       map((data : Response) =>{
-        return data.json() as Asset[];
+        return data.json() as Currency[];
       })
     ).subscribe(x => {
       this.currenciesList = x;

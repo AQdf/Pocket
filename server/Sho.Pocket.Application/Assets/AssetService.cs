@@ -32,6 +32,15 @@ namespace Sho.Pocket.Application.Assets
             return result;
         }
 
+        public async Task<AssetViewModel> GetById(Guid id)
+        {
+            Asset asset = await _assetRepository.GetById(id);
+
+            AssetViewModel model = new AssetViewModel(asset);
+
+            return model;
+        }
+
         public async Task<AssetViewModel> Add(AssetCreateModel createModel)
         {
             Asset asset = await _assetRepository.Add(createModel.Name, createModel.CurrencyId, createModel.IsActive);
