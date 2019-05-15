@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
+import { Http, Response, Headers, RequestOptions, RequestMethod, ResponseContentType } from '@angular/http';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
@@ -35,13 +35,32 @@ export class BalanceService {
     this.getEffectiveDatesList();
   }
 
-  getBalanceList(effectiveDate: string){
-    //let params = new HttpParams().set('effectiveDate', effectiveDate || '');
-    //this.client.get<Balances>(balancesApiUrl, { params }).pipe(
+  getHeaders() {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
 
-    this.client.get<Balances>(balancesApiUrl + effectiveDate).pipe(
-      map((data : Balances) => {
-        return data;
+    return headers;
+  }
+
+  getCurrentTotalBalance() {
+    let headers = this.getHeaders();
+    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+
+    return this.http.get(balancesApiUrl + 'total', requestOptions).pipe(
+      map(data => {
+        return data.json( ) as BalanceTotal[];
+      })
+    )
+  }
+
+  getBalanceList(effectiveDate: string) {
+    let headers = this.getHeaders();
+    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+
+    this.http.get(balancesApiUrl + effectiveDate, requestOptions).pipe(
+      map(data => {
+        return data.json() as Balances;
       })
     ).subscribe(balances => {
       this.balances = balances.items;
@@ -52,19 +71,24 @@ export class BalanceService {
   }
 
   getBalance(id: string) {
-    return this.client.get<Balance>(balancesApiUrl + id).pipe(
-      map((data : Balance) => data)
+    let headers = this.getHeaders();
+    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+
+    return this.http.get(balancesApiUrl + id, requestOptions).pipe(
+      map(data => {
+        return data.json() as Balance
+      })
     );
   }
 
   postBalance(emp : Balance) {
     var body = JSON.stringify(emp);
-    var headerOptions = new Headers({'Content-Type':'application/json'});
-    var requestOptions = new RequestOptions({method : RequestMethod.Post,headers : headerOptions});
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({method : RequestMethod.Post,headers : headers});
 
     return this.http.post(balancesApiUrl, body, requestOptions).pipe(
-        map(x => x.json())
-      );
+      map(x => x.json())
+    );
   }
  
   putBalance(id, balance) {
@@ -72,8 +96,8 @@ export class BalanceService {
       value: balance.Value
     };
     var body = JSON.stringify(updateModel);
-    var headerOptions = new Headers({ 'Content-Type': 'application/json' });
-    var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headerOptions });
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headers });
 
     return this.http.put(balancesApiUrl + id, body, requestOptions).pipe(
         map(res => res.json())
@@ -81,16 +105,22 @@ export class BalanceService {
   }
 
   deleteBalance(id: string) {
-    return this.http.delete(balancesApiUrl + id).pipe(
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({method : RequestMethod.Delete, headers : headers});
+
+    return this.http.delete(balancesApiUrl + id, requestOptions).pipe(
         map(res => res.json())
       );
   }
 
   getEffectiveDatesList(){
-    this.client.get<string[]>(balancesApiUrl + 'effective-dates').pipe(
-      map((data : string[]) => {
-        return data;
-      })
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+
+    this.http.get(balancesApiUrl + 'effective-dates', requestOptions).pipe(
+      map(data => {
+        return data.json() as string[];
+      }),
     ).subscribe(x => {
       this.effectiveDatesList = x;
 
@@ -106,43 +136,35 @@ export class BalanceService {
 
   addBalancesByTemplate() {
     var emptyBody = JSON.stringify('');
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    var headers = this.getHeaders();
 
-    this.client.post(balancesApiUrl + 'template', emptyBody, {headers}).pipe(
-      map((data : boolean) => {
-        return data;
+    this.http.post(balancesApiUrl + 'template', emptyBody, {headers}).pipe(
+      map(data => {
+        return data.json() as boolean;
       })
     ).subscribe(success => {
       if (success) {
         this.reload();
       }
-    });    
+    });
   }
 
   downloadCsv() {
-    const headers = new HttpHeaders().set('Content-Type', 'blob');
-    const options: {
-      headers?: HttpHeaders,
-      observe?: 'body',
-      params?: HttpParams,
-      reportProgress?: boolean,
-      responseType: 'blob',
-      withCredentials?: boolean
-    } = {
-        headers: headers,
-        responseType: 'blob'
-    };
-
+    let headers = new Headers({ 'Content-Type': 'blob' });
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
+    var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers, responseType: ResponseContentType.Blob});
+    
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    this.client.get(balancesApiUrl + 'csv', options).subscribe(response => {
+    this.http.get(balancesApiUrl + 'csv', requestOptions).subscribe(response => {
       if (response) {
         var currentDate = new Date(this.selectedEffectiveDate);
         var day = currentDate.getDate();
         var month = monthNames[currentDate.getMonth()];
         var year = currentDate.getFullYear();
         let name = 'Balances_' + day + '_' + month + '_' + year + '.csv';
-        saveAs(response, name);
+        saveAs(response.blob(), name);
         return response;
       }
     });
@@ -150,17 +172,18 @@ export class BalanceService {
 
   applyExchangeRate(model: ExchangeRate) {
     var body = JSON.stringify(model);
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({method : RequestMethod.Put, headers : headers});
 
-    this.client.put(balancesApiUrl + 'exchange-rate', body, {headers}).pipe(
-      map((data : boolean) => {
-        return data;
+    this.http.put(balancesApiUrl + 'exchange-rate', body, requestOptions).pipe(
+      map(data => {
+        return data.json() as boolean;
       })
     ).subscribe(success => {
       if (success) {
         this.reload();
       }
-    });   
+    });
   }
 
   reload() {
@@ -169,11 +192,14 @@ export class BalanceService {
     this.setBalanceCurrencyTotal("USD");
   }
 
-  setBalanceCurrencyTotal(currencyName: string) {
+  setBalanceCurrencyTotal(currency: string) {
+    var headers = this.getHeaders();
     let queryParams = new HttpParams().set('count', '100');
-    this.client.get<BalanceTotal[]>(balancesApiUrl + 'currency-totals/' + currencyName, { params: queryParams }).pipe(
-      map((data : BalanceTotal[]) => {
-        return data;
+    var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers, params: queryParams});
+
+    this.http.get(balancesApiUrl + 'currency-totals/' + currency, requestOptions).pipe(
+      map(data => {
+        return data.json() as BalanceTotal[];
       })
     ).subscribe(totals => {
       if (!totals || totals.length === 0) {

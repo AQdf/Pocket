@@ -16,7 +16,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private BalanceCreateModel _balanceCreateModel;
 
-        private Balance _createdBalance;
+        private BalanceViewModel _createdBalance;
 
         private readonly BalanceFeatureContext _balanceFeatureContext;
 

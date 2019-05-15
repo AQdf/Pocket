@@ -7,22 +7,22 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IBalanceRepository
     {
-        Task<IEnumerable<Balance>> GetAll(bool includeRelated = true);
+        Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true);
 
-        Task<IEnumerable<Balance>> GetByEffectiveDate(DateTime effectiveDate, bool includeRelated = true);
+        Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true);
 
-        Task<Balance> GetById(Guid id);
+        Task<Balance> GetByIdAsync(Guid userOpenId, Guid id);
 
-        Task<Balance> Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);
+        Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);
 
         Task<IEnumerable<Balance>> AddEffectiveBalances(DateTime currentEffectiveDate);
 
-        Task<Balance> Update(Guid id, decimal value);
+        Task<Balance> UpdateAsync(Guid userOpenId, Guid id, decimal value);
 
-        Task Remove(Guid balanceId);
+        Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId);
 
-        Task<IEnumerable<DateTime>> GetOrderedEffectiveDates();
+        Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId);
 
-        Task ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate);
+        Task ApplyExchangeRate(Guid exchangeRateId, string counterCurrency, DateTime effectiveDate);
     }
 }

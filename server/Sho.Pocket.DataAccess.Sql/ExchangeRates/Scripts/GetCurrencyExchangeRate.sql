@@ -1,3 +1,3 @@
 select * from ExchangeRate
-where BaseCurrencyId = @baseCurrencyId
+where BaseCurrency = @baseCurrency
 	and EffectiveDate = @effectiveDate

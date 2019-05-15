@@ -13,22 +13,16 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
-        private readonly CurrencyFeatureContext _currencyFeatureContext;
-
-        public ExchangeRateFeatureContext(CurrencyFeatureContext currencyFeatureManager) : base()
+        public ExchangeRateFeatureContext() : base()
         {
             ExchangeRates = new Dictionary<Guid, ExchangeRate>();
 
             _exchangeRateRepository = _serviceProvider.GetRequiredService<IExchangeRateRepository>();
-            _currencyFeatureContext = currencyFeatureManager;
         }
 
         public async Task<ExchangeRate> AddExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, int value)
         {
-            Guid baseCurrencyId = _currencyFeatureContext.Currencies[baseCurrency].Id;
-            Guid counterCurrencyId = _currencyFeatureContext.Currencies[counterCurrency].Id;
-
-            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, baseCurrencyId, counterCurrencyId, value);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, baseCurrency, counterCurrency, value);
             ExchangeRates.Add(exchangeRate.Id, exchangeRate);
 
             return exchangeRate;

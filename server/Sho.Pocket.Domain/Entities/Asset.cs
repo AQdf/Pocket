@@ -6,19 +6,17 @@ namespace Sho.Pocket.Domain.Entities
     {
         public Asset() {}
 
-        public Asset(Guid id, string name, Guid currencyId, bool isActive)
+        public Asset(Guid id, string name, string currency, bool isActive)
         {
             Id = id;
             Name = name;
-            CurrencyId = currencyId;
+            Currency = currency;
             IsActive = isActive;
         }
 
         public string Name { get; set; }
 
-        public Guid CurrencyId { get; set; }
-
-        public string CurrencyName { get; set; }
+        public string Currency { get; set; }
 
         public bool IsActive { get; set; }
     }

@@ -14,15 +14,15 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public async Task<ExchangeRate> Alter(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
+        public async Task<ExchangeRate> Alter(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
 
             object queryParameters = new
             {
                 effectiveDate,
-                baseCurrencyId,
-                counterCurrencyId,
+                baseCurrency,
+                counterCurrency,
                 rate
             };
 
@@ -42,51 +42,47 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             return result;
         }
 
-        public async Task<ExchangeRate> GetCurrencyExchangeRate(Guid baseCurrencyId, DateTime effectiveDate)
+        public async Task<ExchangeRate> GetCurrencyExchangeRate(string baseCurrency, DateTime effectiveDate)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetCurrencyExchangeRate.sql");
 
-            object queryParameters = new { baseCurrencyId, effectiveDate };
+            object queryParameters = new { baseCurrency, effectiveDate };
 
             ExchangeRate result = await base.GetEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<bool> Exists(Guid baseCurrencyId, DateTime effectiveDate)
+        public async Task<bool> Exists(string baseCurrency, DateTime effectiveDate)
         {
             string queryText = @"
                 if exists ( select top 1 1 from ExchangeRate
-                            where BaseCurrencyId = @baseCurrencyId
+                            where BaseCurrency = @baseCurrency
                             and EffectiveDate = @effectiveDate )
                 select 1 else select 0";
 
-            object queryParams = new { baseCurrencyId, effectiveDate };
+            object queryParams = new { baseCurrency, effectiveDate };
 
             bool result = await base.Exists(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<IEnumerable<ExchangeRate>> GetByEffectiveDate(DateTime effectiveDate)
+        public async Task<IEnumerable<ExchangeRate>> GetByEffectiveDateAsync(DateTime effectiveDate)
         {
             string queryText = @"
                 select	ExchangeRate.Id,
 		                ExchangeRate.EffectiveDate,
-		                ExchangeRate.BaseCurrencyId,
-		                ExchangeRate.CounterCurrencyId,
-                        ExchangeRate.Rate,
-		                baseCurrency.[Name] as BaseCurrencyName,
-		                counterCurrency.[Name] as CounterCurrencyName
+		                ExchangeRate.BaseCurrency,
+		                ExchangeRate.CounterCurrency,
+                        ExchangeRate.Rate
                 from ExchangeRate
-                join Currency baseCurrency on ExchangeRate.BaseCurrencyId = baseCurrency.Id
-                join Currency counterCurrency on ExchangeRate.CounterCurrencyId = counterCurrency.Id
                 where EffectiveDate = @effectiveDate
-                order by BaseCurrencyName";
+                order by BaseCurrency";
 
             object queryParameters = new { effectiveDate };
 
-            IEnumerable<ExchangeRate> result = await base.GetAll(queryText, queryParameters);
+            IEnumerable<ExchangeRate> result = await base.GetEntities(queryText, queryParameters);
 
             return result;
         }

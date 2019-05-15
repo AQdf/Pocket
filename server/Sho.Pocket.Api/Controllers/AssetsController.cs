@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.Currencies.Models;
+using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Services;
 
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/assets")]
-    [ApiController]
-    public class AssetsController : ControllerBase
+    public class AssetsController : AuthUserApiControllerBase
     {
         private readonly IAssetService _assetService;
 
-        public AssetsController(IAssetService assetService)
+        public AssetsController(IAssetService assetService, IAuthService authService) : base(authService)
         {
             _assetService = assetService;
         }
@@ -24,11 +24,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<AssetViewModel>> GetAll()
+        public async Task<ActionResult<List<AssetViewModel>>> GetCurrentUserAssets()
         {
-            IEnumerable<AssetViewModel> result = await _assetService.GetAll();
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<AssetViewModel> result = await _assetService.GetAssetsAsync(user.Id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -37,11 +44,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<AssetViewModel> Get(Guid id)
+        public async Task<ActionResult<AssetViewModel>> GetCurrentUserAsset(Guid id)
         {
-            AssetViewModel asset = await _assetService.GetById(id);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return asset;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            AssetViewModel result = await _assetService.GetAssetAsync(user.Id, id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -50,11 +64,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="newAsset"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<AssetViewModel> Add([FromBody] AssetCreateModel createModel)
+        public async Task<ActionResult<AssetViewModel>> AddAsset([FromBody] AssetCreateModel createModel)
         {
-            AssetViewModel result = await _assetService.Add(createModel);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            AssetViewModel result = await _assetService.AddAssetAsync(user.Id, createModel);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -63,11 +84,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <param name="updatedAsset"></param>
         [HttpPut("{id}")]
-        public async Task<ActionResult<AssetViewModel>> Update(Guid id, [FromBody] AssetUpdateModel updateModel)
+        public async Task<ActionResult<AssetViewModel>> UpdateAsset(Guid id, [FromBody] AssetUpdateModel updateModel)
         {
-            AssetViewModel result = await _assetService.Update(id, updateModel);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return Ok(result);
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            AssetViewModel result = await _assetService.UpdateAsync(user.Id, id, updateModel);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -75,23 +103,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(Guid id)
+        public async Task<ActionResult<bool>> DeleteAsset(Guid id)
         {
-            bool result = await _assetService.Delete(id);
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            bool result = await _assetService.DeleteAsync(user.Id, id);
 
             return Ok(result);
-        }
-
-        /// <summary>
-        /// GET: api/assets/currencies
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("currencies")]
-        public async Task<IEnumerable<CurrencyViewModel>> GetCurrencies()
-        {
-            var result = await _assetService.GetCurrencies();
-
-            return result;
         }
     }
 }

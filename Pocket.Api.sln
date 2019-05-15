@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.489
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{B6299F33-8682-478B-8C2E-A37826DC9B17}"
 EndProject
@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D14B7495
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Api.IntegrationTests", "tests\Sho.Pocket.Api.IntegrationTests\Sho.Pocket.Api.IntegrationTests.csproj", "{A3FFF33A-A7DE-4B89-BFFF-CA40B521D2A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sho.Pocket.Auth.IdentityServer", "server\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj", "{5BC06275-EA46-4190-A0D0-9841F0EBAE27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.Auth.IdentityServer", "server\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj", "{5BC06275-EA46-4190-A0D0-9841F0EBAE27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

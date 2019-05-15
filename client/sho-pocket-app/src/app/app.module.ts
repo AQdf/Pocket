@@ -1,11 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http'
+import { HttpModule, XHRBackend } from '@angular/http'
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
-import { ChartModule } from 'angular-highcharts';  
+import { ChartModule } from 'angular-highcharts';
+
+import { AuthXHRBackend } from './auth-xhr-backend';
+import { AuthGuard } from './auth.guard';
 
 import { AppComponent } from './app.component';
 import { AssetsComponent } from './components/assets/assets.component';
@@ -19,6 +22,8 @@ import { BalancesComponent } from './components/balances/balances.component';
 import { BalanceComponent } from './components/balances/balance/balance.component';
 import { BalanceListComponent } from './components/balances/balance-list/balance-list.component';
 import { BalancesChartComponent } from './components/balances-chart/balances-chart.component';
+import { RegistrationComponent } from './components/users/registration/registration.component';
+import { LoginComponent } from './components/users/login/login.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +37,9 @@ import { BalancesChartComponent } from './components/balances-chart/balances-cha
     BalancesComponent,
     BalanceComponent,
     BalanceListComponent,
-    BalancesChartComponent
+    BalancesChartComponent,
+    RegistrationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +51,10 @@ import { BalancesChartComponent } from './components/balances-chart/balances-cha
     AppRoutingModule,
     ChartModule
   ],
-  providers: [],
+  providers: [AuthGuard, { 
+    provide: XHRBackend, 
+    useClass: AuthXHRBackend
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

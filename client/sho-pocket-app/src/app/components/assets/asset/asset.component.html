@@ -6,13 +6,13 @@
       <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-3">
-      <select class="form-control" name="CurrencyId" #CurrencyId="ngModel" [(ngModel)]="assetService.selectedAsset.currencyId" placeholder="Currency" required>
+      <select class="form-control" name="Currency" #Currency="ngModel" [(ngModel)]="assetService.selectedAsset.currency" placeholder="Currency" required>
         <option value="" disabled selected>Select currency</option>
-        <option *ngFor="let currency of assetService.currenciesList" value={{currency.id}}>
-            {{currency.name}}
+        <option *ngFor="let currency of assetService.currenciesList" value={{currency}}>
+            {{currency}}
         </option>
       </select>
-      <div class="validation-error" *ngIf="CurrencyId.invalid && CurrencyId.touched">This Field is Required.</div>
+      <div class="validation-error" *ngIf="Currency.invalid && Currency.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-1">
       <label class="switch">

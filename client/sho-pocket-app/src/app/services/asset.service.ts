@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
  
 import { Asset } from'../models/asset.model'
-import { Currency } from '../models/currency.model';
 
 import { environment } from '../../environments/environment'
 
@@ -16,22 +15,36 @@ const assetsApiUrl = environment.baseApiUrl + 'assets/';
 export class AssetService {
   selectedAsset: Asset;
   assetList: Asset[];
-  currenciesList: Currency[];
+  currenciesList: string[];
 
   constructor(public http: Http, public client: HttpClient) {
     this.getAssetList();
   }
 
+  getHeaders() {
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
+
+    return headers;
+  }
+
   getAsset(id: string) {
-    return this.client.get<Asset>(assetsApiUrl + id).pipe(
-      map((data : Asset) => data)
+    let headers = this.getHeaders();
+    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+
+    return this.http.get(assetsApiUrl + id, requestOptions).pipe(
+      map((data : Response) => {
+        return data.json() as Asset
+      })
     );
   }
 
   postAsset(emp : Asset) {
     var body = JSON.stringify(emp);
-    var headerOptions = new Headers({'Content-Type':'application/json'});
-    var requestOptions = new RequestOptions({method : RequestMethod.Post, headers : headerOptions});
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({method : RequestMethod.Post, headers : headers});
+
     return this.http.post(assetsApiUrl, body, requestOptions).pipe(
       map((data : Response) =>{
         return data.json() as Asset;
@@ -41,17 +54,21 @@ export class AssetService {
  
   putAsset(id, emp) {
     var body = JSON.stringify(emp);
-    var headerOptions = new Headers({ 'Content-Type': 'application/json' });
-    var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headerOptions });
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headers });
+
     return this.http.put(assetsApiUrl + id, body, requestOptions).pipe(
-        map(response => response.json())
-      );
+      map(response => response.json())
+    );
   }
  
   getAssetList() {
-    this.client.get<Asset[]>(assetsApiUrl).pipe(
-      map((data : Asset[]) => {
-        return data;
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
+
+    this.http.get(assetsApiUrl, requestOptions).pipe(
+      map(data => {
+        return data.json() as Asset[];
       })
     ).subscribe(assets => {
         this.assetList = assets;
@@ -59,15 +76,21 @@ export class AssetService {
   }
  
   deleteAsset(id: string) {
-    return this.http.delete(assetsApiUrl + id).pipe(
-        map(response => response.json())
-      );
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
+
+    return this.http.delete(assetsApiUrl + id, requestOptions).pipe(
+      map(response => response.json())
+    );
   }
 
   getCurrenciesList() {
-    this.http.get(assetsApiUrl + 'currencies').pipe(
+    var headers = this.getHeaders();
+    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
+
+    this.http.get(environment.baseApiUrl + 'currencies', requestOptions).pipe(
       map((data : Response) =>{
-        return data.json() as Currency[];
+        return data.json() as string[];
       })
     ).subscribe(x => {
       this.currenciesList = x;

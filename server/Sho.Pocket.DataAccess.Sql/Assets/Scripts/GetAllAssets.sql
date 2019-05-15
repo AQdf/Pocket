@@ -1,8 +1,7 @@
 ﻿SELECT [Asset].[Id] AS [ID]
       ,[Asset].[Name] AS [Name]
       ,[Asset].[IsActive] AS [IsActive]
-      ,[Asset].[CurrencyId] AS [CurrencyId]
-	  ,[Currency].[Name] AS CurrencyName
+      ,[Asset].[Currency] AS [Currency]
 FROM [dbo].[Asset]
-JOIN [dbo].[Currency] ON [Currency].[Id] = [Asset].[CurrencyId]
+WHERE [Asset].[UserOpenId] = @userOpenId
 ORDER BY [Asset].[Name] ASC

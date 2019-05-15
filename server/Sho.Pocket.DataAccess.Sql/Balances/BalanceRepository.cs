@@ -18,41 +18,40 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
         {
         }
 
-        public async Task<IEnumerable<Balance>> GetAll(bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllBalances.sql");
+            object queryParams = new { userOpenId };
 
             IEnumerable<Balance> result = includeRelated
-                ? await GetAllWithRelatedEntities(queryText)
-                : await base.GetAll(queryText);
+                ? await GetAllWithRelatedEntities(queryText, queryParams)
+                : await base.GetEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetByEffectiveDate(DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
         {
             string queryText = @"
                 select * from Balance
                 join Asset on Asset.Id = Balance.AssetId
                 left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
-                left join Currency BaseCurrency on BaseCurrency.Id = ExchangeRate.BaseCurrencyId
-                left join Currency CounterCurrency on CounterCurrency.Id = ExchangeRate.CounterCurrencyId
-                where Balance.EffectiveDate = @effectiveDate";
+                where Balance.EffectiveDate = @effectiveDate and Balance.UserOpenId = @userOpenId";
 
-            object queryParams = new { effectiveDate };
+            object queryParams = new { userOpenId, effectiveDate };
 
             IEnumerable<Balance> result = includeRelated
                 ? await GetAllWithRelatedEntities(queryText, queryParams)
-                : await base.GetAll(queryText, queryParams);
+                : await base.GetEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<Balance> GetById(Guid id)
+        public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
 
-            object queryParameters = new { id };
+            object queryParameters = new { userOpenId, id };
 
             IEnumerable<Balance> resultItems;
 
@@ -71,11 +70,11 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return resultItems.FirstOrDefault();
         }
 
-        public async Task<Balance> Add(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
 
-            object queryParameters = new { assetId, effectiveDate, value, exchangeRateId };
+            object queryParameters = new { userOpenId, assetId, effectiveDate, value, exchangeRateId };
 
             Balance result = await base.InsertEntity(queryText, queryParameters);
 
@@ -91,55 +90,52 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
                 effectiveDate = currentEffectiveDate,
             };
 
-            IEnumerable<Balance> result = await base.GetAll(queryText, queryParameters);
+            IEnumerable<Balance> result = await base.GetEntities(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<Balance> Update(Guid id, decimal value)
+        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, decimal value)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");
 
-            object queryParameters = new { id, value };
+            object queryParameters = new { userOpenId, id, value };
 
-            Balance result = await base.UpdateEntity(queryText, queryParameters);
-
-            return result;
+            return await base.UpdateEntity(queryText, queryParameters);
         }
 
-        public async Task Remove(Guid balanceId)
+        public async Task<bool> RemoveAsync(Guid userOpenId, Guid id)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
+            object queryParams = new { userOpenId, id };
 
-            object queryParameters = new
-            {
-                id = balanceId
-            };
+            await base.RemoveEntity(queryText, queryParams);
 
-            await base.RemoveEntity(queryText, queryParameters);
+            return true;
         }
 
-        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDates()
+        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
+            object queryParams = new { userOpenId };
 
             IEnumerable<DateTime> result;
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = await db.QueryAsync<DateTime>(queryText);
+                result = await db.QueryAsync<DateTime>(queryText, queryParams);
             }
 
             return result;
         }
 
-        public async Task ApplyExchangeRate(Guid exchangeRateId, Guid counterCurrencyId, DateTime effectiveDate)
+        public async Task ApplyExchangeRate(Guid exchangeRateId, string counterCurrency, DateTime effectiveDate)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "ApplyExchangeRate.sql");
 
             object queryParameters = new {
                 exchangeRateId,
-                currencyId = counterCurrencyId,
+                currency = counterCurrency,
                 effectiveDate
             };
 
@@ -152,17 +148,11 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
 
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {
-                result = await db.QueryAsync<Balance, Asset, ExchangeRate, Currency, Currency, Balance>(queryText,
-                    (balance, asset, rate, baseCurrency, counterCurrency) =>
+                result = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
+                    (balance, asset, rate) =>
                     {
                         balance.Asset = asset;
                         balance.ExchangeRate = rate;
-
-                        if (balance.ExchangeRate != null)
-                        {
-                            balance.ExchangeRate.BaseCurrency = baseCurrency;
-                            balance.ExchangeRate.CounterCurrency = counterCurrency;
-                        }
 
                         return balance;
                     }, queryParams);

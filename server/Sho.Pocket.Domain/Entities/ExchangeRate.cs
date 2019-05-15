@@ -6,28 +6,20 @@ namespace Sho.Pocket.Domain.Entities
     {
         public ExchangeRate() {}
 
-        public ExchangeRate(DateTime effectiveDate, Guid baseCurrencyId, Guid counterCurrencyId, decimal rate)
+        public ExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate)
         {
             EffectiveDate = effectiveDate;
-            BaseCurrencyId = baseCurrencyId;
-            CounterCurrencyId = counterCurrencyId;
+            BaseCurrency = baseCurrency;
+            CounterCurrency = counterCurrency;
             Rate = rate;
         }
 
         public DateTime EffectiveDate { get; set; }
 
-        public Guid BaseCurrencyId { get; set; }
+        public string BaseCurrency { get; set; }
 
-        public Guid CounterCurrencyId { get; set; }
+        public string CounterCurrency { get; set; }
 
         public decimal Rate { get; set; }
-
-        public virtual string BaseCurrencyName { get; set; }
-
-        public virtual string CounterCurrencyName { get; set; }
-
-        public virtual Currency BaseCurrency { get; set; }
-
-        public virtual Currency CounterCurrency { get; set; }
     }
 }

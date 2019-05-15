@@ -2,8 +2,6 @@
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Domain.Entities;
-using System;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
@@ -14,18 +12,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private readonly AssetFeatureContext _assetFeatureContext;
 
-        private readonly CurrencyFeatureContext _currencyFatureContext;
-
         private AssetCreateModel _assetCreateModel;
 
         public AssetViewModel CreatedAsset = null;
 
-        public AddAssetSteps(
-            AssetFeatureContext assetFeatureContext,
-            CurrencyFeatureContext currencyFatureContext)
+        public AddAssetSteps(AssetFeatureContext assetFeatureContext)
         {
             _assetFeatureContext = assetFeatureContext;
-            _currencyFatureContext = currencyFatureContext;
         }
 
         [BeforeTestRun]
@@ -44,9 +37,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I specified asset name (.*), currency (.*), is active (.*)")]
         public void GivenAssetCreateModel(string assetName, string currencyName, bool isActive)
         {
-            Guid currencyId = _currencyFatureContext.Currencies[currencyName].Id;
-
-            _assetCreateModel = new AssetCreateModel(assetName, currencyId, isActive);
+            _assetCreateModel = new AssetCreateModel(assetName, currencyName, isActive);
         }
 
         [When(@"I add the asset")]
@@ -70,10 +61,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Then(@"asset created with currency (.*)")]
         public void ThenAssetCurrency(string currencyName)
         {
-            Currency currency = _currencyFatureContext.Currencies[currencyName];
-
-            CreatedAsset.CurrencyId.Should().Be(currency.Id);
-            currency.Name.Should().Be(currencyName);
+            CreatedAsset.Currency.Should().Be(currencyName);
         }
 
         [Then(@"asset created with is active (.*)")]

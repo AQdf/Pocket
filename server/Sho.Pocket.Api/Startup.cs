@@ -6,9 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Common.Configuration;
 using Sho.Pocket.Application.Common.Extensions;
+using Sho.Pocket.Auth.IdentityServer;
 using Sho.Pocket.Core;
+using Sho.Pocket.Core.Auth;
 using Sho.Pocket.Core.DataAccess;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
 
 namespace Sho.Pocket.Api
 {
@@ -37,20 +40,34 @@ namespace Sho.Pocket.Api
             services.AddSingleton(s => globalSettings);
 
             services.AddApplicationServices();
-            //services.AddApplicationIdentityServer(globalSettings);
+
+            services.AddApplicationAuth(globalSettings);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Pocket API", Version = "v1" });
-            });
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
 
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            IDbConfiguration dbConfiguration)
+            IDbConfiguration dbConfiguration,
+            IAuthDbConfiguration authDbConfiguration)
         {
             if (env.IsDevelopment())
             {
@@ -62,12 +79,12 @@ namespace Sho.Pocket.Api
                 app.UseHttpsRedirection();
             }
 
+            app.UseAuthentication();
+
             app.SeedApplicationData(dbConfiguration);
+            app.SeedApplicationAuthData(authDbConfiguration);
 
             app.UseMvc();
-
-            //app.UseAuthentication();
-            //app.SeedApplicationAuthData(authDbConfiguration);
 
             app.UseCors("AllowAll");
 

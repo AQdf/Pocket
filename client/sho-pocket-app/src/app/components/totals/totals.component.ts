@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
-import { environment } from '../../../environments/environment'
 import { BalanceTotal } from 'src/app/models/balance-total.model';
-
-const balancesApiUrl = environment.baseApiUrl + 'balances/';
+import { BalanceService } from '../../services/balance.service';
 
 @Component({
   selector: 'app-totals',
@@ -15,7 +11,7 @@ const balancesApiUrl = environment.baseApiUrl + 'balances/';
 export class TotalsComponent implements OnInit {
   totalBalance: BalanceTotal[];
 
-  constructor(public client : HttpClient) { }
+  constructor(public balanceService : BalanceService) { }
 
   ngOnInit() {
     this.getCurrentTotalBalance();
@@ -23,11 +19,7 @@ export class TotalsComponent implements OnInit {
 
   getCurrentTotalBalance()
   {
-    this.client.get<BalanceTotal[]>(balancesApiUrl + 'total').pipe(
-      map((data : BalanceTotal[]) =>{
-        return data;
-      })
-    ).subscribe(response => {
+    this.balanceService.getCurrentTotalBalance().subscribe(response => {
       this.totalBalance = response;
     });
   }

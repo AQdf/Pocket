@@ -1,5 +1,4 @@
-import { Balance } from'../models/balance.model'
-import { Currency } from './currency.model';
+import { Balance } from'../models/balance.model';
 import { ExchangeRate } from './exchange-rate.model';
 import { BalanceTotal } from './balance-total.model';
 

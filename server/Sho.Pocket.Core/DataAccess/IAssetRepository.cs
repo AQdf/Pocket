@@ -7,18 +7,18 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IAssetRepository
     {
-        Task<Asset> GetById(Guid id);
+        Task<Asset> GetByIdAsync(Guid userOpenId, Guid id);
 
-        Task<IEnumerable<Asset>> GetAll();
+        Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId);
 
-        Task<IEnumerable<Asset>> GetActiveAssets();
+        Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive);
 
-        Task<Asset> Add(string name, Guid currencyId, bool isActive);
+        Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive);
 
-        Task<Asset> Update(Guid id, string name, Guid currencyId, bool isActive);
+        Task RemoveAsync(Guid userOpenId, Guid assetId);
 
-        Task Remove(Guid assetId);
+        Task<IEnumerable<Asset>> GetActiveAssetsAsync();
 
-        Task<bool> ExistsAssetBalance(Guid id);
+        Task<bool> ExistsAssetBalanceAsync(Guid id);
     }
 }

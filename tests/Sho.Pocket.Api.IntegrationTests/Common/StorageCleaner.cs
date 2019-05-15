@@ -12,7 +12,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Common
             CleanupTable(nameof(Balance));
             CleanupTable(nameof(ExchangeRate));
             CleanupTable(nameof(Asset));
-            CleanupTable(nameof(Currency));
+            CleanupTable("Currency");
         }
 
         public static void CleanupTable(string tableName)

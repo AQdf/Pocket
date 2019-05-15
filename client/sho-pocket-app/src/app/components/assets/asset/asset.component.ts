@@ -30,8 +30,7 @@ export class AssetComponent implements OnInit {
     this.assetService.selectedAsset = {
       id: null,
       name: '',
-      currencyId: '',
-      currencyName: '',
+      currency: '',
       isActive: true,
     }
   }

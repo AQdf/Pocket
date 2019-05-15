@@ -9,11 +9,11 @@ namespace Sho.Pocket.Application.Assets.Models
         {
         }
 
-        public AssetViewModel(Guid id, string name, Guid currencyId, bool isActive)
+        public AssetViewModel(Guid id, string name, string currency, bool isActive)
         {
             Id = id;
             Name = name;
-            CurrencyId = currencyId;
+            Currency = currency;
             IsActive = isActive;
         }
 
@@ -21,8 +21,7 @@ namespace Sho.Pocket.Application.Assets.Models
         {
             Id = asset.Id;
             Name = asset.Name;
-            CurrencyId = asset.CurrencyId;
-            CurrencyName = asset.CurrencyName;
+            Currency = asset.Currency;
             IsActive = asset.IsActive;
         }
 
@@ -30,9 +29,7 @@ namespace Sho.Pocket.Application.Assets.Models
 
         public string Name { get; set; }
 
-        public Guid CurrencyId { get; set; }
-
-        public string CurrencyName { get; set; }
+        public string Currency { get; set; }
 
         public bool IsActive { get; set; }
     }

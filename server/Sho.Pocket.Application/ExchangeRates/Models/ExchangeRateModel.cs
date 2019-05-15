@@ -15,10 +15,8 @@ namespace Sho.Pocket.Application.ExchangeRates.Models
         {
             Id = exchangeRate.Id;
             EffectiveDate = exchangeRate.EffectiveDate;
-            BaseCurrencyId = exchangeRate.BaseCurrencyId;
-            BaseCurrencyName = exchangeRate.BaseCurrencyName;
-            CounterCurrencyId = exchangeRate.CounterCurrencyId;
-            CounterCurrencyName = exchangeRate.CounterCurrencyName;
+            BaseCurrency = exchangeRate.BaseCurrency;
+            CounterCurrency = exchangeRate.CounterCurrency;
             Value = exchangeRate.Rate;
         }
 
@@ -27,13 +25,9 @@ namespace Sho.Pocket.Application.ExchangeRates.Models
         [JsonConverter(typeof(IsoStringDateTimeConverter))]
         public DateTime EffectiveDate { get; set; }
 
-        public Guid BaseCurrencyId { get; set; }
+        public string BaseCurrency { get; set; }
 
-        public string BaseCurrencyName { get; set; }
-
-        public Guid CounterCurrencyId { get; set; }
-
-        public string CounterCurrencyName { get; set; }
+        public string CounterCurrency { get; set; }
 
         public decimal Value { get; set; }
     }

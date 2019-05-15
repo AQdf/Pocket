@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace Sho.Pocket.Core.DataAccess
 {
-    public interface IBaseRepository<T> where T : BaseEntity
+    public interface IBaseRepository<T>
     {
-        Task<IEnumerable<T>> GetAll(string queryText, object queryParameters = null);
+        Task<IEnumerable<T>> GetEntities(string queryText, object queryParameters = null);
 
         Task<T> GetEntity(string queryText, object queryParameters = null);
 

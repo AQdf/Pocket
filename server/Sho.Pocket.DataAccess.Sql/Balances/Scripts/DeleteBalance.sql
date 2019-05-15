@@ -1,2 +1,2 @@
 ﻿delete from Balance
-where Id = @id
+where Id = @id and UserOpenId = @userOpenId

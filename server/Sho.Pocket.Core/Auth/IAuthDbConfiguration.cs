@@ -1,7 +1,9 @@
-﻿namespace Sho.Pocket.Core.Auth
+﻿using System.Threading.Tasks;
+
+namespace Sho.Pocket.Core.Auth
 {
     public interface IAuthDbConfiguration
     {
-        void SeedApplicationAuthData();
+        Task SeedApplicationAuthData();
     }
 }

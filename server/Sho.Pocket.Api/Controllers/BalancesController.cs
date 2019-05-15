@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Services;
 
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/balances")]
-    [ApiController]
-    public class BalancesController : ControllerBase
+    public class BalancesController : AuthUserApiControllerBase
     {
         private readonly IBalanceService _balanceService;
 
-        public BalancesController(IBalanceService balanceService)
+        public BalancesController(IBalanceService balanceService, IAuthService authService) : base(authService)
         {
             _balanceService = balanceService;
         }
@@ -25,11 +25,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{effectiveDate}")]
-        public async Task<BalancesViewModel> GetAll(DateTime effectiveDate)
+        public async Task<ActionResult<BalancesViewModel>> GetCurrentUserEffectiveBalances(DateTime effectiveDate)
         {
-            BalancesViewModel result = await _balanceService.GetAll(effectiveDate);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalancesViewModel result = await _balanceService.GetUserEffectiveBalancesAsync(user.Id, effectiveDate);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -38,11 +45,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<BalanceViewModel> Get(Guid id)
+        public async Task<ActionResult<BalanceViewModel>> GetCurrentUserBalance(Guid id)
         {
-            BalanceViewModel balance = await _balanceService.GetById(id);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return balance;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalanceViewModel result = await _balanceService.GetUserBalanceAsync(user.Id, id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -51,11 +65,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<bool> Add([FromBody] BalanceCreateModel createModel)
+        public async Task<ActionResult<BalanceViewModel>> AddBalance([FromBody] BalanceCreateModel createModel)
         {
-            await _balanceService.Add(createModel);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return true;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalanceViewModel result = await _balanceService.AddBalanceAsync(user.Id, createModel);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -64,11 +85,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="Id"></param>
         /// <param name="balanceModel"></param>
         [HttpPut("{id}")]
-        public async Task<bool> Update(Guid id, [FromBody] BalanceUpdateModel updateModel)
+        public async Task<ActionResult<BalanceViewModel>> UpdateBalance(Guid id, [FromBody] BalanceUpdateModel updateModel)
         {
-            await _balanceService.Update(id, updateModel);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return true;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalanceViewModel result = await _balanceService.UpdateBalanceAsync(user.Id, id, updateModel);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -76,11 +104,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <param name="Id"></param>
         [HttpDelete("{Id}")]
-        public async Task<bool> Delete(Guid Id)
+        public async Task<ActionResult<bool>> Delete(Guid id)
         {
-            await _balanceService.Delete(Id);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return true;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            var result = await _balanceService.DeleteBalanceAsync(user.Id, id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -88,11 +123,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("total")]
-        public async Task<IEnumerable<BalanceTotalModel>> GetCurrentTotalBalance()
+        public async Task<ActionResult<List<BalanceTotalModel>>> GetCurrentTotalBalance()
         {
-            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrentTotalBalance();
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<BalanceTotalModel> result = await _balanceService.GetCurrentTotalBalance(user.Id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -101,11 +143,18 @@ namespace Sho.Pocket.Api.Controllers
         /// <param name="balanceModel"></param>
         /// <returns></returns>
         [HttpPost("template")]
-        public async Task<IEnumerable<BalanceViewModel>> AddBalancesTemplate()
+        public async Task<ActionResult<List<BalanceViewModel>>> AddBalancesTemplate()
         {
-            IEnumerable<BalanceViewModel> result = await _balanceService.AddEffectiveBalancesTemplate();
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<BalanceViewModel> result = await _balanceService.AddEffectiveBalancesTemplate(user.Id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -113,11 +162,18 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("effective-dates")]
-        public async Task<IEnumerable<DateTime>> GetEffectiveDates()
+        public async Task<ActionResult<List<DateTime>>> GetCurrentUserBalancesDates()
         {
-            IEnumerable<DateTime> result = await _balanceService.GetEffectiveDates();
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<DateTime> result = await _balanceService.GetEffectiveDatesAsync(user.Id);
+
+            return HandleResult(result);
         }
 
         [HttpPut("exchange-rate")]
@@ -129,17 +185,31 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         [HttpGet("currency-totals/{currencyName}")]
-        public async Task<IEnumerable<BalanceTotalModel>> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
+        public async Task<ActionResult<List<BalanceTotalModel>>> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
         {
-            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrencyTotals(currencyName, count);
+            UserViewModel user = await GetCurrentUserAsync();
 
-            return result;
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrencyTotals(user.Id, currencyName, count);
+
+            return HandleResult(result);
         }
 
         [HttpGet("csv")]
         public async Task<IActionResult> DownloadCsv()
         {
-            byte[] bytes = await _balanceService.ExportBalancesToCsv();
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            byte[] bytes = await _balanceService.ExportUserBalancesToCsvAsync(user.Id);
 
             return File(bytes, "application/csv");
         }

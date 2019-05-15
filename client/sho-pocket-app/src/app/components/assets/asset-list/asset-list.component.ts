@@ -93,8 +93,7 @@ export class AssetListComponent implements OnInit {
       id: null,
       name: '',
       value: 0.0,
-      currencyId: '',
-      currencyName: '',
+      currency: '',
       isActive: true
     }
 
@@ -104,9 +103,8 @@ export class AssetListComponent implements OnInit {
     this.isAddMode = true;
   }
 
-  onCurrencyAdded(value) {
-    let currency = this.assetService.currenciesList.find(a => a.id == value);
-    this.assetService.selectedAsset.currencyId = currency.id;
-    this.assetService.selectedAsset.currencyName = currency.name;
+  onCurrencyAdded(value: string) {
+    let currency = this.assetService.currenciesList.find(c => c == value);
+    this.assetService.selectedAsset.currency = currency;
   }
 }

@@ -31,7 +31,7 @@
           [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
       </div>
       <div class="col-md-2">
-        <input class="form-control" value="{{(balance.asset && balance.asset.currencyName) || '-'}}" [disabled]="true">
+        <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
       </div>
       <div class="col-md-4">
         <button type="button" class="btn btn-outline-info ml-1"

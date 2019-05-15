@@ -11,11 +11,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
     public class BalanceFeatureContext : FeatureContextBase
     {
-        public Dictionary<Guid, Asset> Assets { get; set; } = new Dictionary<Guid, Asset>();
-
-        public Dictionary<string, Currency> Currencies { get; set; } = new Dictionary<string, Currency>();
-
-        public Dictionary<Guid, Balance> Balances { get; set; } = new Dictionary<Guid, Balance>();
+        public Dictionary<Guid, BalanceViewModel> Balances { get; set; } = new Dictionary<Guid, BalanceViewModel>();
 
         private readonly IBalanceService _balanceService;
 
@@ -26,30 +22,30 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task<BalanceViewModel> GetBalance(Guid id)
         {
-            return await _balanceService.GetById(id);
+            return await _balanceService.GetUserBalanceAsync(User.Id, id);
         }
 
         public async Task<List<BalanceViewModel>> GetAllBalances(DateTime effectiveDate)
         {
-            BalancesViewModel storageBalances = await _balanceService.GetAll(effectiveDate);
+            BalancesViewModel storageBalances = await _balanceService.GetUserEffectiveBalancesAsync(User.Id, effectiveDate);
 
             List<BalanceViewModel> contextBalances = storageBalances.Items.Where(b => Balances.ContainsKey(b.Id.Value)).ToList();
 
             return contextBalances;
         }
 
-        public async Task<Balance> AddBalance(BalanceCreateModel createModel)
+        public async Task<BalanceViewModel> AddBalance(BalanceCreateModel createModel)
         {
-            Balance newBalance = await _balanceService.Add(createModel);
+            BalanceViewModel newBalance = await _balanceService.AddBalanceAsync(User.Id, createModel);
 
-            Balances.Add(newBalance.Id, newBalance);
+            Balances.Add(newBalance.Id.Value, newBalance);
 
             return newBalance;
         }
 
-        public async Task<Balance> UpdateBalance(Guid id, BalanceUpdateModel updateModel)
+        public async Task<BalanceViewModel> UpdateBalance(Guid id, BalanceUpdateModel updateModel)
         {
-            Balance updateBalance = await _balanceService.Update(id, updateModel);
+            BalanceViewModel updateBalance = await _balanceService.UpdateBalanceAsync(User.Id, id, updateModel);
 
             Balances[id] = updateBalance;
 
@@ -58,16 +54,16 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task DeleteBalance(Guid id)
         {
-            await _balanceService.Delete(id);
+            await _balanceService.DeleteBalanceAsync(User.Id, id);
 
             Balances.Remove(id);
         }
 
         public async Task<List<BalanceViewModel>> AddEffectiveBalances()
         {
-            IEnumerable<BalanceViewModel> balances = await _balanceService.AddEffectiveBalancesTemplate();
+            List<BalanceViewModel> balances = await _balanceService.AddEffectiveBalancesTemplate(User.Id);
 
-            return balances.ToList();
+            return balances;
         }
     }
 }

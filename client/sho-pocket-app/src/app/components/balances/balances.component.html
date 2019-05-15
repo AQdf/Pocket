@@ -28,7 +28,7 @@
           <input name="Rate" type="number" class="form-control" placeholder="Rate" required
             [ngClass]="{'input-invalid': Rate.invalid && Rate.touched }" #Rate="ngModel" [(ngModel)]="rate.value">
           <div class="input-group-append">
-            <button class="btn btn-secondary" (click)="balanceService.applyExchangeRate(rate)">{{rate.baseCurrencyName}}
+            <button class="btn btn-secondary" (click)="balanceService.applyExchangeRate(rate)">{{rate.baseCurrency}}
             </button>
           </div>
         </div>

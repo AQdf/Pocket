@@ -3,32 +3,31 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
 {
     public interface IBalanceService
     {
-        Task<BalancesViewModel> GetAll(DateTime effectiveDate);
+        Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userOpenId, DateTime effectiveDate);
 
-        Task<BalanceViewModel> GetById(Guid id);
+        Task<BalanceViewModel> GetUserBalanceAsync(Guid userOpenId, Guid id);
 
-        Task<Balance> Add(BalanceCreateModel createModel);
+        Task<BalanceViewModel> AddBalanceAsync(Guid userOpenId, BalanceCreateModel createModel);
 
-        Task<IEnumerable<BalanceViewModel>> AddEffectiveBalancesTemplate();
+        Task<List<BalanceViewModel>> AddEffectiveBalancesTemplate(Guid userOpenId);
 
-        Task<Balance> Update(Guid id, BalanceUpdateModel updateModel);
+        Task<BalanceViewModel> UpdateBalanceAsync(Guid userOpenId, Guid id, BalanceUpdateModel updateModel);
 
-        Task Delete(Guid Id);
+        Task<bool> DeleteBalanceAsync(Guid userOpenId, Guid Id);
 
-        Task<IEnumerable<BalanceTotalModel>> GetCurrentTotalBalance();
+        Task<List<BalanceTotalModel>> GetCurrentTotalBalance(Guid userOpenId);
 
-        Task<IEnumerable<DateTime>> GetEffectiveDates();
+        Task<List<DateTime>> GetEffectiveDatesAsync(Guid userOpenId);
 
         Task ApplyExchangeRate(ExchangeRateModel model);
 
-        Task<IEnumerable<BalanceTotalModel>> GetCurrencyTotals(string currencyName, int count);
+        Task<List<BalanceTotalModel>> GetCurrencyTotals(Guid userOpenId, string currencyName, int count);
 
-        Task<byte[]> ExportBalancesToCsv();
+        Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId);
     }
 }

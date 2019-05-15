@@ -14,16 +14,58 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
         {
         }
 
-        public async Task<IEnumerable<Asset>> GetAll()
+        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
+            object queryParams = new { userOpenId };
 
-            IEnumerable<Asset> result = await base.GetAll(queryText);
+            IEnumerable<Asset> result = await base.GetEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<IEnumerable<Asset>> GetActiveAssets()
+        public async Task<Asset> GetByIdAsync(Guid userOpenId, Guid id)
+        {
+            const string queryText = @"select top 1 * from Asset where Id = @id and UserOpenId = @userOpenId";
+            object queryParams = new { userOpenId, id, };
+
+            Asset result = await base.GetEntity(queryText, queryParams);
+
+            return result;
+        }
+
+        public async Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive)
+        {
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
+
+            object queryParameters = new { userOpenId, name, currency, isActive, };
+
+            Asset result = await base.InsertEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public async Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive)
+        {
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
+
+            object queryParameters = new { userOpenId, id, name, currency, isActive, };
+
+            Asset result = await base.UpdateEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public async Task RemoveAsync(Guid userOpenId, Guid id)
+        {
+            string queryText = @"delete from Asset where Id = @id and UserOpenId = @userOpenId";
+
+            object queryParameters = new { userOpenId, id };
+
+            await base.RemoveEntity(queryText, queryParameters);
+        }
+
+        public async Task<IEnumerable<Asset>> GetActiveAssetsAsync()
         {
             string query = @"
                 SELECT [Asset].[Id] AS [ID]
@@ -36,57 +78,12 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
                 WHERE [Asset].[IsActive] = 1
                 ORDER BY [Asset].[Name] ASC";
 
-            IEnumerable<Asset> result = await base.GetAll(query);
+            IEnumerable<Asset> result = await base.GetEntities(query);
 
             return result;
         }
 
-        public async Task<Asset> GetById(Guid id)
-        {
-            string queryText = @"select top 1 * from Asset where Id = @id";
-
-            object queryParams = new { id };
-
-            Asset result = await base.GetEntity(queryText, queryParams);
-
-            return result;
-        }
-
-        public async Task<Asset> Add(string name, Guid currencyId, bool isActive)
-        {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
-
-            object queryParameters = new { name, currencyId, isActive };
-
-            Asset result = await base.InsertEntity(queryText, queryParameters);
-
-            return result;
-        }
-
-        public async Task<Asset> Update(Guid id, string name, Guid currencyId, bool isActive)
-        {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
-
-            object queryParameters = new { id, name, currencyId, isActive };
-
-            Asset result = await base.UpdateEntity(queryText, queryParameters);
-
-            return result;
-        }
-
-        public async Task Remove(Guid assetId)
-        {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteAsset.sql");
-
-            object queryParameters = new
-            {
-                id = assetId
-            };
-
-            await base.RemoveEntity(queryText, queryParameters);
-        }
-
-        public async Task<bool> ExistsAssetBalance(Guid id)
+        public async Task<bool> ExistsAssetBalanceAsync(Guid id)
         {
             string queryText = @"
                 if exists (select top 1 1 from Balance where AssetId = @id)

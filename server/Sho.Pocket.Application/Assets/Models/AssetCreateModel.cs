@@ -8,16 +8,16 @@ namespace Sho.Pocket.Application.Assets.Models
         {
         }
 
-        public AssetCreateModel(string name, Guid currencyId, bool isActive)
+        public AssetCreateModel(string name, string currency, bool isActive)
         {
             Name = name;
-            CurrencyId = currencyId;
+            Currency = currency;
             IsActive = isActive;
         }
 
         public string Name { get; set; }
 
-        public Guid CurrencyId { get; set; }
+        public string Currency { get; set; }
 
         public bool IsActive { get; set; }
     }

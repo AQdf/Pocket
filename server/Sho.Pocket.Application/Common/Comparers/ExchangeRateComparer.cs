@@ -10,16 +10,16 @@ namespace Sho.Pocket.Application.Common.Comparers
         {
             return y != null &&
                    x.EffectiveDate == y.EffectiveDate &&
-                   x.BaseCurrencyId.Equals(y.BaseCurrencyId) &&
-                   x.CounterCurrencyId.Equals(y.CounterCurrencyId);
+                   string.Equals(x.BaseCurrency, y.BaseCurrency, StringComparison.InvariantCultureIgnoreCase) &&
+                   string.Equals(x.CounterCurrency, y.CounterCurrency, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public int GetHashCode(ExchangeRateModel obj)
         {
             var hashCode = -810118591;
             hashCode = hashCode * -1521134295 + obj.EffectiveDate.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(obj.BaseCurrencyId);
-            hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(obj.CounterCurrencyId);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(obj.BaseCurrency);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(obj.CounterCurrency);
             return hashCode;
         }
     }

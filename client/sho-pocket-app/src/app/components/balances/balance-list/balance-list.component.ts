@@ -111,7 +111,7 @@ export class BalanceListComponent implements OnInit {
 
   onAssetAdded(value) {
     let asset = this.assetService.assetList.find(a => a.id == value);
-    let exchangeRate = this.balanceService.exchangeRates.find(rate => rate.baseCurrencyName == asset.currencyName);
+    let exchangeRate = this.balanceService.exchangeRates.find(rate => rate.baseCurrency == asset.currency);
     this.balanceService.selectedBalance.assetId = asset.id;
     this.balanceService.selectedBalance.exchangeRateId = exchangeRate.id;
     this.balanceService.selectedBalance.asset = asset;

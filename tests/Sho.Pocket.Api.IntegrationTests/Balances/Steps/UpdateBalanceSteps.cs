@@ -16,7 +16,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private BalanceUpdateModel _balanceUpdateModel;
 
-        private Balance _updatedBalance;
+        private BalanceViewModel _updatedBalance;
 
         private readonly BalanceFeatureContext _balanceFeatureContext;
 
@@ -48,10 +48,10 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             DateTime today = DateTime.UtcNow.Date;
             AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
 
-            Balance balance = _balanceFeatureContext.Balances.Values
+            BalanceViewModel balance = _balanceFeatureContext.Balances.Values
                 .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
 
-            _updatedBalance = await _balanceFeatureContext.UpdateBalance(balance.Id, _balanceUpdateModel);
+            _updatedBalance = await _balanceFeatureContext.UpdateBalance(balance.Id.Value, _balanceUpdateModel);
         }
         
         [Then(@"balance amount updated to (.*)")]

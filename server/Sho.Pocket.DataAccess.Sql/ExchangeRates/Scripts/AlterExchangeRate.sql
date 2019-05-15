@@ -1,17 +1,17 @@
 ﻿DECLARE @id uniqueidentifier = (
 	select top 1 Id from ExchangeRate
-	where BaseCurrencyId = @baseCurrencyId
-		and CounterCurrencyId = @counterCurrencyId
+	where BaseCurrency = @baseCurrency
+		and CounterCurrency = @counterCurrency
 		and EffectiveDate = @effectiveDate)
 
 IF @id IS NULL
 	BEGIN
 		SET @id = NEWID();
-		insert into ExchangeRate([Id], [EffectiveDate], [BaseCurrencyId], [CounterCurrencyId], [Rate]) values (
+		insert into ExchangeRate([Id], [EffectiveDate], [BaseCurrency], [CounterCurrency], [Rate]) values (
 			@id,
 			@effectiveDate,
-			@baseCurrencyId,
-			@counterCurrencyId,
+			@baseCurrency,
+			@counterCurrency,
 			@rate
 		)
 	END

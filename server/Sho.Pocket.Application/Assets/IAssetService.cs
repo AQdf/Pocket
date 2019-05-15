@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.Currencies.Models;
 
 namespace Sho.Pocket.Application.Assets
 {
     public interface IAssetService
     {
-        Task<IEnumerable<AssetViewModel>> GetAll();
+        Task<List<AssetViewModel>> GetAssetsAsync(Guid userOpenId);
 
-        Task<AssetViewModel> GetById(Guid id);
+        Task<AssetViewModel> GetAssetAsync(Guid userOpenId, Guid id);
 
-        Task<AssetViewModel> Add(AssetCreateModel createModel);
+        Task<AssetViewModel> AddAssetAsync(Guid userOpenId, AssetCreateModel createModel);
 
-        Task<AssetViewModel> Update(Guid id, AssetUpdateModel updateModel);
+        Task<AssetViewModel> UpdateAsync(Guid userOpenId, Guid id, AssetUpdateModel updateModel);
 
-        Task<bool> Delete(Guid Id);
-
-        Task<IEnumerable<CurrencyViewModel>> GetCurrencies();
+        Task<bool> DeleteAsync(Guid userOpenId, Guid Id);
     }
 }

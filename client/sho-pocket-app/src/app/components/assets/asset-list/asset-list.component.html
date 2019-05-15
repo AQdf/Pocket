@@ -16,15 +16,15 @@
           [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
       </div>
       <div class="col-md-2">
-        <select name="CurrencyId" class="form-control" placeholder="Currency" required
-          [disabled]="asset.id !== currentEditRecordId" #CurrencyId="ngModel" [(ngModel)]="asset.currencyId"
-          [ngClass]="{'input-invalid': CurrencyId.invalid && CurrencyId.touched}"
+        <select name="Currency" class="form-control" placeholder="Currency" required
+          [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
+          [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
           (change)="this.onCurrencyAdded($event.target.value)">
           <option value="" disabled selected>
             Select asset
           </option>
-          <option *ngFor="let currency of assetService.currenciesList" value={{currency.id}}>
-            {{currency.name}}
+          <option *ngFor="let currency of assetService.currenciesList" value={{currency}}>
+            {{currency}}
           </option>
         </select>
       </div>

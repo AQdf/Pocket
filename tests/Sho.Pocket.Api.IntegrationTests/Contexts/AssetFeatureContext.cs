@@ -23,7 +23,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task<List<AssetViewModel>> GetAssets()
         {
-            IEnumerable<AssetViewModel> storageAssets = await _assetService.GetAll();
+            IEnumerable<AssetViewModel> storageAssets = await _assetService.GetAssetsAsync(User.Id);
 
             List<AssetViewModel> contextAssets = storageAssets.Where(sa => Assets.ContainsKey(sa.Name)).ToList();
 
@@ -32,7 +32,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task<AssetViewModel> AddAsset(AssetCreateModel createModel)
         {
-            AssetViewModel asset = await _assetService.Add(createModel);
+            AssetViewModel asset = await _assetService.AddAssetAsync(User.Id, createModel);
             Assets.Add(asset.Name, asset);
 
             return asset;
@@ -40,7 +40,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task DeleteAsset(Guid id, string assetName)
         {
-            bool isSuccess = await _assetService.Delete(id);
+            bool isSuccess = await _assetService.DeleteAsync(User.Id, id);
 
             if (isSuccess)
             {
@@ -50,7 +50,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task<AssetViewModel> UpdateAsset(Guid id, AssetUpdateModel updateModel)
         {
-            AssetViewModel result = await _assetService.Update(id, updateModel);
+            AssetViewModel result = await _assetService.UpdateAsync(User.Id, id, updateModel);
             Assets[updateModel.Name] = result;
 
             return result;

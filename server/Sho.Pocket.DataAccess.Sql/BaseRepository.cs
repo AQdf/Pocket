@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T> where T: BaseEntity
+    public abstract class BaseRepository<T> : IBaseRepository<T>
     {
         public readonly IDbConfiguration DbConfiguration;
 
@@ -19,7 +18,7 @@ namespace Sho.Pocket.DataAccess.Sql
             DbConfiguration = dbConfiguration;
         }
 
-        public async Task<IEnumerable<T>> GetAll(string queryText, object queryParameters = null)
+        public async Task<IEnumerable<T>> GetEntities(string queryText, object queryParameters = null)
         {
             IEnumerable<T> result;
 

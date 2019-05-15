@@ -1,9 +1,7 @@
 export class ExchangeRate {
-  id : string;
-  effectiveDate : number;
-  baseCurrencyId : string;
-  baseCurrencyName : string;
-  counterCurrencyId : string;
-  counterCurrencyName : string;
+  id: string;
+  effectiveDate: number;
+  baseCurrency: string;
+  counterCurrency: string;
   value: number;
 }

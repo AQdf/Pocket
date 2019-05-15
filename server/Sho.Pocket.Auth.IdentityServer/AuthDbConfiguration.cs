@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,45 +13,53 @@ namespace Sho.Pocket.Auth.IdentityServer
 {
     public class AuthDbConfiguration : IAuthDbConfiguration
     {
-        private const string _adminRoleName = "admin";
-        private readonly string _adminName;
+        private readonly string _adminRoleName;
+        private readonly string[] _defaultRoles;
         private readonly string _adminEmail;
         private readonly string _adminPassword;
-
-        private readonly string[] _defaultRoles = new string[] { _adminRoleName };
 
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthDbConfiguration(RoleManager<IdentityRole<Guid>> roleManager, UserManager<ApplicationUser> userManager)
+        public AuthDbConfiguration(
+            ApplicationAuthDataContext dbContext,
+            RoleManager<IdentityRole<Guid>> roleManager,
+            UserManager<ApplicationUser> userManager,
+            GlobalSettings settings)
         {
+            dbContext.Database.Migrate();
+
+            _adminRoleName = settings.AdminRole;
+            _defaultRoles = new string[] { _adminRoleName };
+            _adminEmail = settings.AdminEmail;
+            _adminPassword = settings.AdminPass;
+
             _roleManager = roleManager;
             _userManager = userManager;
-
-            _adminName = Environment.GetEnvironmentVariable("POCKET_ADMIN_NAME");
-            _adminEmail = Environment.GetEnvironmentVariable("POCKET_ADMIN_EMAIL");
-            _adminPassword = Environment.GetEnvironmentVariable("POCKET_ADMIN_PASS");
         }
 
-        public void SeedApplicationAuthData()
+        public async Task SeedApplicationAuthData()
         {
-            EnsureRoles();
+            await EnsureRoles();
+            await EnsureDefaultUser();
         }
 
-        private void EnsureRoles()
+        private async Task EnsureRoles()
         {
             foreach (var role in _defaultRoles)
             {
-                if (!_roleManager.RoleExistsAsync(role).Result)
+                bool exists = await _roleManager.RoleExistsAsync(role);
+
+                if (!exists)
                 {
-                    _roleManager.CreateAsync(new IdentityRole<Guid>(role)).RunSynchronously();
+                    await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
                 }
             }
         }
 
-        private void EnsureDefaultUser()
+        private async Task EnsureDefaultUser()
         {
-            var adminUsers = _userManager.GetUsersInRoleAsync(_adminRoleName).Result;
+            IList<ApplicationUser> adminUsers = await _userManager.GetUsersInRoleAsync(_adminRoleName);
 
             if (!adminUsers.Any())
             {
@@ -55,11 +67,13 @@ namespace Sho.Pocket.Auth.IdentityServer
                 {
                     Id = Guid.NewGuid(),
                     Email = _adminEmail,
-                    UserName = _adminName
+                    UserName = _adminEmail,
+                    SecurityStamp = DateTime.UtcNow.ToString()
                 };
 
-                IdentityResult result = _userManager.CreateAsync(adminUser, _adminPassword).Result;
-                _userManager.AddToRoleAsync(adminUser, _adminRoleName).RunSynchronously();
+                IdentityResult result = await _userManager.CreateAsync(adminUser, _adminPassword);
+
+                await _userManager.AddToRoleAsync(adminUser, _adminRoleName);
             }
         }
     }

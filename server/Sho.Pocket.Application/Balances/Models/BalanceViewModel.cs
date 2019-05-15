@@ -20,8 +20,16 @@ namespace Sho.Pocket.Application.Balances.Models
             EffectiveDate = balance.EffectiveDate;
             Value = balance.Value;
             ExchangeRateId = balance.ExchangeRateId;
-            ExchangeRateValue = balance.ExchangeRate.Rate;
-            Asset = new AssetViewModel(balance.Asset);
+
+            if (balance.ExchangeRate != null)
+            {
+                ExchangeRateValue = balance.ExchangeRate.Rate;
+            }
+
+            if (balance.Asset != null)
+            {
+                Asset = new AssetViewModel(balance.Asset);
+            }
         }
 
         public BalanceViewModel(Balance balance, ExchangeRateModel exchangeRate, AssetViewModel asset)

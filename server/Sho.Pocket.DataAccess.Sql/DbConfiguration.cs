@@ -20,12 +20,8 @@ namespace Sho.Pocket.DataAccess.Sql
             string queryText = @"
                 IF NOT EXISTS (select top 1 1 from [dbo].[Currency])
                 BEGIN
-                    INSERT INTO [dbo].[Currency] ([Id], [Name], [Description], [IsDefault])
-                    VALUES 
-                    (NEWID(), 'UAH', 'Ukrainian Hryvnya', 1),
-                    (NEWID(), 'USD', 'American Dollar', 0),
-                    (NEWID(), 'EUR', 'Euro', 0),
-                    (NEWID(), 'PLN', 'Polish zloty', 0)
+                    INSERT INTO [dbo].[Currency] ([Name])
+                    VALUES ('UAH'), ('USD'), ('EUR'), ('PLN')
                 END";
 
             using (IDbConnection db = new SqlConnection(DbConnectionString))

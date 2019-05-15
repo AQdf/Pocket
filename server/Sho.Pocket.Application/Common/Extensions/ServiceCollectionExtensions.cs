@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Balances;
+using Sho.Pocket.Application.Currencies;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
@@ -25,6 +26,7 @@ namespace Sho.Pocket.Application.Common.Configuration
 
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();

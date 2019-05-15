@@ -41,9 +41,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I set asset name to (.*), currency (.*), is active (.*)")]
         public void GivenSetAssetName(string assetName, string currencyName, bool isActive)
         {
-            var currency = _currencyFeatureContext.Currencies[currencyName];
-
-            _updateModel = new AssetUpdateModel(assetName, currency.Id, isActive);
+            _updateModel = new AssetUpdateModel(assetName, currencyName, isActive);
         }
 
         [When(@"I update asset")]

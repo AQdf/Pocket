@@ -1,42 +1,65 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Auth.IdentityServer.Models;
-using System;
+using Sho.Pocket.Auth.IdentityServer.Services;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILoginService _loginService;
 
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IRegistrationService _registrationService;
+
+        public UsersController(ILoginService loginService, IRegistrationService registrationService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _loginService = loginService;
+            _registrationService = registrationService;
         }
 
-        [HttpPost("/login")]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]UserCreateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            IdentityResult result = await _registrationService.CreateUser(model);
+
+            return result.Succeeded ? Ok(result) : (IActionResult)BadRequest(result);
+        }
+
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
+            IActionResult response;
+
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-                if (result.Succeeded)
+                var identity = await _loginService.GetClaimsIdentity(model.Email, model.Password);
+
+                if (identity != null)
                 {
-                    return RedirectToAction("Index", "Home");
+                    string jwt = await _loginService.GenerateJwt(model.Email, identity);
+
+                    response = Ok(jwt);
+
                 }
                 else
                 {
-                    throw new Exception("Invalid login attempt");
-
+                    response = Unauthorized();
                 }
             }
+            else
+            {
+                response = BadRequest(ModelState);
+            }
 
-            return Ok(model);
+            return response;
         }
     }
 }

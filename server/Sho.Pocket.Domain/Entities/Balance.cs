@@ -15,14 +15,6 @@ namespace Sho.Pocket.Domain.Entities
             ExchangeRateId = exchangeRateId;
         }
 
-        public Balance(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
-        {
-            AssetId = assetId;
-            EffectiveDate = effectiveDate;
-            Value = value;
-            ExchangeRateId = exchangeRateId;
-        }
-
         public Guid AssetId { get; set; }
 
         public DateTime EffectiveDate { get; set; }

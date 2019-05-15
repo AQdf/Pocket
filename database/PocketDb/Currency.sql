@@ -1,7 +1,5 @@
 ﻿CREATE TABLE [dbo].[Currency]
 (
-	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(), 
-    [Name] NVARCHAR(10) NOT NULL, 
-    [Description] NVARCHAR(50) NULL, 
-    [IsDefault] BIT NOT NULL DEFAULT 0
+    [Name] VARCHAR(3) NOT NULL, 
+    PRIMARY KEY ([Name])
 )
