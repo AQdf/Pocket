@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         //.finally(() => this.isRequesting = false)
         .subscribe(result => {
           if (result) {
-             this.router.navigate(['/dashboard']);             
+             this.router.navigate(['/dashboard']);
           }
         }, error => this.errors = error);
     }

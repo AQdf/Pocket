@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Utils;
 using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
 using System;
@@ -13,7 +14,6 @@ namespace Sho.Pocket.Auth.IdentityServer
 {
     public class AuthDbConfiguration : IAuthDbConfiguration
     {
-        private readonly string _adminRoleName;
         private readonly string[] _defaultRoles;
         private readonly string _adminEmail;
         private readonly string _adminPassword;
@@ -29,8 +29,7 @@ namespace Sho.Pocket.Auth.IdentityServer
         {
             dbContext.Database.Migrate();
 
-            _adminRoleName = settings.AdminRole;
-            _defaultRoles = new string[] { _adminRoleName };
+            _defaultRoles = new string[] { RoleConst.Admin, RoleConst.Simple };
             _adminEmail = settings.AdminEmail;
             _adminPassword = settings.AdminPass;
 
@@ -59,7 +58,7 @@ namespace Sho.Pocket.Auth.IdentityServer
 
         private async Task EnsureDefaultUser()
         {
-            IList<ApplicationUser> adminUsers = await _userManager.GetUsersInRoleAsync(_adminRoleName);
+            IList<ApplicationUser> adminUsers = await _userManager.GetUsersInRoleAsync(RoleConst.Admin);
 
             if (!adminUsers.Any())
             {
@@ -73,7 +72,7 @@ namespace Sho.Pocket.Auth.IdentityServer
 
                 IdentityResult result = await _userManager.CreateAsync(adminUser, _adminPassword);
 
-                await _userManager.AddToRoleAsync(adminUser, _adminRoleName);
+                await _userManager.AddToRoleAsync(adminUser, RoleConst.Admin);
             }
         }
     }

@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using Sho.Pocket.Domain.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Core.DataAccess
 {
     public interface ICurrencyRepository
     {
-        Task<IEnumerable<string>> GetAllAsync();
+        Task<IEnumerable<Currency>> GetAllAsync();
 
         Task<bool> ExistsAsync(string name);
 
-        Task<string> CreateAsync(string name);
+        Task<Currency> CreateAsync(string name);
     }
 }

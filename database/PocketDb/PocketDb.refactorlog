@@ -56,4 +56,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Value" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="b5940252-73c5-49c2-885f-8776d9694825" ChangeDateTime="05/20/2019 16:00:17">
+    <Property Name="ElementName" Value="[dbo].[ItemCategory].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d353cc5d-73f0-47b0-96ea-af7416f3cbdb" ChangeDateTime="05/20/2019 16:00:55">
+    <Property Name="ElementName" Value="[dbo].[ItemCategory].[Name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ItemCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fc8ad9b9-b0f9-4528-9177-031e24dac7fd" ChangeDateTime="05/20/2019 16:04:43">
+    <Property Name="ElementName" Value="[dbo].[FK_InventoryItem_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[InventoryItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_InventoryItem_ToItemCategory]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d6df3edf-840f-439b-91b5-6ebc0bcfcd87" ChangeDateTime="05/21/2019 13:43:54">
+    <Property Name="ElementName" Value="[dbo].[InventoryItem].[CategoryId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[InventoryItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Category" />
+  </Operation>
 </Operations>

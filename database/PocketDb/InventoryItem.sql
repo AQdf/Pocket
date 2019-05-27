@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[InventoryItem]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [Name] NVARCHAR(50) NOT NULL, 
+    [Description] NVARCHAR(250) NULL, 
+    [Category] NVARCHAR(250) NOT NULL, 
+    [UserOpenId] UNIQUEIDENTIFIER NOT NULL
+)

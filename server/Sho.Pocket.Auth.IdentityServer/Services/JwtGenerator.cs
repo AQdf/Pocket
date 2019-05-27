@@ -1,11 +1,13 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Sho.Pocket.Auth.IdentityServer.Utils;
 using Sho.Pocket.Core.Auth;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
-using static Sho.Pocket.Auth.IdentityServer.Services.JwtConstants;
 
 namespace Sho.Pocket.Auth.IdentityServer.Services
 {
@@ -13,22 +15,18 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public JwtGenerator(IOptions<JwtIssuerOptions> jwtOptions)
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+
+        public JwtGenerator(RoleManager<IdentityRole<Guid>> roleManager, IOptions<JwtIssuerOptions> jwtOptions)
         {
+            _roleManager = roleManager;
             _jwtOptions = jwtOptions.Value;
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
+        public async Task<string> GenerateEncodedTokenAsync(Guid userId, string email, IList<string> roles)
         {
-            var claims = new[]
-         {
-                 new Claim(JwtRegisteredClaimNames.Sub, userName),
-                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                 identity.FindFirst(JwtClaimIdentifiers.Rol),
-                 identity.FindFirst(JwtClaimIdentifiers.Id)
-             };
+            var claims = await GenerateClaims(userId, email, roles);
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -44,13 +42,20 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, Guid id)
+        public async Task<IEnumerable<Claim>> GenerateClaims(Guid id, string userName, IList<string> roles)
         {
-            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
-            {
-                new Claim(JwtClaimIdentifiers.Id, id.ToString()),
-                new Claim(JwtClaimIdentifiers.Rol, JwtClaims.ApiAccess)
-            });
+            List<Claim> claims = new List<Claim>
+{
+                 new Claim(JwtRegisteredClaimNames.Sub, userName),
+                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
+                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                 new Claim(JwtClaimIdentifiers.Id, id.ToString())
+            };
+
+            IEnumerable<Claim> roleClaims = roles.Select(role => new Claim(JwtClaimIdentifiers.Role, role));
+            claims.AddRange(roleClaims);
+
+            return claims;
         }
 
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>

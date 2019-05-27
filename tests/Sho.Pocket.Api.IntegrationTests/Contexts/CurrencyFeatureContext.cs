@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,8 +28,8 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
                 // TODO: Fix issue with duplicate insert because of parallel execution
                 try
                 {
-                    string currency = await _currencyRepository.CreateAsync(currencyName);
-                    Currencies.Add(currency);
+                    Currency currency = await _currencyRepository.CreateAsync(currencyName);
+                    Currencies.Add(currency.Name);
                 }
                 catch (System.Exception)
                 {

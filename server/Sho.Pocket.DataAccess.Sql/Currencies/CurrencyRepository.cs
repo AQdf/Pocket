@@ -1,10 +1,11 @@
 ﻿using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.DataAccess.Sql.Currencies
 {
-    public class CurrencyRepository : BaseRepository<string>, ICurrencyRepository
+    public class CurrencyRepository : BaseRepository<Currency>, ICurrencyRepository
     {
         private const string SCRIPTS_DIR_NAME = "Currencies.Scripts";
 
@@ -12,7 +13,7 @@ namespace Sho.Pocket.DataAccess.Sql.Currencies
         {
         }
 
-        public async Task<string> CreateAsync(string name)
+        public async Task<Currency> CreateAsync(string name)
         {
             string queryText = @"
                 if not exists (select top 1 1 from Currency where Name = @name)
@@ -22,7 +23,7 @@ namespace Sho.Pocket.DataAccess.Sql.Currencies
                 select * from Currency where Name = @name";
             object queryParams = new { name };
 
-            string result = await base.InsertEntity(queryText, queryParams);
+            Currency result = await base.InsertEntity(queryText, queryParams);
 
             return result;
         }
@@ -39,11 +40,11 @@ namespace Sho.Pocket.DataAccess.Sql.Currencies
             return result;
         }
 
-        public async Task<IEnumerable<string>> GetAllAsync()
+        public async Task<IEnumerable<Currency>> GetAllAsync()
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllCurrencies.sql");
 
-            IEnumerable<string> result = await base.GetEntities(queryText);
+            IEnumerable<Currency> result = await base.GetEntities(queryText);
 
             return result;
         }

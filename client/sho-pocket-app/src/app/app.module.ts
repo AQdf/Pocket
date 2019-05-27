@@ -24,6 +24,8 @@ import { BalanceListComponent } from './components/balances/balance-list/balance
 import { BalancesChartComponent } from './components/balances-chart/balances-chart.component';
 import { RegistrationComponent } from './components/users/registration/registration.component';
 import { LoginComponent } from './components/users/login/login.component';
+import { InventoryComponent } from './components/inventory/inventory.component';
+import { InventoryItemsComponent } from './components/inventory/inventory-items/inventory-items.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { LoginComponent } from './components/users/login/login.component';
     BalanceListComponent,
     BalancesChartComponent,
     RegistrationComponent,
-    LoginComponent
+    LoginComponent,
+    InventoryComponent,
+    InventoryItemsComponent
   ],
   imports: [
     BrowserModule,

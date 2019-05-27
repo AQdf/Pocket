@@ -30,36 +30,19 @@ namespace Sho.Pocket.Api.Controllers
 
             IdentityResult result = await _registrationService.CreateUser(model);
 
-            return result.Succeeded ? Ok(result) : (IActionResult)BadRequest(result);
+            return result.Succeeded 
+                ? Ok(result) 
+                : (IActionResult)BadRequest(result);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            IActionResult response;
+            LoginResult result = await _loginService.GenerateJwtAsync(model.Email, model.Password);
 
-            if (ModelState.IsValid)
-            {
-                var identity = await _loginService.GetClaimsIdentity(model.Email, model.Password);
-
-                if (identity != null)
-                {
-                    string jwt = await _loginService.GenerateJwt(model.Email, identity);
-
-                    response = Ok(jwt);
-
-                }
-                else
-                {
-                    response = Unauthorized();
-                }
-            }
-            else
-            {
-                response = BadRequest(ModelState);
-            }
-
-            return response;
+            return result.Succeeded
+                ? Ok(result.Jwt) 
+                : (IActionResult)Unauthorized();
         }
     }
 }

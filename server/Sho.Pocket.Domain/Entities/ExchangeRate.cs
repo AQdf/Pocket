@@ -14,6 +14,8 @@ namespace Sho.Pocket.Domain.Entities
             Rate = rate;
         }
 
+        public Guid Id { get; set; }
+
         public DateTime EffectiveDate { get; set; }
 
         public string BaseCurrency { get; set; }

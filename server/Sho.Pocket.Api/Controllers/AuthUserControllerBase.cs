@@ -2,17 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Auth.IdentityServer.Utils;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
-    [Authorize(Policy = "ApiUser")]
+    [Authorize(Policy = AuthPolicyConst.SimpleUser)]
     [ApiController]
-    public abstract class AuthUserApiControllerBase : ControllerBase
+    public abstract class AuthUserControllerBase : ControllerBase
     {
         private readonly IAuthService _authService;
 
-        public AuthUserApiControllerBase(IAuthService authService)
+        public AuthUserControllerBase(IAuthService authService)
         {
             _authService = authService;
         }

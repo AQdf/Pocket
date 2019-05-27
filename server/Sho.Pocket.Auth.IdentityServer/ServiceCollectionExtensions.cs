@@ -6,11 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Auth.IdentityServer.Utils;
 using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
 using System;
 using System.Text;
-using static Sho.Pocket.Auth.IdentityServer.Services.JwtConstants;
 
 namespace Sho.Pocket.Auth.IdentityServer
 {
@@ -52,11 +52,17 @@ namespace Sho.Pocket.Auth.IdentityServer
             // api user claim policy
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ApiUser", policy =>
+                options.AddPolicy(AuthPolicyConst.SimpleUser, policy =>
                 {
                     policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(JwtClaimIdentifiers.Rol, JwtClaims.ApiAccess);
+                    policy.RequireRole(RoleConst.Simple, RoleConst.Admin);
+                });
+                options.AddPolicy(AuthPolicyConst.AdminUser, policy =>
+                {
+                    policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole(RoleConst.Admin);
                 });
             });
 

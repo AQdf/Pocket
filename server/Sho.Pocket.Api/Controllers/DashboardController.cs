@@ -5,7 +5,7 @@ using Sho.Pocket.Auth.IdentityServer.Services;
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/dashboard")]
-    public class DashboardController : AuthUserApiControllerBase
+    public class DashboardController : AuthUserControllerBase
     {
         private readonly BalanceService _balanceService;
 

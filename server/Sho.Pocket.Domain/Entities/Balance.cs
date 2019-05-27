@@ -15,6 +15,8 @@ namespace Sho.Pocket.Domain.Entities
             ExchangeRateId = exchangeRateId;
         }
 
+        public Guid Id { get; set; }
+
         public Guid AssetId { get; set; }
 
         public DateTime EffectiveDate { get; set; }

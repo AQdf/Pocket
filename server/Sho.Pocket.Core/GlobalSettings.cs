@@ -16,8 +16,6 @@
 
         public string SigningCredentials { get; set; }
 
-        public string AdminRole { get; set; }
-
         public string AdminEmail { get; set; }
 
         public string AdminPass { get; set; }

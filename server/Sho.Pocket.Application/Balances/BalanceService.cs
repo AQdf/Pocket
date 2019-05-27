@@ -197,10 +197,10 @@ namespace Sho.Pocket.Application.Balances
 
         private async Task<List<BalanceTotalModel>> CalculateTotalsAsync(IEnumerable<Balance> balances, DateTime effectiveDate)
         {
-            IEnumerable<string> currencies = await _currencyRepository.GetAllAsync();
+            IEnumerable<Currency> currencies = await _currencyRepository.GetAllAsync();
 
             IEnumerable<Task<BalanceTotalModel>> totalsCalculationTasks = currencies
-                .Select(c => CalculateCurrencyTotalAsync(balances, c, CurrencyConstants.UAH, effectiveDate));
+                .Select(c => CalculateCurrencyTotalAsync(balances, c.Name, CurrencyConstants.UAH, effectiveDate));
 
             BalanceTotalModel[] balanceTotals = await Task.WhenAll(totalsCalculationTasks);
             List<BalanceTotalModel> result = balanceTotals.OrderBy(c => c.Currency).ToList();

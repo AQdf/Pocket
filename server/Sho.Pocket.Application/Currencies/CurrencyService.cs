@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Currencies
 {
@@ -16,9 +17,10 @@ namespace Sho.Pocket.Application.Currencies
 
         public async Task<List<string>> GetCurrencies()
         {
-            IEnumerable<string> currencies = await _currencyRepository.GetAllAsync();
+            IEnumerable<Currency> currencies = await _currencyRepository.GetAllAsync();
+            List<string> result = currencies.Select(c => c.Name).ToList();
 
-            return currencies.ToList();
+            return result;
         }
     }
 }

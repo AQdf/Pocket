@@ -1,0 +1,48 @@
+<div class="col-auto mt-2">
+  <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addItem()">
+    New item
+  </button>
+</div>
+
+<div *ngFor="let item of inventoryService.items">
+  <form class="m-2" #inventoryItemForm="ngForm" (ngSubmit)="onSubmit(inventoryItemForm)">
+
+    <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="item.id">
+
+    <div class="form-row align-items-center p-2">
+      <div class="col-md-4">
+        <input name="Name" class="form-control" placeholder="Name" required
+          [disabled]="item.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="item.name"
+          [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
+      </div>
+      <div class="col-md-2">
+        <input name="Description" class="form-control" placeholder="Description" required
+          [disabled]="item.id !== currentEditRecordId" #Description="ngModel" [(ngModel)]="item.description"
+          [ngClass]="{'input-invalid': Description.invalid && Description.touched }">
+      </div>
+      <div class="col-md-2">
+        <input name="Category" class="form-control" placeholder="Category" required
+          [disabled]="item.id !== currentEditRecordId" #Category="ngModel" [(ngModel)]="item.category"
+          [ngClass]="{'input-invalid': Category.invalid && Category.touched }">
+      </div>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-outline-info ml-1"
+          [disabled]="isAddMode && currentEditRecordId !== item.id" (click)="showForEdit(item)">
+          <i class="fa fa-pencil-square-o"></i>
+        </button>
+        <button type="submit" class="btn btn-outline-info ml-1"
+          [disabled]="!inventoryItemForm.valid || currentEditRecordId !== item.id">
+          <i class="fa fa-floppy-o"></i>
+        </button>
+        <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== item.id"
+          (click)="resetRecord(item.id)">
+          <i class="fa fa-repeat"></i>
+        </button>
+        <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(item.id)">
+          <i class="fa fa-trash-o"></i>
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>

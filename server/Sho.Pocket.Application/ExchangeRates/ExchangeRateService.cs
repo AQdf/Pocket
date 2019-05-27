@@ -34,7 +34,8 @@ namespace Sho.Pocket.Application.ExchangeRates
         {
             List<ExchangeRateModel> result = new List<ExchangeRateModel>();
 
-            IEnumerable<string> currencies = await _currencyRepository.GetAllAsync();
+            IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
+            IEnumerable<string> currencies = currenciesEntities.Select(c => c.Name);
 
             foreach (string currency in currencies)
             {

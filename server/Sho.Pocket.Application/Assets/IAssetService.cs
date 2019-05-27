@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Sho.Pocket.Application.Assets.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sho.Pocket.Application.Assets.Models;
 
 namespace Sho.Pocket.Application.Assets
 {
@@ -15,6 +15,6 @@ namespace Sho.Pocket.Application.Assets
 
         Task<AssetViewModel> UpdateAsync(Guid userOpenId, Guid id, AssetUpdateModel updateModel);
 
-        Task<bool> DeleteAsync(Guid userOpenId, Guid Id);
+        Task<bool> DeleteAsync(Guid userOpenId, Guid id);
     }
 }

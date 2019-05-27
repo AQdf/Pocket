@@ -14,6 +14,8 @@ namespace Sho.Pocket.Domain.Entities
             IsActive = isActive;
         }
 
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public string Currency { get; set; }

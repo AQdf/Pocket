@@ -3,8 +3,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Core.Auth;
-using System.Linq;
-using System.Security.Claims;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Auth.IdentityServer.Services
@@ -24,38 +23,52 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
             _jwtOptions = jwtOptions.Value;
         }
 
-        public async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
+        public async Task<LoginResult> GenerateJwtAsync(string email, string password)
         {
-            ClaimsIdentity result = null;
+            LoginResult result;
+            ApplicationUser user = await GetValidatedUserAsync(email, password);
 
-            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
+            if (user != null)
             {
-                ApplicationUser userToVerify = await _userManager.FindByEmailAsync(userName);
+                IList<string> roles = await _userManager.GetRolesAsync(user);
+                string authToken = await _jwtGenerator.GenerateEncodedTokenAsync(user.Id, user.Email, roles);
 
-                if (userToVerify != null)
+                var response = new
                 {
-                    bool isPasswordValid = await _userManager.CheckPasswordAsync(userToVerify, password);
+                    id = user.Id,
+                    auth_token = authToken,
+                    expires_in = (int)_jwtOptions.ValidFor.TotalSeconds
+                };
 
-                    if (isPasswordValid)
-                    {
-                        result = _jwtGenerator.GenerateClaimsIdentity(userName, userToVerify.Id);
-                    }
-                }
+                string jsonResponse = JsonConvert.SerializeObject(response, _serializerSettings);
+                result = LoginResult.Success(jsonResponse);
+            }
+            else
+            {
+                result = LoginResult.Failed();
             }
 
             return result;
         }
 
-        public async Task<string> GenerateJwt(string userName, ClaimsIdentity identity)
+        private async Task<ApplicationUser> GetValidatedUserAsync(string userName, string password)
         {
-            var response = new
+            if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(password))
             {
-                id = identity.Claims.Single(c => c.Type == "id").Value,
-                auth_token = await _jwtGenerator.GenerateEncodedToken(userName, identity),
-                expires_in = (int)_jwtOptions.ValidFor.TotalSeconds
-            };
+                ApplicationUser user = await _userManager.FindByEmailAsync(userName);
 
-            return JsonConvert.SerializeObject(response, _serializerSettings);
+                if (user != null)
+                {
+                    bool isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
+
+                    if (isPasswordValid)
+                    {
+                        return user;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

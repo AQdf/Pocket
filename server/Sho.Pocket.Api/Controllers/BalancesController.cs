@@ -11,7 +11,7 @@ using Sho.Pocket.Auth.IdentityServer.Services;
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/balances")]
-    public class BalancesController : AuthUserApiControllerBase
+    public class BalancesController : AuthUserControllerBase
     {
         private readonly IBalanceService _balanceService;
 

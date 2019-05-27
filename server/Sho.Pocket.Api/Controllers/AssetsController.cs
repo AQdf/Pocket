@@ -10,7 +10,7 @@ using Sho.Pocket.Auth.IdentityServer.Services;
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/assets")]
-    public class AssetsController : AuthUserApiControllerBase
+    public class AssetsController : AuthUserControllerBase
     {
         private readonly IAssetService _assetService;
 
