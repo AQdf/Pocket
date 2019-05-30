@@ -2,8 +2,12 @@
 {
     public static class ProviderConstants
     {
-        public const string DEFAULT_PROVIDER = "DefaultProvider";
+        public const string DEFAULT_PROVIDER = "Default";
 
-        public const string FREE_CURRENCY_PROVIDER = "FreeCurrencyProvider";
+        public const string FREE_CURRENCY_PROVIDER = "FreeCurrencyConverter";
+
+        public const string FINANCE_UA_PROVIDER = "FinanceUa";
+
+        public const string NBU_PROVIDER = "NBU";
     }
 }

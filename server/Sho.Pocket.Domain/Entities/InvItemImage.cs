@@ -11,7 +11,5 @@ namespace Sho.Pocket.Domain.Entities
         public string FileName { get; set; }
 
         public byte[] Content { get; set; }
-
-        public string Path { get; set; }
     }
 }

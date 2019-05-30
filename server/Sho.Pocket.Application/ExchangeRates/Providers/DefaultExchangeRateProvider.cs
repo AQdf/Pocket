@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
 
@@ -16,7 +17,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
             }
         }
 
-        public List<ExchangeRateProviderModel> FetchCurrencyRates(List<string> baseCurrencies, string counterCurrency)
+        public async Task<IEnumerable<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {
             List<ExchangeRateProviderModel> result = new List<ExchangeRateProviderModel>();
 
@@ -29,7 +30,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
             return result;
         }
 
-        public ExchangeRateProviderModel FetchRate(string baseCurrency, string counterCurrency)
+        public async Task<ExchangeRateProviderModel> FetchRateAsync(string baseCurrency, string counterCurrency)
         {
             ExchangeRateProviderModel result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, DEFAULT_VALUE);
 

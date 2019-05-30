@@ -1,9 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Common.Configuration;
+using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Core;
+using Sho.Pocket.Core.ExchangeRates;
 using System;
+using System.Collections.Generic;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -29,6 +33,15 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
             };
 
             services.AddSingleton(s => globalSettings);
+
+            services.AddOptions();
+
+            List<ExchangeRateProviderOption> exchangeRateProviders = new List<ExchangeRateProviderOption>
+            {
+                new ExchangeRateProviderOption{ Name = ProviderConstants.DEFAULT_PROVIDER }
+            };
+
+            services.Configure<ExchangeRateSettings>(o => { o.Providers = exchangeRateProviders; });
 
             services.AddApplicationServices();
 

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core;
+using Sho.Pocket.Core.ExchangeRates;
 
 namespace Sho.Pocket.Application.ExchangeRates.Providers
 {
@@ -15,34 +16,38 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
         {
             get
             {
-                return ProviderConstants.DEFAULT_PROVIDER;
+                return ProviderConstants.FREE_CURRENCY_PROVIDER;
             }
         }
 
         private readonly string _apiKey;
 
-        public FreeCurrencyConverterProvider(GlobalSettings settings)
+        private readonly string _uri;
+
+        public FreeCurrencyConverterProvider(ExchangeRateProviderOption settings)
         {
-            _apiKey = settings.FreeCurrencyConverterApiKey;
+            _apiKey = settings.ApiKey;
+            _uri = settings.Uri;
         }
 
-        public List<ExchangeRateProviderModel> FetchCurrencyRates(List<string> baseCurrencies, string counterCurrency)
+        public async Task<IEnumerable<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {
-            List<ExchangeRateProviderModel> result = baseCurrencies.Select(c => FetchRate(c, counterCurrency)).ToList();
+            IEnumerable<Task<ExchangeRateProviderModel>> tasks = baseCurrencies.Select(c => FetchRateAsync(c, counterCurrency));
+            ExchangeRateProviderModel[] result = await Task.WhenAll(tasks);
 
             return result;
         }
 
-        public ExchangeRateProviderModel FetchRate(string baseCurrency, string counterCurrency)
+        public async Task<ExchangeRateProviderModel> FetchRateAsync(string baseCurrency, string counterCurrency)
         {
             string apiKey = _apiKey;
             string code = $"{baseCurrency}_{counterCurrency}";
-            string requestUri = $"https://free.currencyconverterapi.com/api/v6/convert?q={code}&compact=ultra&apiKey={apiKey}";
+            string requestUri = $"{_uri}?q={code}&compact=ultra&apiKey={apiKey}";
             string requestJson;
 
             using (HttpClient client = new HttpClient())
             {
-                requestJson = client.GetStringAsync(requestUri).Result;
+                requestJson = await client.GetStringAsync(requestUri);
             }
 
             Dictionary<string, decimal> jsonObject = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(requestJson);

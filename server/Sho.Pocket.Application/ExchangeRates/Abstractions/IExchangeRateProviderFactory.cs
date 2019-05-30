@@ -1,7 +1,12 @@
-﻿namespace Sho.Pocket.Application.ExchangeRates.Abstractions
+﻿using Sho.Pocket.Core.ExchangeRates;
+using System.Collections.Generic;
+
+namespace Sho.Pocket.Application.ExchangeRates.Abstractions
 {
     public interface IExchangeRateProviderFactory
     {
-        IExchangeRateProvider GetProvider(string name);
+        List<ExchangeRateProviderOption> GetActiveProvidersOptions();
+
+        IExchangeRateProvider GetProvider(ExchangeRateProviderOption providerSettings);
     }
 }

@@ -85,7 +85,7 @@ namespace Sho.Pocket.Application.Balances
 
             if (!todayBalancesExists)
             {
-                IEnumerable<ExchangeRateModel> todayExchangeRates = await _exchangeRateService.AddDefaultExchangeRates(today);
+                List<ExchangeRateModel> todayExchangeRates = await _exchangeRateService.AddDefaultExchangeRates(today);
 
                 if (effectiveDates.Any())
                 {

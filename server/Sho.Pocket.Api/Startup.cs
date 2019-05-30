@@ -10,6 +10,7 @@ using Sho.Pocket.Auth.IdentityServer;
 using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.ExchangeRates;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 
@@ -27,6 +28,7 @@ namespace Sho.Pocket.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddCors(options => options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
             services.AddMvc();
@@ -36,8 +38,10 @@ namespace Sho.Pocket.Api
             });
 
             GlobalSettings globalSettings = new GlobalSettings();
-            ConfigurationBinder.Bind(Configuration.GetSection("GlobalSettings"), globalSettings);
+            ConfigurationBinder.Bind(Configuration.GetSection(nameof(GlobalSettings)), globalSettings);
             services.AddSingleton(s => globalSettings);
+
+            services.Configure<ExchangeRateSettings>(Configuration.GetSection(nameof(ExchangeRateSettings)));
 
             services.AddApplicationServices();
 

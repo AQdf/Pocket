@@ -7,8 +7,8 @@ namespace Sho.Pocket.Application.ExchangeRates.Abstractions
 {
     public interface IExchangeRateService
     {
-        Task<IEnumerable<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate);
+        Task<List<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate);
 
-        Task<ExchangeRateModel> AlterExchangeRate(ExchangeRateModel model);
+        Task<ExchangeRateModel> AlterExchangeRateAsync(ExchangeRateModel model);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.ExchangeRates;
 using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -17,7 +17,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         private readonly ICurrencyRepository _currencyRepository;
 
-        private readonly IExchangeRateProvider _exchangeRateProvider;
+        private readonly IExchangeRateProviderFactory _exchangeRateProviderFactory;
 
         public ExchangeRateService(
             IExchangeRateRepository exchangeRateRepository,
@@ -26,43 +26,66 @@ namespace Sho.Pocket.Application.ExchangeRates
         {
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
-
-            _exchangeRateProvider = exchangeRateProviderFactory.GetProvider(ProviderConstants.DEFAULT_PROVIDER);
+            _exchangeRateProviderFactory = exchangeRateProviderFactory;
         }
 
-        public async Task<IEnumerable<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate)
+        public async Task<List<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate)
         {
-            List<ExchangeRateModel> result = new List<ExchangeRateModel>();
-
             IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
             IEnumerable<string> currencies = currenciesEntities.Select(c => c.Name);
+            IEnumerable<ExchangeRate> existingRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
+            List<string> missingCurrencies = currencies.Except(existingRates.Select(r => r.BaseCurrency)).ToList();
 
-            foreach (string currency in currencies)
-            {
-                bool exists = await _exchangeRateRepository.Exists(currency, effectiveDate);
-                ExchangeRate exchangeRate;
+            IEnumerable<ExchangeRateProviderModel> providerRates = await TryFetchRatesAsync(missingCurrencies);
+            List<ExchangeRateModel> savedRates = await SaveRatesAsync(providerRates, effectiveDate);
 
-                if (!exists)
-                {
-                    ExchangeRateProviderModel providerRate = _exchangeRateProvider.FetchRate(currency, CurrencyConstants.UAH);
-                    exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, currency, CurrencyConstants.UAH, providerRate.Value);
-                }
-                else
-                {
-                    exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(currency, effectiveDate);
-                }
-
-                ExchangeRateModel model = new ExchangeRateModel(exchangeRate);
-                result.Add(model);
-            }
+            List<ExchangeRateModel> result = existingRates.Select(r => new ExchangeRateModel(r)).ToList();
+            result.AddRange(savedRates);
 
             return result;
         }
 
-        public async Task<ExchangeRateModel> AlterExchangeRate(ExchangeRateModel model)
+        public async Task<ExchangeRateModel> AlterExchangeRateAsync(ExchangeRateModel model)
         {
             ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrency, model.CounterCurrency, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
+
+            return result;
+        }
+
+        // TODO: Refactor this
+        private async Task<IEnumerable<ExchangeRateProviderModel>> TryFetchRatesAsync(List<string> currencies)
+        {
+            List<ExchangeRateProviderOption> options = _exchangeRateProviderFactory.GetActiveProvidersOptions();
+
+            foreach (ExchangeRateProviderOption option in options)
+            {
+                try
+                {
+                    IExchangeRateProvider provider = _exchangeRateProviderFactory.GetProvider(option);
+                    IEnumerable<ExchangeRateProviderModel> result = await provider.FetchCurrencyRatesAsync(currencies, CurrencyConstants.UAH);
+
+                    return result;
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<List<ExchangeRateModel>> SaveRatesAsync(IEnumerable<ExchangeRateProviderModel> rates, DateTime effectiveDate)
+        {
+            List<ExchangeRateModel> result = new List<ExchangeRateModel>();
+
+            foreach (ExchangeRateProviderModel rate in rates)
+            {
+                var exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, rate.BaseCurrency, CurrencyConstants.UAH, rate.Value);
+                var model = new ExchangeRateModel(exchangeRate);
+                result.Add(model);
+            }
 
             return result;
         }
