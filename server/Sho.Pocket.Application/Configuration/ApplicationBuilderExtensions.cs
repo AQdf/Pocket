@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Sho.Pocket.Core.DataAccess;
 
-namespace Sho.Pocket.Application.Common.Extensions
+namespace Sho.Pocket.Application.Configuration
 {
     public static class ApplicationBuilderExtensions
     {

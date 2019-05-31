@@ -5,7 +5,7 @@ namespace Sho.Pocket.Auth.IdentityServer
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void SeedApplicationAuthData(this IApplicationBuilder app, IAuthDbConfiguration authDbConfiguration)
+        public static void SeedApplicationAuthData(this IApplicationBuilder app, IAuthDbInitializer authDbConfiguration)
         {
             authDbConfiguration.SeedApplicationAuthData().Wait();
         }

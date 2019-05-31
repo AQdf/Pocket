@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Application.Common.Configuration;
-using Sho.Pocket.Application.Common.Extensions;
+using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Auth.IdentityServer;
-using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
+using Sho.Pocket.Core.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.ExchangeRates;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 
@@ -71,7 +69,7 @@ namespace Sho.Pocket.Api
             IApplicationBuilder app,
             IHostingEnvironment env,
             IDbConfiguration dbConfiguration,
-            IAuthDbConfiguration authDbConfiguration)
+            IAuthDbInitializer authDbConfiguration)
         {
             if (env.IsDevelopment())
             {

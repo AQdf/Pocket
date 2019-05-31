@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
 
@@ -18,6 +17,25 @@ namespace Sho.Pocket.Api.Controllers
         public BalancesController(IBalanceService balanceService, IAuthService authService) : base(authService)
         {
             _balanceService = balanceService;
+        }
+
+        /// <summary>
+        /// GET: api/balances/latest
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("latest")]
+        public async Task<ActionResult<BalancesViewModel>> GetCurrentUserLatestBalances()
+        {
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalancesViewModel result = await _balanceService.GetUserLatestBalancesAsync(user.Id);
+
+            return HandleResult(result);
         }
 
         /// <summary>
@@ -119,25 +137,6 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/balances/total
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("total")]
-        public async Task<ActionResult<List<BalanceTotalModel>>> GetCurrentTotalBalance()
-        {
-            UserViewModel user = await GetCurrentUserAsync();
-
-            if (user == null)
-            {
-                return HandleUserNotFoundResult();
-            }
-
-            List<BalanceTotalModel> result = await _balanceService.GetCurrentTotalBalance(user.Id);
-
-            return HandleResult(result);
-        }
-
-        /// <summary>
         /// POST: api/balances/template
         /// </summary>
         /// <param name="balanceModel"></param>
@@ -172,29 +171,6 @@ namespace Sho.Pocket.Api.Controllers
             }
 
             List<DateTime> result = await _balanceService.GetEffectiveDatesAsync(user.Id);
-
-            return HandleResult(result);
-        }
-
-        [HttpPut("exchange-rate")]
-        public async Task<bool> ApplyExchangeRate([FromBody]ExchangeRateModel model)
-        {
-            await _balanceService.ApplyExchangeRate(model);
-
-            return true;
-        }
-
-        [HttpGet("currency-totals/{currencyName}")]
-        public async Task<ActionResult<List<BalanceTotalModel>>> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
-        {
-            UserViewModel user = await GetCurrentUserAsync();
-
-            if (user == null)
-            {
-                return HandleUserNotFoundResult();
-            }
-
-            IEnumerable<BalanceTotalModel> result = await _balanceService.GetCurrencyTotals(user.Id, currencyName, count);
 
             return HandleResult(result);
         }

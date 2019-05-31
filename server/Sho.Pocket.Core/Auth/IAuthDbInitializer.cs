@@ -2,7 +2,7 @@
 
 namespace Sho.Pocket.Core.Auth
 {
-    public interface IAuthDbConfiguration
+    public interface IAuthDbInitializer
     {
         Task SeedApplicationAuthData();
     }

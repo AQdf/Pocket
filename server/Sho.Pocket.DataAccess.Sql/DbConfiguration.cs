@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using Sho.Pocket.Core;
+using Sho.Pocket.Core.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
 using System.Data;
 using System.Data.SqlClient;

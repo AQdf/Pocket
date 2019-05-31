@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Core.ExchangeRates;
+using Sho.Pocket.Core.Configuration.Models;
 
 namespace Sho.Pocket.Application.ExchangeRates.Providers
 {

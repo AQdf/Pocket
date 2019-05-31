@@ -10,5 +10,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Abstractions
         Task<List<ExchangeRateModel>> AddDefaultExchangeRates(DateTime effectiveDate);
 
         Task<ExchangeRateModel> AlterExchangeRateAsync(ExchangeRateModel model);
+
+        Task UpdateExchangeRateAsync(ExchangeRateModel model);
     }
 }

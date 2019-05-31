@@ -1,4 +1,4 @@
-﻿using Sho.Pocket.Core.ExchangeRates;
+﻿using Sho.Pocket.Core.Configuration.Models;
 using System.Collections.Generic;
 
 namespace Sho.Pocket.Application.ExchangeRates.Abstractions

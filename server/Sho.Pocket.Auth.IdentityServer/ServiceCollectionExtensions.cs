@@ -7,8 +7,8 @@ using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
 using Sho.Pocket.Auth.IdentityServer.Utils;
-using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
+using Sho.Pocket.Core.Configuration.Models;
 using System;
 using System.Text;
 
@@ -75,7 +75,7 @@ namespace Sho.Pocket.Auth.IdentityServer
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IRegistrationService, RegistrationService>();
-            services.AddScoped<IAuthDbConfiguration, AuthDbConfiguration>();
+            services.AddScoped<IAuthDbInitializer, AuthDbInitializer>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
     }

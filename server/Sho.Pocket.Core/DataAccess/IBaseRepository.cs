@@ -14,7 +14,7 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<T> UpdateEntity(string queryText, object queryParameters = null);
 
-        Task RemoveEntity(string queryText, object queryParameters = null);
+        Task DeleteEntity(string queryText, object queryParameters = null);
 
         Task ExecuteScript(string queryText, object queryParameters = null);
 

@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core
+﻿namespace Sho.Pocket.Core.Configuration.Models
 {
     public class GlobalSettings
     {

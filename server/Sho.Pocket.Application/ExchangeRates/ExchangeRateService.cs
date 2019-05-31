@@ -1,7 +1,7 @@
 ﻿using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Core.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.ExchangeRates;
 using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 using System;
@@ -51,6 +51,11 @@ namespace Sho.Pocket.Application.ExchangeRates
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;
+        }
+
+        public async Task UpdateExchangeRateAsync(ExchangeRateModel model)
+        {
+            await _exchangeRateRepository.Update(model.Id, model.Value);
         }
 
         // TODO: Refactor this

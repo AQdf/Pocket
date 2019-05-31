@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Sho.Pocket.Api.IntegrationTests.Common;
-using Sho.Pocket.Application.Common.Configuration;
+using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Auth.IdentityServer.Models;
-using Sho.Pocket.Core;
-using Sho.Pocket.Core.ExchangeRates;
+using Sho.Pocket.Core.Configuration.Models;
 using System;
 using System.Collections.Generic;
 

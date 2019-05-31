@@ -67,7 +67,7 @@ namespace Sho.Pocket.DataAccess.Sql
             return result;
         }
 
-        public async Task RemoveEntity(string queryText, object queryParameters = null)
+        public async Task DeleteEntity(string queryText, object queryParameters = null)
         {
             using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
             {

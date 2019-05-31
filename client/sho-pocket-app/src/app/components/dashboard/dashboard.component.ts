@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { BalanceService } from '../../services/balance.service'
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,9 +7,9 @@ import { BalanceService } from '../../services/balance.service'
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(public balanceService : BalanceService) { }
+  constructor() { }
 
   ngOnInit() {
   }
-  
+
 }

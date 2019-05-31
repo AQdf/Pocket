@@ -76,7 +76,7 @@ namespace Sho.Pocket.DataAccess.Sql.InventoryImages
             string queryText = @"DELETE FROM [dbo].[InvItemImage] WHERE [Id] = @id";
             object queryParameters = new { id };
 
-            await base.RemoveEntity(queryText, queryParameters);
+            await base.DeleteEntity(queryText, queryParameters);
 
             return true;
         }

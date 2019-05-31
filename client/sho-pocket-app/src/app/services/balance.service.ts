@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestMethod, ResponseContentType } from '@angular/http';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Http, Headers, RequestOptions, RequestMethod, ResponseContentType } from '@angular/http';
 
 import { map } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
@@ -11,7 +10,6 @@ import { ExchangeRate } from '../models/exchange-rate.model';
 
 import { environment } from '../../environments/environment';
 import { BalanceTotal } from '../models/balance-total.model';
-import { Chart } from 'angular-highcharts';
 
 const balancesApiUrl = environment.baseApiUrl + 'balances/';
 
@@ -25,13 +23,9 @@ export class BalanceService {
   effectiveDatesList: string[];
   selectedEffectiveDate: string;
   exchangeRates: ExchangeRate[];
-  chart: Chart;
-
   uahTotalHistory: BalanceTotal[];
-  uahBalanceChangeChart: Chart;
-  usdBalanceChangeChart: Chart;
 
-  constructor(public http: Http, public client: HttpClient) {
+  constructor(public http: Http) {
     this.getEffectiveDatesList();
   }
 
@@ -43,15 +37,15 @@ export class BalanceService {
     return headers;
   }
 
-  getCurrentTotalBalance() {
+  getLatestBalances() {
     let headers = this.getHeaders();
     let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
 
-    return this.http.get(balancesApiUrl + 'total', requestOptions).pipe(
+    return this.http.get(balancesApiUrl + 'latest', requestOptions).pipe(
       map(data => {
-        return data.json( ) as BalanceTotal[];
+        return data.json() as Balances;
       })
-    )
+    );
   }
 
   getBalanceList(effectiveDate: string) {
@@ -66,7 +60,6 @@ export class BalanceService {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
       this.exchangeRates = balances.exchangeRates;
-      this.createBalanceChart(this.balances);
     });
   }
 
@@ -138,15 +131,9 @@ export class BalanceService {
     var emptyBody = JSON.stringify('');
     var headers = this.getHeaders();
 
-    this.http.post(balancesApiUrl + 'template', emptyBody, {headers}).pipe(
-      map(data => {
-        return data.json() as boolean;
-      })
-    ).subscribe(success => {
-      if (success) {
-        this.reload();
-      }
-    });
+    return this.http.post(balancesApiUrl + 'template', emptyBody, {headers}).pipe(
+      map(res => res.json())
+    );
   }
 
   downloadCsv() {
@@ -170,146 +157,7 @@ export class BalanceService {
     });
   }
 
-  applyExchangeRate(model: ExchangeRate) {
-    var body = JSON.stringify(model);
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({method : RequestMethod.Put, headers : headers});
-
-    this.http.put(balancesApiUrl + 'exchange-rate', body, requestOptions).pipe(
-      map(data => {
-        return data.json() as boolean;
-      })
-    ).subscribe(success => {
-      if (success) {
-        this.reload();
-      }
-    });
-  }
-
   reload() {
     this.getEffectiveDatesList();
-    this.setBalanceCurrencyTotal("UAH");
-    this.setBalanceCurrencyTotal("USD");
-  }
-
-  setBalanceCurrencyTotal(currency: string) {
-    var headers = this.getHeaders();
-    let queryParams = new HttpParams().set('count', '100');
-    var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers, params: queryParams});
-
-    this.http.get(balancesApiUrl + 'currency-totals/' + currency, requestOptions).pipe(
-      map(data => {
-        return data.json() as BalanceTotal[];
-      })
-    ).subscribe(totals => {
-      if (!totals || totals.length === 0) {
-        return;
-      }
-
-      if (totals[0].currency === 'UAH') {
-        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
-      } else {
-        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
-      }
-    });
-  }
-
-  createBalanceChart(balances: Balance[])
-  {
-    let chartData = [];  
-    for (var i = 0; i < balances.length; i++) {  
-        chartData.push({  
-            "name": balances[i].asset.name,  
-            "y": balances[i].defaultCurrencyValue,  
-            sliced: true,  
-            selected: true  
-        })  
-    }
-
-    let effectiveDate = balances[0].effectiveDate;
-
-    this.chart = new Chart({  
-        chart: {  
-            plotBackgroundColor: null,  
-            plotBorderWidth: null,  
-            plotShadow: false,  
-            type: 'pie',  
-            backgroundColor: null,  
-            options3d: {  
-                enabled: true,  
-                alpha: 45,  
-                beta: 0  
-            },
-            height: 700
-        },  
-        title: {  
-            text: 'Latest balances',  
-        },  
-        subtitle: {  
-            text: effectiveDate  
-        },  
-        tooltip: {  
-            pointFormat: '{series.name}: <b>{point.y}</b>'  
-        },  
-        plotOptions: {  
-            pie: {  
-                allowPointSelect: true,  
-                cursor: 'pointer',  
-                depth: 35,  
-                dataLabels: {  
-                    enabled: true,  
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'  
-                },
-                showInLegend: true
-            }  
-        },  
-        series: [{  
-            name: 'Total balances',  
-            type: "pie",
-            data: chartData  
-        }]  
-    });
-  }
-
-  createBalanceChangeChart(totals: BalanceTotal[], currencyColor: string)
-  {
-    let chartData = [];  
-    for (var i = 0; i < totals.length; i++) {
-      var formattedDate = new Date(totals[i].effectiveDate);
-      var ticks = Date.UTC(formattedDate.getUTCFullYear(), formattedDate.getUTCMonth(), formattedDate.getUTCDate())
-      var formattedValue = Number.parseFloat(totals[i].value.toFixed(2));
-      chartData.push([ticks, formattedValue]);
-    }
-
-    let currency = totals[0].currency;
-
-    return new Chart({  
-        chart: {
-          type: 'line',
-        },
-        title: {
-            text: 'Balances change'
-        },
-        subtitle: {
-            text: currency
-        },
-        xAxis: {
-            type: 'datetime',
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                color: currencyColor,
-                enableMouseTracking: true
-            }
-        },
-        series: [{  
-          name: 'Total balances',
-          type: 'line',
-          data: chartData
-      }]  
-    })
   }
 }

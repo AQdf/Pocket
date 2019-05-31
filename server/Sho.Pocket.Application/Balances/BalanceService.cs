@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
+using Sho.Pocket.Application.BalancesTotal;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Constants;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
@@ -19,24 +19,34 @@ namespace Sho.Pocket.Application.Balances
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
-        private readonly ICurrencyRepository _currencyRepository;
         private readonly IExchangeRateService _exchangeRateService;
+        private readonly IBalancesTotalService _balancesTotalService;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IExchangeRateRepository exchangeRateRepository,
-            ICurrencyRepository currencyRepository,
             IExchangeRateService exchangeRateService,
+            IBalancesTotalService balancesTotalService,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
-            _currencyRepository = currencyRepository;
             _exchangeRateService = exchangeRateService;
+            _balancesTotalService = balancesTotalService;
             _csvExporter = balanceExporter;
+        }
+
+        public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
+        {
+            List<DateTime> effectiveDates = await GetEffectiveDatesAsync(userOpenId);
+            DateTime latestDate = effectiveDates.FirstOrDefault();
+
+            BalancesViewModel result = await GetUserEffectiveBalancesAsync(userOpenId, latestDate);
+
+            return result;
         }
 
         public async Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userOpenId, DateTime effectiveDate)
@@ -51,7 +61,7 @@ namespace Sho.Pocket.Application.Balances
             IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
             List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
 
-            IEnumerable<BalanceTotalModel> totals = await CalculateTotalsAsync(balances, effectiveDate);
+            IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(balances, effectiveDate);
 
             BalancesViewModel result = new BalancesViewModel(items, items.Count, totals, ratesModels);
 
@@ -130,57 +140,6 @@ namespace Sho.Pocket.Application.Balances
             return result.ToList();
         }
 
-        public async Task<List<BalanceTotalModel>> GetCurrentTotalBalance(Guid userOpenId)
-        {
-            IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
-            DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
-            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
-
-            if (!balances.Any())
-            {
-                return null;
-            }
-
-            IEnumerable<BalanceTotalModel> totals = await CalculateTotalsAsync(balances, latestEffectiveDate);
-
-            List<BalanceTotalModel> result = totals
-                .Where(t => t.Currency == CurrencyConstants.UAH || t.Currency == CurrencyConstants.USD)
-                .ToList();
-
-            return result;
-        }
-
-        public async Task ApplyExchangeRate(ExchangeRateModel model)
-        {
-            await _exchangeRateRepository.Update(model.Id, model.Value);
-
-            await _balanceRepository.ApplyExchangeRate(model.Id, model.BaseCurrency, model.EffectiveDate);
-        }
-
-        public async Task<List<BalanceTotalModel>> GetCurrencyTotals(Guid userOpenId, string currencyName, int count)
-        {
-            IEnumerable<DateTime> effectivateDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
-            IEnumerable<DateTime> totalsEffectiveDates = effectivateDates.Take(count);
-
-            bool exists = await _currencyRepository.ExistsAsync(currencyName);
-
-            if (!exists)
-            {
-                throw new ArgumentException($"Specified currency {currencyName} is not supported in the system.");
-            }
-
-            List<BalanceTotalModel> result = new List<BalanceTotalModel>();
-
-            foreach (DateTime effectiveDate in totalsEffectiveDates)
-            {
-                IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
-                BalanceTotalModel balanceTotal = await CalculateCurrencyTotalAsync(balances, currencyName, CurrencyConstants.UAH, effectiveDate);
-                result.Add(balanceTotal);
-            }
-
-            return result;
-        }
-
         public async Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId)
         {
             IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userOpenId);
@@ -193,45 +152,6 @@ namespace Sho.Pocket.Application.Balances
             byte[] bytes = Encoding.ASCII.GetBytes(csv);
 
             return bytes;
-        }
-
-        private async Task<List<BalanceTotalModel>> CalculateTotalsAsync(IEnumerable<Balance> balances, DateTime effectiveDate)
-        {
-            IEnumerable<Currency> currencies = await _currencyRepository.GetAllAsync();
-
-            IEnumerable<Task<BalanceTotalModel>> totalsCalculationTasks = currencies
-                .Select(c => CalculateCurrencyTotalAsync(balances, c.Name, CurrencyConstants.UAH, effectiveDate));
-
-            BalanceTotalModel[] balanceTotals = await Task.WhenAll(totalsCalculationTasks);
-            List<BalanceTotalModel> result = balanceTotals.OrderBy(c => c.Currency).ToList();
-
-            return result;
-        }
-
-        private async Task<BalanceTotalModel> CalculateCurrencyTotalAsync(IEnumerable<Balance> balances, string currency, string defaultCurrency, DateTime effectiveDate)
-        {
-            decimal value = 0;
-
-            if (string.Equals(currency, defaultCurrency, StringComparison.InvariantCultureIgnoreCase))
-            {
-                value = balances.Select(b => b.Value * b.ExchangeRate?.Rate ?? 0).Sum();
-            }
-            else
-            {
-                List<Balance> currentCurrencyBalances = balances.Where(b => string.Equals(b.Asset.Currency, currency, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                List<Balance> defaultCurrencyBalances = balances.Where(b => string.Equals(b.Asset.Currency, defaultCurrency, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                List<Balance> otherCurrenciesBalances = balances.Where(b => !string.Equals(b.Asset.Currency, currency) && !string.Equals(b.Asset.Currency,defaultCurrency)).ToList();
-
-                ExchangeRate currentCurrencyExchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(currency, effectiveDate);
-
-                value = currentCurrencyBalances.Select(b => b.Value).Sum()
-                    + defaultCurrencyBalances.Select(b => b.Value / currentCurrencyExchangeRate.Rate).Sum()
-                    + otherCurrenciesBalances.Select(b => b.Value * b.ExchangeRate.Rate / currentCurrencyExchangeRate.Rate).Sum();
-            }
-
-            BalanceTotalModel result = new BalanceTotalModel(effectiveDate, currency, value);
-
-            return result;
         }
 
         private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, IEnumerable<Balance> balances, IEnumerable<ExchangeRateModel> exchangeRates, DateTime effectiveDate)

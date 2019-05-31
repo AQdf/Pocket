@@ -65,7 +65,7 @@ namespace Sho.Pocket.DataAccess.Sql.ItemCategories
             const string queryText = @"DELETE FROM [dbo].[ItemCategory] WHERE [Name] = @name";
             object queryParams = new { name };
 
-            await base.RemoveEntity(queryText, queryParams);
+            await base.DeleteEntity(queryText, queryParams);
 
             return true;
         }

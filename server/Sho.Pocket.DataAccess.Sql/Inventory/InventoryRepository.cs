@@ -81,7 +81,7 @@ namespace Sho.Pocket.DataAccess.Sql.Inventory
                 WHERE [Id] = @id AND [UserOpenId] = @userOpenId";
             object queryParameters = new { userOpenId, id };
 
-            await base.RemoveEntity(queryText, queryParameters);
+            await base.DeleteEntity(queryText, queryParameters);
 
             return true;
         }

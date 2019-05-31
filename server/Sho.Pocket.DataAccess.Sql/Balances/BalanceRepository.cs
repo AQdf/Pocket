@@ -109,7 +109,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
             object queryParams = new { userOpenId, id };
 
-            await base.RemoveEntity(queryText, queryParams);
+            await base.DeleteEntity(queryText, queryParams);
 
             return true;
         }

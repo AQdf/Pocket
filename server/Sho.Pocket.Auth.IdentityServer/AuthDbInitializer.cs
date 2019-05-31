@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Utils;
-using Sho.Pocket.Core;
 using Sho.Pocket.Core.Auth;
+using Sho.Pocket.Core.Configuration.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Sho.Pocket.Auth.IdentityServer
 {
-    public class AuthDbConfiguration : IAuthDbConfiguration
+    public class AuthDbInitializer : IAuthDbInitializer
     {
         private readonly string[] _defaultRoles;
         private readonly string _adminEmail;
@@ -21,7 +21,7 @@ namespace Sho.Pocket.Auth.IdentityServer
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthDbConfiguration(
+        public AuthDbInitializer(
             ApplicationAuthDataContext dbContext,
             RoleManager<IdentityRole<Guid>> roleManager,
             UserManager<ApplicationUser> userManager,

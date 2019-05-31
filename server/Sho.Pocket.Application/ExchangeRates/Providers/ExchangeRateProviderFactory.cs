@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.Extensions.Options;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Core.ExchangeRates;
+using Sho.Pocket.Core.Configuration.Models;
 
 namespace Sho.Pocket.Application.ExchangeRates.Providers
 {

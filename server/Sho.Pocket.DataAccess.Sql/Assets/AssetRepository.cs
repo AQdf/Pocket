@@ -62,7 +62,7 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
 
             object queryParameters = new { userOpenId, id };
 
-            await base.RemoveEntity(queryText, queryParameters);
+            await base.DeleteEntity(queryText, queryParameters);
         }
 
         public async Task<IEnumerable<Asset>> GetActiveAssetsAsync()
