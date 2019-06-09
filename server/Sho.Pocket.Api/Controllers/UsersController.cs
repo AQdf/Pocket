@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Application.UserCurrencies;
+using Sho.Pocket.Application.UserCurrencies.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Configuration.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
@@ -14,10 +19,25 @@ namespace Sho.Pocket.Api.Controllers
 
         private readonly IRegistrationService _registrationService;
 
-        public UsersController(ILoginService loginService, IRegistrationService registrationService)
+        private readonly IAuthService _authService;
+
+        private readonly IUserCurrencyService _userCurrencyService;
+
+        private readonly string _defaultCurrency;
+
+        public UsersController(
+            ILoginService loginService,
+            IRegistrationService registrationService,
+            IAuthService authService,
+            IUserCurrencyService userCurrencyService,
+            GlobalSettings settings)
         {
             _loginService = loginService;
             _registrationService = registrationService;
+            _authService = authService;
+            _userCurrencyService = userCurrencyService;
+
+            _defaultCurrency = settings.DefaultCurrency;
         }
 
         [HttpPost("register")]
@@ -30,9 +50,17 @@ namespace Sho.Pocket.Api.Controllers
 
             IdentityResult result = await _registrationService.CreateUser(model);
 
-            return result.Succeeded 
-                ? Ok(result) 
-                : (IActionResult)BadRequest(result);
+            if (result.Succeeded)
+            {
+                UserViewModel user = await _authService.GetUserByEmail(model.Email);
+                await _userCurrencyService.AddUserCurrencyAsync(user.Id, _defaultCurrency, true);
+
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
 
         [HttpPost("login")]
@@ -41,7 +69,7 @@ namespace Sho.Pocket.Api.Controllers
             LoginResult result = await _loginService.GenerateJwtAsync(model.Email, model.Password);
 
             return result.Succeeded
-                ? Ok(result.Jwt) 
+                ? Ok(result.Jwt)
                 : (IActionResult)Unauthorized();
         }
     }

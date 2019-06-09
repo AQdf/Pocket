@@ -14,7 +14,6 @@
     <EmbeddedResource Include="Assets\Scripts\GetAllAssets.sql" />
     <EmbeddedResource Include="Assets\Scripts\InsertAsset.sql" />
     <EmbeddedResource Include="Assets\Scripts\UpdateAsset.sql" />
-    <EmbeddedResource Include="Balances\Scripts\ApplyExchangeRate.sql" />
     <EmbeddedResource Include="Balances\Scripts\DeleteBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\GetBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\GetAllBalances.sql" />

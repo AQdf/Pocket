@@ -129,19 +129,6 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
-        public async Task ApplyExchangeRate(Guid exchangeRateId, string counterCurrency, DateTime effectiveDate)
-        {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "ApplyExchangeRate.sql");
-
-            object queryParameters = new {
-                exchangeRateId,
-                currency = counterCurrency,
-                effectiveDate
-            };
-
-            await base.ExecuteScript(queryText, queryParameters);
-        }
-
         private async Task<IEnumerable<Balance>> GetAllWithRelatedEntities(string queryText, object queryParams = null)
         {
             IEnumerable<Balance> result;

@@ -33,13 +33,13 @@ namespace Sho.Pocket.Application.UserCurrencies
             return result;
         }
 
-        public async Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userOpenId, UserCurrencyCreateModel createModel)
+        public async Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userOpenId, string currency, bool isPrimary)
         {
-            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userOpenId, createModel.Currency);
+            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userOpenId, currency);
 
             if (userCurrency == null)
             {
-                userCurrency = await _userCurrencyRepository.CreateAsync(userOpenId, createModel.Currency, createModel.IsPrimary);
+                userCurrency = await _userCurrencyRepository.CreateAsync(userOpenId, currency, isPrimary);
             }
 
             UserCurrencyModel result = new UserCurrencyModel(userCurrency.Currency, userCurrency.IsPrimary);

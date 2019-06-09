@@ -23,7 +23,6 @@ export class BalanceService {
   effectiveDatesList: string[];
   selectedEffectiveDate: string;
   exchangeRates: ExchangeRate[];
-  uahTotalHistory: BalanceTotal[];
 
   constructor(public http: Http) {
     this.getEffectiveDatesList();

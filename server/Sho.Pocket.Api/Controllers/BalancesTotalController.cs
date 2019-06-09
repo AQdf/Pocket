@@ -32,7 +32,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<BalanceTotalModel> result = await _balancesTotalService.GetCurrentTotalBalance(user.Id);
+            List<BalanceTotalModel> result = await _balancesTotalService.GetCurrentTotalBalanceAsync(user.Id);
 
             return HandleResult(result);
         }
@@ -41,8 +41,8 @@ namespace Sho.Pocket.Api.Controllers
         /// GET: api/balances-total/USD
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{currencyName}")]
-        public async Task<ActionResult<List<BalanceTotalModel>>> GetCurrencyTotals(string currencyName, [FromQuery] int count = 10)
+        [HttpGet("changes")]
+        public async Task<ActionResult<List<BalanceTotalChangeModel>>> GetUserBalanceChanges([FromQuery] int count = 10)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -51,7 +51,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            IEnumerable<BalanceTotalModel> result = await _balancesTotalService.GetCurrencyTotals(user.Id, currencyName, count);
+            List<BalanceTotalChangeModel> result = await _balancesTotalService.GetUserBalanceChangesAsync(user.Id, count);
 
             return HandleResult(result);
         }

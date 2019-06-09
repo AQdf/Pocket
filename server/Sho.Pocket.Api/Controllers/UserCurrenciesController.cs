@@ -73,7 +73,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            UserCurrencyModel result = await _userCurrencyService.AddUserCurrencyAsync(user.Id, createModel);
+            UserCurrencyModel result = await _userCurrencyService.AddUserCurrencyAsync(user.Id, createModel.Currency, createModel.IsPrimary);
 
             return HandleResult(result);
         }

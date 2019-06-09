@@ -1,5 +1,5 @@
 <div [chart]="chart"></div>  
 
-<div [chart]="uahBalanceChangeChart"></div>  
-
-<div [chart]="usdBalanceChangeChart"></div>  
+<div *ngFor="let changesChart of balanceChangeCharts">
+  <div [chart]="changesChart"></div>
+</div>

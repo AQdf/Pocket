@@ -94,6 +94,19 @@ namespace Sho.Pocket.DataAccess.Sql.UserCurrencies
             return true;
         }
 
+        public async Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userOpenId)
+        {
+            const string queryText =
+                @"SELECT TOP 1 [UserOpenId], [Currency], [IsPrimary]
+                FROM [dbo].[UserCurrency]
+                WHERE [UserOpenId] = @userOpenId AND [IsPrimary] = 1";
+            object queryParams = new { userOpenId };
+
+            UserCurrency result = await base.GetEntity(queryText, queryParams);
+
+            return result;
+        }
+
         public async Task<bool> CheckIsPrimaryAsync(Guid userOpenId, string currency)
         {
             const string queryText =

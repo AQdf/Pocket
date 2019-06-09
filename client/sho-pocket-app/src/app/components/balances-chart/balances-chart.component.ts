@@ -5,7 +5,7 @@ import { BalanceService } from '../../services/balance.service'
 import { BalancesTotalService } from '../../services/balances-total.service'
 
 import { Balance } from'../../models/balance.model'
-import { BalanceTotal } from '../../models/balance-total.model';
+import { BalanceChanges } from '../../models/balance-changes.model';
 
 @Component({
   selector: 'app-balances-chart',
@@ -16,15 +16,13 @@ export class BalancesChartComponent implements OnInit {
 
   balances: Balance[];
   chart: Chart;
-  uahBalanceChangeChart: Chart;
-  usdBalanceChangeChart: Chart;
+  balanceChangeCharts: Chart[];
 
   constructor(private balanceService : BalanceService, private balancesTotalService: BalancesTotalService) { }
 
   ngOnInit() {
     this.initBalancePieChartData();
-    this.initUahBalanceLineChart();
-    this.initUsdBalanceLineChart();
+    this.initBalanceChangeLineCharts();
   }
 
   initBalancePieChartData()
@@ -35,33 +33,15 @@ export class BalancesChartComponent implements OnInit {
     });
   }
 
-  initUahBalanceLineChart()
+  initBalanceChangeLineCharts()
   {
-    this.balancesTotalService.getBalanceCurrencyTotal('UAH').subscribe(totals => {
-      if (!totals || totals.length === 0) {
+    this.balancesTotalService.getBalanceTotalChanges().subscribe(currenciesTotals => {
+      if (!currenciesTotals || currenciesTotals.length === 0) {
         return;
       }
 
-      if (totals[0].currency === 'UAH') {
-        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
-      } else {
-        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
-      }
-    });
-  }
-
-  initUsdBalanceLineChart()
-  {
-    this.balancesTotalService.getBalanceCurrencyTotal('USD').subscribe(totals => {
-      if (!totals || totals.length === 0) {
-        return;
-      }
-
-      if (totals[0].currency === 'UAH') {
-        this.uahBalanceChangeChart = this.createBalanceChangeChart(totals, "#E4D354");
-      } else {
-        this.usdBalanceChangeChart = this.createBalanceChangeChart(totals, "#90ED7D");
-      }
+      this.balanceChangeCharts = new Array(currenciesTotals.length);
+      currenciesTotals.forEach(c => this.balanceChangeCharts.push(this.createBalanceChangeChart(c)));
     });
   }
 
@@ -122,9 +102,10 @@ export class BalancesChartComponent implements OnInit {
     });
   }
 
-  createBalanceChangeChart(totals: BalanceTotal[], currencyColor: string)
+  createBalanceChangeChart(changes: BalanceChanges)
   {
-    let chartData = [];  
+    let chartData = [];
+    let totals = changes.values;
     for (var i = 0; i < totals.length; i++) {
       var formattedDate = new Date(totals[i].effectiveDate);
       var ticks = Date.UTC(formattedDate.getUTCFullYear(), formattedDate.getUTCMonth(), formattedDate.getUTCDate())
@@ -132,7 +113,7 @@ export class BalancesChartComponent implements OnInit {
       chartData.push([ticks, formattedValue]);
     }
 
-    let currency = totals[0].currency;
+    let currency = changes.currency;
 
     return new Chart({  
         chart: {
@@ -152,7 +133,7 @@ export class BalancesChartComponent implements OnInit {
                 dataLabels: {
                     enabled: true
                 },
-                color: currencyColor,
+                color: "#E4D354",
                 enableMouseTracking: true
             }
         },

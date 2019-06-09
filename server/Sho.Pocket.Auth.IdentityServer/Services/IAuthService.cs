@@ -8,5 +8,7 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
         Task<UserViewModel> GetUserById(string id);
 
         Task<bool> VerifyAdminUserById(string id);
+
+        Task<UserViewModel> GetUserByEmail(string email);
     }
 }

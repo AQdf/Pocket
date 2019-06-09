@@ -11,7 +11,7 @@ namespace Sho.Pocket.Application.UserCurrencies
 
         Task<UserCurrencyModel> GetUserCurrencyAsync(Guid userOpenId, string currency);
 
-        Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userOpenId, UserCurrencyCreateModel createModel);
+        Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userOpenId, string currency, bool isPrimary);
 
         Task<UserCurrencyModel> SetUserPrimaryCurrencyAsync(Guid userOpenId, string currency);
 

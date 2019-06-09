@@ -22,7 +22,5 @@ namespace Sho.Pocket.Core.DataAccess
         Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId);
 
         Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId);
-
-        Task ApplyExchangeRate(Guid exchangeRateId, string counterCurrency, DateTime effectiveDate);
     }
 }

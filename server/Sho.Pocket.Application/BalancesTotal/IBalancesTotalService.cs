@@ -8,10 +8,10 @@ namespace Sho.Pocket.Application.BalancesTotal
 {
     public interface IBalancesTotalService
     {
-        Task<List<BalanceTotalModel>> GetCurrentTotalBalance(Guid userOpenId);
+        Task<List<BalanceTotalModel>> GetCurrentTotalBalanceAsync(Guid userOpenId);
 
-        Task<List<BalanceTotalModel>> GetCurrencyTotals(Guid userOpenId, string currency, int count);
+        Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userOpenId, int count);
 
-        Task<List<BalanceTotalModel>> CalculateTotalsAsync(IEnumerable<Balance> balances, DateTime effectiveDate);
+        Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userOpenId, IEnumerable<Balance> balances, DateTime effectiveDate);
     }
 }

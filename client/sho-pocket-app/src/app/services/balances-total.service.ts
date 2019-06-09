@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { BalanceTotal } from '../models/balance-total.model';
+import { BalanceChanges } from '../models/balance-changes.model';
 
 const balancesTotalApiUrl = environment.baseApiUrl + 'balances-total/';
 
@@ -34,14 +35,14 @@ export class BalancesTotalService {
     )
   }
 
-  getBalanceCurrencyTotal(currency: string) {
+  getBalanceTotalChanges() {
     var headers = this.getHeaders();
     let queryParams = new HttpParams().set('count', '100');
     var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers, params: queryParams});
 
-    return this.http.get(balancesTotalApiUrl + currency, requestOptions).pipe(
+    return this.http.get(balancesTotalApiUrl + 'changes', requestOptions).pipe(
       map(data => {
-        return data.json() as BalanceTotal[];
+        return data.json() as BalanceChanges[];
       })
     );
   }

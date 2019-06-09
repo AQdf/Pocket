@@ -21,6 +21,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
+        private readonly IUserCurrencyRepository _userCurrencyRepository;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
@@ -29,6 +30,7 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
+            IUserCurrencyRepository userCurrencyRepository,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
@@ -36,6 +38,7 @@ namespace Sho.Pocket.Application.Balances
             _exchangeRateRepository = exchangeRateRepository;
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
+            _userCurrencyRepository = userCurrencyRepository;
             _csvExporter = balanceExporter;
         }
 
@@ -61,7 +64,7 @@ namespace Sho.Pocket.Application.Balances
             IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
             List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
 
-            IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(balances, effectiveDate);
+            IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(userOpenId, balances, effectiveDate);
 
             BalancesViewModel result = new BalancesViewModel(items, items.Count, totals, ratesModels);
 
@@ -95,7 +98,7 @@ namespace Sho.Pocket.Application.Balances
 
             if (!todayBalancesExists)
             {
-                List<ExchangeRateModel> todayExchangeRates = await _exchangeRateService.AddDefaultExchangeRates(today);
+                List<ExchangeRateModel> todayExchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, today);
 
                 if (effectiveDates.Any())
                 {

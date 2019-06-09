@@ -17,6 +17,8 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<UserCurrency> SetPrimaryAsync(Guid userOpenId, string currency);
 
+        Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userOpenId);
+
         Task<bool> CheckIsPrimaryAsync(Guid userOpenId, string currency);
     }
 }

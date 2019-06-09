@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using Sho.Pocket.Core.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Domain.Entities;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -10,23 +12,37 @@ namespace Sho.Pocket.DataAccess.Sql
     {
         public string DbConnectionString { get; }
 
+        private readonly List<Currency> _defaultCurrencies;
+
         public DbConfiguration(GlobalSettings globalSettings)
         {
             DbConnectionString = globalSettings.DbConnectionString;
+
+            _defaultCurrencies = new List<Currency>
+            {
+                new Currency("USD"),
+                new Currency("UAH"),
+                new Currency("EUR"),
+                new Currency("PLN")
+            };
+
+            if (!_defaultCurrencies.Exists(c => c.Name == globalSettings.DefaultCurrency))
+            {
+                _defaultCurrencies.Add(new Currency(globalSettings.DefaultCurrency));
+            }
         }
 
         public void SeedStorageData()
         {
             string queryText = @"
-                IF NOT EXISTS (select top 1 1 from [dbo].[Currency])
+                IF NOT EXISTS (select top 1 1 from [dbo].[Currency] where [Name] = @Name)
                 BEGIN
-                    INSERT INTO [dbo].[Currency] ([Name])
-                    VALUES ('UAH'), ('USD'), ('EUR'), ('PLN')
+                    INSERT INTO [dbo].[Currency] ([Name]) VALUES (@Name)
                 END";
 
             using (IDbConnection db = new SqlConnection(DbConnectionString))
             {
-                db.ExecuteScalar(queryText);
+                db.Execute(queryText, _defaultCurrencies);
             }
         }
     }

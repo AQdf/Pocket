@@ -19,5 +19,7 @@
         public string AdminEmail { get; set; }
 
         public string AdminPass { get; set; }
+
+        public string DefaultCurrency { get; set; }
     }
 }

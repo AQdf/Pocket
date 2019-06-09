@@ -23,6 +23,15 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
             return model;
         }
 
+        public async Task<UserViewModel> GetUserByEmail(string email)
+        {
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
+
+            UserViewModel model = new UserViewModel(user.Id, user.Email);
+
+            return model;
+        }
+
         public async Task<bool> VerifyAdminUserById(string id)
         {
             bool result = false;
