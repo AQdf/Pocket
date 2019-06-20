@@ -8,7 +8,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Abstractions
     {
         string ProviderName { get; }
 
-        Task<IEnumerable<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency);
+        Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency);
 
         Task<ExchangeRateProviderModel> FetchRateAsync(string baseCurrency, string counterCurrency);
     }

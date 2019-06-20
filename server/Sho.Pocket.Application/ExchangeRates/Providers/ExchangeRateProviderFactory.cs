@@ -37,9 +37,6 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
                 case ProviderConstants.FREE_CURRENCY_PROVIDER:
                     result = new FreeCurrencyConverterProvider(providerSettings);
                     break;
-                case ProviderConstants.FINANCE_UA_PROVIDER:
-                    result = new FinanceUaProvider(providerSettings);
-                    break;
                 default:
                     result = new DefaultExchangeRateProvider();
                     break;

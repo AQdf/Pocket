@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Application.ItemCategories
+namespace Sho.Pocket.Application.Inventory
 {
     public class ItemCategoryService : IItemCategoryService
     {

@@ -18,17 +18,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 
         private readonly AssetFeatureContext _assetFeatureContext;
 
-        private readonly CurrencyFeatureContext _currencyFeatureContext;
-
         private readonly AddAssetSteps _addAssetSteps;
 
-        public UpdateAssetSteps(
-            AssetFeatureContext assetFeatureContext,
-            CurrencyFeatureContext currencyFeatureContext,
-            AddAssetSteps addAssetSteps)
+        public UpdateAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
         {
             _assetFeatureContext = assetFeatureContext;
-            _currencyFeatureContext = currencyFeatureContext;
             _addAssetSteps = addAssetSteps;
         }
 

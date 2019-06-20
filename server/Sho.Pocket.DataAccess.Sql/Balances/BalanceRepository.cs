@@ -47,6 +47,25 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
+        {
+            string queryText = @"
+                declare @latestDate datetime2(7) = (select top 1 EffectiveDate from Balance order by EffectiveDate desc)
+
+                select * from Balance
+                join Asset on Asset.Id = Balance.AssetId
+                left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
+                where Balance.EffectiveDate = @latestDate and Balance.UserOpenId = @userOpenId";
+
+            object queryParams = new { userOpenId };
+
+            IEnumerable<Balance> result = includeRelated
+                ? await GetAllWithRelatedEntities(queryText, queryParams)
+                : await base.GetEntities(queryText, queryParams);
+
+            return result;
+        }
+
         public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");

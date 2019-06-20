@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="SpecFlow" Version="3.0.199" />
     <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.0.199" />
     <PackageReference Include="SpecFlow.xUnit" Version="3.0.199" />
@@ -17,5 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\server\Sho.Pocket.Api\Sho.Pocket.Api.csproj" />
+    <ProjectReference Include="..\..\server\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
   </ItemGroup>
 </Project>

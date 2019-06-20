@@ -86,6 +86,8 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [Then(@"balance of (.*) effective date is today")]
         public void ThenBalanceEffectiveDateIsToday(string assetName)
         {
+            _createdBalance.Asset.Name.Should().Be(assetName);
+
             DateTime today = DateTime.UtcNow.Date;
             _createdBalance.EffectiveDate.Should().Be(today);
         }

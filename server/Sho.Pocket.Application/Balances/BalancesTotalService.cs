@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Application.BalancesTotal
+namespace Sho.Pocket.Application.Balances
 {
     public class BalancesTotalService : IBalancesTotalService
     {
@@ -24,7 +24,7 @@ namespace Sho.Pocket.Application.BalancesTotal
             _userCurrencyRepository = userCurrencyRepository;
         }
 
-        public async Task<List<BalanceTotalModel>> GetCurrentTotalBalanceAsync(Guid userOpenId)
+        public async Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId)
         {
             IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
             DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();

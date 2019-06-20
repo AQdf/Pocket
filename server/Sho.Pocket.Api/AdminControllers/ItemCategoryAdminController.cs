@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.ItemCategories;
+using Sho.Pocket.Application.Inventory;
 using Sho.Pocket.Auth.IdentityServer.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;

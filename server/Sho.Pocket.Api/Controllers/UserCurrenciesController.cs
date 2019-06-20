@@ -3,7 +3,6 @@ using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Application.UserCurrencies.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

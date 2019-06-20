@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.BalancesTotal
+namespace Sho.Pocket.Application.Balances
 {
     public interface IBalancesTotalService
     {
-        Task<List<BalanceTotalModel>> GetCurrentTotalBalanceAsync(Guid userOpenId);
+        Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId);
 
         Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userOpenId, int count);
 

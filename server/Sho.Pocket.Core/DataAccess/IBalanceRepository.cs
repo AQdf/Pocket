@@ -11,6 +11,8 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true);
 
+        Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true);
+
         Task<Balance> GetByIdAsync(Guid userOpenId, Guid id);
 
         Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);

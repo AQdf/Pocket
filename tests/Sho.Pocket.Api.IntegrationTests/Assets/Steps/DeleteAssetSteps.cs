@@ -31,7 +31,10 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I specified asset to delete (.*)")]
         public void GivenSpecifiedAssetToDelete(string assetName)
         {
-            _assetToDelete = _addAssetSteps.CreatedAsset;
+            if (_addAssetSteps.CreatedAsset.Name == assetName)
+            {
+                _assetToDelete = _addAssetSteps.CreatedAsset;
+            }
         }
 
         [When(@"I delete asset (.*)")]

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Application.BalancesTotal;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
@@ -21,7 +20,6 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
-        private readonly IUserCurrencyRepository _userCurrencyRepository;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
@@ -30,7 +28,6 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
-            IUserCurrencyRepository userCurrencyRepository,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
@@ -38,7 +35,6 @@ namespace Sho.Pocket.Application.Balances
             _exchangeRateRepository = exchangeRateRepository;
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
-            _userCurrencyRepository = userCurrencyRepository;
             _csvExporter = balanceExporter;
         }
 

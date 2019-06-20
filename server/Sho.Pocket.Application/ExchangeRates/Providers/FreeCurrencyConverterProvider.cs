@@ -29,12 +29,12 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
             _uri = settings.Uri;
         }
 
-        public async Task<IEnumerable<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
+        public async Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {
             IEnumerable<Task<ExchangeRateProviderModel>> tasks = baseCurrencies.Select(c => FetchRateAsync(c, counterCurrency));
             ExchangeRateProviderModel[] result = await Task.WhenAll(tasks);
 
-            return result;
+            return result.ToList();
         }
 
         public async Task<ExchangeRateProviderModel> FetchRateAsync(string baseCurrency, string counterCurrency)

@@ -70,8 +70,7 @@ namespace Sho.Pocket.Auth.IdentityServer
                     SecurityStamp = DateTime.UtcNow.ToString()
                 };
 
-                IdentityResult result = await _userManager.CreateAsync(adminUser, _adminPassword);
-
+                await _userManager.CreateAsync(adminUser, _adminPassword);
                 await _userManager.AddToRoleAsync(adminUser, RoleConst.Admin);
             }
         }

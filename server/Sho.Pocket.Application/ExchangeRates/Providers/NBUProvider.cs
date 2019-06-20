@@ -22,7 +22,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
             _uri = settings.Uri;
         }
 
-        public async Task<IEnumerable<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
+        public async Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {
             string requestUri = _uri;
             string xml;

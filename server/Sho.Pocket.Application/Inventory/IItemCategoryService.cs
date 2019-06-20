@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Application.ItemCategories
+namespace Sho.Pocket.Application.Inventory
 {
     public interface IItemCategoryService
     {

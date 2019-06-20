@@ -1,14 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Balances;
-using Sho.Pocket.Application.BalancesTotal;
 using Sho.Pocket.Application.Currencies;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Application.Inventory;
-using Sho.Pocket.Application.ItemCategories;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.DataAccess.Sql;

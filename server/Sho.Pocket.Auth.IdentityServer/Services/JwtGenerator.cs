@@ -15,11 +15,8 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
-        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-
-        public JwtGenerator(RoleManager<IdentityRole<Guid>> roleManager, IOptions<JwtIssuerOptions> jwtOptions)
+        public JwtGenerator(IOptions<JwtIssuerOptions> jwtOptions)
         {
-            _roleManager = roleManager;
             _jwtOptions = jwtOptions.Value;
             ThrowIfInvalidOptions(_jwtOptions);
         }

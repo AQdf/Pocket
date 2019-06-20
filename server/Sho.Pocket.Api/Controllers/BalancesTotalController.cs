@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Application.BalancesTotal;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<BalanceTotalModel> result = await _balancesTotalService.GetCurrentTotalBalanceAsync(user.Id);
+            List<BalanceTotalModel> result = await _balancesTotalService.GetLatestTotalBalanceAsync(user.Id);
 
             return HandleResult(result);
         }
