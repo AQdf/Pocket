@@ -1,27 +1,87 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, OnChanges, SimpleChange, Output } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 
 import { AssetService } from '../../../services/asset.service';
 import { BalanceService } from '../../../services/balance.service';
 import { Balance } from '../../../models/balance.model'
+import { ResponseError } from 'src/app/models/response-error.model';
+import { Asset } from 'src/app/models/asset.model';
+import { BalancesTotalService } from 'src/app/services/balances-total.service';
+import { BalanceTotal } from 'src/app/models/balance-total.model';
+import { ExchangeRate } from 'src/app/models/exchange-rate.model';
+import { Balances } from 'src/app/models/balances.model';
+import { ExchangeRateService } from 'src/app/services/exchange-rate.service';
 
 @Component({
   selector: 'app-balance-list',
   templateUrl: './balance-list.component.html',
   styleUrls: ['./balance-list.component.css']
 })
-export class BalanceListComponent implements OnInit {
-  currentEditRecordId: string;
-  isAddMode: boolean;
+export class BalanceListComponent implements OnInit, OnChanges {
 
   constructor(
     public balanceService : BalanceService,
     public assetService : AssetService,
+    private balanceTotalService : BalancesTotalService,
+    private exchangeRateService: ExchangeRateService,
     private toastr : ToastrService) { }
 
+  @Input() effectiveDate: string;
+  @Output() shouldReload = new EventEmitter<boolean>();
+ 
+  reloadEffectiveDates(shouldReload: boolean) {
+    this.shouldReload.emit(shouldReload);
+  }
+  
+  selectedBalance: Balance;
+  balances: Balance[];
+  totalBalance: BalanceTotal[];
+  exchangeRates: ExchangeRate[];
+  assetList: Asset[];
+  currentEditRecordId: string;
+  isAddMode: boolean;
+
   ngOnInit() {
-    this.assetService.getAssetList();
+    this.initAssets();
+  }
+
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+    this.effectiveDate = changes.effectiveDate.currentValue;
+    if (this.effectiveDate) {
+      this.reloadBalances();
+    }
+  }
+
+  reloadBalances() {
+    this.balanceService.getBalanceList(this.effectiveDate).subscribe((balances: Balances) => {
+      this.balances = balances.items;
+      this.totalBalance = balances.totalBalance;
+      this.exchangeRates = balances.exchangeRates;
+      if (this.balances.length === 0) {
+        this.reloadEffectiveDates(true);
+      }
+    });
+  }
+
+  initAssets() {
+    this.assetService.getAssetList().subscribe((assets: Asset[]) => {
+      this.assetList = assets;
+    });
+  }
+  
+  addBalances() {
+    this.balanceService.addBalancesByTemplate().subscribe(success => {
+      if (success) {
+        this.reloadEffectiveDates(true);
+        this.balanceTotalService.loadCurrentTotalBalance();
+        this.toastr.success('Current date balances created by template', 'Balance');
+      }
+    }, (errors: ResponseError[]) => {
+      for (let error of errors) {
+        this.toastr.error(error.description, 'Balances')
+      }
+    });
   }
 
   showForEdit(balance: Balance) {
@@ -33,42 +93,41 @@ export class BalanceListComponent implements OnInit {
   }
 
   resetRecord(id: string) {
-    this.balanceService.getBalance(id).subscribe(result => {
-      let index = this.balanceService.balances.findIndex(f => f.id === id)
-      this.balanceService.balances[index] = result;
+    this.balanceService.getBalance(id).subscribe((result: Balance) => {
+      let index = this.balances.findIndex(f => f.id === id)
+      this.balances[index] = result;
     })
   }
 
   onDelete(id: string) {
-    if (id === null)
-    {
-      this.balanceService.balances.shift();
+    if (id === null) {
+      this.balances.shift();
       this.isAddMode = false;
       return;
     }
 
     if (confirm('Are you sure to delete this record ?') == true) {
-      this.balanceService.deleteBalance(id)
-      .subscribe(x => {
-        this.balanceService.getEffectiveDatesList();
+      this.balanceService.deleteBalance(id).subscribe(x => {
+        this.reloadBalances();
+        this.balanceTotalService.loadCurrentTotalBalance();
         this.toastr.success("Deleted Successfully", "Balance");
       })
     }
   }
 
-  removeItemFromBalancesListById(id: string)
-  {
-    let index = this.balanceService.balances.findIndex(f => f.id === id)
+  removeItemFromBalancesListById(id: string) {
+    let index = this.balances.findIndex(f => f.id === id)
     if (index > -1) {
-      this.balanceService.balances.splice(index, 1);
+      this.balances.splice(index, 1);
     }
   }
 
   onSubmit(form: NgForm) {
     if (form.value.id === null) {
-      this.balanceService.postBalance(this.balanceService.selectedBalance)
+      this.balanceService.postBalance(this.selectedBalance)
         .subscribe(() => {
-          this.balanceService.reload();
+          this.reloadBalances();
+          this.balanceTotalService.loadCurrentTotalBalance();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
           this.currentEditRecordId = null;
           this.isAddMode = false;
@@ -77,7 +136,8 @@ export class BalanceListComponent implements OnInit {
     else {
       this.balanceService.putBalance(form.value.id, form.value)
       .subscribe(() => {
-        this.balanceService.reload();
+        this.reloadBalances();
+        this.balanceTotalService.loadCurrentTotalBalance();
         this.toastr.info('Record Updated Successfully!', 'Balance');
         this.currentEditRecordId = null;
         this.isAddMode = false;
@@ -86,7 +146,7 @@ export class BalanceListComponent implements OnInit {
   }
 
   addBalance() {
-    var balanceDate = this.balanceService.selectedEffectiveDate;
+    var balanceDate = this.effectiveDate;
     var formattedDate = balanceDate.substring(0, balanceDate.indexOf('T'));
 
     let newBalance =  {
@@ -100,17 +160,27 @@ export class BalanceListComponent implements OnInit {
       asset: null
     }
 
-    this.balanceService.balances.unshift(newBalance);
-    this.balanceService.selectedBalance = newBalance;
+    this.balances.unshift(newBalance);
+    this.selectedBalance = newBalance;
     this.currentEditRecordId = null;
     this.isAddMode = true;
   }
 
   onAssetAdded(value) {
-    let asset = this.assetService.assetList.find(a => a.id == value);
-    let exchangeRate = this.balanceService.exchangeRates.find(rate => rate.baseCurrency == asset.currency);
-    this.balanceService.selectedBalance.assetId = asset.id;
-    this.balanceService.selectedBalance.exchangeRateId = exchangeRate.id;
-    this.balanceService.selectedBalance.asset = asset;
+    let asset = this.assetList.find(a => a.id == value);
+    let exchangeRate = this.exchangeRates.find(rate => rate.baseCurrency == asset.currency);
+    this.selectedBalance.assetId = asset.id;
+    this.selectedBalance.exchangeRateId = exchangeRate.id;
+    this.selectedBalance.asset = asset;
+  }
+
+  applyExchangeRate(model: ExchangeRate) {
+    this.exchangeRateService.applyExchangeRate(model).subscribe(success => {
+      if (success) {
+        this.reloadBalances();
+        this.balanceTotalService.loadCurrentTotalBalance();
+        this.toastr.success('Exchange rate applied', 'Balance');
+      }
+    });
   }
 }

@@ -27,7 +27,14 @@ namespace Sho.Pocket.Application.Balances
         public async Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId)
         {
             IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
+
+            if (!effectiveDates.Any())
+            {
+                return null;
+            }
+
             DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
+
             IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
 
             if (!balances.Any())

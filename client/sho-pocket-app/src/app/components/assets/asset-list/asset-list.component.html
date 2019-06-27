@@ -4,7 +4,7 @@
     </button>
   </div>
 
-<div *ngFor="let asset of assetService.assetList">
+<div *ngFor="let asset of assetList">
   <form class="m-2" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
 
     <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
@@ -21,7 +21,7 @@
           [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
           (change)="this.onCurrencyAdded($event.target.value)">
           <option value="" disabled selected>
-            Select asset
+            Select currency
           </option>
           <option *ngFor="let currency of assetService.currenciesList" value={{currency}}>
             {{currency}}

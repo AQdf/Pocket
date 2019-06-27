@@ -1,35 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, RequestMethod } from '@angular/http';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
-import { UserDetails } from'../models/user-details.model'
 import { environment } from '../../environments/environment'
+import { BaseService } from './base.service';
 
 const userDetailsApiUrl = environment.baseApiUrl + 'user/details/';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserDetailsService {
+export class UserDetailsService extends BaseService {
 
-  constructor(private http: Http) { }
-
-  getHeaders() {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let authToken = localStorage.getItem('auth_token');
-    headers.append('Authorization', `Bearer ${authToken}`);
-
-    return headers;
-  }
+  constructor(private http: HttpClient) {
+    super();
+   }
 
   getUserDetails() {
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
-
-    return this.http.get(userDetailsApiUrl, requestOptions).pipe(
-      map(data => {
-        return data.json() as UserDetails;
-      })
-    );
+    return this.http.get(userDetailsApiUrl, this.getDefaultOptions());
   }
 }

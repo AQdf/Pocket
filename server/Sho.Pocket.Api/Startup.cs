@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sho.Pocket.Api.Middlewares;
+using Sho.Pocket.Api.Validation;
 using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Auth.IdentityServer;
 using Sho.Pocket.Core.Auth;
@@ -29,7 +31,15 @@ namespace Sho.Pocket.Api
             services.AddOptions();
             services.AddCors(options => options.AddPolicy("AllowAll", policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ValidateModelStateAttribute));
+            })
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory("AllowAll"));
@@ -86,6 +96,7 @@ namespace Sho.Pocket.Api
             app.SeedApplicationData(dbConfiguration);
             app.SeedApplicationAuthData(authDbConfiguration);
 
+            app.UseMiddleware<PocketExceptionMiddleware>();
             app.UseMvc();
 
             app.UseCors("AllowAll");

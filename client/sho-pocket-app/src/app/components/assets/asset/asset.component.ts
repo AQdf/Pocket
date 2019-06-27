@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
 import { AssetService } from '../../../services/asset.service';
+import { Asset } from 'src/app/models/asset.model';
 
 @Component({
   selector: 'app-asset',
@@ -16,6 +17,9 @@ export class AssetComponent implements OnInit {
     private toastr : ToastrService,
     protected changeDetectorRef: ChangeDetectorRef) { }
 
+  selectedAsset: Asset;
+  assetList: Asset[];
+
   ngOnInit() {
     this.assetService.getCurrenciesList();
     this.resetForm();
@@ -27,7 +31,7 @@ export class AssetComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
 
-    this.assetService.selectedAsset = {
+    this.selectedAsset = {
       id: null,
       name: '',
       currency: '',
@@ -38,18 +42,18 @@ export class AssetComponent implements OnInit {
   onSubmit(form: NgForm) {
     if (form.value.id == null) {
       this.assetService.postAsset(form.value)
-        .subscribe(asset => {
-          this.assetService.assetList.unshift(asset);
-          this.toastr.success('New Record Added Succcessfully', 'Asset');
-          this.resetForm(form);
-        });
+      .subscribe((asset: Asset) => {
+        this.assetList.unshift(asset);
+        this.toastr.success('New Record Added Succcessfully', 'Asset');
+        this.resetForm(form);
+      });
     }
     else {
       this.assetService.putAsset(form.value.id, form.value)
-      .subscribe(asset => {
+      .subscribe((asset: Asset) => {
         if(asset) {
-          var listIndex = this.assetService.assetList.findIndex(a => a.id === asset.id);
-          this.assetService.assetList[listIndex] = asset;
+          var listIndex = this.assetList.findIndex(a => a.id === asset.id);
+          this.assetList[listIndex] = asset;
           this.toastr.success('Updated Successfully!', 'Asset');
           this.resetForm(form);
         } else {

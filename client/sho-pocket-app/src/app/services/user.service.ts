@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { UserDetailsService } from './user-details.service'
-import { UserRegistration } from'../models/user-registration.model'
+import { UserRegistration } from '../models/user-registration.model';
+import { UserDetails } from '../models/user-details.model';
 
 const usersApiUrl = environment.baseApiUrl + 'users/';
 
@@ -21,36 +21,32 @@ export class UserService {
 
   private loggedIn = false;
 
-  constructor(private http: Http, private userDetailsService: UserDetailsService) {
+  constructor(private http: HttpClient, private userDetailsService: UserDetailsService) {
     this.loggedIn = !!localStorage.getItem('auth_token');
     // ?? not sure if this the best way to broadcast the status but seems to resolve issue on page refresh where auth status is lost in
     // header component resulting in authed user nav links disappearing despite the fact user is still logged in
     this._authNavStatusSource.next(this.loggedIn);
   }
 
-  register(email: string, password: string, firstName: string, lastName: string, location: string): Observable<UserRegistration> {
-    let body = JSON.stringify({ email, password, firstName, lastName,location });
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let requestOptions = new RequestOptions({ headers: headers });
+  register(userData: UserRegistration) {
+    let body = JSON.stringify(userData);
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let requestOptions = { headers: headers };
 
-    return this.http.post(usersApiUrl + 'register', body, requestOptions).pipe(
-      map(response => response.json())
-    );
+    return this.http.post(usersApiUrl + 'register', body, requestOptions);
   }  
 
   login(email, password) {
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json');
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     let body = JSON.stringify({ email, password });
 
-    return this.http.post(usersApiUrl + 'login', body , { headers }).pipe(
-      map(response => response.json()),
-      map(response => {
+    return this.http.post(usersApiUrl + 'login', body, {headers}).pipe(
+      map((response:any) => {
         localStorage.setItem('auth_token', response.auth_token);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
 
-        this.userDetailsService.getUserDetails().subscribe(userDetails => {
+        this.userDetailsService.getUserDetails().subscribe((userDetails: UserDetails) => {
           localStorage.setItem('default_currencies', JSON.stringify(userDetails.defaultCurrencies));
           localStorage.setItem('primary_currency', userDetails.primaryCurrency);
         });

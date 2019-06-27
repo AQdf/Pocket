@@ -42,7 +42,7 @@ namespace Sho.Pocket.DataAccess.Sql.UserCurrencies
         {
             const string queryText =
                 @"INSERT INTO [dbo].[UserCurrency]
-                ([Id], [UserOpenId], [Currency], [IsPrimary])
+                ([UserOpenId], [Currency], [IsPrimary])
                 VALUES (@userOpenId, @currency, @isPrimary)
 
                 SELECT [UserOpenId], [Currency], [IsPrimary]

@@ -34,7 +34,7 @@ namespace Sho.Pocket.Api.Controllers
 
             List<BalanceTotalModel> result = await _balancesTotalService.GetLatestTotalBalanceAsync(user.Id);
 
-            return HandleResult(result);
+            return Ok(result);
         }
 
         /// <summary>

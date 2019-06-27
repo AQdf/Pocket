@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, finalize, map, pluck } from 'rxjs/operators';
 
 import { UserService } from '../../../services/user.service';
-import { UserRegistration } from'../../../models/user-registration.model'
+import { UserRegistration } from'../../../models/user-registration.model';
+import { ResponseError } from'../../../models/response-error.model';
 
 @Component({
   selector: 'app-registration',
@@ -11,7 +13,7 @@ import { UserRegistration } from'../../../models/user-registration.model'
 })
 export class RegistrationComponent implements OnInit {
 
-  errors: string;  
+  errors: ResponseError[];  
   isRequesting: boolean;
   submitted: boolean = false;
 
@@ -23,17 +25,15 @@ export class RegistrationComponent implements OnInit {
   registerUser({ value, valid } : { value: UserRegistration, valid: boolean }) {
     this.submitted = true;
     this.isRequesting = true;
-    this.errors = '';
-    if (valid)
-    {
+    if (valid) {
       this.userService
-        .register(value.email, value.password, value.firstName, value.lastName, value.location)
-        //.finally(() => this.isRequesting = false)
-        .subscribe(result  => {
-          if(result) {
-            this.router.navigate(['/login'], {queryParams: { brandNew: true,email:value.email }});
-          }
-        }, errors =>  this.errors = errors);
+      .register(value).pipe(
+          finalize(() => this.isRequesting = false))
+      .subscribe(result => {
+        if(result) {
+          this.router.navigate(['/login'], {queryParams: { brandNew: true, email: value.email }});
+        }
+      }, (errors: ResponseError[]) => this.errors = errors)
     }      
   }
 

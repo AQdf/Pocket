@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Utils;
 
 namespace Sho.Pocket.Auth.IdentityServer.Services
 {
@@ -14,16 +15,26 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
             _userManager = userManager;
         }
 
-        public async Task<IdentityResult> CreateUser(UserCreateModel model)
+        public async Task<UserCreationResult> CreateSimpleUser(UserCreateModel model)
         {
-            ApplicationUser user = new ApplicationUser
+            Guid userId = Guid.NewGuid();
+            ApplicationUser userToCreate = new ApplicationUser
             {
-                Id = Guid.NewGuid(),
+                Id = userId,
                 Email = model.Email,
                 UserName = model.Email
             };
 
-            IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+            UserCreationResult result = null;
+            IdentityResult identityResult = await _userManager.CreateAsync(userToCreate, model.Password);
+
+            if (identityResult.Succeeded)
+            {
+                ApplicationUser user = await _userManager.FindByIdAsync(userId.ToString());
+                await _userManager.AddToRoleAsync(user, RoleConst.Simple);
+
+                result = new UserCreationResult(identityResult, user);
+            }
 
             return result;
         }

@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { BalanceService } from '../../../services/balance.service';
 import { AssetService } from '../../../services/asset.service';
+import { Balance } from 'src/app/models/balance.model';
 
 @Component({
   selector: 'app-balance',
@@ -19,8 +20,9 @@ export class BalanceComponent implements OnInit {
     protected changeDetectorRef: ChangeDetectorRef) { 
   }
 
+  selectedBalance: Balance;
+
   ngOnInit() {
-    this.assetService.getAssetList();
     this.resetForm();
   }
 
@@ -34,7 +36,7 @@ export class BalanceComponent implements OnInit {
       var localISOTime = (new Date(Date.now() - tzOffset)).toISOString().slice(0, -1);
       var formattedNow = localISOTime.substring(0, localISOTime.indexOf('T'));
 
-      this.balanceService.selectedBalance = {
+      this.selectedBalance = {
       id: null,
       effectiveDate: formattedNow,
       value: 0.0,
@@ -47,13 +49,11 @@ export class BalanceComponent implements OnInit {
   }
  
   onSubmit(form: NgForm) {
-    let dateFilter = this.balanceService.effectiveDatesList.length > 0 ? this.balanceService.effectiveDatesList[0] : null;
-
     if (form.value.id == null) {
       this.balanceService.postBalance(form.value)
         .subscribe(() => {
           this.resetForm(form);
-          this.balanceService.getEffectiveDatesList();
+          this.balanceService.loadEffectiveDatesList();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
         });
     }
@@ -61,7 +61,7 @@ export class BalanceComponent implements OnInit {
       this.balanceService.putBalance(form.value.id, form.value)
       .subscribe(() => {
         this.resetForm(form);
-        this.balanceService.getEffectiveDatesList();
+        this.balanceService.loadEffectiveDatesList();
         this.toastr.info('Record Updated Successfully!', 'Balance');
       });
     }

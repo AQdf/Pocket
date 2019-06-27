@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Api.Models;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
 using Sho.Pocket.Core.Configuration.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
@@ -45,18 +47,17 @@ namespace Sho.Pocket.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await _registrationService.CreateUser(model);
+            UserCreationResult result = await _registrationService.CreateSimpleUser(model);
 
             if (result.Succeeded)
             {
-                UserViewModel user = await _authService.GetUserByEmail(model.Email);
-                await _userCurrencyService.AddUserCurrencyAsync(user.Id, _defaultCurrency, true);
+                await _userCurrencyService.AddUserCurrencyAsync(result.User.Id, _defaultCurrency, true);
 
                 return Ok(result);
             }
             else
             {
-                return BadRequest(result);
+                return BadRequest(result.Errors);
             }
         }
 
@@ -65,9 +66,19 @@ namespace Sho.Pocket.Api.Controllers
         {
             LoginResult result = await _loginService.GenerateJwtAsync(model.Email, model.Password);
 
-            return result.Succeeded
-                ? Ok(result.Jwt)
-                : (IActionResult)Unauthorized();
+            if (result.Succeeded)
+            {
+                return Ok(result.Jwt);
+            }
+            else
+            {
+                List<ResponseError> errors = new List<ResponseError>
+                {
+                    new ResponseError("InvalidEmailOrPassword", "Invalid email or password")
+                };
+
+                return BadRequest(errors);
+            }
         }
     }
 }

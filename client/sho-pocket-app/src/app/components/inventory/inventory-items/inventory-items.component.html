@@ -1,10 +1,16 @@
-<div class="col-auto mt-2">
+<div class="row bg-light mb-3 pt-2 pb-2 border rounded">
+  <div class="col-auto">
+    <label for="">Total items: {{(items && items.length) || 0}}</label>
+  </div>
+</div>
+
+<div class="col-auto mt-2 mb-2">
   <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addItem()">
     New item
   </button>
 </div>
 
-<div *ngFor="let item of inventoryService.items">
+<div *ngFor="let item of items">
   <form class="m-2" #inventoryItemForm="ngForm" (ngSubmit)="onSubmit(inventoryItemForm)">
 
     <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="item.id">

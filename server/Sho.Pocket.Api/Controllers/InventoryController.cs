@@ -35,7 +35,7 @@ namespace Sho.Pocket.Api.Controllers
 
             List<InventoryItemModel> result = await _inventoryService.GetItemsAsync(user.Id);
 
-            return HandleResult(result);
+            return Ok(result);
         }
 
         /// <summary>

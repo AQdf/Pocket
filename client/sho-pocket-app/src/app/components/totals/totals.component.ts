@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
-import { BalanceTotal } from '../../models/balance-total.model';
 import { BalancesTotalService } from '../../services/balances-total.service';
 
 @Component({
@@ -9,18 +8,14 @@ import { BalancesTotalService } from '../../services/balances-total.service';
   styleUrls: ['./totals.component.css']
 })
 export class TotalsComponent implements OnInit {
-  totalBalance: BalanceTotal[];
 
   constructor(public balancesTotalService : BalancesTotalService) { }
 
   ngOnInit() {
-    this.getCurrentTotalBalance();
+    this.loadCurrentTotalBalance();
   }
 
-  getCurrentTotalBalance()
-  {
-    this.balancesTotalService.getCurrentTotalBalance().subscribe(response => {
-      this.totalBalance = response;
-    });
+  loadCurrentTotalBalance() {
+    this.balancesTotalService.loadCurrentTotalBalance();
   }
 }

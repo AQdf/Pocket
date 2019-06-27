@@ -1,14 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpModule, XHRBackend } from '@angular/http'
-import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
 import { ChartModule } from 'angular-highcharts';
 
-import { AuthXHRBackend } from './auth-xhr-backend';
+// import { AuthXHRBackend } from './auth-xhr-backend';
 import { AuthGuard } from './auth.guard';
+import { HttpErrorInterceptor } from './common/http-error.interceptor';
+import { AuthHeaderInterceptor } from './common/auth-header.interceptor';
 
 import { AppComponent } from './app.component';
 import { AssetsComponent } from './components/assets/assets.component';
@@ -55,10 +57,19 @@ import { InventoryItemsComponent } from './components/inventory/inventory-items/
     AppRoutingModule,
     ChartModule
   ],
-  providers: [AuthGuard, { 
-    provide: XHRBackend, 
-    useClass: AuthXHRBackend
-  }],
+  providers: [
+    AuthGuard,
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: AuthHeaderInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

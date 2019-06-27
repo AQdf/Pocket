@@ -1,38 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, RequestMethod } from '@angular/http';
-
-import { map } from 'rxjs/operators';
-
-import { ExchangeRate } from '../models/exchange-rate.model';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
+import { ExchangeRate } from '../models/exchange-rate.model';
+import { BaseService } from './base.service';
 
 const exchangeRateApiUrl = environment.baseApiUrl + 'exchange-rates/';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExchangeRateService {
+export class ExchangeRateService extends BaseService {
 
-  constructor(public http: Http) { }
+  constructor(public http: HttpClient) {
+    super();
+  }
 
-  getHeaders() {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let authToken = localStorage.getItem('auth_token');
-    headers.append('Authorization', `Bearer ${authToken}`);
-
-    return headers;
+  getExchangeRates(effectiveDate: string) {
+    return this.http.get(exchangeRateApiUrl + effectiveDate, this.getDefaultOptions());
   }
 
   applyExchangeRate(model: ExchangeRate) {
-    var body = JSON.stringify(model);
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({method : RequestMethod.Put, headers : headers});
-
-    return this.http.put(exchangeRateApiUrl, body, requestOptions).pipe(
-      map(data => {
-        return data.json() as boolean;
-      })
-    );
+    let body = JSON.stringify(model);
+    return this.http.put(exchangeRateApiUrl, body, this.getDefaultOptions());
   }
 }

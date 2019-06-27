@@ -1,49 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, RequestMethod } from '@angular/http';
-import { HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
+import { BaseService } from './base.service';
 import { BalanceTotal } from '../models/balance-total.model';
-import { BalanceChanges } from '../models/balance-changes.model';
 
 const balancesTotalApiUrl = environment.baseApiUrl + 'balances-total/';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BalancesTotalService {
+export class BalancesTotalService extends BaseService {
 
-  constructor(private http: Http) { }
-
-  getHeaders() {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let authToken = localStorage.getItem('auth_token');
-    headers.append('Authorization', `Bearer ${authToken}`);
-
-    return headers;
+  constructor(private http: HttpClient) {
+    super();
   }
 
-  getCurrentTotalBalance() {
-    let headers = this.getHeaders();
-    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
+  balanceTotals: BalanceTotal[];
 
-    return this.http.get(balancesTotalApiUrl, requestOptions).pipe(
-      map(data => {
-        return data.json( ) as BalanceTotal[];
-      })
-    )
+  loadCurrentTotalBalance() {
+    this.http.get(balancesTotalApiUrl, this.getDefaultOptions())
+      .subscribe((totals: BalanceTotal[]) => this.balanceTotals = totals);
   }
 
   getBalanceTotalChanges() {
-    var headers = this.getHeaders();
-    let queryParams = new HttpParams().set('count', '100');
-    var requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers, params: queryParams});
-
-    return this.http.get(balancesTotalApiUrl + 'changes', requestOptions).pipe(
-      map(data => {
-        return data.json() as BalanceChanges[];
-      })
-    );
+    let options = this.getDefaultOptions();
+    options.params.set('count', '100');
+    return this.http.get(balancesTotalApiUrl + 'changes', options);
   }
 }

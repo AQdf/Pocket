@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 
 import { UserService } from '../../../services/user.service';
-import { UserLogin } from'../../../models/user-login.model'
+import { UserLogin } from'../../../models/user-login.model';
+import { ResponseError } from 'src/app/models/response-error.model';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
   private subscription: Subscription;
 
   brandNew: boolean;
-  errors: string;
+  errors: ResponseError[];
   isRequesting: boolean;
   submitted: boolean = false;
   credentials: UserLogin = { email: '', password: '' };
@@ -39,16 +41,16 @@ export class LoginComponent implements OnInit {
   login({ value, valid }: { value: UserLogin, valid: boolean }) {
     this.submitted = true;
     this.isRequesting = true;
-    this.errors='';
     if (valid) {
       this.userService
-        .login(value.email, value.password)
-        //.finally(() => this.isRequesting = false)
+        .login(value.email, value.password).pipe(
+          finalize(() => this.isRequesting = false)
+        )
         .subscribe(result => {
           if (result) {
              this.router.navigate(['/dashboard']);
           }
-        }, error => this.errors = error);
+        }, (errors: ResponseError[]) => this.errors = errors);
     }
   }
 

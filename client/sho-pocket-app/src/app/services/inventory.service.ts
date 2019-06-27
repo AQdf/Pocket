@@ -1,85 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions, RequestMethod } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 
-import { InventoryItem } from'../models/inventory-item.model'
 import { environment } from '../../environments/environment'
+import { InventoryItem } from'../models/inventory-item.model'
+import { BaseService } from './base.service';
 
 const inventoryApiUrl = environment.baseApiUrl + 'inventory/';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InventoryService {
-  selectedItem: InventoryItem;
-  items: InventoryItem[];
-  categories: string[];
+export class InventoryService extends BaseService {
 
-  constructor(public http: Http, public client: HttpClient) {
-    this.getInventoryItems();
-  }
-
-  getHeaders() {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let authToken = localStorage.getItem('auth_token');
-    headers.append('Authorization', `Bearer ${authToken}`);
-
-    return headers;
+  constructor(private http: HttpClient) {
+    super();
   }
 
   getInventoryItems() {
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
-
-    this.http.get(inventoryApiUrl, requestOptions).pipe(
-      map(data => {
-        return data.json() as InventoryItem[];
-      })
-    ).subscribe(items => {
-        this.items = items;
-    });
+    return this.http.get(inventoryApiUrl, this.getDefaultOptions());
   }
 
   getInventoryItem(id: string) {
-    let headers = this.getHeaders();
-    let requestOptions = new RequestOptions({method : RequestMethod.Get, headers : headers});
-
-    return this.http.get(inventoryApiUrl + id, requestOptions).pipe(
-      map((data : Response) => {
-        return data.json() as InventoryItem
-      })
-    );
+    return this.http.get(inventoryApiUrl + id, this.getDefaultOptions());
   }
 
-  postInventoryItem(emp : InventoryItem) {
-    var body = JSON.stringify(emp);
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({method : RequestMethod.Post, headers : headers});
-
-    return this.http.post(inventoryApiUrl, body, requestOptions).pipe(
-      map((data : Response) =>{
-        return data.json() as InventoryItem;
-      })
-    );
+  postInventoryItem(item: InventoryItem) {
+    let body = JSON.stringify(item);
+    return this.http.post(inventoryApiUrl, body, this.getDefaultOptions());
   }
  
-  putInventoryItem(id, emp) {
-    var body = JSON.stringify(emp);
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({ method: RequestMethod.Put, headers: headers });
-
-    return this.http.put(inventoryApiUrl + id, body, requestOptions).pipe(
-      map(response => response.json())
-    );
+  putInventoryItem(id: string, item: InventoryItem) {
+    let body = JSON.stringify(item);
+    return this.http.put(inventoryApiUrl + id, body, this.getDefaultOptions());
   }
 
   deleteInventoryItem(id: string) {
-    var headers = this.getHeaders();
-    var requestOptions = new RequestOptions({ method: RequestMethod.Get, headers: headers });
-
-    return this.http.delete(inventoryApiUrl + id, requestOptions).pipe(
-      map(response => response.json())
-    );
+    return this.http.delete(inventoryApiUrl + id, this.getDefaultOptions());
   }
 }

@@ -27,15 +27,17 @@ export class BalancesChartComponent implements OnInit {
 
   initBalancePieChartData()
   {
-    this.balanceService.getLatestBalances().subscribe(balances => {
-      this.balances = balances.items;
-      this.createBalanceChart(this.balances);
+    this.balanceService.getLatestBalances()
+    .subscribe((balances: any) => {
+      if (balances) {
+        this.balances = balances.items;
+        this.createBalanceChart(this.balances);
+      }
     });
   }
 
-  initBalanceChangeLineCharts()
-  {
-    this.balancesTotalService.getBalanceTotalChanges().subscribe(currenciesTotals => {
+  initBalanceChangeLineCharts() {
+    this.balancesTotalService.getBalanceTotalChanges().subscribe((currenciesTotals:any) => {
       if (!currenciesTotals || currenciesTotals.length === 0) {
         return;
       }
@@ -45,8 +47,7 @@ export class BalancesChartComponent implements OnInit {
     });
   }
 
-  createBalanceChart(balances: Balance[])
-  {
+  createBalanceChart(balances: Balance[]) {
     let chartData = [];  
     for (var i = 0; i < balances.length; i++) {  
         chartData.push({  

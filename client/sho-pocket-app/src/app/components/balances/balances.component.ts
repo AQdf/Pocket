@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 
 import { BalanceService } from '../../services/balance.service';
-import { ExchangeRateService } from '../../services/exchange-rate.service';
-
-import { ExchangeRate } from '../../models/exchange-rate.model';
 
 @Component({
   selector: 'app-balances',
@@ -13,34 +9,36 @@ import { ExchangeRate } from '../../models/exchange-rate.model';
 })
 export class BalancesComponent implements OnInit {
 
-  constructor(public balanceService: BalanceService, private exchangeRateService: ExchangeRateService, private toastr: ToastrService) { }
+  constructor(public balanceService: BalanceService) { }
+
+  selectedEffectiveDate: string;
+  effectiveDatesList: string[];
 
   ngOnInit() {
+    this.loadEffectiveDates();
   }
 
-  onDateChange(value) {
-    this.balanceService.getBalanceList(value);
-  }
-
-  addBalances() {
-    this.balanceService.addBalancesByTemplate().subscribe(success => {
-      if (success) {
-        this.balanceService.reload();
-        this.toastr.success('Current date balances created by template', 'Balance');
-      }
-    });
-  }
-
-  applyExchangeRate(model: ExchangeRate) {
-    this.exchangeRateService.applyExchangeRate(model).subscribe(success => {
-      if (success) {
-        this.balanceService.reload();
-        this.toastr.success('Exchange rate applied', 'Balance');
+  loadEffectiveDates() {
+    this.balanceService.loadEffectiveDatesList().subscribe((result: string[]) => {
+      if(result.length > 0) {
+        this.effectiveDatesList = result;
+        this.selectedEffectiveDate = this.effectiveDatesList[0];
+      } else {
+        this.effectiveDatesList = null;
+        this.selectedEffectiveDate = null;
       }
     });
   }
   
+  onDateChange(effectiveDate: string) {
+    this.selectedEffectiveDate = effectiveDate;
+  }
+
+  reload(event: any) {
+    this.loadEffectiveDates();
+  }
+  
   downloadCsv() {
-    this.balanceService.downloadCsv();
+    this.balanceService.downloadCsv(this.selectedEffectiveDate);
   }
 }

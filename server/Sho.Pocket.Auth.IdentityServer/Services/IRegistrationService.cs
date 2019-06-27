@@ -6,6 +6,6 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
 {
     public interface IRegistrationService
     {
-        Task<IdentityResult> CreateUser(UserCreateModel model);
+        Task<UserCreationResult> CreateSimpleUser(UserCreateModel model);
     }
 }

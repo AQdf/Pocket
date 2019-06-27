@@ -32,6 +32,14 @@ namespace Sho.Pocket.Application.ExchangeRates
             _userCurrencyRepository = userCurrencyRepository;
         }
 
+        public async Task<List<ExchangeRateModel>> GetExchangeRatesAsync(DateTime effectiveDate)
+        {
+            IEnumerable<ExchangeRate> existingRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
+            List<ExchangeRateModel> result = existingRates.Select(r => new ExchangeRateModel(r)).ToList();
+
+            return result;
+        }
+
         public async Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userOpenId, DateTime effectiveDate)
         {
             IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
@@ -39,13 +47,16 @@ namespace Sho.Pocket.Application.ExchangeRates
             IEnumerable<ExchangeRate> existingRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
             List<string> missingCurrencies = currencies.Except(existingRates.Select(r => r.BaseCurrency)).ToList();
 
-            UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
-
-            IEnumerable<ExchangeRateProviderModel> providerRates = await TryFetchRatesAsync(primaryCurrency.Currency, missingCurrencies);
-            List<ExchangeRateModel> savedRates = await SaveRatesAsync(providerRates, effectiveDate, primaryCurrency.Currency);
-
             List<ExchangeRateModel> result = existingRates.Select(r => new ExchangeRateModel(r)).ToList();
-            result.AddRange(savedRates);
+
+            if (missingCurrencies.Any())
+            {
+                UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
+
+                IEnumerable<ExchangeRateProviderModel> providerRates = await TryFetchRatesAsync(primaryCurrency.Currency, missingCurrencies);
+                List<ExchangeRateModel> savedRates = await SaveRatesAsync(providerRates, effectiveDate, primaryCurrency.Currency);
+                result.AddRange(savedRates);
+            }
 
             return result;
         }

@@ -1,5 +1,5 @@
 <div class="input-group">
-  <div *ngFor="let total of totalBalance">
+  <div *ngFor="let total of balancesTotalService.balanceTotals">
     <div class="input-group pr-3">
       <h4>{{total.value | number:'1.0-0' }} {{total.currency}}</h4>
     </div>

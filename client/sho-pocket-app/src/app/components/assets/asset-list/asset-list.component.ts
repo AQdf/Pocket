@@ -11,14 +11,23 @@ import { Asset } from '../../../models/asset.model'
   styleUrls: ['./asset-list.component.css']
 })
 export class AssetListComponent implements OnInit {
+
+  constructor(public assetService : AssetService, private toastr : ToastrService) { }
+  
+  assetList: Asset[]
+  selectedAsset: Asset;
   currentEditRecordId: string;
   isAddMode: boolean;
 
-  constructor(public assetService : AssetService, private toastr : ToastrService) { }
-
   ngOnInit() {
     this.assetService.getCurrenciesList();
-    this.assetService.getAssetList();
+    this.loadAssetList();
+  }
+
+  loadAssetList() {
+    this.assetService.getAssetList().subscribe((assets: Asset[]) => {
+      this.assetList = assets;
+    });
   }
 
   showForEdit(asset: Asset) {
@@ -32,7 +41,7 @@ export class AssetListComponent implements OnInit {
   onDelete(id: string) {
     if (id === null)
     {
-      this.assetService.assetList.shift();
+      this.assetList.shift();
       this.isAddMode = false;
       return;
     }
@@ -41,7 +50,7 @@ export class AssetListComponent implements OnInit {
       this.assetService.deleteAsset(id)
       .subscribe(result => {
         if (result) {
-          this.assetService.getAssetList();
+          this.loadAssetList();
           this.toastr.success("Deleted Successfully","Asset");
         } else {
           this.toastr.error("Delete failed! Possibly, cannot delete asset because balance for asset exists","Asset");
@@ -52,20 +61,20 @@ export class AssetListComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     if (form.value.id == null) {
-      this.assetService.postAsset(this.assetService.selectedAsset)
+      this.assetService.postAsset(this.selectedAsset)
         .subscribe(asset => {
           this.toastr.success('New Record Added Succcessfully', 'Asset');
-          this.reload();
+          this.loadAssetList();
           this.currentEditRecordId = null;
           this.isAddMode = false;
         });
     }
     else {
       this.assetService.putAsset(form.value.id, form.value)
-      .subscribe(asset => {
+      .subscribe((asset: Asset) => {
         if(asset) {
-          var listIndex = this.assetService.assetList.findIndex(a => a.id === asset.id);
-          this.assetService.assetList[listIndex] = asset;
+          var listIndex = this.assetList.findIndex(a => a.id === asset.id);
+          this.assetList[listIndex] = asset;
           this.toastr.success('Updated Successfully!', 'Asset');
           this.currentEditRecordId = null;
           this.isAddMode = false;
@@ -76,15 +85,10 @@ export class AssetListComponent implements OnInit {
     }
   }
 
-  reload()
-  {
-    this.assetService.getAssetList();
-  }
-
   resetRecord(id: string) {
-    this.assetService.getAsset(id).subscribe(result => {
-      let index = this.assetService.assetList.findIndex(f => f.id === id)
-      this.assetService.assetList[index] = result;
+    this.assetService.getAsset(id).subscribe((result: Asset) => {
+      let index = this.assetList.findIndex(f => f.id === id)
+      this.assetList[index] = result;
     })
   }
 
@@ -97,14 +101,14 @@ export class AssetListComponent implements OnInit {
       isActive: true
     }
 
-    this.assetService.assetList.unshift(newAsset);
-    this.assetService.selectedAsset = newAsset;
+    this.assetList.unshift(newAsset);
+    this.selectedAsset = newAsset;
     this.currentEditRecordId = null;
     this.isAddMode = true;
   }
 
   onCurrencyAdded(value: string) {
     let currency = this.assetService.currenciesList.find(c => c == value);
-    this.assetService.selectedAsset.currency = currency;
+    this.selectedAsset.currency = currency;
   }
 }

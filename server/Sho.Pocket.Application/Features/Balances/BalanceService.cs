@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.DataExport;
+using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
@@ -40,10 +41,14 @@ namespace Sho.Pocket.Application.Balances
 
         public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
         {
+            BalancesViewModel result = null;
             List<DateTime> effectiveDates = await GetEffectiveDatesAsync(userOpenId);
-            DateTime latestDate = effectiveDates.FirstOrDefault();
 
-            BalancesViewModel result = await GetUserEffectiveBalancesAsync(userOpenId, latestDate);
+            if (effectiveDates != null && effectiveDates.Any())
+            {
+                DateTime latestDate = effectiveDates.FirstOrDefault();
+                result = await GetUserEffectiveBalancesAsync(userOpenId, latestDate);
+            }
 
             return result;
         }
@@ -94,18 +99,14 @@ namespace Sho.Pocket.Application.Balances
 
             if (!todayBalancesExists)
             {
-                List<ExchangeRateModel> todayExchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, today);
-
                 if (effectiveDates.Any())
                 {
                     DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
-                    IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
-
-                    result = await AddBalancesByTemplateAsync(userOpenId, latestBalances, todayExchangeRates, today);
+                    result = await AddBalancesByTemplateAsync(userOpenId, latestEffectiveDate, today);
                 }
                 else
                 {
-                    result = await AddAssetsBalancesAsync(userOpenId, todayExchangeRates, today);
+                    result = await AddAssetsBalancesAsync(userOpenId, today);
                 }
             }
             else
@@ -153,11 +154,14 @@ namespace Sho.Pocket.Application.Balances
             return bytes;
         }
 
-        private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, IEnumerable<Balance> balances, IEnumerable<ExchangeRateModel> exchangeRates, DateTime effectiveDate)
+        private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, DateTime latestEffectiveDate, DateTime effectiveDate)
         {
+            IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
+            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
+
             List<BalanceViewModel> result = new List<BalanceViewModel>();
 
-            foreach (Balance balance in balances)
+            foreach (Balance balance in latestBalances)
             {
                 ExchangeRateModel balanceExchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == balance.Asset.Currency);
                 Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, balance.Value, balanceExchangeRate.Id);
@@ -170,10 +174,17 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        private async Task<List<BalanceViewModel>> AddAssetsBalancesAsync(Guid userOpenId, IEnumerable<ExchangeRateModel> exchangeRates, DateTime effectiveDate)
+        private async Task<List<BalanceViewModel>> AddAssetsBalancesAsync(Guid userOpenId, DateTime effectiveDate)
         {
             List<BalanceViewModel> result = new List<BalanceViewModel>();
             IEnumerable<Asset> activeAssets = await _assetRepository.GetActiveAssetsAsync();
+
+            if (!activeAssets.Any())
+            {
+                throw new UserHasNoAssetsException();
+            }
+
+            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
 
             foreach (Asset asset in activeAssets)
             {
