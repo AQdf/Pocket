@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BalanceService } from '../../../services/balance.service';
 import { AssetService } from '../../../services/asset.service';
 import { Balance } from 'src/app/models/balance.model';
+import { Asset } from 'src/app/models/asset.model';
 
 @Component({
   selector: 'app-balance',
@@ -21,6 +22,7 @@ export class BalanceComponent implements OnInit {
   }
 
   selectedBalance: Balance;
+  assetList: Asset[];
 
   ngOnInit() {
     this.resetForm();

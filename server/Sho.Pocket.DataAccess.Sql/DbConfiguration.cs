@@ -26,7 +26,8 @@ namespace Sho.Pocket.DataAccess.Sql
                 new Currency("PLN")
             };
 
-            if (!_defaultCurrencies.Exists(c => c.Name == globalSettings.DefaultCurrency))
+            if (!string.IsNullOrWhiteSpace(globalSettings.DefaultCurrency) 
+                && !_defaultCurrencies.Exists(c => c.Name == globalSettings.DefaultCurrency))
             {
                 _defaultCurrencies.Add(new Currency(globalSettings.DefaultCurrency));
             }

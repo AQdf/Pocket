@@ -68,6 +68,7 @@
     <Build Include="InvItemImage.sql" />
     <Build Include="InvItemLink.sql" />
     <Build Include="UserCurrency.sql" />
+    <Build Include="BalanceNote.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="PocketDb.refactorlog" />

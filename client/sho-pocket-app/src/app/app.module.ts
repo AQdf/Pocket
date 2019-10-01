@@ -28,6 +28,7 @@ import { RegistrationComponent } from './components/users/registration/registrat
 import { LoginComponent } from './components/users/login/login.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { InventoryItemsComponent } from './components/inventory/inventory-items/inventory-items.component';
+import { BalanceNoteComponent } from './components/balances/balance-note/balance-note.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { InventoryItemsComponent } from './components/inventory/inventory-items/
     RegistrationComponent,
     LoginComponent,
     InventoryComponent,
-    InventoryItemsComponent
+    InventoryItemsComponent,
+    BalanceNoteComponent
   ],
   imports: [
     BrowserModule,

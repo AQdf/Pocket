@@ -6,6 +6,7 @@ using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Providers;
+using Sho.Pocket.Application.Features.Balances;
 using Sho.Pocket.Application.Inventory;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Core.DataAccess;
@@ -32,6 +33,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
             services.AddScoped<IBalancesTotalService, BalancesTotalService>();
+            services.AddScoped<IBalanceNoteService, BalanceNoteService>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IInventoryService, InventoryService>();
             services.AddScoped<IItemCategoryService, ItemCategoryService>();
@@ -39,6 +41,7 @@ namespace Sho.Pocket.Application.Configuration
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
+            services.AddScoped<IBalanceNoteRepository, BalanceNoteRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
             services.AddScoped<IInventoryRepository, InventoryRepository>();

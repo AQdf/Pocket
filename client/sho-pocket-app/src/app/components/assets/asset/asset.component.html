@@ -1,12 +1,12 @@
 <form class="asset-form" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
-  <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="assetService.selectedAsset.id">
+  <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="selectedAsset.id">
   <div class="form-row">
     <div class="form-group col-md-3">
-      <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="assetService.selectedAsset.name" placeholder="Name" required>
+      <input class="form-control" name="Name" #Name="ngModel" [(ngModel)]="selectedAsset.name" placeholder="Name" required>
       <div class="validation-error" *ngIf="Name.invalid && Name.touched">This Field is Required.</div>
     </div>
     <div class="form-group col-md-3">
-      <select class="form-control" name="Currency" #Currency="ngModel" [(ngModel)]="assetService.selectedAsset.currency" placeholder="Currency" required>
+      <select class="form-control" name="Currency" #Currency="ngModel" [(ngModel)]="selectedAsset.currency" placeholder="Currency" required>
         <option value="" disabled selected>Select currency</option>
         <option *ngFor="let currency of assetService.currenciesList" value={{currency}}>
             {{currency}}
@@ -16,7 +16,7 @@
     </div>
     <div class="form-group col-md-1">
       <label class="switch">
-          <input type="checkbox" checked data-toggle="toggle" name="IsActive" #IsActive="ngModel" [(ngModel)]="assetService.selectedAsset.isActive">
+          <input type="checkbox" checked data-toggle="toggle" name="IsActive" #IsActive="ngModel" [(ngModel)]="selectedAsset.isActive">
           <span class="slider"></span>
         </label>
     </div>

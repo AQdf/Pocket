@@ -5,7 +5,7 @@ import { finalize } from 'rxjs/operators';
 
 import { UserService } from '../../../services/user.service';
 import { UserLogin } from'../../../models/user-login.model';
-import { ResponseError } from 'src/app/models/response-error.model';
+import { ResponseError } from '../../../models/response-error.model';
 
 @Component({
   selector: 'app-login',
@@ -28,9 +28,9 @@ export class LoginComponent implements OnInit {
     // subscribe to router event
     this.subscription = this.activatedRoute.queryParams.subscribe(
       (param: any) => {
-         this.brandNew = param['brandNew'];   
-         this.credentials.email = param['email'];         
-      });      
+         this.brandNew = param['brandNew'];
+         this.credentials.email = param['email'];
+      });
   }
 
   ngOnDestroy() {

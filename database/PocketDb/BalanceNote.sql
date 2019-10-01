@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[BalanceNote]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [EffectiveDate] DATETIME2 NOT NULL, 
+    [Content] NVARCHAR(MAX) NULL, 
+    [UserOpenId] UNIQUEIDENTIFIER NOT NULL
+)

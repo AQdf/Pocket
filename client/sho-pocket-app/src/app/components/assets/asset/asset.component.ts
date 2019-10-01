@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';   
 
 import { AssetService } from '../../../services/asset.service';
-import { Asset } from 'src/app/models/asset.model';
+import { Asset } from '../../../models/asset.model';
 
 @Component({
   selector: 'app-asset',
