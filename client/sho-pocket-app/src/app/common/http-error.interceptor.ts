@@ -4,11 +4,12 @@ import {
     HttpInterceptor,
     HttpHandler,
     HttpRequest,
-    HttpResponse,
     HttpErrorResponse
    } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
+
+import { ResponseError } from '../models/response-error.model';
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +18,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(
-            catchError((error: HttpErrorResponse) => {
-                if ((error.status === 401 || error.status === 403) && (window.location.href.match(/\?/g) || []).length < 2) {
+            catchError((errorResponse: HttpErrorResponse) => {
+                if ((errorResponse.status === 401 || errorResponse.status === 403) && (window.location.href.match(/\?/g) || []).length < 2) {
                     
                     console.log('The authentication session expired or the user is not authorized. Force refresh of the current page.');
                     /* Great solution for bundling with Auth Guard! 
@@ -29,8 +30,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                     localStorage.removeItem('auth_token');              
                     window.location.href = window.location.href + '?' + new Date().getMilliseconds();
                 }
+
+                if (errorResponse.statusText && errorResponse.statusText === "Unknown Error") {
+                    let error: ResponseError = {
+                        code: "0",
+                        description: "Uknown error. Please contact the system administrator."
+                    }
+
+                    return throwError([error]);
+                }
                 
-                return throwError(error.error);
+                return throwError(errorResponse.error);
             })
         )
     }

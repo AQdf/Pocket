@@ -5,13 +5,13 @@ import { ToastrService } from 'ngx-toastr';
 import { AssetService } from '../../../services/asset.service';
 import { BalanceService } from '../../../services/balance.service';
 import { Balance } from '../../../models/balance.model'
-import { ResponseError } from 'src/app/models/response-error.model';
-import { Asset } from 'src/app/models/asset.model';
-import { BalancesTotalService } from 'src/app/services/balances-total.service';
-import { BalanceTotal } from 'src/app/models/balance-total.model';
-import { ExchangeRate } from 'src/app/models/exchange-rate.model';
-import { Balances } from 'src/app/models/balances.model';
-import { ExchangeRateService } from 'src/app/services/exchange-rate.service';
+import { ResponseError } from '../../../models/response-error.model';
+import { Asset } from '../../../models/asset.model';
+import { BalancesTotalService } from '../../../services/balances-total.service';
+import { BalanceTotal } from '../../../models/balance-total.model';
+import { ExchangeRate } from '../../../models/exchange-rate.model';
+import { Balances } from '../../../models/balances.model';
+import { ExchangeRateService } from '../../../services/exchange-rate.service';
 
 @Component({
   selector: 'app-balance-list',
