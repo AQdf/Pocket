@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 import { BalanceService } from '../../services/balance.service';
+import { BalancesTotalService } from '../../services/balances-total.service';
+import { ResponseError } from '../../models/response-error.model';
 
 @Component({
   selector: 'app-balances',
@@ -9,7 +12,10 @@ import { BalanceService } from '../../services/balance.service';
 })
 export class BalancesComponent implements OnInit {
 
-  constructor(public balanceService: BalanceService) { }
+  constructor(
+    private balanceService: BalanceService,
+    private balanceTotalService: BalancesTotalService,
+    private toastr: ToastrService) { }
 
   selectedEffectiveDate: string;
   effectiveDatesList: string[];
@@ -37,7 +43,21 @@ export class BalancesComponent implements OnInit {
   reload(event: any) {
     this.loadEffectiveDates();
   }
-  
+
+  addBalances() {
+    this.balanceService.addBalancesByTemplate().subscribe(success => {
+      if (success) {
+        this.loadEffectiveDates();
+        this.balanceTotalService.loadCurrentTotalBalance();
+        this.toastr.success('Current date balances created by template', 'Balance');
+      }
+    }, (errors: ResponseError[]) => {
+      for (let error of errors) {
+        this.toastr.error(error.description, 'Balances')
+      }
+    });
+  }
+
   downloadCsv() {
     this.balanceService.downloadCsv(this.selectedEffectiveDate);
   }

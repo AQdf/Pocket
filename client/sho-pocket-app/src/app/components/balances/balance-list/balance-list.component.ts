@@ -5,7 +5,6 @@ import { ToastrService } from 'ngx-toastr';
 import { AssetService } from '../../../services/asset.service';
 import { BalanceService } from '../../../services/balance.service';
 import { Balance } from '../../../models/balance.model'
-import { ResponseError } from '../../../models/response-error.model';
 import { Asset } from '../../../models/asset.model';
 import { BalancesTotalService } from '../../../services/balances-total.service';
 import { BalanceTotal } from '../../../models/balance-total.model';
@@ -67,20 +66,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
   initAssets() {
     this.assetService.getAssetList().subscribe((assets: Asset[]) => {
       this.assetList = assets;
-    });
-  }
-  
-  addBalances() {
-    this.balanceService.addBalancesByTemplate().subscribe(success => {
-      if (success) {
-        this.reloadEffectiveDates(true);
-        this.balanceTotalService.loadCurrentTotalBalance();
-        this.toastr.success('Current date balances created by template', 'Balance');
-      }
-    }, (errors: ResponseError[]) => {
-      for (let error of errors) {
-        this.toastr.error(error.description, 'Balances')
-      }
     });
   }
 

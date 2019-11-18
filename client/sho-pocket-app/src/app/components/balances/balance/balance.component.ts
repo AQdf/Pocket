@@ -4,8 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { BalanceService } from '../../../services/balance.service';
 import { AssetService } from '../../../services/asset.service';
-import { Balance } from 'src/app/models/balance.model';
-import { Asset } from 'src/app/models/asset.model';
+import { Balance } from '../../../models/balance.model';
+import { Asset } from '../../../models/asset.model';
 
 @Component({
   selector: 'app-balance',
