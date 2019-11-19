@@ -70,16 +70,18 @@
   </div>
 
   <div class="col-md-3">
-    <div class="bg-light mb-3 p-2 border rounded"> 
+    <div class="bg-light mb-3 p-2 border rounded">
       <div class="mb-2">
         <span>Exchange rates</span>
       </div>
-      <div class="input-group mb-3" *ngFor="let rate of exchangeRates">
-        <div class="input-group-prepend">
-          <button class="btn btn-secondary" (click)="applyExchangeRate(rate)">{{rate.baseCurrency}}</button>
+      <div *ngFor="let rate of exchangeRates">
+        <div *ngIf="rate.baseCurrency !== rate.counterCurrency" class="input-group mb-3">
+          <div class="input-group-prepend">
+            <button class="btn btn-secondary" (click)="applyExchangeRate(rate)">{{rate.baseCurrency}}</button>
+          </div>
+          <input name="Rate" type="number" class="form-control" placeholder="Rate" required
+            [ngClass]="{'input-invalid': Rate.invalid && Rate.touched }" #Rate="ngModel" [(ngModel)]="rate.value">
         </div>
-        <input name="Rate" type="number" class="form-control" placeholder="Rate" required
-          [ngClass]="{'input-invalid': Rate.invalid && Rate.touched }" #Rate="ngModel" [(ngModel)]="rate.value">
       </div>
     </div>
   </div>
