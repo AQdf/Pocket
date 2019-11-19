@@ -26,9 +26,9 @@
         <div class="form-row align-items-center p-2">
           <div class="col-md-4">
             <select name="AssetId" class="form-control" placeholder="Asset" required
-              [disabled]="balance.id !== currentEditRecordId" #AssetId="ngModel" [(ngModel)]="balance.assetId"
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel" [(ngModel)]="balance.assetId"
               [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched}"
-              (change)="this.onAssetAdded($event.target.value)">
+              (change)="this.onAssetChanged($event.target.value)">
               <option value="" disabled selected>
                 Select asset
               </option>
@@ -39,7 +39,7 @@
           </div>
           <div class="col-md-2">
             <input name="Value" class="form-control" placeholder="Balance" required
-              [disabled]="balance.id !== currentEditRecordId" #Value="ngModel" [(ngModel)]="balance.value"
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #Value="ngModel" [(ngModel)]="balance.value"
               [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
           </div>
           <div class="col-md-2">
@@ -47,14 +47,14 @@
           </div>
           <div class="col-md-4">
             <button type="button" class="btn btn-outline-info ml-1"
-              [disabled]="isAddMode && currentEditRecordId !== balance.id" (click)="showForEdit(balance)">
+              [disabled]="isAddMode && (selectedBalance && selectedBalance.id) !== balance.id" (click)="showForEdit(balance)">
               <i class="fa fa-pencil-square-o"></i>
             </button>
             <button type="submit" class="btn btn-outline-info ml-1"
-              [disabled]="!balanceForm.valid || currentEditRecordId !== balance.id">
+              [disabled]="!balanceForm.valid || (selectedBalance && selectedBalance.id) !== balance.id">
               <i class="fa fa-floppy-o"></i>
             </button>
-            <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== balance.id"
+            <button type="button" class="btn btn-outline-info ml-1" [disabled]="(selectedBalance && selectedBalance.id) !== balance.id"
               (click)="resetRecord(balance.id)">
               <i class="fa fa-repeat"></i>
             </button>

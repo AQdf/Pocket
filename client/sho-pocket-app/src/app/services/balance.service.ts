@@ -34,9 +34,10 @@ export class BalanceService extends BaseService {
     return this.http.post(balancesApiUrl, body, this.getDefaultOptions());
   }
  
-  putBalance(id: string, balanceData: any) {
+  putBalance(id: string, balanceData: Balance) {
     var updateModel = {
-      value: balanceData.Value
+      assetId: balanceData.assetId,
+      value: balanceData.value
     };
     var body = JSON.stringify(updateModel);
     return this.http.put(balancesApiUrl + id, body, this.getDefaultOptions());

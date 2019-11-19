@@ -38,7 +38,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
   totalBalance: BalanceTotal[];
   exchangeRates: ExchangeRate[];
   assetList: Asset[];
-  currentEditRecordId: string;
   isAddMode: boolean;
 
   ngOnInit() {
@@ -70,10 +69,10 @@ export class BalanceListComponent implements OnInit, OnChanges {
   }
 
   showForEdit(balance: Balance) {
-    if (this.currentEditRecordId === balance.id) {
-      this.currentEditRecordId = null;
+    if (this.selectedBalance && this.selectedBalance.id === balance.id) {
+      this.selectedBalance = null;
     } else {
-      this.currentEditRecordId = balance.id;
+      this.selectedBalance = balance;
     }
   }
 
@@ -114,17 +113,17 @@ export class BalanceListComponent implements OnInit, OnChanges {
           this.reloadBalances();
           this.balanceTotalService.loadCurrentTotalBalance();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
-          this.currentEditRecordId = null;
+          this.selectedBalance = null;
           this.isAddMode = false;
         });
     }
     else {
-      this.balanceService.putBalance(form.value.id, form.value)
+      this.balanceService.putBalance(form.value.id, this.selectedBalance)
       .subscribe(() => {
         this.reloadBalances();
         this.balanceTotalService.loadCurrentTotalBalance();
         this.toastr.info('Record Updated Successfully!', 'Balance');
-        this.currentEditRecordId = null;
+        this.selectedBalance = null;
         this.isAddMode = false;
       });
     }
@@ -147,12 +146,11 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
     this.balances.unshift(newBalance);
     this.selectedBalance = newBalance;
-    this.currentEditRecordId = null;
     this.isAddMode = true;
   }
 
-  onAssetAdded(value) {
-    let asset = this.assetList.find(a => a.id == value);
+  onAssetChanged(assetId: string) {
+    let asset = this.assetList.find(a => a.id == assetId);
     let exchangeRate = this.exchangeRates.find(rate => rate.baseCurrency == asset.currency);
     this.selectedBalance.assetId = asset.id;
     this.selectedBalance.exchangeRateId = exchangeRate.id;
