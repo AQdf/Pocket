@@ -19,7 +19,7 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<IEnumerable<Balance>> AddEffectiveBalances(DateTime currentEffectiveDate);
 
-        Task<Balance> UpdateAsync(Guid userOpenId, Guid id, decimal value);
+        Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value);
 
         Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId);
 

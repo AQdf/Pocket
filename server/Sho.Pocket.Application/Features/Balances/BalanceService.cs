@@ -120,7 +120,7 @@ namespace Sho.Pocket.Application.Balances
 
         public async Task<BalanceViewModel> UpdateBalanceAsync(Guid userOpenId, Guid id, BalanceUpdateModel updateModel)
         {
-            Balance balance= await _balanceRepository.UpdateAsync(userOpenId, id, updateModel.Value);
+            Balance balance= await _balanceRepository.UpdateAsync(userOpenId, id, updateModel.AssetId, updateModel.Value);
             BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;

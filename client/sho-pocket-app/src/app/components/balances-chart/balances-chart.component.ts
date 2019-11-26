@@ -42,7 +42,7 @@ export class BalancesChartComponent implements OnInit {
         return;
       }
 
-      this.balanceChangeCharts = new Array(currenciesTotals.length);
+      this.balanceChangeCharts = new Array();
       currenciesTotals.forEach(c => this.balanceChangeCharts.push(this.createBalanceChangeChart(c)));
     });
   }
@@ -58,7 +58,7 @@ export class BalancesChartComponent implements OnInit {
         })  
     }
 
-    let effectiveDate = balances[0].effectiveDate;
+    let effectiveDate = new Date(balances[0].effectiveDate).toDateString();
 
     this.chart = new Chart({  
         chart: {  
@@ -66,7 +66,7 @@ export class BalancesChartComponent implements OnInit {
             plotBorderWidth: null,  
             plotShadow: false,  
             type: 'pie',  
-            backgroundColor: null,  
+            backgroundColor: "#f9f9f9",  
             options3d: {  
                 enabled: true,  
                 alpha: 45,  
@@ -75,7 +75,7 @@ export class BalancesChartComponent implements OnInit {
             height: 700
         },  
         title: {  
-            text: 'Latest balances',  
+            text: '',
         },  
         subtitle: {  
             text: effectiveDate  
@@ -118,10 +118,11 @@ export class BalancesChartComponent implements OnInit {
 
     return new Chart({  
         chart: {
+          backgroundColor: "#f9f9f9",
           type: 'line',
         },
         title: {
-            text: 'Balances change'
+            text: ''
         },
         subtitle: {
             text: currency

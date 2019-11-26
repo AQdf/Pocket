@@ -102,7 +102,7 @@ this.FeatureBackground();
 #line 11
  testRunner.Given("I have balance of asset Active asset, amount 200, day shift 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 12
-  testRunner.And("I set balance value to 1000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I set balance of asset Active asset value to 1000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 13
  testRunner.When("I update balance for today of Active asset", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 14

@@ -36,10 +36,11 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             StorageCleaner.Cleanup();
         }
 
-        [Given(@"I set balance value to (.*)")]
-        public void GivenISetBalanceValueTo(decimal value)
+        [Given(@"I set balance of asset (.*) value to (.*)")]
+        public void GivenISetBalanceValueTo(string assetName, decimal value)
         {
-            _balanceUpdateModel = new BalanceUpdateModel(value);
+            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            _balanceUpdateModel = new BalanceUpdateModel(asset.Id, value);
         }
         
         [When(@"I update balance for today of (.*)")]

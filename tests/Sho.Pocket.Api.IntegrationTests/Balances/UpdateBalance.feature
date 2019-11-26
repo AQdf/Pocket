@@ -9,6 +9,6 @@ Background:
 
 Scenario: User updates balance
 	Given I have balance of asset Active asset, amount 200, day shift 0
-		And I set balance value to 1000
+		And I set balance of asset Active asset value to 1000
 	When I update balance for today of Active asset
 	Then balance amount updated to 1000

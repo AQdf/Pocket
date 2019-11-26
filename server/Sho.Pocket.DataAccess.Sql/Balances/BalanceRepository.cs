@@ -114,11 +114,17 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
-        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, decimal value)
+        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateBalance.sql");
+            string queryText = @"
+                update Balance
+                set [Value] = @value, [AssetId] = @assetId
+                where Id = @id and UserOpenId = @userOpenId
 
-            object queryParameters = new { userOpenId, id, value };
+                select * from Balance
+                where Id = @id";
+
+            object queryParameters = new { userOpenId, id, assetId, value };
 
             return await base.UpdateEntity(queryText, queryParameters);
         }

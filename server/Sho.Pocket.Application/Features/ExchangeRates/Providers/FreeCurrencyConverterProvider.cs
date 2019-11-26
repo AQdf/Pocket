@@ -42,14 +42,14 @@ namespace Sho.Pocket.Application.ExchangeRates.Providers
             string apiKey = _apiKey;
             string code = $"{baseCurrency}_{counterCurrency}";
             string requestUri = $"{_uri}?q={code}&compact=ultra&apiKey={apiKey}";
-            string requestJson;
+            string json;
 
             using (HttpClient client = new HttpClient())
             {
-                requestJson = await client.GetStringAsync(requestUri);
+                json = await client.GetStringAsync(requestUri);
             }
 
-            Dictionary<string, decimal> jsonObject = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(requestJson);
+            Dictionary<string, decimal> jsonObject = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(json);
             decimal rate = jsonObject[code];
 
             ExchangeRateProviderModel result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, rate);

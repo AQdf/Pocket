@@ -42,7 +42,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("changes")]
-        public async Task<ActionResult<List<BalanceTotalChangeModel>>> GetUserBalanceChanges([FromQuery] int count = 10)
+        public async Task<ActionResult<List<BalanceTotalChangeModel>>> GetUserBalanceChanges([FromQuery] int count = 50)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
