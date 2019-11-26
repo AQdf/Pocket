@@ -8,5 +8,7 @@ namespace Sho.Pocket.Application.ExchangeRates.Abstractions
         List<ExchangeRateProviderOption> GetActiveProvidersOptions();
 
         IExchangeRateProvider GetProvider(ExchangeRateProviderOption providerSettings);
+
+        IExchangeRateProvider GetProvider(string providerName);
     }
 }

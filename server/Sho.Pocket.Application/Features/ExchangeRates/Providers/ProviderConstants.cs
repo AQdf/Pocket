@@ -9,5 +9,9 @@
         public const string FINANCE_UA_PROVIDER = "FinanceUa";
 
         public const string NBU_PROVIDER = "NBU";
+
+        public const string MONOBANK_PROVIDER = "Monobank";
+
+        public const string PRIVATBANK_PROVIDER = "Privatbank";
     }
 }

@@ -40,6 +40,18 @@ namespace Sho.Pocket.Application.ExchangeRates
             return result;
         }
 
+        public async Task<List<ExchangeRateProviderModel>> GetProviderExchangeRateAsync(Guid userOpenId, string providerName)
+        {
+            IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
+            List<string> currencies = currenciesEntities.Select(c => c.Name).ToList();
+            UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
+
+            IExchangeRateProvider provider = _exchangeRateProviderFactory.GetProvider(providerName);
+            IEnumerable<ExchangeRateProviderModel> result = await provider.FetchCurrencyRatesAsync(currencies, primaryCurrency.Currency);
+
+            return result.ToList();
+        }
+
         public async Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userOpenId, DateTime effectiveDate)
         {
             IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
