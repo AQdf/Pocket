@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Sho.Pocket.Domain.Entities
+﻿namespace Sho.Pocket.Domain.Entities
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
     }
 }

@@ -93,5 +93,19 @@ namespace Sho.Pocket.DataAccess.Sql.Assets
 
             return result;
         }
+
+        public async Task<Asset> GetByNameAsync(Guid userOpenId, string name)
+        {
+            string query = @"
+                SELECT [Id], [Name], [IsActive], [Currency]
+                FROM [dbo].[Asset]
+                WHERE [UserOpenId] = @userOpenId AND [Name] = @name";
+
+            object queryParams = new { userOpenId, name };
+
+            Asset result = await base.GetEntity(query, queryParams);
+
+            return result;
+        }
     }
 }

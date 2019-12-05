@@ -6,6 +6,7 @@ import { AssetsComponent } from './components/assets/assets.component'
 import { InventoryComponent } from './components/inventory/inventory.component'
 import { RegistrationComponent } from './components/users/registration/registration.component'
 import { LoginComponent } from './components/users/login/login.component'
+import { AssetComponent } from './components/assets/asset/asset.component';
 import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'balances', component: BalancesComponent, canActivate: [AuthGuard] },
   { path: 'assets', component: AssetsComponent, canActivate: [AuthGuard] },
+  { path: 'asset/:id', component: AssetComponent, canActivate: [AuthGuard] },
   { path: 'inventory', component: InventoryComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent }

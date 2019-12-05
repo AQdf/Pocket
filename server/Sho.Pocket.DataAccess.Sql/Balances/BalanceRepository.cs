@@ -154,6 +154,18 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
             return result;
         }
 
+        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        {
+            string queryText = @"
+                IF EXISTS (SELECT TOP 1 1 FROM [dbo].[Balance] WHERE [UserOpenId] = @userOpenId AND [EffectiveDate] = @effectiveDate)
+                SELECT 1 ELSE SELECT 0";
+
+            object queryParams = new { userOpenId, effectiveDate };
+            bool result = await base.Exists(queryText, queryParams);
+
+            return result;
+        }
+
         private async Task<IEnumerable<Balance>> GetAllWithRelatedEntities(string queryText, object queryParams = null)
         {
             IEnumerable<Balance> result;

@@ -35,6 +35,12 @@ namespace Sho.Pocket.DataAccess.Sql
 
         public void SeedStorageData()
         {
+            AddDefaultCurrencies();
+            AddSupportedBanks();
+        }
+
+        private void AddDefaultCurrencies()
+        {
             string queryText = @"
                 IF NOT EXISTS (select top 1 1 from [dbo].[Currency] where [Name] = @Name)
                 BEGIN
@@ -44,6 +50,20 @@ namespace Sho.Pocket.DataAccess.Sql
             using (IDbConnection db = new SqlConnection(DbConnectionString))
             {
                 db.Execute(queryText, _defaultCurrencies);
+            }
+        }
+
+        private void AddSupportedBanks()
+        {
+            string queryText = @"
+                IF NOT EXISTS (select top 1 1 from [dbo].[Bank] where [Name] = 'Monobank')
+                BEGIN
+                    INSERT INTO [dbo].[Bank] ([Name], [Country], [Active], [ApiUrl], [SyncFreqInSeconds]) VALUES ('Monobank', 'Ukraine', 1, NULL, NULL)
+                END";
+
+            using (IDbConnection db = new SqlConnection(DbConnectionString))
+            {
+                db.Execute(queryText);
             }
         }
     }

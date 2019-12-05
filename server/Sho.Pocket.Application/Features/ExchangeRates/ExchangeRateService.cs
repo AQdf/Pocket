@@ -75,7 +75,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         public async Task<ExchangeRateModel> AlterExchangeRateAsync(ExchangeRateModel model)
         {
-            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(model.EffectiveDate, model.BaseCurrency, model.CounterCurrency, model.Value);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.AlterAsync(model.EffectiveDate, model.BaseCurrency, model.CounterCurrency, model.Value);
             ExchangeRateModel result = new ExchangeRateModel(exchangeRate);
 
             return result;
@@ -115,7 +115,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
             foreach (ExchangeRateProviderModel rate in rates)
             {
-                var exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, rate.BaseCurrency, primaryCurrency, rate.Value);
+                var exchangeRate = await _exchangeRateRepository.AlterAsync(effectiveDate, rate.BaseCurrency, primaryCurrency, rate.Value);
                 var model = new ExchangeRateModel(exchangeRate);
                 result.Add(model);
             }

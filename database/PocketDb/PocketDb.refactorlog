@@ -84,4 +84,32 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Category" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0c1144ae-84a1-4c51-946f-a304abdd614b" ChangeDateTime="11/30/2019 19:44:23">
+    <Property Name="ElementName" Value="[dbo].[Bank].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Bank]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="da0b9dc9-545b-4c67-ab58-95fa1ec1fc8b" ChangeDateTime="11/30/2019 19:55:31">
+    <Property Name="ElementName" Value="[dbo].[UserBankAuthData].[BankId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[UserBankAuthData]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="BankName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c61113eb-1468-473e-ae75-c02a8b3d952c" ChangeDateTime="11/30/2019 20:15:05">
+    <Property Name="ElementName" Value="[dbo].[FK_AssetBankAccount_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[AssetBankAccount]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_AssetBankAccount_Asset]" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="c3407f32-0d8d-483f-b4d9-cac63eb42795" ChangeDateTime="12/01/2019 00:36:02">
+    <Property Name="ElementName" Value="[dbo].[FK_AssetBankAccount_ToTable]" />
+    <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
+    <Property Name="ParentElementName" Value="[dbo].[AssetBankAccount]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[FK_AssetBankAccount_UserBankAuthData]" />
+  </Operation>
 </Operations>

@@ -24,5 +24,7 @@ namespace Sho.Pocket.Core.DataAccess
         Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId);
 
         Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId);
+
+        Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate);
     }
 }

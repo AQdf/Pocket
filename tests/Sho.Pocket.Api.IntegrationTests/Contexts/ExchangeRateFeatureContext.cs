@@ -22,7 +22,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
         public async Task<ExchangeRate> AddExchangeRate(DateTime effectiveDate, string baseCurrency, string counterCurrency, int value)
         {
-            ExchangeRate exchangeRate = await _exchangeRateRepository.Alter(effectiveDate, baseCurrency, counterCurrency, value);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.AlterAsync(effectiveDate, baseCurrency, counterCurrency, value);
             ExchangeRates.Add(exchangeRate.Id, exchangeRate);
 
             return exchangeRate;

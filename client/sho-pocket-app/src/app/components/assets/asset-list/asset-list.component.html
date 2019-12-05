@@ -56,6 +56,9 @@
         <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
           <i class="fa fa-trash-o"></i>
         </button>
+        <a class="ml-1" [routerLink]="['/asset/', asset.id]">
+          <button type="button" class="btn btn-md btn-outline-info">Bank Sync</button>
+        </a>
       </div>
     </div>
 

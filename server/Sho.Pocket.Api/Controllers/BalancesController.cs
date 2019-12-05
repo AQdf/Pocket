@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -39,10 +39,10 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/balances
+        /// GET: api/balances/date
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{effectiveDate}")]
+        [HttpGet("date/{effectiveDate}")]
         public async Task<ActionResult<BalancesViewModel>> GetCurrentUserEffectiveBalances(DateTime effectiveDate)
         {
             UserViewModel user = await GetCurrentUserAsync();
@@ -120,8 +120,8 @@ namespace Sho.Pocket.Api.Controllers
         /// <summary>
         /// DELETE: api/balances/0E056948-4014-4A2A-A132-5493A8499B9A
         /// </summary>
-        /// <param name="Id"></param>
-        [HttpDelete("{Id}")]
+        /// <param name="id"></param>
+        [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Delete(Guid id)
         {
             UserViewModel user = await GetCurrentUserAsync();
@@ -173,21 +173,6 @@ namespace Sho.Pocket.Api.Controllers
             List<DateTime> result = await _balanceService.GetEffectiveDatesAsync(user.Id);
 
             return HandleResult(result);
-        }
-
-        [HttpGet("csv")]
-        public async Task<IActionResult> DownloadCsv()
-        {
-            UserViewModel user = await GetCurrentUserAsync();
-
-            if (user == null)
-            {
-                return HandleUserNotFoundResult();
-            }
-
-            byte[] bytes = await _balanceService.ExportUserBalancesToCsvAsync(user.Id);
-
-            return File(bytes, "application/csv");
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms'
-import { ToastrService } from 'ngx-toastr';   
+import { ToastrService } from 'ngx-toastr';
 
 import { AssetService } from '../../../services/asset.service';
 import { Asset } from '../../../models/asset.model'
@@ -14,7 +14,7 @@ export class AssetListComponent implements OnInit {
 
   constructor(public assetService : AssetService, private toastr : ToastrService) { }
   
-  assetList: Asset[]
+  assetList: Asset[];
   selectedAsset: Asset;
   currentEditRecordId: string;
   isAddMode: boolean;

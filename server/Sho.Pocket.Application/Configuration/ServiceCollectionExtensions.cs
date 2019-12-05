@@ -7,12 +7,17 @@ using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Application.Features.Balances;
+using Sho.Pocket.Application.Features.BankSync;
 using Sho.Pocket.Application.Inventory;
 using Sho.Pocket.Application.UserCurrencies;
+using Sho.Pocket.BankIntegration.Monobank;
+using Sho.Pocket.BankIntegration.Monobank.Abstractions;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
 using Sho.Pocket.DataAccess.Sql.Balances;
+using Sho.Pocket.DataAccess.Sql.Banks;
 using Sho.Pocket.DataAccess.Sql.Currencies;
 using Sho.Pocket.DataAccess.Sql.ExchangeRates;
 using Sho.Pocket.DataAccess.Sql.Inventory;
@@ -40,6 +45,9 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IUserCurrencyService, UserCurrencyService>();
 
             services.AddScoped<IAssetRepository, AssetRepository>();
+            services.AddScoped<IBankRepository, BankRepository>();
+            services.AddScoped<IUserBankAuthDataRepository, UserBankAuthDataRepository>();
+            services.AddScoped<IAssetBankAccountRepository, AssetBankAccountRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<IBalanceNoteRepository, BalanceNoteRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
@@ -47,6 +55,9 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IItemCategoryRepository, ItemCategoryRepository>();
             services.AddScoped<IUserCurrencyRepository, UserCurrencyRepository>();
+
+            services.AddScoped<IAccountBankSyncService, AccountBankSyncService>();
+            services.AddScoped<IMonobankAccountService, MonobankAccountService>();
 
             services.AddScoped<ICsvExporter, CsvExporter>();
         }

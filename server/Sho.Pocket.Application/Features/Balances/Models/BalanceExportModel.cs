@@ -4,13 +4,14 @@ namespace Sho.Pocket.Application.Balances.Models
 {
     public class BalanceExportModel
     {
-        public BalanceExportModel(DateTime effectiveDate, string asset, decimal value, string currency, decimal exchangeRate)
+        public BalanceExportModel(DateTime effectiveDate, string asset, decimal value, string currency, decimal exchangeRate, string counterCurrency)
         {
             EffectiveDate = effectiveDate;
             Asset = asset;
             Value = value;
             Currency = currency;
             ExchangeRate = exchangeRate;
+            CounterCurrency = counterCurrency;
         }
 
         public DateTime EffectiveDate { get; set; }
@@ -23,12 +24,6 @@ namespace Sho.Pocket.Application.Balances.Models
 
         public decimal ExchangeRate { get; set; }
 
-        public decimal DefaultCurrencyValue
-        {
-            get
-            {
-                return Value * ExchangeRate;
-            }
-        }
+        public string CounterCurrency { get; set; }
     }
 }

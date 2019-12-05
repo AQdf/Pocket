@@ -1,9 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
-import { NgForm } from '@angular/forms'
-import { ToastrService } from 'ngx-toastr';   
+import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 import { AssetService } from '../../../services/asset.service';
+import { BankSyncService } from '../../../services/bank-sync.service';
 import { Asset } from '../../../models/asset.model';
+import { ActivatedRoute } from '@angular/router';
+import { BankAccount } from '../../../models/bank-account';
+import { AssetBankAccount } from '../../../models/asset-bank-account';
 
 @Component({
   selector: 'app-asset',
@@ -13,54 +16,83 @@ import { Asset } from '../../../models/asset.model';
 export class AssetComponent implements OnInit {
 
   constructor(
-    public assetService : AssetService,
-    private toastr : ToastrService,
-    protected changeDetectorRef: ChangeDetectorRef) { }
+    private assetService : AssetService,
+    private bankSyncService : BankSyncService,
+    private activeRouter : ActivatedRoute,
+    private toastr : ToastrService) { }
 
-  selectedAsset: Asset;
-  assetList: Asset[];
+    id: string = null;
+    asset: Asset;
+    banksList: string[];
+    selectedBank: string;
+    token: string;
+    authDataSubmitted: boolean = false;
+    isConnected: boolean = false;
+    bankAccountsList: BankAccount[];
+    selectedAccount: BankAccount;
 
   ngOnInit() {
-    this.assetService.getCurrenciesList();
-    this.resetForm();
+    this.id = this.activeRouter.snapshot.params['id'];
+    this.initBanksLookup();
+    this.initAsset();
+    this.initAssetBankAccount();
   }
 
-  resetForm(form?: NgForm) {
-    if (form != null) {
-      form.reset();
-      this.changeDetectorRef.detectChanges();
-    }
+  initAsset() {
+    this.assetService.getAsset(this.id).subscribe((result: Asset) => {
+      this.asset = result;
+    })
+  }
 
-    this.selectedAsset = {
-      id: null,
-      name: '',
-      currency: '',
-      isActive: true,
-    }
+  initBanksLookup() {
+    this.bankSyncService.getBanksList().subscribe((response: string[]) => {
+      this.banksList = response;
+    });
   }
- 
-  onSubmit(form: NgForm) {
-    if (form.value.id == null) {
-      this.assetService.postAsset(form.value)
-      .subscribe((asset: Asset) => {
-        this.assetList.unshift(asset);
-        this.toastr.success('New Record Added Succcessfully', 'Asset');
-        this.resetForm(form);
-      });
-    }
-    else {
-      this.assetService.putAsset(form.value.id, form.value)
-      .subscribe((asset: Asset) => {
-        if(asset) {
-          var listIndex = this.assetList.findIndex(a => a.id === asset.id);
-          this.assetList[listIndex] = asset;
-          this.toastr.success('Updated Successfully!', 'Asset');
-          this.resetForm(form);
-        } else {
-          this.toastr.error('Update failed! Possibly, cannot update asset currency because balance for asset exists', 'Asset');
-        }
-      });
-    }
+
+  initAssetBankAccount() {
+    this.bankSyncService.getAssetBankSyncData(this.id).subscribe((account: AssetBankAccount) => {
+      if (account) {
+        this.authDataSubmitted = true;
+        this.selectedBank = account.bankName;
+        this.token = account.tokenMask;
+        this.selectedAccount = new BankAccount();
+        this.selectedAccount.name = account.bankAccountName;
+        this.bankAccountsList = [
+          this.selectedAccount
+        ];
+        this.isConnected = true;
+      }
+    });
   }
-  
+
+  onBankFormSubmit(form: any) {
+    this.bankSyncService.submitBankClientAuthData(this.selectedBank, this.token).subscribe((response: BankAccount[]) => {
+      this.authDataSubmitted = true;
+      this.bankAccountsList = response;
+    });
+  }
+
+  onAccountFormSubmit(form: any) {
+    this.bankSyncService.connectAccount(this.id, this.selectedBank, this.selectedAccount).subscribe(success => {
+      if (success) {
+        this.isConnected = true;
+        this.toastr.success('Asset was successfully connected to bank account.', 'Bank sync.');
+      }
+    });
+  }
+
+  disconnectAccount() {
+    this.bankSyncService.disconnectAccount(this.id).subscribe(success => {
+      if (success) {
+        this.selectedBank = null;
+        this.token = null;
+        this.authDataSubmitted = false;
+        this.isConnected = false
+        this.bankAccountsList = null;
+        this.selectedAccount = null;
+        this.toastr.success('Asset was disconnected from bank account.', 'Bank sync.');
+      }
+    });
+  }
 }

@@ -9,6 +9,8 @@ namespace Sho.Pocket.Core.DataAccess
     {
         Task<Asset> GetByIdAsync(Guid userOpenId, Guid id);
 
+        Task<Asset> GetByNameAsync(Guid userOpenId, string name);
+
         Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId);
 
         Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive);

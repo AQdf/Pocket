@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpEventType } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 
 import { environment } from '../../environments/environment';
@@ -22,7 +22,7 @@ export class BalanceService extends BaseService {
   }
 
   getBalanceList(effectiveDate: string) {
-    return this.http.get(balancesApiUrl + effectiveDate, this.getDefaultOptions());
+    return this.http.get(balancesApiUrl + 'date/' + effectiveDate, this.getDefaultOptions());
   }
 
   getBalance(id: string) {
@@ -56,11 +56,11 @@ export class BalanceService extends BaseService {
     return this.http.post(balancesApiUrl + 'template', emptyBody, this.getDefaultOptions());
   }
 
-  downloadCsv(effectiveDate: string) {
+  exportAllCsv(effectiveDate: string) {
     let headers = new HttpHeaders({ 'Content-Type': 'blob' });
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    this.http.get(balancesApiUrl + 'csv', { headers, responseType: 'blob' })
+    this.http.get(balancesApiUrl + 'export/csv', { headers, responseType: 'blob' })
     .subscribe(response => {
       if (response) {
         var currentDate = new Date(effectiveDate);
@@ -72,6 +72,36 @@ export class BalanceService extends BaseService {
         return response;
       }
     });
+  }
+
+  exportJson(effectiveDate: string) {
+    let headers = new HttpHeaders({ 'Content-Type': 'blob' });
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    this.http.get(balancesApiUrl + 'export/json/' + effectiveDate, { headers, responseType: 'blob' })
+    .subscribe(response => {
+      if (response) {
+        var currentDate = new Date(effectiveDate);
+        var day = currentDate.getDate();
+        var month = monthNames[currentDate.getMonth()];
+        var year = currentDate.getFullYear();
+        let name = 'Balances_' + day + '_' + month + '_' + year + '.json';
+        saveAs(response, name);
+        return response;
+      }
+    });
+  }
+
+  importJson(files: File[]) {
+    if (files.length === 0) {
+      return;
+    }
+ 
+    let fileToUpload = <File>files[0];
+    const formData = new FormData();
+    formData.append('file', fileToUpload, fileToUpload.name);
+ 
+    return this.http.post(balancesApiUrl + 'import/json', formData, {reportProgress: true, observe: 'events'});
   }
 
   reload() {

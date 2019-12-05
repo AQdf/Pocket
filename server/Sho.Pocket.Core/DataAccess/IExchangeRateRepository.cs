@@ -7,7 +7,7 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IExchangeRateRepository
     {
-        Task<ExchangeRate> Alter(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate);
+        Task<ExchangeRate> AlterAsync(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate);
 
         Task<ExchangeRate> Update(Guid id, decimal rate);
 

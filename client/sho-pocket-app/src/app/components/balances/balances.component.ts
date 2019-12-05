@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { BalanceService } from '../../services/balance.service';
 import { BalancesTotalService } from '../../services/balances-total.service';
 import { ResponseError } from '../../models/response-error.model';
+import { HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-balances',
@@ -40,7 +41,7 @@ export class BalancesComponent implements OnInit {
     this.selectedEffectiveDate = effectiveDate;
   }
 
-  reload(event: any) {
+  reload() {
     this.loadEffectiveDates();
   }
 
@@ -58,7 +59,23 @@ export class BalancesComponent implements OnInit {
     });
   }
 
-  downloadCsv() {
-    this.balanceService.downloadCsv(this.selectedEffectiveDate);
+  exportToCsv() {
+    this.balanceService.exportAllCsv(this.selectedEffectiveDate);
+  }
+
+  exportToJson() {
+    this.balanceService.exportJson(this.selectedEffectiveDate);
+  }
+
+  importJson(files: File[]) {
+    this.balanceService.importJson(files).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        //this.progress = Math.round(100 * event.loaded / event.total);
+      }
+      else if (event.type === HttpEventType.Response) {
+        this.toastr.success('Balances successfully imported.', 'Balance');
+        this.reload();
+      }
+    });
   }
 }

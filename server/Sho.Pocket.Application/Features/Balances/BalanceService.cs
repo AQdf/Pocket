@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.DataExport;
@@ -145,13 +146,52 @@ namespace Sho.Pocket.Application.Balances
             IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userOpenId);
 
             List<BalanceExportModel> items = balances
-                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.Currency, b.ExchangeRate.Rate))
+                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.Currency, b.ExchangeRate.Rate, b.ExchangeRate.CounterCurrency))
                 .ToList();
 
             string csv = _csvExporter.ExportToCsv(items);
-            byte[] bytes = Encoding.ASCII.GetBytes(csv);
+            byte[] bytes = Encoding.Default.GetBytes(csv);
 
             return bytes;
+        }
+
+        public async Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate)
+        {
+            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
+
+            List<BalanceExportModel> items = balances
+                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.Currency, b.ExchangeRate.Rate, b.ExchangeRate.CounterCurrency))
+                .ToList();
+
+            string csv = JsonConvert.SerializeObject(items);
+            byte[] bytes = Encoding.Default.GetBytes(csv);
+
+            return bytes;
+        }
+
+        public async Task ImportJsonAsync(Guid userOpenId, string jsonData)
+        {
+            List<BalanceExportModel> items = JsonConvert.DeserializeObject<List<BalanceExportModel>>(jsonData);
+            IEnumerable<IGrouping<DateTime, BalanceExportModel>> efeectiveDateGroup = items.GroupBy(i => i.EffectiveDate);
+
+            foreach (IGrouping<DateTime, BalanceExportModel> group in efeectiveDateGroup)
+            {
+                bool exists = await _balanceRepository.ExistsEffectiveDateBalancesAsync(userOpenId, group.Key);
+
+                if (!exists)
+                {
+                    foreach (BalanceExportModel item in group)
+                    {
+                        Asset asset = await _assetRepository.GetByNameAsync(userOpenId, item.Asset);
+
+                        if (asset != null)
+                        {
+                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.ExchangeRate);
+                            Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.Value, rate.Id);
+                        }
+                    }
+                }
+            }
         }
 
         private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, DateTime latestEffectiveDate, DateTime effectiveDate)

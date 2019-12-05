@@ -24,5 +24,9 @@ namespace Sho.Pocket.Application.Balances
         Task<List<DateTime>> GetEffectiveDatesAsync(Guid userOpenId);
 
         Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId);
+
+        Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate);
+
+        Task ImportJsonAsync(Guid userOpenId, string jsonData);
     }
 }

@@ -1,22 +1,33 @@
 <div class="row bg-light mb-3 pt-2 pb-2 border rounded" [hidden]="!selectedEffectiveDate">
   <div class="col-auto">
-    <button type="button" class="btn btn-md btn-info" (click)="addBalances()">
-      Add balances
-    </button>
-  </div>
-  <div class="col-auto">
-    <button type="button" class="btn btn-md btn-info" (click)="downloadCsv()">
-      Download
-    </button>
-  </div>
-  <div class="col-auto">
-    <select class="form-control" placeholder="Date" required
-      [(ngModel)]="selectedEffectiveDate" (change)="this.onDateChange($event.target.value)">
+    <select class="form-control" placeholder="Date" required [(ngModel)]="selectedEffectiveDate"
+      (change)="this.onDateChange($event.target.value)">
       <option *ngFor="let effectiveDate of effectiveDatesList" value={{effectiveDate}}>
         {{effectiveDate | date:'mediumDate'}}
       </option>
     </select>
   </div>
+  <div class="col-auto">
+    <button type="button" class="btn btn-md btn-info" (click)="addBalances()">
+      Add balances
+    </button>
+  </div>
+  <div class="col-auto">
+    <button type="button" class="btn btn-md btn-info" (click)="exportToCsv()">
+      Export
+    </button>
+  </div>
+  <div class="col-auto">
+    <button type="button" class="btn btn-md btn-info" (click)="exportToJson()">
+      Export JSON
+    </button>
+  </div>
+  <div class="col-auto">
+    <div class="upload-btn-wrapper">
+      <button class="btn btn-md btn-info">Import JSON</button>
+      <input type="file" class="custom-file-input" style="content: Import JSON;" #file placeholder="Import JSON" (change)="importJson(file.files)">
+    </div>
+  </div>
 </div>
 
-<app-balance-list [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload($event)"></app-balance-list>
+<app-balance-list [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload()"></app-balance-list>

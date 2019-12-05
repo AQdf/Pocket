@@ -14,7 +14,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public async Task<ExchangeRate> Alter(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate)
+        public async Task<ExchangeRate> AlterAsync(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "AlterExchangeRate.sql");
 
