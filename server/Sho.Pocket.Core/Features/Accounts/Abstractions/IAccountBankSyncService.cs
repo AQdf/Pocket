@@ -1,4 +1,5 @@
-﻿using Sho.Pocket.Core.Features.Accounts.Models;
+﻿using Sho.Pocket.Core.BankIntegration.Models;
+using Sho.Pocket.Core.Features.Accounts.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace Sho.Pocket.Core.Features.BankAccounts.Abstractions
         Task<bool> ConnectAssetWithBankAcountAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId);
 
         Task<bool> DisconnectAssetWithBankAcountAsync(Guid userId, Guid assetId);
+
+        Task<BankAccountBalance> GetBankAccountBalanceAsync(Guid userId, Guid assetId);
     }
 }

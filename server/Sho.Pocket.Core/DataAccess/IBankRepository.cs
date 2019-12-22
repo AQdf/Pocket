@@ -7,5 +7,7 @@ namespace Sho.Pocket.Core.DataAccess
     public interface IBankRepository
     {
         Task<IEnumerable<Bank>> GetSupportedBanksAsync();
+
+        Task<Bank> GetBankAsync(string name);
     }
 }

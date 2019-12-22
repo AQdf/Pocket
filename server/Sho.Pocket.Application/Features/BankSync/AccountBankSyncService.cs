@@ -71,7 +71,7 @@ namespace Sho.Pocket.Application.Features.BankSync
             if (accountBalances != null)
             {
                 UserBankAuthData authData = await _userBankAuthDataRepository.AlterAsync(userId, bankName, token);
-                result = accountBalances.Select(a => GetBankAccount(a, bankName, authData.Id)).ToList();
+                result = accountBalances.Select(a => new BankAccount(authData.Id, a.AccountId, a.AccountName)).ToList();
             }
             else
             {
@@ -102,18 +102,30 @@ namespace Sho.Pocket.Application.Features.BankSync
             return true;
         }
 
-        private BankAccount GetBankAccount(BankAccountBalance accountBalance, string bankName, Guid authDataId)
+        public async Task<BankAccountBalance> GetBankAccountBalanceAsync(Guid userId, Guid assetId)
         {
-            string accountName = $"{bankName}: {accountBalance.Balance} {accountBalance.Currency}";
-
-            BankAccount result = new BankAccount
+            try
             {
-                AuthDataId = authDataId,
-                Id = accountBalance.AccountId,
-                Name = accountName
-            };
+                BankAccountBalance accountBalance = null;
+                AssetBankAccount assetBankAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
+                UserBankAuthData authData = await _userBankAuthDataRepository.GetAsync(userId, assetBankAccount.UserBankAuthDataId);
+                Bank bank = await _bankRepository.GetBankAsync(authData.BankName);
+                TimeSpan syncSpan = DateTime.UtcNow - assetBankAccount.LastSyncDateTime;
 
-            return result;
+                if (syncSpan.TotalSeconds > bank.SyncFreqInSeconds)
+                {
+                    List<BankAccountBalance> accountBalances = await _monobankAccountService.GetClientAccountsInfoAsync(authData.Token);
+                    accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
+
+                    await _assetBankAccountRepository.UpdateAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
+                }
+
+                return accountBalance;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Bank account not found.");
+            }
         }
 
         private string GetMaskedToken(string token)

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
@@ -9,6 +11,26 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
     {
         public AssetBankAccountRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
         {
+        }
+
+        public async Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId)
+        {
+            const string queryText = @"
+                SELECT [AssetBankAccount].[Id] AS Id,
+                    [AssetBankAccount].[AssetId] AS AssetId,
+                    [AssetBankAccount].[BankName] AS BankName,
+                    [AssetBankAccount].[BankAccountId] AS BankAccountId,
+                    [AssetBankAccount].[LastSyncDateTime] AS LastSyncDateTime,
+                    [AssetBankAccount].[UserBankAuthDataId] AS UserBankAuthDataId,
+                    [AssetBankAccount].[BankAccountName] AS BankAccountName
+                FROM [dbo].[AssetBankAccount]
+                LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+                WHERE [Asset].[UserOpenId] = @userId";
+
+            object queryParams = new { userId };
+            IEnumerable<AssetBankAccount> result = await base.GetEntities(queryText, queryParams);
+
+            return result.ToList();
         }
 
         public async Task<AssetBankAccount> CreateAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId)
@@ -55,6 +77,31 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
 
             object queryParams = new { userId, assetId };
             await base.DeleteEntity(queryText, queryParams);
+        }
+
+        public async Task<AssetBankAccount> UpdateAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string bankAccountName)
+        {
+            const string queryText = @"
+                DECLARE @assetBankAccountId UNIQUEIDENTIFIER = (
+	                SELECT [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
+	                LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[Id] = @assetId AND [Asset].[UserOpenId] = @userId)
+
+                IF (@assetBankAccountId IS NOT NULL)
+                BEGIN
+	                UPDATE [dbo].[AssetBankAccount]
+	                SET [LastSyncDateTime] = @lastSyncDateTime, [BankAccountName] = @bankAccountName
+	                WHERE [AssetId] = @assetId
+
+	                SELECT * FROM [dbo].[AssetBankAccount]
+	                WHERE [Id] = @assetBankAccountId
+                END";
+
+            object queryParams = new { userId, assetId, lastSyncDateTime, bankAccountName };
+
+            AssetBankAccount result = await base.UpdateEntity(queryText, queryParams);
+
+            return result;
         }
     }
 }

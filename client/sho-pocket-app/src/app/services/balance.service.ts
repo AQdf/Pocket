@@ -12,7 +12,6 @@ const balancesApiUrl = environment.baseApiUrl + 'balances/';
   providedIn: 'root'
 })
 export class BalanceService extends BaseService {
-
   constructor(public http: HttpClient) {
     super();
   }
@@ -41,6 +40,11 @@ export class BalanceService extends BaseService {
     };
     var body = JSON.stringify(updateModel);
     return this.http.put(balancesApiUrl + id, body, this.getDefaultOptions());
+  }
+
+  syncBankAccountBalance(id: string) {
+    var emptyBody = JSON.stringify({});
+    return this.http.put(balancesApiUrl + 'sync/' + id, emptyBody,this.getDefaultOptions());
   }
 
   deleteBalance(id: string) {

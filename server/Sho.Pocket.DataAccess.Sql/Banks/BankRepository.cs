@@ -22,5 +22,14 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
 
             return result;
         }
+
+        public async Task<Bank> GetBankAsync(string name)
+        {
+            const string queryText = @"SELECT * FROM [dbo].[Bank] WHERE [Name] = @name";
+            object queryParams = new { name };
+            Bank result = await base.GetEntity(queryText, queryParams);
+
+            return result;
+        }
     }
 }

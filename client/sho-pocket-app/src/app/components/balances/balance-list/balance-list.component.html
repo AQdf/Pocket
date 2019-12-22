@@ -61,6 +61,9 @@
             <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(balance.id)">
               <i class="fa fa-trash-o"></i>
             </button>
+            <button type="button" *ngIf="balance.isBankAccount" class="btn btn-outline-info ml-3" (click)="onBankAccountSync(balance.id)">
+              <i class="fa fa-refresh"></i>
+            </button>
           </div>
         </div>
 

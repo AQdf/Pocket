@@ -108,32 +108,31 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
   onSubmit(form: NgForm) {
     if (form.value.id === null) {
-      this.balanceService.postBalance(this.selectedBalance)
-        .subscribe(() => {
-          this.reloadBalances();
-          this.balanceTotalService.loadCurrentTotalBalance();
+      this.balanceService.postBalance(this.selectedBalance).subscribe(() => {
+          this.afterSubmit();
           this.toastr.success('New Record Added Succcessfully', 'Balance');
-          this.selectedBalance = null;
-          this.isAddMode = false;
         });
     }
     else {
-      this.balanceService.putBalance(form.value.id, this.selectedBalance)
-      .subscribe(() => {
-        this.reloadBalances();
-        this.balanceTotalService.loadCurrentTotalBalance();
+      this.balanceService.putBalance(form.value.id, this.selectedBalance).subscribe(() => {
+        this.afterSubmit();
         this.toastr.info('Record Updated Successfully!', 'Balance');
-        this.selectedBalance = null;
-        this.isAddMode = false;
       });
     }
+  }
+
+  afterSubmit() {
+    this.reloadBalances();
+    this.balanceTotalService.loadCurrentTotalBalance();
+    this.selectedBalance = null;
+    this.isAddMode = false;
   }
 
   addBalance() {
     var balanceDate = this.effectiveDate;
     var formattedDate = balanceDate.substring(0, balanceDate.indexOf('T'));
 
-    let newBalance =  {
+    let newBalance: Balance =  {
       id: null,
       effectiveDate: formattedDate,
       value: 0.0,
@@ -141,7 +140,8 @@ export class BalanceListComponent implements OnInit, OnChanges {
       exchangeRateId: '',
       exchangeRateValue: 0.0,
       defaultCurrencyValue: 0.0,
-      asset: null
+      asset: null,
+      isBankAccount: false
     }
 
     this.balances.unshift(newBalance);
@@ -164,6 +164,13 @@ export class BalanceListComponent implements OnInit, OnChanges {
         this.balanceTotalService.loadCurrentTotalBalance();
         this.toastr.success('Exchange rate applied', 'Balance');
       }
+    });
+  }
+
+  onBankAccountSync(balanceId: string) {
+    this.balanceService.syncBankAccountBalance(balanceId).subscribe(() => {
+      this.afterSubmit();
+      this.toastr.info('Record Synced Successfully!', 'Balance');
     });
   }
 }

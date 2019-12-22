@@ -28,5 +28,7 @@ namespace Sho.Pocket.Application.Balances
         Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate);
 
         Task ImportJsonAsync(Guid userOpenId, string jsonData);
+
+        Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id);
     }
 }

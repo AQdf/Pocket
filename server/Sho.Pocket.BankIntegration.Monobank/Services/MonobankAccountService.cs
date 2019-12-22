@@ -5,7 +5,6 @@ using Sho.Pocket.BankIntegration.Monobank.Models;
 using Sho.Pocket.Core.BankIntegration.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -47,24 +46,21 @@ namespace Sho.Pocket.BankIntegration.Monobank
             var currencyCodeConverter = new ISO4217CurrencyCodeConverter();
             List<BankAccountBalance> result = new List<BankAccountBalance>();
 
-            int number = 1;
-
             foreach (MonobankAccount account in userInfo.Accounts)
             {
+                decimal balance = (decimal)account.Balance / 100;
                 string currency = currencyCodeConverter.GetCurrencyName(account.CurrencyCode.ToString());
+                string name = GetFriendlyMonobankAccountName(balance, currency);
 
-                result.Add(new BankAccountBalance
-                {
-                    AccountId = account.Id,
-                    AccountName = $"{_bankName} {currency} {number}",
-                    Balance = (decimal)account.Balance / 100,
-                    Currency = currency
-                });
-
-                number++;
+                result.Add(new BankAccountBalance(_bankName, account.Id, name, currency, balance));
             }
 
             return result;
+        }
+
+        private string GetFriendlyMonobankAccountName(decimal balance, string currency)
+        {
+            return $"{_bankName}: {balance} {currency}";
         }
     }
 }

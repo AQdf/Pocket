@@ -174,5 +174,25 @@ namespace Sho.Pocket.Api.Controllers
 
             return HandleResult(result);
         }
+
+        /// <summary>
+        /// PUT: api/balances/sync/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// </summary>
+        /// <param name="id"></param>   
+        /// <returns></returns>
+        [HttpPut("sync/{id}")]
+        public async Task<ActionResult<BalanceViewModel>> SyncBankAccountBalance(Guid id)
+        {
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            BalanceViewModel result = await _balanceService.SyncBankAccountBalanceAsync(user.Id, id);
+
+            return HandleResult(result);
+        }
     }
 }

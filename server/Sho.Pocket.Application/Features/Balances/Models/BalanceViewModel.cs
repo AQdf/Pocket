@@ -65,5 +65,7 @@ namespace Sho.Pocket.Application.Balances.Models
         }
 
         public AssetViewModel Asset { get; set; }
+
+        public bool IsBankAccount { get; set; }
     }
 }

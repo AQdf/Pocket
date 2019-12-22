@@ -10,7 +10,9 @@ using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Core.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
@@ -19,24 +21,30 @@ namespace Sho.Pocket.Application.Balances
     {
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
+        private readonly IAssetBankAccountRepository _assetBankAccountRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
+        private readonly IAccountBankSyncService _accountBankSyncService;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
+            IAssetBankAccountRepository assetBankAccountRepository,
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
+            IAccountBankSyncService accountBankSyncService,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
+            _assetBankAccountRepository = assetBankAccountRepository;
             _exchangeRateRepository = exchangeRateRepository;
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
+            _accountBankSyncService = accountBankSyncService;
             _csvExporter = balanceExporter;
         }
 
@@ -60,8 +68,10 @@ namespace Sho.Pocket.Application.Balances
 
             List<BalanceViewModel> items = balances
                 .Select(b => new BalanceViewModel(b))
-                .OrderBy(i => i.Asset.Name)
+                .OrderBy(i => i.Asset.Currency)
                 .ToList();
+
+            PopulateIsBankAccountFieldAsync(userOpenId, items);
 
             IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
             List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
@@ -194,6 +204,26 @@ namespace Sho.Pocket.Application.Balances
             }
         }
 
+        public async Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id)
+        {
+            BalanceViewModel balanceViewModel;
+            Balance balance = await _balanceRepository.GetByIdAsync(userOpenId, id);
+
+            BankAccountBalance bankAccountBalance = await _accountBankSyncService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+
+            if (bankAccountBalance != null)
+            {
+                Balance updatedBalance = await _balanceRepository.UpdateAsync(userOpenId, id, balance.AssetId, bankAccountBalance.Balance);
+                balanceViewModel = new BalanceViewModel(updatedBalance);
+            }
+            else
+            {
+                balanceViewModel = new BalanceViewModel(balance);
+            }
+
+            return balanceViewModel;
+        }
+
         private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, DateTime latestEffectiveDate, DateTime effectiveDate)
         {
             IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
@@ -237,6 +267,21 @@ namespace Sho.Pocket.Application.Balances
             }
 
             return result;
+        }
+
+        private async Task PopulateIsBankAccountFieldAsync(Guid userId, List<BalanceViewModel> items)
+        {
+            IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userId);
+
+            foreach (AssetBankAccount bankAccount in bankAccounts)
+            {
+                BalanceViewModel balance = items.FirstOrDefault(i => i.AssetId == bankAccount.AssetId);
+
+                if (balance != null)
+                {
+                    balance.IsBankAccount = true;
+                }
+            }
         }
     }
 }
