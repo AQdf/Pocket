@@ -6,7 +6,7 @@ namespace Sho.Pocket.Core.BankIntegration
 {
     public interface IBankAccountService
     {
-        Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(string token);
+        Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData);
 
         Task<string> GetClientAccountExctractAsync(string token);
     }

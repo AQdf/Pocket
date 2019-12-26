@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.BankIntegration.Monobank\Sho.Pocket.BankIntegration.Monobank.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.BankIntegration.PrivatBank\Sho.Pocket.BankIntegration.Privatbank.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
     <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />

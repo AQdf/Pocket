@@ -11,7 +11,7 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
         {
         }
 
-        public async Task<UserBankAuthData> AlterAsync(Guid userId, string bankName, string token)
+        public async Task<UserBankAuthData> AlterAsync(Guid userId, string bankName, string token, string bankClientId)
         {
             string queryText = @"
                 DECLARE @id uniqueidentifier = (
@@ -21,13 +21,13 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
                 IF @id IS NULL
 	                BEGIN
 		                SET @id = NEWID();
-                        INSERT INTO [dbo].[UserBankAuthData] ([Id], [UserId], [BankName], [Token])
-                        VALUES (@id, @userId, @bankName, @token)
+                        INSERT INTO [dbo].[UserBankAuthData] ([Id], [UserId], [BankName], [Token], [BankClientId])
+                        VALUES (@id, @userId, @bankName, @token, @bankClientId)
 	                END
                 ELSE
 	                BEGIN
 		                UPDATE [dbo].[UserBankAuthData]
-		                SET [BankName] = @bankName, [Token] = @token
+		                SET [BankName] = @bankName, [Token] = @token, [BankClientId] = @bankClientId
 		                WHERE [Id] = @id
 	                END
 
@@ -38,7 +38,8 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
             {
                 userId,
                 bankName,
-                token
+                token,
+                bankClientId
             };
 
             UserBankAuthData result = await base.InsertEntity(queryText, queryParameters);

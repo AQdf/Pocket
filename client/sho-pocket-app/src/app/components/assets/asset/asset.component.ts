@@ -26,6 +26,8 @@ export class AssetComponent implements OnInit {
     banksList: string[];
     selectedBank: string;
     token: string;
+    bankClientId: string;
+    cardNumber: string;
     authDataSubmitted: boolean = false;
     isConnected: boolean = false;
     bankAccountsList: BankAccount[];
@@ -67,7 +69,8 @@ export class AssetComponent implements OnInit {
   }
 
   onBankFormSubmit(form: any) {
-    this.bankSyncService.submitBankClientAuthData(this.selectedBank, this.token).subscribe((response: BankAccount[]) => {
+    this.bankSyncService.submitBankClientAuthData(this.selectedBank, this.token, this.bankClientId, this.cardNumber).subscribe((response: BankAccount[]) => {
+      console.log(response[0].name);
       this.authDataSubmitted = true;
       this.bankAccountsList = response;
     });
@@ -87,6 +90,8 @@ export class AssetComponent implements OnInit {
       if (success) {
         this.selectedBank = null;
         this.token = null;
+        this.bankClientId = null;
+        this.cardNumber = null;
         this.authDataSubmitted = false;
         this.isConnected = false
         this.bankAccountsList = null;

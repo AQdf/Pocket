@@ -40,14 +40,13 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
                 DECLARE @authDataId uniqueidentifier = (SELECT [Id] FROM [dbo].[UserBankAuthData] WHERE [UserId] = @userId AND [BankName] = @bankName)
 
                 INSERT INTO [dbo].[AssetBankAccount] ([Id], [AssetId], [BankName], [BankAccountId], [LastSyncDateTime], [UserBankAuthDataId], [BankAccountName])
-                VALUES (@id, @assetId, @bankName, @bankAccountId, @currentDate, @authDataId, @accountName)
+                VALUES (@id, @assetId, @bankName, @bankAccountId, NULL, @authDataId, @accountName)
 
                 SELECT [Id], [Id], [AssetId], [BankName], [BankAccountId], [LastSyncDateTime]
                 FROM [dbo].[AssetBankAccount]
                 WHERE [Id] = @id";
 
-            DateTime currentDate = DateTime.UtcNow;
-            object queryParams = new { userId, assetId, bankName, bankAccountId, accountName, currentDate };
+            object queryParams = new { userId, assetId, bankName, bankAccountId, accountName };
             AssetBankAccount result = await base.InsertEntity(queryText, queryParams);
 
             return result;

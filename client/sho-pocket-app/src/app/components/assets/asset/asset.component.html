@@ -13,8 +13,8 @@
   <div class="col-md-5 p-3 bg-light border rounded">
     <form #bankForm="ngForm" (ngSubmit)="onBankFormSubmit(bankForm)">
 
-      <div class="form-group row">
-        <label for="bankName" class="col-md-3 col-form-label">Bank</label>
+      <div class="form-group row required">
+        <label for="bankName" class="col-md-3 col-form-label control-label">Bank</label>
         <div class="col-md-6">
           <select id="bankName" [disabled]="isConnected" class="form-control" name="BankName" #BankName="ngModel" [(ngModel)]="selectedBank"
             placeholder="Bank" required>
@@ -26,10 +26,24 @@
         </div>
       </div>
 
-      <div class="form-group row">
-        <label for="token" class="col-md-3 col-form-label">Access Token</label>
+      <div class="form-group row required">
+        <label for="token" class="col-md-3 col-form-label control-label">Access token</label>
         <div class="col-md-6">
-          <input name="Token" [disabled]="isConnected" class="form-control" placeholder="Token" #Token="ngModel" [(ngModel)]="token" required>
+          <input name="Token" [disabled]="isConnected" class="form-control" #Token="ngModel" [(ngModel)]="token" required>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="token" class="col-md-3 col-form-label control-label">Bank client id</label>
+        <div class="col-md-6">
+          <input name="BankClientId" [disabled]="isConnected" class="form-control" #BankClientId="ngModel" [(ngModel)]="bankClientId">
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="token" class="col-md-3 col-form-label control-label">Card number</label>
+        <div class="col-md-6">
+          <input name="CardNumber" [disabled]="isConnected" class="form-control" #CardNumber="ngModel" [(ngModel)]="cardNumber">
         </div>
       </div>
 

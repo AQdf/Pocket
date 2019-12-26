@@ -72,7 +72,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<BankAccount> result = await _accountBankSyncService.SubmitBankClientAuthDataAsync(user.Id, authData.BankName, authData.Token);
+            List<BankAccount> result = await _accountBankSyncService.SubmitBankClientAuthDataAsync(user.Id, authData.BankName, authData.Token, authData.BankClientId, authData.CardNumber);
 
             return Ok(result);
         }

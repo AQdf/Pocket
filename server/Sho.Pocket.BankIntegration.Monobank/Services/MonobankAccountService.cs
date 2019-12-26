@@ -16,7 +16,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
 
         private readonly string _bankApiUrl = "https://api.monobank.ua/";
 
-        public async Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(string token)
+        public async Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData)
         {
             string requestUri = _bankApiUrl + "personal/client-info";
             List<BankAccountBalance> result;
@@ -24,7 +24,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
             using (HttpClient client = new HttpClient())
             {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-                request.Headers.Add("X-Token", token);
+                request.Headers.Add("X-Token", clientData.Token);
 
                 HttpResponseMessage response = await client.SendAsync(request);
                 string content = await response.Content.ReadAsStringAsync();
@@ -50,7 +50,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
             {
                 decimal balance = (decimal)account.Balance / 100;
                 string currency = currencyCodeConverter.GetCurrencyName(account.CurrencyCode.ToString());
-                string name = GetFriendlyMonobankAccountName(balance, currency);
+                string name = GetFriendlyAccountName(balance, currency);
 
                 result.Add(new BankAccountBalance(_bankName, account.Id, name, currency, balance));
             }
@@ -58,7 +58,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
             return result;
         }
 
-        private string GetFriendlyMonobankAccountName(decimal balance, string currency)
+        private string GetFriendlyAccountName(decimal balance, string currency)
         {
             return $"{_bankName}: {balance} {currency}";
         }

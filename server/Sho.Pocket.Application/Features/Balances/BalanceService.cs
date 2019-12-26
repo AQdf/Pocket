@@ -71,7 +71,10 @@ namespace Sho.Pocket.Application.Balances
                 .OrderBy(i => i.Asset.Currency)
                 .ToList();
 
-            PopulateIsBankAccountFieldAsync(userOpenId, items);
+            if (effectiveDate == DateTime.UtcNow.Date)
+            {
+                await PopulateIsBankAccountFieldAsync(userOpenId, items);
+            }
 
             IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
             List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
@@ -228,13 +231,22 @@ namespace Sho.Pocket.Application.Balances
         {
             IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
             List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
-
+            IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userOpenId);
             List<BalanceViewModel> result = new List<BalanceViewModel>();
 
             foreach (Balance balance in latestBalances)
             {
                 ExchangeRateModel balanceExchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == balance.Asset.Currency);
-                Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, balance.Value, balanceExchangeRate.Id);
+
+                decimal value = balance.Value;
+
+                if (bankAccounts.Any(ba => ba.AssetId == balance.AssetId))
+                {
+                    BankAccountBalance bankAccountBalance = await _accountBankSyncService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+                    value = bankAccountBalance.Balance;
+                }
+
+                Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);
 
                 var assetModel = new AssetViewModel(balance.Asset);
                 var model = new BalanceViewModel(newBalance, balanceExchangeRate, assetModel);

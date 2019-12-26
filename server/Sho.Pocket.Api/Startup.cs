@@ -46,6 +46,10 @@ namespace Sho.Pocket.Api
 
             GlobalSettings globalSettings = new GlobalSettings();
             ConfigurationBinder.Bind(Configuration.GetSection(nameof(GlobalSettings)), globalSettings);
+
+            // Refactor this
+            globalSettings.DbConnectionString = Configuration.GetConnectionString("DbConnectionString");
+            globalSettings.UsersDbConnectionString = Configuration.GetConnectionString("UsersDbConnectionString");
             services.AddSingleton(s => globalSettings);
 
             services.Configure<ExchangeRateSettings>(Configuration.GetSection(nameof(ExchangeRateSettings)));
