@@ -46,12 +46,11 @@ namespace Sho.Pocket.Application.DataExport
         {
             List<string> propertyValues = new List<string>();
 
-            foreach (var prop in properties)
+            foreach (PropertyInfo prop in properties)
             {
-                string stringformatString = string.Empty;
                 string value = prop.Name;
+                Attribute attribute = prop.GetCustomAttribute(typeof(DisplayAttribute));
 
-                var attribute = prop.GetCustomAttribute(typeof(DisplayAttribute));
                 if (attribute != null)
                 {
                     value = (attribute as DisplayAttribute).Name;
@@ -67,9 +66,8 @@ namespace Sho.Pocket.Application.DataExport
         {
             List<string> propertyValues = new List<string>();
 
-            foreach (var prop in properties)
+            foreach (PropertyInfo prop in properties)
             {
-                string stringformatString = string.Empty;
                 object value = prop.GetValue(item, null);
 
                 if (prop.PropertyType == typeof(string))

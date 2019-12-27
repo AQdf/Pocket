@@ -117,7 +117,7 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
             await base.DeleteEntity(queryText, queryParams);
         }
 
-        public async Task<AssetBankAccount> UpdateLatsSyncAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string bankAccountName)
+        public async Task<AssetBankAccount> UpdateLastSyncAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string bankAccountName)
         {
             const string queryText = @"
                 DECLARE @assetBankAccountId UNIQUEIDENTIFIER = (

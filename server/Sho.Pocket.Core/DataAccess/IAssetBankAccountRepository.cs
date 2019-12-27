@@ -17,9 +17,6 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task DeleteAsync(Guid userId, Guid assetId);
 
-        Task<AssetBankAccount> UpdateLatsSyncAsync(Guid userId, Guid id, DateTime lastSyncDateTime, string bankAccountName);
-
-
-
+        Task<AssetBankAccount> UpdateLastSyncAsync(Guid userId, Guid id, DateTime lastSyncDateTime, string bankAccountName);
     }
 }

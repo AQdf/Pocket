@@ -18,8 +18,6 @@ namespace Sho.Pocket.Api.Controllers
 
         private readonly IRegistrationService _registrationService;
 
-        private readonly IAuthService _authService;
-
         private readonly IUserCurrencyService _userCurrencyService;
 
         private readonly string _defaultCurrency;
@@ -27,13 +25,11 @@ namespace Sho.Pocket.Api.Controllers
         public UsersController(
             ILoginService loginService,
             IRegistrationService registrationService,
-            IAuthService authService,
             IUserCurrencyService userCurrencyService,
             GlobalSettings settings)
         {
             _loginService = loginService;
             _registrationService = registrationService;
-            _authService = authService;
             _userCurrencyService = userCurrencyService;
 
             _defaultCurrency = settings.DefaultCurrency;

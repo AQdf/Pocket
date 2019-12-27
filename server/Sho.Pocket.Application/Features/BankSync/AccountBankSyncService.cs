@@ -98,7 +98,7 @@ namespace Sho.Pocket.Application.Features.BankSync
                     List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
                     accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
 
-                    await _assetBankAccountRepository.UpdateLatsSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
+                    await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
                 }
 
                 return accountBalance;

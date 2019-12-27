@@ -14,11 +14,9 @@ namespace Sho.Pocket.Application.Features.ExchangeRates.Providers
     {
         public string ProviderName { get { return ProviderConstants.PRIVATBANK_PROVIDER; } }
 
-        private const decimal DEFAULT_VALUE = 0.0M;
-
         private readonly string _uri;
 
-        private readonly string[] courceIds = new string[] { "4", "5" }; // 5 - main currencies, 4 - secondary currencies
+        private readonly string[] courceIds = new string[] { "4", "5" }; // 4 - secondary currencies, 5 - main currencies
 
         public PrivatbankProvider(ExchangeRateProviderOption settings)
         {
