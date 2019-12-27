@@ -25,7 +25,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
-        private readonly IAccountBankSyncService _accountBankSyncService;
+        private readonly IBankAccountSyncService _accountBankSyncService;
         private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
@@ -35,7 +35,7 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
-            IAccountBankSyncService accountBankSyncService,
+            IBankAccountSyncService accountBankSyncService,
             ICsvExporter balanceExporter)
         {
             _balanceRepository = balanceRepository;

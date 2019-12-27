@@ -1,14 +1,14 @@
 ﻿using Sho.Pocket.Core.BankIntegration.Models;
-using Sho.Pocket.Core.Features.Accounts.Models;
+using Sho.Pocket.Core.Features.BankAccounts.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Sho.Pocket.Core.Features.BankAccounts.Abstractions
 {
-    public interface IAccountBankSyncService
+    public interface IBankAccountSyncService
     {
-        Task<AssetBankSyncData> GetAssetBankAccountAsync(Guid userId, Guid assetId);
+        Task<AssetBankAccountViewModel> GetAssetBankAccountAsync(Guid userId, Guid assetId);
 
         Task<List<string>> GetSupportedBanksAsync();
 

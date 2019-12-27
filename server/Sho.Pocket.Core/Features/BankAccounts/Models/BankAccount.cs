@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sho.Pocket.Core.Features.Accounts.Models
+﻿namespace Sho.Pocket.Core.Features.BankAccounts.Models
 {
     public class BankAccount
     {

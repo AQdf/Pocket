@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Sho.Pocket.Core.BankIntegration;
 using Sho.Pocket.Core.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.Accounts.Models;
 using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.BankSync
 {
-    public class AccountBankSyncService : IAccountBankSyncService
+    public class AccountBankSyncService : IBankAccountSyncService
     {
         private readonly IBankAccountServiceResolver _bankAccountServiceResolver;
 
@@ -29,21 +29,12 @@ namespace Sho.Pocket.Application.Features.BankSync
             _assetBankAccountRepository = assetBankAccountRepository;
         }
 
-        public async Task<AssetBankSyncData> GetAssetBankAccountAsync(Guid userId, Guid assetId)
+        public async Task<AssetBankAccountViewModel> GetAssetBankAccountAsync(Guid userId, Guid assetId)
         {
             AssetBankAccount assetBankAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
-            AssetBankSyncData result = null;
-
-            if (assetBankAccount != null)
-            {
-                result = new AssetBankSyncData
-                {
-                    AssetId = assetId,
-                    BankAccountName = assetBankAccount.BankAccountName,
-                    BankName = assetBankAccount.BankName,
-                    TokenMask = GetMaskedToken(assetBankAccount.Token)
-                };
-            }
+            AssetBankAccountViewModel result = assetBankAccount != null 
+                ? new AssetBankAccountViewModel(assetBankAccount) 
+                : null;
 
             return result;
         }
@@ -116,14 +107,6 @@ namespace Sho.Pocket.Application.Features.BankSync
             {
                 throw new Exception("Bank account not found.");
             }
-        }
-
-        private string GetMaskedToken(string token)
-        {
-            string visiblePart = token.Substring(0, 4);
-            string maskedPart = new string('*', token.Length - 4);
-
-            return $"{visiblePart}{maskedPart}";
         }
     }
 }

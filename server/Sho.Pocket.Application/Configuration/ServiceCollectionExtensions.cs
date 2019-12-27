@@ -57,7 +57,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IItemCategoryRepository, ItemCategoryRepository>();
             services.AddScoped<IUserCurrencyRepository, UserCurrencyRepository>();
-            services.AddScoped<IAccountBankSyncService, AccountBankSyncService>();
+            services.AddScoped<IBankAccountSyncService, AccountBankSyncService>();
             services.AddScoped<IBankAccountServiceResolver, BankAccountServiceResolver>();
             services.AddScoped<ICsvExporter, CsvExporter>();
 
