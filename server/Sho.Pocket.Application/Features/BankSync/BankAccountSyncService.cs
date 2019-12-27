@@ -11,7 +11,7 @@ using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.BankSync
 {
-    public class AccountBankSyncService : IBankAccountSyncService
+    public class BankAccountSyncService : IBankAccountSyncService
     {
         private readonly IBankAccountServiceResolver _bankAccountServiceResolver;
 
@@ -19,7 +19,7 @@ namespace Sho.Pocket.Application.Features.BankSync
 
         private readonly IAssetBankAccountRepository _assetBankAccountRepository;
 
-        public AccountBankSyncService(
+        public BankAccountSyncService(
             IBankAccountServiceResolver bankAccountServiceResolver,
             IBankRepository bankRepository,
             IAssetBankAccountRepository assetBankAccountRepository)
