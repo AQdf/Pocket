@@ -2,7 +2,7 @@
 
 namespace Sho.Pocket.Api.Models
 {
-    public class AssetBankAccountCreateRequest
+    public class AssetBankAccountUpdateRequest
     {
         public Guid AssetId { get; set; }
 

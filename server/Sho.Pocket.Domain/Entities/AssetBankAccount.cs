@@ -14,8 +14,10 @@ namespace Sho.Pocket.Domain.Entities
 
         public DateTime LastSyncDateTime { get; set; }
 
-        public Guid UserBankAuthDataId { get; set; }
-
         public string BankAccountName { get; set; }
+
+        public string Token { get; set; }
+
+        public string BankClientId { get; set; }
     }
 }

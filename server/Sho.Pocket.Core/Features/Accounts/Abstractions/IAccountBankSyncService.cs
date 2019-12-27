@@ -12,7 +12,7 @@ namespace Sho.Pocket.Core.Features.BankAccounts.Abstractions
 
         Task<List<string>> GetSupportedBanksAsync();
 
-        Task<List<BankAccount>> SubmitBankClientAuthDataAsync(Guid userId, string bankName, string token, string bankClientId, string cardNumber);
+        Task<List<BankAccount>> SubmitBankClientAuthDataAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId, string cardNumber);
 
         Task<bool> ConnectAssetWithBankAcountAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId);
 

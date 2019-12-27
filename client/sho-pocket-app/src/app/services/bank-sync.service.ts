@@ -24,8 +24,9 @@ export class BankSyncService extends BaseService {
     return this.http.get(bankSyncApiUrl + 'banks-lookup/', this.getDefaultOptions());
   }
 
-  submitBankClientAuthData(bankName: string, token: string, bankClientId: string, cardNumber: string) {
+  submitBankClientAuthData(bankName: string, id: string, token: string, bankClientId: string, cardNumber: string) {
     let body = JSON.stringify({
+      assetId: id,
       bankName: bankName,
       token: token,
       bankClientId: bankClientId,
@@ -34,10 +35,9 @@ export class BankSyncService extends BaseService {
     return this.http.post(bankSyncApiUrl + 'auth/', body, this.getDefaultOptions());
   }
 
-  connectAccount(assetId: string, bankName: string, account: BankAccount) {
+  connectAccount(assetId: string, account: BankAccount) {
     let body = JSON.stringify({
       assetId: assetId,
-      bankName: bankName,
       bankAccountId: account.id,
       accountName: account.name
     });

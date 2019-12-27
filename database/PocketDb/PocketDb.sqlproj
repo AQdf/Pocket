@@ -70,7 +70,6 @@
     <Build Include="UserCurrency.sql" />
     <Build Include="BalanceNote.sql" />
     <Build Include="Bank.sql" />
-    <Build Include="UserBankAuthData.sql" />
     <Build Include="AssetBankAccount.sql" />
   </ItemGroup>
   <ItemGroup>

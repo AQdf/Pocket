@@ -21,8 +21,9 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
                     [AssetBankAccount].[BankName] AS BankName,
                     [AssetBankAccount].[BankAccountId] AS BankAccountId,
                     [AssetBankAccount].[LastSyncDateTime] AS LastSyncDateTime,
-                    [AssetBankAccount].[UserBankAuthDataId] AS UserBankAuthDataId,
-                    [AssetBankAccount].[BankAccountName] AS BankAccountName
+                    [AssetBankAccount].[BankAccountName] AS BankAccountName,
+                    [AssetBankAccount].[Token] AS Token,
+                    [AssetBankAccount].[BankClientId] AS BankClientId
                 FROM [dbo].[AssetBankAccount]
                 LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
                 WHERE [Asset].[UserOpenId] = @userId";
@@ -33,21 +34,59 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
             return result.ToList();
         }
 
-        public async Task<AssetBankAccount> CreateAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId)
+        public async Task<AssetBankAccount> AlterAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId)
+        {
+            string queryText = @"
+                DECLARE @id uniqueidentifier = (
+	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
+                    LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[UserOpenId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
+
+                IF @id IS NULL
+	                BEGIN
+		                SET @id = NEWID();
+                        INSERT INTO [dbo].[AssetBankAccount] ([Id], [AssetId], [BankName], [Token], [BankClientId])
+                        VALUES (@id, @assetId, @bankName, @token, @bankClientId)
+	                END
+                ELSE
+	                BEGIN
+		                UPDATE [dbo].[AssetBankAccount]
+		                SET [AssetId] = @assetId, [BankName] = @bankName, [Token] = @token, [BankClientId] = @bankClientId
+		                WHERE [Id] = @id
+	                END
+
+                SELECT * FROM [dbo].[AssetBankAccount] WHERE [Id] = @id";
+
+            object queryParameters = new
+            {
+                userId,
+                assetId,
+                bankName,
+                token,
+                bankClientId
+            };
+
+            AssetBankAccount result = await base.InsertEntity(queryText, queryParameters);
+
+            return result;
+        }
+
+        public async Task<AssetBankAccount> UpdateAccountAsync(Guid userId, Guid assetId, string accountName, string bankAccountId)
         {
             const string queryText = @"
-                DECLARE @id uniqueidentifier = NEWID()
-                DECLARE @authDataId uniqueidentifier = (SELECT [Id] FROM [dbo].[UserBankAuthData] WHERE [UserId] = @userId AND [BankName] = @bankName)
+                DECLARE @id uniqueidentifier = (
+	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
+                    LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[UserOpenId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
 
-                INSERT INTO [dbo].[AssetBankAccount] ([Id], [AssetId], [BankName], [BankAccountId], [LastSyncDateTime], [UserBankAuthDataId], [BankAccountName])
-                VALUES (@id, @assetId, @bankName, @bankAccountId, NULL, @authDataId, @accountName)
+		        UPDATE [dbo].[AssetBankAccount]
+		        SET [BankAccountName] = @accountName, [BankAccountId] = @bankAccountId
+		        WHERE [Id] = @id
 
-                SELECT [Id], [Id], [AssetId], [BankName], [BankAccountId], [LastSyncDateTime]
-                FROM [dbo].[AssetBankAccount]
-                WHERE [Id] = @id";
+                SELECT * FROM [dbo].[AssetBankAccount] WHERE [Id] = @id";
 
-            object queryParams = new { userId, assetId, bankName, bankAccountId, accountName };
-            AssetBankAccount result = await base.InsertEntity(queryText, queryParams);
+            object queryParams = new { userId, assetId, accountName, bankAccountId };
+            AssetBankAccount result = await base.UpdateEntity(queryText, queryParams);
 
             return result;
         }
@@ -78,7 +117,7 @@ namespace Sho.Pocket.DataAccess.Sql.Banks
             await base.DeleteEntity(queryText, queryParams);
         }
 
-        public async Task<AssetBankAccount> UpdateAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string bankAccountName)
+        public async Task<AssetBankAccount> UpdateLatsSyncAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string bankAccountName)
         {
             const string queryText = @"
                 DECLARE @assetBankAccountId UNIQUEIDENTIFIER = (

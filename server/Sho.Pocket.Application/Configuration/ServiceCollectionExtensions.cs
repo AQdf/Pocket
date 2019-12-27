@@ -49,7 +49,6 @@ namespace Sho.Pocket.Application.Configuration
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBankRepository, BankRepository>();
-            services.AddScoped<IUserBankAuthDataRepository, UserBankAuthDataRepository>();
             services.AddScoped<IAssetBankAccountRepository, AssetBankAccountRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<IBalanceNoteRepository, BalanceNoteRepository>();

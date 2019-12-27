@@ -9,12 +9,17 @@ namespace Sho.Pocket.Core.DataAccess
     {
         Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId);
 
-        Task<AssetBankAccount> CreateAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId);
-
         Task<AssetBankAccount> GetAsync(Guid userId, Guid assetId);
+
+        Task<AssetBankAccount> AlterAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId);
+
+        Task<AssetBankAccount> UpdateAccountAsync(Guid userId, Guid assetId, string accountName, string bankAccountId);
 
         Task DeleteAsync(Guid userId, Guid assetId);
 
-        Task<AssetBankAccount> UpdateAsync(Guid userId, Guid id, DateTime lastSyncDateTime, string bankAccountName);
+        Task<AssetBankAccount> UpdateLatsSyncAsync(Guid userId, Guid id, DateTime lastSyncDateTime, string bankAccountName);
+
+
+
     }
 }

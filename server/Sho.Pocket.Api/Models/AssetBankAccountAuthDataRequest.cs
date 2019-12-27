@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace Sho.Pocket.Domain.Entities
+namespace Sho.Pocket.Api.Models
 {
-    public class UserBankAuthData : BaseEntity
+    public class AssetBankAccountAuthDataRequest
     {
-        public Guid Id { get; set; }
-
-        public Guid UserId { get; set; }
+        public Guid AssetId { get; set; }
 
         public string BankName { get; set; }
 
         public string Token { get; set; }
 
         public string BankClientId { get; set; }
+
+        public string CardNumber { get; set; }
     }
 }

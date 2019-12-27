@@ -17,19 +17,15 @@ namespace Sho.Pocket.Application.Features.BankSync
 
         private readonly IBankRepository _bankRepository;
 
-        private readonly IUserBankAuthDataRepository _userBankAuthDataRepository;
-
         private readonly IAssetBankAccountRepository _assetBankAccountRepository;
 
         public AccountBankSyncService(
             IBankAccountServiceResolver bankAccountServiceResolver,
             IBankRepository bankRepository,
-            IUserBankAuthDataRepository userBankAuthDataRepository,
             IAssetBankAccountRepository assetBankAccountRepository)
         {
             _bankAccountServiceResolver = bankAccountServiceResolver;
             _bankRepository = bankRepository;
-            _userBankAuthDataRepository = userBankAuthDataRepository;
             _assetBankAccountRepository = assetBankAccountRepository;
         }
 
@@ -40,14 +36,12 @@ namespace Sho.Pocket.Application.Features.BankSync
 
             if (assetBankAccount != null)
             {
-                UserBankAuthData authData = await _userBankAuthDataRepository.GetAsync(userId, assetBankAccount.UserBankAuthDataId);
-
                 result = new AssetBankSyncData
                 {
                     AssetId = assetId,
                     BankAccountName = assetBankAccount.BankAccountName,
                     BankName = assetBankAccount.BankName,
-                    TokenMask = GetMaskedToken(authData.Token)
+                    TokenMask = GetMaskedToken(assetBankAccount.Token)
                 };
             }
 
@@ -62,7 +56,7 @@ namespace Sho.Pocket.Application.Features.BankSync
             return result;
         }
 
-        public async Task<List<BankAccount>> SubmitBankClientAuthDataAsync(Guid userId, string bankName, string token, string bankClientId, string cardNumber)
+        public async Task<List<BankAccount>> SubmitBankClientAuthDataAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId, string cardNumber)
         {
             //TODO: Catch errors. Verify if token is correct and then save it to database. Encrypt this token.
             BankClientData clientData = new BankClientData(token, bankClientId, cardNumber);
@@ -72,8 +66,8 @@ namespace Sho.Pocket.Application.Features.BankSync
 
             if (accountBalances != null)
             {
-                UserBankAuthData authData = await _userBankAuthDataRepository.AlterAsync(userId, bankName, token, bankClientId);
-                result = accountBalances.Select(a => new BankAccount(authData.Id, a.AccountId, a.AccountName)).ToList();
+                AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
+                result = accountBalances.Select(a => new BankAccount(a.AccountId, a.AccountName)).ToList();
             }
             else
             {
@@ -85,14 +79,7 @@ namespace Sho.Pocket.Application.Features.BankSync
 
         public async Task<bool> ConnectAssetWithBankAcountAsync(Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId)
         {
-            AssetBankAccount existingAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
-
-            if (existingAccount != null)
-            {
-                await _assetBankAccountRepository.DeleteAsync(userId, assetId);
-            }
-
-            await _assetBankAccountRepository.CreateAsync(userId, assetId, bankName, accountName, bankAccountId);
+            await _assetBankAccountRepository.UpdateAccountAsync(userId, assetId, accountName, bankAccountId);
 
             return true;
         }
@@ -110,18 +97,17 @@ namespace Sho.Pocket.Application.Features.BankSync
             {
                 BankAccountBalance accountBalance = null;
                 AssetBankAccount assetBankAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
-                UserBankAuthData authData = await _userBankAuthDataRepository.GetAsync(userId, assetBankAccount.UserBankAuthDataId);
-                Bank bank = await _bankRepository.GetBankAsync(authData.BankName);
+                Bank bank = await _bankRepository.GetBankAsync(assetBankAccount.BankName);
                 TimeSpan syncSpan = DateTime.UtcNow - assetBankAccount.LastSyncDateTime;
 
                 if (syncSpan.TotalSeconds > bank.SyncFreqInSeconds)
                 {
-                    IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(authData.BankName);
-                    BankClientData clientData = new BankClientData(authData.Token, authData.BankClientId, assetBankAccount.BankAccountId);
+                    IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(assetBankAccount.BankName);
+                    BankClientData clientData = new BankClientData(assetBankAccount.Token, assetBankAccount.BankClientId, assetBankAccount.BankAccountId);
                     List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
                     accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
 
-                    await _assetBankAccountRepository.UpdateAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
+                    await _assetBankAccountRepository.UpdateLatsSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
                 }
 
                 return accountBalance;
