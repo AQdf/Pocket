@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.BankIntegration.Monobank.Common
+namespace Sho.Pocket.BankIntegration.Monobank.Utils
 {
     internal class ISO4217CurrencyCodeConverter
     {

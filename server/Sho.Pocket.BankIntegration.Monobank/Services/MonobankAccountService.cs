@@ -1,20 +1,20 @@
 ﻿using Newtonsoft.Json;
-using Sho.Pocket.BankIntegration.Monobank.Abstractions;
-using Sho.Pocket.BankIntegration.Monobank.Common;
 using Sho.Pocket.BankIntegration.Monobank.Models;
+using Sho.Pocket.BankIntegration.Monobank.Utils;
+using Sho.Pocket.Core.BankIntegration.Abstractions;
 using Sho.Pocket.Core.BankIntegration.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.BankIntegration.Monobank
+namespace Sho.Pocket.BankIntegration.Monobank.Services
 {
-    public class MonobankAccountService : IMonobankAccountService
+    public class MonobankAccountService : IBankAccountService
     {
-        private const string _bankName = "Monobank";
+        public string BankName => "Monobank";
 
-        private readonly string _bankApiUrl = "https://api.monobank.ua/";
+        private const string _bankApiUrl = "https://api.monobank.ua/";
 
         public async Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData)
         {
@@ -52,7 +52,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
                 string currency = currencyCodeConverter.GetCurrencyName(account.CurrencyCode.ToString());
                 string name = GetFriendlyAccountName(balance, currency);
 
-                result.Add(new BankAccountBalance(_bankName, account.Id, name, currency, balance));
+                result.Add(new BankAccountBalance(BankName, account.Id, name, currency, balance));
             }
 
             return result;
@@ -60,7 +60,7 @@ namespace Sho.Pocket.BankIntegration.Monobank
 
         private string GetFriendlyAccountName(decimal balance, string currency)
         {
-            return $"{_bankName}: {balance} {currency}";
+            return $"{BankName}: {balance} {currency}";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core.BankIntegration
+﻿namespace Sho.Pocket.Core.BankIntegration.Abstractions
 {
     public interface IBankAccountServiceResolver
     {

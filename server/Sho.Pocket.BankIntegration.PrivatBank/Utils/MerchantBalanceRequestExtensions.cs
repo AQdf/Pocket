@@ -3,7 +3,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Sho.Pocket.BankIntegration.Privatbank.Common
+namespace Sho.Pocket.BankIntegration.Privatbank.Utils
 {
     internal static class MerchantBalanceRequestExtensions
     {

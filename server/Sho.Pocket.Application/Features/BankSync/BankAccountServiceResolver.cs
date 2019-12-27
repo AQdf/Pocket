@@ -1,37 +1,29 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Core.BankIntegration;
-using Sho.Pocket.BankIntegration.Monobank.Abstractions;
-using Sho.Pocket.BankIntegration.Privatbank.Abstractions;
+using System.Linq;
+using System.Collections.Generic;
+using Sho.Pocket.Core.BankIntegration.Abstractions;
 
 namespace Sho.Pocket.Application.Features.BankSync
 {
     public class BankAccountServiceResolver : IBankAccountServiceResolver
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEnumerable<IBankAccountService> _bankAccountServices;
 
-        public BankAccountServiceResolver(IServiceProvider serviceProvider)
+        public BankAccountServiceResolver(IEnumerable<IBankAccountService> bankAccountServices)
         {
-            _serviceProvider = serviceProvider;
+            _bankAccountServices = bankAccountServices;
         }
 
         public IBankAccountService Resolve(string bankName)
         {
-            switch (bankName)
+            IBankAccountService service = _bankAccountServices.FirstOrDefault(s => s.BankName.Equals(bankName, StringComparison.OrdinalIgnoreCase));
+
+            if (service == null)
             {
-                case BankNameConstants.MONOBANK:
-                {
-                    return _serviceProvider.GetService<IMonobankAccountService>();
-                }
-                case BankNameConstants.PRIVATBANK:
-                {
-                    return _serviceProvider.GetService<IPrivatbankAccountService>();
-                }
-                default:
-                {
-                    throw new Exception("Bank is not supported");
-                }
+                throw new Exception("Bank Account Service is not supported");
             }
+
+            return service;
         }
     }
 }

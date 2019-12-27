@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sho.Pocket.Core.BankIntegration;
+using Sho.Pocket.Core.BankIntegration.Abstractions;
 using Sho.Pocket.Core.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
@@ -15,18 +15,18 @@ namespace Sho.Pocket.Application.Features.BankSync
     {
         private readonly IBankAccountServiceResolver _bankAccountServiceResolver;
 
-        private readonly IBankRepository _bankRepository;
-
         private readonly IAssetBankAccountRepository _assetBankAccountRepository;
+
+        private readonly IBankRepository _bankRepository;
 
         public BankAccountSyncService(
             IBankAccountServiceResolver bankAccountServiceResolver,
-            IBankRepository bankRepository,
-            IAssetBankAccountRepository assetBankAccountRepository)
+            IAssetBankAccountRepository assetBankAccountRepository,
+            IBankRepository bankRepository)
         {
             _bankAccountServiceResolver = bankAccountServiceResolver;
-            _bankRepository = bankRepository;
             _assetBankAccountRepository = assetBankAccountRepository;
+            _bankRepository = bankRepository;
         }
 
         public async Task<AssetBankAccountViewModel> GetAssetBankAccountAsync(Guid userId, Guid assetId)
@@ -53,17 +53,14 @@ namespace Sho.Pocket.Application.Features.BankSync
             BankClientData clientData = new BankClientData(token, bankClientId, cardNumber);
             IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(bankName);
             List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
-            List<BankAccount> result = new List<BankAccount>();
 
-            if (accountBalances != null)
-            {
-                AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
-                result = accountBalances.Select(a => new BankAccount(a.AccountId, a.AccountName)).ToList();
-            }
-            else
+            if (accountBalances == null)
             {
                 throw new Exception($"Sync with bank {bankName} failed.");
             }
+
+            AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
+            List<BankAccount> result = accountBalances.Select(a => new BankAccount(a.AccountId, a.AccountName)).ToList();
 
             return result;
         }
@@ -84,29 +81,28 @@ namespace Sho.Pocket.Application.Features.BankSync
 
         public async Task<BankAccountBalance> GetBankAccountBalanceAsync(Guid userId, Guid assetId)
         {
-            try
-            {
-                BankAccountBalance accountBalance = null;
-                AssetBankAccount assetBankAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
-                Bank bank = await _bankRepository.GetBankAsync(assetBankAccount.BankName);
-                TimeSpan syncSpan = DateTime.UtcNow - assetBankAccount.LastSyncDateTime;
+            AssetBankAccount assetBankAccount = await _assetBankAccountRepository.GetAsync(userId, assetId);
 
-                if (syncSpan.TotalSeconds > bank.SyncFreqInSeconds)
-                {
-                    IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(assetBankAccount.BankName);
-                    BankClientData clientData = new BankClientData(assetBankAccount.Token, assetBankAccount.BankClientId, assetBankAccount.BankAccountId);
-                    List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
-                    accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
-
-                    await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
-                }
-
-                return accountBalance;
-            }
-            catch (Exception)
+            if (assetBankAccount == null)
             {
                 throw new Exception("Bank account not found.");
             }
+
+            Bank bank = await _bankRepository.GetBankAsync(assetBankAccount.BankName);
+            TimeSpan syncSpan = DateTime.UtcNow - assetBankAccount.LastSyncDateTime;
+            BankAccountBalance accountBalance = null;
+
+            if (syncSpan.TotalSeconds > bank.SyncFreqInSeconds)
+            {
+                IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(assetBankAccount.BankName);
+                BankClientData clientData = new BankClientData(assetBankAccount.Token, assetBankAccount.BankClientId, assetBankAccount.BankAccountId);
+                List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
+                accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
+
+                await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
+            }
+
+            return accountBalance;
         }
     }
 }

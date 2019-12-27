@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Sho.Pocket.BankIntegration.Privatbank.Abstractions;
 using Sho.Pocket.Core.BankIntegration.Models;
 using System.Net.Http;
 using System.Text;
-using Sho.Pocket.BankIntegration.Privatbank.Common;
 using System;
 using System.Xml;
+using Sho.Pocket.BankIntegration.Privatbank.Utils;
+using Sho.Pocket.Core.BankIntegration.Abstractions;
 
 namespace Sho.Pocket.BankIntegration.Privatbank.Services
 {
-    public class PrivatbankAccountService : IPrivatbankAccountService
+    public class PrivatbankAccountService : IBankAccountService
     {
-        private const string _bankName = "Privatbank";
+        public string BankName => "Privatbank";
 
-        private readonly string _bankApiUrl = "https://api.privatbank.ua/p24api/";
+        private const string _bankApiUrl = "https://api.privatbank.ua/p24api/";
 
         public async Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData)
         {
@@ -108,7 +108,7 @@ namespace Sho.Pocket.BankIntegration.Privatbank.Services
             if (!string.IsNullOrWhiteSpace(accountId) && !string.IsNullOrWhiteSpace(currency) && parsed)
             {
                 accountName = !string.IsNullOrWhiteSpace(accountName) ? accountName : GetFriendlyAccountName(value, currency);
-                BankAccountBalance accountBalance = new BankAccountBalance(_bankName, accountId, accountName, currency, value);
+                BankAccountBalance accountBalance = new BankAccountBalance(BankName, accountId, accountName, currency, value);
                 result.Add(accountBalance);
             }
 
@@ -117,7 +117,7 @@ namespace Sho.Pocket.BankIntegration.Privatbank.Services
 
         private string GetFriendlyAccountName(decimal balance, string currency)
         {
-            return $"{_bankName}: {balance} {currency}";
+            return $"{BankName}: {balance} {currency}";
         }
     }
 }

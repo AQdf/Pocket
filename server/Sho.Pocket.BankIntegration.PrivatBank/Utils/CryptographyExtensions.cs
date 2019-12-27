@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Sho.Pocket.BankIntegration.Privatbank.Common
+namespace Sho.Pocket.BankIntegration.Privatbank.Utils
 {
     public static class CryptographyExtensions
     {
