@@ -5,11 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sho.Pocket.BankIntegration.Monobank\Sho.BankIntegration.Monobank.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.BankIntegration.PrivatBank\Sho.BankIntegration.Privatbank.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>

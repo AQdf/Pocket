@@ -1,33 +1,47 @@
-﻿namespace Sho.Pocket.BankIntegration.Monobank.Models
+﻿namespace Sho.BankIntegration.Monobank.Models
 {
     /// <summary>
-    /// Monobank API ref: https://api.monobank.ua/docs/#/definitions/UserInfo
+    /// Monobank account information
     /// </summary>
-    internal class MonobankAccount
+    public class MonobankAccount
     {
-        /// <summary>
-        /// Account identifier
-        /// </summary>
-        public string Id { get; set; }
+        public MonobankAccount(string id, long balance, long creditLimit, string currency, string cashbackType)
+        {
+            Id = id;
+            Balance = (decimal)balance / 100;
+            CreditLimit = (decimal)creditLimit / 100;
+            Currency = currency;
+            CashbackType = cashbackType;
+        }
 
         /// <summary>
-        /// The value in minimal currency units (cent, kopiyka)
+        /// Account identifier in Monobank system
         /// </summary>
-        public long Balance { get; set; }
+        public string Id { get; }
 
         /// <summary>
-        /// The value in minimal currency units (cent, kopiyka)
+        /// Account balance
         /// </summary>
-        public long CreditLimit { get; set; }
+        public decimal Balance { get; }
 
         /// <summary>
-        /// Currency code according to ISO 4217
+        /// Account credit limit
         /// </summary>
-        public int CurrencyCode { get; set; }
+        public decimal CreditLimit { get; }
 
         /// <summary>
-        /// String enum [None, UAH, Miles]
+        /// Currency name according to ISO 4217
         /// </summary>
-        public string CashbackType { get; set; }
+        public string Currency { get; }
+
+        /// <summary>
+        /// [None, UAH, Miles]
+        /// </summary>
+        public string CashbackType { get; }
+
+        /// <summary>
+        /// Account friendly name
+        /// </summary>
+        public string Name => $"{MonobankConfiguration.BANK_NAME}: {Balance} {Currency}";
     }
 }

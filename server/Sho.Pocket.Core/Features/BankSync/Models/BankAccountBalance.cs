@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core.BankIntegration.Models
+﻿namespace Sho.Pocket.Core.Features.BankSync.Models
 {
     public class BankAccountBalance
     {

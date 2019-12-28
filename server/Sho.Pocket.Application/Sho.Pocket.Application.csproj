@@ -10,11 +10,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sho.Pocket.BankIntegration.Monobank\Sho.Pocket.BankIntegration.Monobank.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.BankIntegration.PrivatBank\Sho.Pocket.BankIntegration.Privatbank.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.BankIntegration\Sho.Pocket.BankIntegration.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
     <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />

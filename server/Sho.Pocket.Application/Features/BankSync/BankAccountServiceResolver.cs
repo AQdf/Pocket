@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Sho.Pocket.Core.BankIntegration.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Abstractions;
 
 namespace Sho.Pocket.Application.Features.BankSync
 {

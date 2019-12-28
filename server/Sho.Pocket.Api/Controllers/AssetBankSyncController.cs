@@ -2,8 +2,8 @@
 using Sho.Pocket.Api.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
-using Sho.Pocket.Core.Features.BankAccounts.Models;
+using Sho.Pocket.Core.Features.BankSync.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

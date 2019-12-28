@@ -10,11 +10,9 @@ using Sho.Pocket.Application.Features.Balances;
 using Sho.Pocket.Application.Features.BankSync;
 using Sho.Pocket.Application.Inventory;
 using Sho.Pocket.Application.UserCurrencies;
-using Sho.Pocket.BankIntegration.Monobank.Services;
-using Sho.Pocket.BankIntegration.Privatbank.Services;
-using Sho.Pocket.Core.BankIntegration.Abstractions;
+using Sho.Pocket.BankIntegration;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Abstractions;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
 using Sho.Pocket.DataAccess.Sql.Balances;
@@ -55,11 +53,11 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IItemCategoryRepository, ItemCategoryRepository>();
             services.AddScoped<IUserCurrencyRepository, UserCurrencyRepository>();
-            services.AddScoped<IBankAccountSyncService, BankAccountSyncService>();
             services.AddScoped<ICsvExporter, CsvExporter>();
 
-            services.AddScoped<IBankAccountService, MonobankAccountService>();
-            services.AddScoped<IBankAccountService, PrivatbankAccountService>();
+            services.AddScoped<IBankAccountSyncService, BankAccountSyncService>();
+            services.AddScoped<IBankAccountService, MonobankAccountServiceAdapter>();
+            services.AddScoped<IBankAccountService, PrivatbankAccountServiceAdapter>();
             services.AddScoped<IBankAccountServiceResolver, BankAccountServiceResolver>();
 
         }

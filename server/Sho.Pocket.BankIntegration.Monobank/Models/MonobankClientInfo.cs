@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.BankIntegration.Monobank.Models
+namespace Sho.BankIntegration.Monobank.Models
 {
     /// <summary>
-    /// Monobank API ref: https://api.monobank.ua/docs/#/definitions/UserInfo
+    /// Example: https://api.monobank.ua/docs/#/definitions/UserInfo
     /// </summary>
-    internal class MonobankUserInfo
+    internal class MonobankClientInfo
     {
         /// <summary>
         /// Client name
@@ -20,6 +20,6 @@ namespace Sho.Pocket.BankIntegration.Monobank.Models
         /// <summary>
         /// Collection of accounts
         /// </summary>
-        public IReadOnlyCollection<MonobankAccount> Accounts { get; set; }
+        public IReadOnlyCollection<MonobankClientAccount> Accounts { get; set; }
     }
 }

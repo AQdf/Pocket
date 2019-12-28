@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sho.Pocket.Core.BankIntegration.Abstractions;
-using Sho.Pocket.Core.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
-using Sho.Pocket.Core.Features.BankAccounts.Models;
+using Sho.Pocket.Core.Features.BankSync.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.BankSync
@@ -52,7 +50,7 @@ namespace Sho.Pocket.Application.Features.BankSync
             //TODO: Catch errors. Verify if token is correct and then save it to database. Encrypt this token.
             BankClientData clientData = new BankClientData(token, bankClientId, cardNumber);
             IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(bankName);
-            List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
+            IReadOnlyCollection<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
 
             if (accountBalances == null)
             {
@@ -96,7 +94,7 @@ namespace Sho.Pocket.Application.Features.BankSync
             {
                 IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(assetBankAccount.BankName);
                 BankClientData clientData = new BankClientData(assetBankAccount.Token, assetBankAccount.BankClientId, assetBankAccount.BankAccountId);
-                List<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
+                IReadOnlyCollection<BankAccountBalance> accountBalances = await bankAccountservice.GetClientAccountsInfoAsync(clientData);
                 accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == assetBankAccount.BankAccountId);
 
                 await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);

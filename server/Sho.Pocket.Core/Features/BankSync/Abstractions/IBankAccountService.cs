@@ -1,14 +1,14 @@
-﻿using Sho.Pocket.Core.BankIntegration.Models;
+﻿using Sho.Pocket.Core.Features.BankSync.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Core.BankIntegration.Abstractions
+namespace Sho.Pocket.Core.Features.BankSync.Abstractions
 {
     public interface IBankAccountService
     {
         string BankName { get; }
 
-        Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData);
+        Task<IReadOnlyCollection<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData);
 
         Task<string> GetClientAccountExctractAsync(string token);
     }

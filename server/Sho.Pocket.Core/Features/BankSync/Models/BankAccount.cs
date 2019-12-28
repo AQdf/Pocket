@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core.Features.BankAccounts.Models
+﻿namespace Sho.Pocket.Core.Features.BankSync.Models
 {
     public class BankAccount
     {

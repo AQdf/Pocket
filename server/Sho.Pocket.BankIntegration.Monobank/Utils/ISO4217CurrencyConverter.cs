@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.BankIntegration.Monobank.Utils
+namespace Sho.BankIntegration.Monobank.Utils
 {
-    internal class ISO4217CurrencyCodeConverter
+    internal static class ISO4217CurrencyConverter
     {
-        private readonly Dictionary<string, string> _currencyCodes = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> _currencyCodes = new Dictionary<string, string>
         {
             { "840", "USD" },
             { "980", "UAH" },
@@ -21,7 +21,7 @@ namespace Sho.Pocket.BankIntegration.Monobank.Utils
             { "949", "TRY" }
         };
 
-        internal string GetCurrencyName(string code)
+        internal static string GetCurrencyName(string code)
         {
             if (!_currencyCodes.ContainsKey(code))
             {

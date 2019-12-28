@@ -10,9 +10,9 @@ using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Core.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Abstractions;
+using Sho.Pocket.Core.Features.BankSync.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
@@ -243,7 +243,11 @@ namespace Sho.Pocket.Application.Balances
                 if (bankAccounts.Any(ba => ba.AssetId == balance.AssetId))
                 {
                     BankAccountBalance bankAccountBalance = await _accountBankSyncService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
-                    value = bankAccountBalance.Balance;
+
+                    if (bankAccountBalance != null)
+                    {
+                        value = bankAccountBalance.Balance;
+                    }
                 }
 
                 Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);

@@ -1,10 +1,9 @@
-﻿using Sho.Pocket.Core.BankIntegration.Models;
-using Sho.Pocket.Core.Features.BankAccounts.Models;
+﻿using Sho.Pocket.Core.Features.BankSync.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Core.Features.BankAccounts.Abstractions
+namespace Sho.Pocket.Core.Features.BankSync.Abstractions
 {
     public interface IBankAccountSyncService
     {

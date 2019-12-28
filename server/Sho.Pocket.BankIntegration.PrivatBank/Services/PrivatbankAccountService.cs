@@ -1,123 +1,58 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Sho.Pocket.Core.BankIntegration.Models;
+﻿using System.Threading.Tasks;
 using System.Net.Http;
 using System.Text;
 using System;
-using System.Xml;
-using Sho.Pocket.BankIntegration.Privatbank.Utils;
-using Sho.Pocket.Core.BankIntegration.Abstractions;
+using Sho.BankIntegration.Privatbank.Models;
 
-namespace Sho.Pocket.BankIntegration.Privatbank.Services
+namespace Sho.BankIntegration.Privatbank.Services
 {
-    public class PrivatbankAccountService : IBankAccountService
+    public class PrivatbankAccountService
     {
-        public string BankName => "Privatbank";
-
-        private const string _bankApiUrl = "https://api.privatbank.ua/p24api/";
-
-        public async Task<List<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData)
+        /// <summary>
+        /// Gets merchant account. Privatbank API reference: <https://api.privatbank.ua/#p24/balance>.
+        /// </summary>
+        /// <param name="password">Private merchant password.</param>
+        /// <param name="merchantId">Merchant id.</param>
+        /// <param name="cardNumber">Merchant assossiated card number.</param>
+        /// <returns></returns>
+        public async Task<PrivatbankAccount> GetMerchantAccountAsync(string password, string merchantId, string cardNumber)
         {
-            string requestUri = _bankApiUrl + "balance";
-            List<BankAccountBalance> result;
+            string requestUri = PrivatbankConfiguration.BANK_API_URL + "balance";
+            PrivatbankAccount account;
 
             using (HttpClient client = new HttpClient())
             {
-                string request = BuildRequestData(clientData);
+                AccountBalanceRequest request = new AccountBalanceRequest(password, merchantId, cardNumber);
                 HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUri)
                 {
-                    Content = new StringContent(request, Encoding.UTF8, "text/xml")
+                    Content = new StringContent(request.Xml, Encoding.UTF8, "text/xml")
                 };
 
                 HttpResponseMessage response = await client.SendAsync(message);
                 string content = await response.Content.ReadAsStringAsync();
-                result = ParseClientAccountsInfo(content);
+                AccountBalanceResponse balance = AccountBalanceResponse.Parse(content);
+
+                if (string.IsNullOrWhiteSpace(balance.Id) || string.IsNullOrWhiteSpace(balance.Currency) || !balance.Balance.HasValue)
+                {
+                    throw new Exception("Failed to parse merchant account data");
+                }
+
+                account = new PrivatbankAccount(balance.Id,balance.Currency, balance.Balance.Value, balance.CreditLimit ?? decimal.Zero, balance.Name);
             }
 
-            return result;
-        }
-
-        public Task<string> GetClientAccountExctractAsync(string token)
-        {
-            throw new NotImplementedException();
+            return account;
         }
 
         /// <summary>
-        /// Make sure that the contents of dataContent and the corresponding substring in xml match up to a byte.
+        /// Gets merchant account extract. Privatbank API reference: <https://api.privatbank.ua/#p24/orders>.
         /// </summary>
-        /// <param name="clientData"></param>
+        /// <param name="password">Private merchant password.</param>
+        /// <param name="merchantId">Merchant id.</param>
+        /// <param name="cardNumber">Merchant assossiated card number.</param>
         /// <returns></returns>
-        private string BuildRequestData(BankClientData clientData)
+        public Task<string> GetClientAccountExctractAsync(string password, string merchantId, string cardNumber)
         {
-            string dataTagContent = $"<oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"cardnum\" value=\"{clientData.CardNumber}\" /><prop name=\"country\" value=\"UA\" /></payment>";
-            string plainSignature = $"{dataTagContent}{clientData.Token}";
-            string signature = plainSignature.GetHashMd5().GetHashSha1();
-            string request = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?><request version=\"1.0\"><merchant><id>{clientData.BankClientId}</id><signature>{signature}</signature></merchant><data>{dataTagContent}</data></request>";
-
-            return request;
-        }
-
-        /// <summary>Parses Privatbank merchant card balance response</summary>
-        /// <param name="content">
-        ///     <?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        ///     <response version =\"1.0\">
-        ///         <merchant>
-        ///             <id>153774</id>
-        ///             <signature>1249ef10df822f755ab723c4aaba8e624bebda7f</signature>
-        ///         </merchant>
-        ///         <data>
-        ///             <oper>cmt</oper>
-        ///             <info>
-        ///                 <cardbalance>
-        ///                     <card>
-        ///                         <account>4731219100649452980</account>
-        ///                         <card_number>4731219100649452</card_number>
-        ///                         <acc_name/>
-        ///                         <acc_type/>
-        ///                         <currency>UAH</currency>
-        ///                         <card_type/>
-        ///                         <main_card_number>4731219100649452980</main_card_number>
-        ///                         <card_stat/>
-        ///                         <src/>
-        ///                     </card>
-        ///                     <av_balance>32.25</av_balance>
-        ///                     <bal_date>26.12.19 04:30</bal_date>
-        ///                     <bal_dyn>null</bal_dyn>
-        ///                     <balance>32.25</balance>
-        ///                     <fin_limit>0.0</fin_limit>
-        ///                     <trade_limit>0.0</trade_limit>
-        ///                 </cardbalance>
-        ///             </info>
-        ///         </data>
-        ///     </response>
-        /// </param>
-        /// <returns></returns>
-        private List<BankAccountBalance> ParseClientAccountsInfo(string content)
-        {
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(content);
-
-            string accountId = document.SelectSingleNode("response/data/info/cardbalance/card/card_number").InnerText;
-            string currency = document.SelectSingleNode("response/data/info/cardbalance/card/currency").InnerText;
-            string accountName = document.SelectSingleNode("response/data/info/cardbalance/card/acc_name").InnerText;
-            string balanceString = document.SelectSingleNode("response/data/info/cardbalance/balance").InnerText;
-            bool parsed = decimal.TryParse(balanceString, out decimal value);
-
-            List<BankAccountBalance> result = new List<BankAccountBalance>();
-
-            if (!string.IsNullOrWhiteSpace(accountId) && !string.IsNullOrWhiteSpace(currency) && parsed)
-            {
-                accountName = !string.IsNullOrWhiteSpace(accountName) ? accountName : GetFriendlyAccountName(value, currency);
-                BankAccountBalance accountBalance = new BankAccountBalance(BankName, accountId, accountName, currency, value);
-                result.Add(accountBalance);
-            }
-
-            return result;
-        }
-
-        private string GetFriendlyAccountName(decimal balance, string currency)
-        {
-            return $"{BankName}: {balance} {currency}";
+            throw new NotImplementedException();
         }
     }
 }
