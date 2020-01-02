@@ -1,4 +1,4 @@
-﻿using Sho.Pocket.Application.ExchangeRates.Models;
+﻿using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using System;
 using System.Collections.Generic;
 

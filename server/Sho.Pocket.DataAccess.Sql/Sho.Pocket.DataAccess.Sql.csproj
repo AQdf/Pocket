@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ExchangeRates\Scripts\GetCurrencyExchangeRate.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Assets\Scripts\DeactivateAsset.sql" />
     <EmbeddedResource Include="Assets\Scripts\DeleteAsset.sql" />
     <EmbeddedResource Include="Assets\Scripts\GetAllAssets.sql" />
@@ -22,10 +18,6 @@
     <EmbeddedResource Include="Balances\Scripts\InsertBalance.sql" />
     <EmbeddedResource Include="Balances\Scripts\UpdateBalance.sql" />
     <EmbeddedResource Include="Currencies\Scripts\GetAllCurrencies.sql" />
-    <EmbeddedResource Include="ExchangeRates\Scripts\AlterExchangeRate.sql" />
-    <EmbeddedResource Include="ExchangeRates\Scripts\GetCurrencyExchangeRate.sql" />
-    <EmbeddedResource Include="ExchangeRates\Scripts\InsertExchangeRate.sql" />
-    <EmbeddedResource Include="ExchangeRates\Scripts\UpdateExchangeRate.sql" />
   </ItemGroup>
 
   <ItemGroup>

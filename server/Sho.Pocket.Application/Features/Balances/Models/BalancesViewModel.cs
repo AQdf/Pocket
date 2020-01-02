@@ -1,5 +1,5 @@
-﻿using Sho.Pocket.Application.ExchangeRates.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
 namespace Sho.Pocket.Application.Balances.Models
 {

@@ -23,7 +23,7 @@
         /// <summary>
         /// Currency code according to ISO 4217
         /// </summary>
-        public string CurrencyCode { get; set; }
+        public int CurrencyCode { get; set; }
 
         /// <summary>
         /// String enum [None, UAH, Miles]

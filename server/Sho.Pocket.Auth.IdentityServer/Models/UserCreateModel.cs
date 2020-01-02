@@ -16,5 +16,8 @@ namespace Sho.Pocket.Auth.IdentityServer.Models
 
         [Required]
         public string LastName { get; set; }
+
+        [Required]
+        public string PrimaryCurrency { get; set; }
     }
 }

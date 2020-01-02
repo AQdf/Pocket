@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
-using Sho.BankIntegration.Monobank.Models;
-using Sho.BankIntegration.Monobank.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Sho.BankIntegration.Monobank.Models;
 
 namespace Sho.BankIntegration.Monobank.Services
 {
@@ -18,22 +17,23 @@ namespace Sho.BankIntegration.Monobank.Services
         /// <returns></returns>
         public async Task<IReadOnlyCollection<MonobankAccount>> GetClientAccountsAsync(string token)
         {
-            string requestUri = MonobankConfiguration.BANK_API_URL + "personal/client-info";
-            IReadOnlyCollection<MonobankAccount> accounts;
+            string requestUri = $"{MonobankConfiguration.BANK_API_URL}/personal/client-info";
+            string json;
 
             using (HttpClient client = new HttpClient())
             {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
                 request.Headers.Add("X-Token", token);
-
                 HttpResponseMessage response = await client.SendAsync(request);
-                string content = await response.Content.ReadAsStringAsync();
-                MonobankClientInfo clientInfo = JsonConvert.DeserializeObject<MonobankClientInfo>(content);
-
-                accounts = clientInfo.Accounts
-                    .Select(a => new MonobankAccount(a.Id, a.Balance, a.CreditLimit, ISO4217CurrencyConverter.GetCurrencyName(a.CurrencyCode), a.CashbackType))
-                    .ToList();
+                json = await response.Content.ReadAsStringAsync();
             }
+
+            MonobankClientInfo clientInfo = JsonConvert.DeserializeObject<MonobankClientInfo>(json);
+
+            IReadOnlyCollection<MonobankAccount> accounts = clientInfo.Accounts
+                .Select(a => ParseAccount(a))
+                .Where(account => account != null)
+                .ToList();
 
             return accounts;
         }
@@ -46,6 +46,21 @@ namespace Sho.BankIntegration.Monobank.Services
         public Task<string> GetClientAccountExctractAsync(string token)
         {
             throw new NotImplementedException();
+        }
+
+        private MonobankAccount ParseAccount(MonobankClientAccount item)
+        {
+            bool currencyParsed = MonobankCurrency.TryParse(item.CurrencyCode, out MonobankCurrency currency);
+
+            if (currencyParsed)
+            {
+                return new MonobankAccount(item.Id, item.Balance, item.CreditLimit, currency.Name, item.CashbackType);
+            }
+            else
+            {
+                //TODO: Log warning: Monobank account parsing failed!
+                return null;
+            }
         }
     }
 }

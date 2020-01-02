@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Auth.IdentityServer.Models;
-using Sho.Pocket.Auth.IdentityServer.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Application.ExchangeRates.Abstractions;
+using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -28,7 +28,7 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         [HttpGet("providers/{provider}")]
-        public async Task<ActionResult<List<ExchangeRateProviderModel>>> GetProviderExchangeRate(string provider)
+        public async Task<ActionResult<IReadOnlyCollection<ExchangeRateProviderModel>>> GetProviderExchangeRate(string provider)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -37,9 +37,9 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<ExchangeRateProviderModel> result = await _exchangeRateService.GetProviderExchangeRateAsync(user.Id, provider);
+            IReadOnlyCollection<ExchangeRateProviderModel> result = await _exchangeRateService.FetchProviderExchangeRateAsync(user.Id, provider);
 
-            return result;
+            return Ok(result);
         }
 
         [HttpPut]

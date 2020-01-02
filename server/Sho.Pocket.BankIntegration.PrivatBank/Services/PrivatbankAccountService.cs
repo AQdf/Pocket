@@ -17,8 +17,8 @@ namespace Sho.BankIntegration.Privatbank.Services
         /// <returns></returns>
         public async Task<PrivatbankAccount> GetMerchantAccountAsync(string password, string merchantId, string cardNumber)
         {
-            string requestUri = PrivatbankConfiguration.BANK_API_URL + "balance";
-            PrivatbankAccount account;
+            string requestUri = $"{PrivatbankConfiguration.BANK_API_URL}/balance";
+            string json;
 
             using (HttpClient client = new HttpClient())
             {
@@ -29,16 +29,22 @@ namespace Sho.BankIntegration.Privatbank.Services
                 };
 
                 HttpResponseMessage response = await client.SendAsync(message);
-                string content = await response.Content.ReadAsStringAsync();
-                AccountBalanceResponse balance = AccountBalanceResponse.Parse(content);
-
-                if (string.IsNullOrWhiteSpace(balance.Id) || string.IsNullOrWhiteSpace(balance.Currency) || !balance.Balance.HasValue)
-                {
-                    throw new Exception("Failed to parse merchant account data");
-                }
-
-                account = new PrivatbankAccount(balance.Id,balance.Currency, balance.Balance.Value, balance.CreditLimit ?? decimal.Zero, balance.Name);
+                json = await response.Content.ReadAsStringAsync();
             }
+
+            AccountBalanceResponse balance = AccountBalanceResponse.Parse(json);
+
+            if (string.IsNullOrWhiteSpace(balance.Id) || string.IsNullOrWhiteSpace(balance.Currency) || !balance.Balance.HasValue)
+            {
+                throw new Exception("Failed to parse merchant account data");
+            }
+
+            PrivatbankAccount account = new PrivatbankAccount(
+                balance.Id,
+                balance.Currency,
+                balance.Balance.Value,
+                balance.CreditLimit ?? decimal.Zero,
+                balance.Name);
 
             return account;
         }

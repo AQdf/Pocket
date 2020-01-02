@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,11 +9,11 @@ using Newtonsoft.Json.Serialization;
 using Sho.Pocket.Api.Middlewares;
 using Sho.Pocket.Api.Validation;
 using Sho.Pocket.Application.Configuration;
-using Sho.Pocket.Auth.IdentityServer;
-using Sho.Pocket.Core.Auth;
-using Sho.Pocket.Core.Configuration.Models;
+using Sho.Pocket.Auth.IdentityServer.Configuration;
+using Sho.Pocket.Auth.IdentityServer.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
-using System.Collections.Generic;
+using Sho.Pocket.DataAccess.Sql;
+using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api
 {
@@ -44,19 +45,25 @@ namespace Sho.Pocket.Api
                         CamelCasePropertyNamesContractResolver())
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
-            GlobalSettings globalSettings = new GlobalSettings();
-            ConfigurationBinder.Bind(Configuration.GetSection(nameof(GlobalSettings)), globalSettings);
+            // TODO: Refactor this
+            DbSettings dbSettings = new DbSettings();
+            ConfigurationBinder.Bind(Configuration.GetSection(nameof(DbSettings)), dbSettings);
+            dbSettings.DbConnectionString = Configuration.GetConnectionString("DbConnectionString");
+            services.AddSingleton(s => dbSettings);
 
-            // Refactor this
-            globalSettings.DbConnectionString = Configuration.GetConnectionString("DbConnectionString");
-            globalSettings.UsersDbConnectionString = Configuration.GetConnectionString("UsersDbConnectionString");
-            services.AddSingleton(s => globalSettings);
+            // TODO: Refactor this
+            AuthSettings authSettings = new AuthSettings();
+            ConfigurationBinder.Bind(Configuration.GetSection(nameof(AuthSettings)), authSettings);
+            authSettings.UsersDbConnectionString = Configuration.GetConnectionString("UsersDbConnectionString");
+            services.AddSingleton(s => authSettings);
+            services.AddApplicationAuth(authSettings);
 
-            services.Configure<ExchangeRateSettings>(Configuration.GetSection(nameof(ExchangeRateSettings)));
+            // TODO: Refactor this
+            ExchangeRateSettings exchangeRateSettings = new ExchangeRateSettings();
+            ConfigurationBinder.Bind(Configuration.GetSection(nameof(ExchangeRateSettings)), exchangeRateSettings);
+            services.AddSingleton(s => exchangeRateSettings);
 
             services.AddApplicationServices();
-
-            services.AddApplicationAuth(globalSettings);
 
             services.AddSwaggerGen(c =>
             {

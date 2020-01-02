@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Configuration;
-using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Auth.IdentityServer.Models;
-using Sho.Pocket.Core.Configuration.Models;
-using System;
-using System.Collections.Generic;
+using Sho.Pocket.DataAccess.Sql;
+using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {
@@ -25,18 +25,18 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
         {
             IServiceCollection services = new ServiceCollection();
 
-            GlobalSettings globalSettings = new GlobalSettings
+            DbSettings dbSettings = new DbSettings
             {
                 DbConnectionString = ConfigurationConstants.DB_CONNECTION
             };
 
-            services.AddSingleton(s => globalSettings);
+            services.AddSingleton(s => dbSettings);
 
             services.AddOptions();
 
             List<ExchangeRateProviderOption> exchangeRateProviders = new List<ExchangeRateProviderOption>
             {
-                new ExchangeRateProviderOption{ Name = ProviderConstants.DEFAULT_PROVIDER }
+                new ExchangeRateProviderOption{ Name = "Default" }
             };
 
             services.Configure<ExchangeRateSettings>(o => { o.Providers = exchangeRateProviders; });

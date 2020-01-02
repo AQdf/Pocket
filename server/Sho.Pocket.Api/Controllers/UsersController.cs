@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Api.Models;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using Sho.Pocket.Core.Configuration.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -20,19 +18,14 @@ namespace Sho.Pocket.Api.Controllers
 
         private readonly IUserCurrencyService _userCurrencyService;
 
-        private readonly string _defaultCurrency;
-
         public UsersController(
             ILoginService loginService,
             IRegistrationService registrationService,
-            IUserCurrencyService userCurrencyService,
-            GlobalSettings settings)
+            IUserCurrencyService userCurrencyService)
         {
             _loginService = loginService;
             _registrationService = registrationService;
             _userCurrencyService = userCurrencyService;
-
-            _defaultCurrency = settings.DefaultCurrency;
         }
 
         [HttpPost("register")]
@@ -47,7 +40,7 @@ namespace Sho.Pocket.Api.Controllers
 
             if (result.Succeeded)
             {
-                await _userCurrencyService.AddUserCurrencyAsync(result.User.Id, _defaultCurrency, true);
+                await _userCurrencyService.AddUserCurrencyAsync(result.User.Id, model.PrimaryCurrency, true);
 
                 return Ok(result);
             }

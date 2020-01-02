@@ -23,5 +23,7 @@ namespace Sho.Pocket.Domain.Entities
         public string CounterCurrency { get; set; }
 
         public decimal Rate { get; set; }
+
+        public string Provider { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using Sho.Pocket.Application.Currencies;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Application.ExchangeRates.Providers;
 using Sho.Pocket.Application.Features.Balances;
 using Sho.Pocket.Application.Features.BankSync;
 using Sho.Pocket.Application.Inventory;
@@ -13,6 +12,7 @@ using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.BankIntegration;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.BankSync.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.DataAccess.Sql;
 using Sho.Pocket.DataAccess.Sql.Assets;
 using Sho.Pocket.DataAccess.Sql.Balances;
@@ -22,6 +22,7 @@ using Sho.Pocket.DataAccess.Sql.ExchangeRates;
 using Sho.Pocket.DataAccess.Sql.Inventory;
 using Sho.Pocket.DataAccess.Sql.ItemCategories;
 using Sho.Pocket.DataAccess.Sql.UserCurrencies;
+using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
 {
@@ -31,8 +32,6 @@ namespace Sho.Pocket.Application.Configuration
         {
             services.AddSingleton<IDbConfiguration, DbConfiguration>();
 
-            services.AddScoped<IExchangeRateService, ExchangeRateService>();
-            services.AddScoped<IExchangeRateProviderFactory, ExchangeRateProviderFactory>();
 
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
@@ -60,6 +59,12 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IBankAccountService, PrivatbankAccountServiceAdapter>();
             services.AddScoped<IBankAccountServiceResolver, BankAccountServiceResolver>();
 
+            services.AddScoped<IExchangeRateService, ExchangeRateService>();
+            services.AddScoped<IExchangeRateProvider, MonobankExchangeRateProvider>();
+            services.AddScoped<IExchangeRateProvider, PrivatbankExchangeRateProvider>();
+            services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
+            services.AddScoped<IExchangeRateProvider, DefaultExchangeRateProvider>();
+            services.AddScoped<IExchangeRateProviderResolver, ExchangeRateProviderResolver>();
         }
     }
 }

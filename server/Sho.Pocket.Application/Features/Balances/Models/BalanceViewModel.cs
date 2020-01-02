@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Sho.Pocket.Application.Assets.Models;
-using Sho.Pocket.Application.Common.Converters;
-using Sho.Pocket.Application.ExchangeRates.Models;
+using Sho.Pocket.Core.Common.Converters;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
-using System;
 
 namespace Sho.Pocket.Application.Balances.Models
 {

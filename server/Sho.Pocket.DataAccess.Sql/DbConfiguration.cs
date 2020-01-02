@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Sho.Pocket.Core.Configuration.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 using System.Collections.Generic;
@@ -14,9 +13,9 @@ namespace Sho.Pocket.DataAccess.Sql
 
         private readonly List<Currency> _defaultCurrencies;
 
-        public DbConfiguration(GlobalSettings globalSettings)
+        public DbConfiguration(DbSettings settings)
         {
-            DbConnectionString = globalSettings.DbConnectionString;
+            DbConnectionString = settings.DbConnectionString;
 
             _defaultCurrencies = new List<Currency>
             {
@@ -26,10 +25,10 @@ namespace Sho.Pocket.DataAccess.Sql
                 new Currency("PLN")
             };
 
-            if (!string.IsNullOrWhiteSpace(globalSettings.DefaultCurrency) 
-                && !_defaultCurrencies.Exists(c => c.Name == globalSettings.DefaultCurrency))
+            if (!string.IsNullOrWhiteSpace(settings.SystemDefaultCurrency) 
+                && !_defaultCurrencies.Exists(c => c.Name == settings.SystemDefaultCurrency))
             {
-                _defaultCurrencies.Add(new Currency(globalSettings.DefaultCurrency));
+                _defaultCurrencies.Add(new Currency(settings.SystemDefaultCurrency));
             }
         }
 

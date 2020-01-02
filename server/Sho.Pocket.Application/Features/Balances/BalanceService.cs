@@ -9,10 +9,10 @@ using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.BankSync.Abstractions;
 using Sho.Pocket.Core.Features.BankSync.Models;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
@@ -231,6 +231,7 @@ namespace Sho.Pocket.Application.Balances
         {
             IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
             List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
+
             IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userOpenId);
             List<BalanceViewModel> result = new List<BalanceViewModel>();
 

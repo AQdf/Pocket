@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Sho.Pocket.Application.Common.Converters;
+using Sho.Pocket.Core.Common.Converters;
 using System;
 
 namespace Sho.Pocket.Application.Balances.Models
