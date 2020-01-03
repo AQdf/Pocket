@@ -8,8 +8,8 @@ namespace Sho.Pocket.Core.Features.BankSync.Abstractions
     {
         string BankName { get; }
 
-        Task<IReadOnlyCollection<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData);
+        Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams requestParams);
 
-        Task<string> GetClientAccountExctractAsync(string token);
+        Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams);
     }
 }

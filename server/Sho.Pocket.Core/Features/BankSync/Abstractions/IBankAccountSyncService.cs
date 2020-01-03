@@ -18,5 +18,7 @@ namespace Sho.Pocket.Core.Features.BankSync.Abstractions
         Task<bool> DisconnectAssetWithBankAcountAsync(Guid userId, Guid assetId);
 
         Task<BankAccountBalance> GetBankAccountBalanceAsync(Guid userId, Guid assetId);
+
+        Task<List<AssetTransactionViewModel>> GetAssetBankAccountTransactionsAsync(Guid userId, Guid assetId);
     }
 }

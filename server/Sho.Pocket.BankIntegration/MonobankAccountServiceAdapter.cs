@@ -15,9 +15,9 @@ namespace Sho.Pocket.BankIntegration
 
         private readonly MonobankAccountService _accountService = new MonobankAccountService();
 
-        public async Task<IReadOnlyCollection<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData clientData)
+        public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams requestParams)
         {
-            IReadOnlyCollection<MonobankAccount> accounts = await _accountService.GetClientAccountsAsync(clientData.Token);
+            IReadOnlyCollection<MonobankAccount> accounts = await _accountService.GetAccountsAsync(requestParams.Token);
 
             List<BankAccountBalance> balances = accounts
                 .Select(a => new BankAccountBalance(BankName, a.Id, a.Name, a.Currency, a.Balance))
@@ -26,9 +26,16 @@ namespace Sho.Pocket.BankIntegration
             return balances;
         }
 
-        public Task<string> GetClientAccountExctractAsync(string token)
+        public async Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
         {
-            throw new System.NotImplementedException();
+            IReadOnlyCollection<MonobankAccountTransaction> statementItems = 
+                await _accountService.GetAccountStatementAsync(requestParams.Token, requestParams.Account, requestParams.From, requestParams.To);
+
+            List<AccountTransaction> transactions = statementItems
+                .Select(i => new AccountTransaction(i.Id, i.TransactionDate, i.Description, i.Currency, i.Amount, i.Balance))
+                .ToList();
+
+            return transactions;
         }
     }
 }

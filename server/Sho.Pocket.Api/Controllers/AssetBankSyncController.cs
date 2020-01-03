@@ -59,6 +59,25 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
+        /// GET: api/assets/bank-sync/transactions/0E056948-4014-4A2A-A132-5493A8499B9A
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("transactions/{assetId}")]
+        public async Task<ActionResult<List<AssetBankAccountViewModel>>> GetAssetBankAccountTransactions(Guid assetId)
+        {
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<AssetTransactionViewModel> result = await _accountBankSyncService.GetAssetBankAccountTransactionsAsync(user.Id, assetId);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// POST: api/assets/bank-sync/auth
         /// </summary>
         /// <returns></returns>

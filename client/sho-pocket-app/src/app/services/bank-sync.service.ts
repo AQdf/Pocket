@@ -48,4 +48,8 @@ export class BankSyncService extends BaseService {
   disconnectAccount(assetId: string) {
     return this.http.post(bankSyncApiUrl + 'disconnect-account/' + assetId, null, this.getDefaultOptions());
   }
+
+  loadTransactions(assetId: string) {
+    return this.http.get(bankSyncApiUrl + 'transactions/' + assetId, this.getDefaultOptions());
+  }
 }

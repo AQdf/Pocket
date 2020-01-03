@@ -14,15 +14,15 @@ namespace Sho.Pocket.BankIntegration
 
         private readonly PrivatbankAccountService _accountService = new PrivatbankAccountService();
 
-        public async Task<IReadOnlyCollection<BankAccountBalance>> GetClientAccountsInfoAsync(BankClientData client)
+        public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams request)
         {
-            PrivatbankAccount account = await _accountService.GetMerchantAccountAsync(client.Token, client.Id, client.CardNumber);
+            PrivatbankAccount account = await _accountService.GetMerchantAccountAsync(request.Token, request.Id, request.CardNumber);
             BankAccountBalance balance = new BankAccountBalance(BankName, account.Id, account.Name, account.Currency, account.Balance);
 
             return new List<BankAccountBalance> { balance };
         }
 
-        public Task<string> GetClientAccountExctractAsync(string token)
+        public Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
         {
             throw new System.NotImplementedException();
         }
