@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 
 import { AssetService } from '../../../services/asset.service';
+import { CurrencyService } from '../../../services/currency.service';
 import { Asset } from '../../../models/asset.model'
 
 @Component({
@@ -12,15 +13,16 @@ import { Asset } from '../../../models/asset.model'
 })
 export class AssetListComponent implements OnInit {
 
-  constructor(public assetService : AssetService, private toastr : ToastrService) { }
+  constructor(private assetService : AssetService, private currencyService: CurrencyService, private toastr : ToastrService) { }
   
   assetList: Asset[];
   selectedAsset: Asset;
   currentEditRecordId: string;
+  currenciesList: string[];
   isAddMode: boolean;
 
   ngOnInit() {
-    this.assetService.getCurrenciesList();
+    this.getCurrenciesList();
     this.loadAssetList();
   }
 
@@ -110,5 +112,11 @@ export class AssetListComponent implements OnInit {
   onCurrencyAdded(value: string) {
     let currency = this.assetService.currenciesList.find(c => c == value);
     this.selectedAsset.currency = currency;
+  }
+
+  getCurrenciesList() {
+    this.currencyService.getCurrenciesList().subscribe((response: string[]) => {
+      this.currenciesList = response;
+    });
   }
 }

@@ -16,7 +16,6 @@ export class AssetService extends BaseService {
 
   constructor(private http: HttpClient) {
     super();
-    this.getAssetList();
   }
 
   getAsset(id: string) {

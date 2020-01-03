@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, finalize, map, pluck } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { UserService } from '../../../services/user.service';
 import { UserRegistration } from'../../../models/user-registration.model';
 import { ResponseError } from'../../../models/response-error.model';
+import { CurrencyService } from '../../../services/currency.service';
 
 @Component({
   selector: 'app-registration',
@@ -13,13 +14,15 @@ import { ResponseError } from'../../../models/response-error.model';
 })
 export class RegistrationComponent implements OnInit {
 
-  errors: ResponseError[];  
+  errors: ResponseError[];
+  currenciesList: string[];
   isRequesting: boolean;
   submitted: boolean = false;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private currencyService: CurrencyService, private router: Router) { }
 
   ngOnInit() {
+    this.getCurrenciesList();
   }
 
   registerUser({ value, valid } : { value: UserRegistration, valid: boolean }) {
@@ -27,14 +30,18 @@ export class RegistrationComponent implements OnInit {
     this.isRequesting = true;
     if (valid) {
       this.userService
-      .register(value).pipe(
-          finalize(() => this.isRequesting = false))
+      .register(value).pipe(finalize(() => this.isRequesting = false))
       .subscribe(result => {
         if(result) {
           this.router.navigate(['/login'], {queryParams: { brandNew: true, email: value.email }});
         }
       }, (errors: ResponseError[]) => this.errors = errors)
-    }      
+    }
   }
 
+  getCurrenciesList() {
+    this.currencyService.getCurrenciesList().subscribe((response: string[]) => {
+      this.currenciesList = response;
+    });
+  }
 }

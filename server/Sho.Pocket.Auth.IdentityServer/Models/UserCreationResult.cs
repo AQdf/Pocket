@@ -9,7 +9,11 @@ namespace Sho.Pocket.Auth.IdentityServer.Models
         {
             Succeeded = identityResult.Succeeded;
             Errors = identityResult.Errors;
-            User = new UserViewModel(user.Id, user.Email);
+
+            if (user != null)
+            {
+                User = new UserViewModel(user.Id, user.Email);
+            }
         }
 
         public bool Succeeded { get; protected set; }

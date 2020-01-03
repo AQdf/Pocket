@@ -25,15 +25,18 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
                 UserName = model.Email
             };
 
-            UserCreationResult result = null;
             IdentityResult identityResult = await _userManager.CreateAsync(userToCreate, model.Password);
+            UserCreationResult result;
 
             if (identityResult.Succeeded)
             {
                 ApplicationUser user = await _userManager.FindByIdAsync(userId.ToString());
                 await _userManager.AddToRoleAsync(user, RoleConst.Simple);
-
                 result = new UserCreationResult(identityResult, user);
+            }
+            else
+            {
+                result = new UserCreationResult(identityResult, null);
             }
 
             return result;
