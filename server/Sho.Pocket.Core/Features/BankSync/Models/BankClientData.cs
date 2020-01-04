@@ -7,16 +7,16 @@
             Token = token;
         }
 
-        public BankAccountsRequestParams(string token, string id, string cardNumber)
+        public BankAccountsRequestParams(string token, string bankClientId, string cardNumber)
         {
             Token = token;
-            Id = id;
+            BankClientId = bankClientId;
             CardNumber = cardNumber;
         }
 
         public string Token { get; }
 
-        public string Id { get; }
+        public string BankClientId { get; }
 
         public string CardNumber { get; }
     }

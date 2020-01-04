@@ -29,7 +29,7 @@ namespace Sho.Pocket.BankIntegration
         public async Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
         {
             IReadOnlyCollection<MonobankAccountTransaction> statementItems = 
-                await _accountService.GetAccountStatementAsync(requestParams.Token, requestParams.Account, requestParams.From, requestParams.To);
+                await _accountService.GetAccountTransactionsAsync(requestParams.Token, requestParams.Account, requestParams.From, requestParams.To);
 
             List<AccountTransaction> transactions = statementItems
                 .Select(i => new AccountTransaction(i.Id, i.TransactionDate, i.Description, i.Currency, i.Amount, i.Balance))

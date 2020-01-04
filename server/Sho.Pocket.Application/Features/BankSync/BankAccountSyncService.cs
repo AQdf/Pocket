@@ -124,9 +124,10 @@ namespace Sho.Pocket.Application.Features.BankSync
             }
 
             IBankAccountService bankAccountservice = _bankAccountServiceResolver.Resolve(account.BankName);
+            // TODO: Remove hard-coded dates.
             DateTime now = DateTime.UtcNow;
             DateTime from = new DateTime(now.Year, now.Month, 1);
-            var requestParams = new AccountStatementRequestParams(account.Token, account.BankAccountId, from, null);
+            var requestParams = new AccountStatementRequestParams(account.Token, account.BankAccountId, account.BankClientId, from, now);
             var accountTransactions = await bankAccountservice.GetAccountTransactionsAsync(requestParams);
 
             transactions = accountTransactions

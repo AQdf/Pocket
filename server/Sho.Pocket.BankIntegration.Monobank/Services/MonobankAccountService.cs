@@ -49,15 +49,12 @@ namespace Sho.BankIntegration.Monobank.Services
         /// <param name="token">Client auth token.</param>
         /// <param name="account">Account identifier from statement list or 0 for default account.</param>
         /// <param name="from">Start time of the statement.</param>
-        /// <param name="to">End time of the statement. Default to current time.</param>
+        /// <param name="to">End time of the statement.</param>
         /// <returns></returns>
-        public async Task<IReadOnlyCollection<MonobankAccountTransaction>> GetAccountStatementAsync(string token, string account, DateTime from, DateTime? to = null)
+        public async Task<IReadOnlyCollection<MonobankAccountTransaction>> GetAccountTransactionsAsync(string token, string account, DateTime from, DateTime to)
         {
             string fromTime = from.ToUnixTime().ToString();
-            string toTime = to.HasValue 
-                ? to.Value.ToUnixTime().ToString() 
-                : DateTime.UtcNow.ToUnixTime().ToString();
-
+            string toTime = to.ToUnixTime().ToString();
             string requestUri = $"{MonobankConfiguration.BANK_API_URL}/personal/statement/{account}/{fromTime}/{toTime}";
             string json;
 

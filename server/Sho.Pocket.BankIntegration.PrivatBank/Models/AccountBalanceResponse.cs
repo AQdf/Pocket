@@ -40,8 +40,8 @@ namespace Sho.BankIntegration.Privatbank.Models
             string balanceString = document.SelectSingleNode("response/data/info/cardbalance/balance").InnerText;
             string creditLimitString = document.SelectSingleNode("response/data/info/cardbalance/fin_limit").InnerText;
 
-            bool balanceParsed = decimal.TryParse(balanceString, out decimal balanceValue);
             decimal? balance = null;
+            bool balanceParsed = decimal.TryParse(balanceString, out decimal balanceValue);
 
             if (balanceParsed)
             {
