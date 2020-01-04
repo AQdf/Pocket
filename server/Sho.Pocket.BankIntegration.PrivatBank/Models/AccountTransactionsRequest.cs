@@ -1,5 +1,4 @@
 ﻿using System;
-using Sho.BankIntegration.Privatbank.Services;
 using Sho.BankIntegration.Privatbank.Utils;
 
 namespace Sho.BankIntegration.Privatbank.Models

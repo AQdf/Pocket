@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sho.BankIntegration.Privatbank.Services
+namespace Sho.BankIntegration.Privatbank.Utils
 {
     internal static class DateTimeExtensions
     {
