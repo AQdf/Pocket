@@ -1,6 +1,6 @@
 ﻿namespace Sho.BankIntegration.Monobank
 {
-    public static class MonobankConfiguration
+    public static class MonobankDefaultConfig
     {
         public const string BANK_NAME = "Monobank";
 

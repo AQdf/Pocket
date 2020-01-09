@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Auth.IdentityServer.Configuration.Models;
 using Sho.Pocket.Auth.IdentityServer.DataAccess;
 using Sho.Pocket.Auth.IdentityServer.Models;
@@ -24,13 +25,13 @@ namespace Sho.Pocket.Auth.IdentityServer.Configuration
             ApplicationAuthDataContext dbContext,
             RoleManager<IdentityRole<Guid>> roleManager,
             UserManager<ApplicationUser> userManager,
-            AuthSettings settings)
+            IOptionsMonitor<AuthSettings> options)
         {
             dbContext.Database.Migrate();
 
             _defaultRoles = new string[] { RoleConst.Admin, RoleConst.Simple };
-            _adminEmail = settings.AdminEmail;
-            _adminPassword = settings.AdminPass;
+            _adminEmail = options.CurrentValue.AdminEmail;
+            _adminPassword = options.CurrentValue.AdminPass;
 
             _roleManager = roleManager;
             _userManager = userManager;

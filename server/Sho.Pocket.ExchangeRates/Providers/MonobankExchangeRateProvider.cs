@@ -12,9 +12,14 @@ namespace Sho.Pocket.ExchangeRates.Providers
 {
     public class MonobankExchangeRateProvider : IExchangeRateProvider
     {
-        public string ProviderName => MonobankConfiguration.BANK_NAME;
+        public string ProviderName => MonobankDefaultConfig.BANK_NAME;
 
-        private readonly MonobankExchangeRateService _exchangeRateService = new MonobankExchangeRateService();
+        private readonly MonobankExchangeRateService _exchangeRateService;
+
+        public MonobankExchangeRateProvider(MonobankExchangeRateService exchangeRateService)
+        {
+            _exchangeRateService = exchangeRateService;
+        }
 
         public async Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {

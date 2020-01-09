@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Sho.BankIntegration.Privatbank.Models;
 
@@ -10,6 +8,13 @@ namespace Sho.BankIntegration.Privatbank.Services
 {
     public class PrivatbankAccountService
     {
+        private readonly PrivatbankClient _privatbankClient;
+
+        public PrivatbankAccountService(PrivatbankClient privatbankClient)
+        {
+            _privatbankClient = privatbankClient;
+        }
+
         /// <summary>
         /// Gets merchant account. Privatbank API reference: <https://api.privatbank.ua/#p24/balance>.
         /// </summary>
@@ -19,20 +24,8 @@ namespace Sho.BankIntegration.Privatbank.Services
         /// <returns></returns>
         public async Task<PrivatbankAccount> GetMerchantAccountAsync(string password, string merchantId, string cardNumber)
         {
-            string requestUri = $"{PrivatbankConfiguration.BANK_API_URL}/balance";
-            string xml;
-
-            using (HttpClient client = new HttpClient())
-            {
-                AccountBalanceRequest request = new AccountBalanceRequest(password, merchantId, cardNumber);
-                HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUri)
-                {
-                    Content = new StringContent(request.Xml, Encoding.UTF8, "text/xml")
-                };
-
-                HttpResponseMessage response = await client.SendAsync(message);
-                xml = await response.Content.ReadAsStringAsync();
-            }
+            AccountBalanceRequest request = new AccountBalanceRequest(password, merchantId, cardNumber);
+            string xml = await _privatbankClient.GetMerchantDataAsync("balance", request.Xml);
 
             AccountBalanceResponse balance = AccountBalanceResponse.Parse(xml);
 
@@ -64,20 +57,8 @@ namespace Sho.BankIntegration.Privatbank.Services
         public async Task<IReadOnlyCollection<PrivatbankAccountTransaction>> GetMerchantAccountTransactionsAsync(
             string password, string merchantId, string cardNumber, DateTime from, DateTime to)
         {
-            string requestUri = $"{PrivatbankConfiguration.BANK_API_URL}/rest_fiz";
-            string xml;
-
-            using (HttpClient client = new HttpClient())
-            {
-                AccountTransactionsRequest request = new AccountTransactionsRequest(password, merchantId, cardNumber, from , to);
-                HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUri)
-                {
-                    Content = new StringContent(request.Xml, Encoding.UTF8, "text/xml")
-                };
-
-                HttpResponseMessage response = await client.SendAsync(message);
-                xml = await response.Content.ReadAsStringAsync();
-            }
+            AccountTransactionsRequest request = new AccountTransactionsRequest(password, merchantId, cardNumber, from, to);
+            string xml = await _privatbankClient.GetMerchantDataAsync("rest_fiz", request.Xml);
 
             AccountStatementResponse statement = AccountStatementResponse.Parse(xml);
 

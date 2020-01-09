@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
@@ -13,15 +14,15 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
         private readonly ExchangeRateSettings _settings;
 
-        public ExchangeRateProviderResolver(IEnumerable<IExchangeRateProvider> exchangeRateProviders, ExchangeRateSettings settings)
+        public ExchangeRateProviderResolver(IEnumerable<IExchangeRateProvider> exchangeRateProviders, IOptionsMonitor<ExchangeRateSettings> options)
         {
-            if (settings == null || settings.Providers == null)
+            if (options.CurrentValue == null || options.CurrentValue.Providers == null)
             {
                 throw new Exception("Missing exchange rate providers settings");
             }
 
             _exchangeRateProviders = exchangeRateProviders;
-            _settings = settings;
+            _settings = options.CurrentValue;
         }
 
         public IExchangeRateProvider Resolve(string name)

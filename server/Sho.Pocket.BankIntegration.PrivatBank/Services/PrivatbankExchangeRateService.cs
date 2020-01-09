@@ -1,33 +1,33 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sho.BankIntegration.Privatbank.Models;
 
 namespace Sho.BankIntegration.Privatbank.Services
 {
-    /// <summary>
-    /// Gets exchange rates of Privatbank.
-    /// Reference: <https://api.privatbank.ua/#p24/exchange>
-    /// </summary>
-    /// <returns></returns>
     public class PrivatbankExchangeRateService
     {
         private readonly string[] currencyTypes = new string[] { "4", "5" }; // 4 - secondary currencies, 5 - main currencies
 
+        private readonly PrivatbankClient _privatbankClient;
+
+        public PrivatbankExchangeRateService(PrivatbankClient privatbankClient)
+        {
+            _privatbankClient = privatbankClient;
+        }
+
+        /// <summary>
+        /// Gets exchange rates of Privatbank.
+        /// Reference: <https://api.privatbank.ua/#p24/exchange>
+        /// </summary>
+        /// <returns></returns>
         public async Task<IReadOnlyCollection<PrivatbankExchangeRate>> GetBankExchangeRatesAsync()
         {
             List<PrivatbankExchangeRate> result = new List<PrivatbankExchangeRate>();
 
             foreach (string type in currencyTypes)
             {
-                string requestUri = $"{PrivatbankConfiguration.BANK_API_URL}/pubinfo?json&exchange&coursid={type}";
-                string json;
-
-                using (HttpClient client = new HttpClient())
-                {
-                    json = await client.GetStringAsync(requestUri);
-                }
+                string json = await _privatbankClient.GetPublicDataAsync($"pubinfo?json&exchange&coursid={type}");
 
                 List<PrivatbankExchangeRateResponse> rates = JsonConvert.DeserializeObject<List<PrivatbankExchangeRateResponse>>(json);
                 result.AddRange(ParseExchangeRates(rates));

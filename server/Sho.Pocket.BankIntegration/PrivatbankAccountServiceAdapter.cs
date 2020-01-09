@@ -11,9 +11,14 @@ namespace Sho.Pocket.BankIntegration
 {
     public class PrivatbankAccountServiceAdapter : IBankAccountService
     {
-        public string BankName => PrivatbankConfiguration.BANK_NAME;
+        public string BankName => PrivatbankDefaultConfig.BANK_NAME;
 
-        private readonly PrivatbankAccountService _accountService = new PrivatbankAccountService();
+        private readonly PrivatbankAccountService _accountService;
+
+        public PrivatbankAccountServiceAdapter(PrivatbankAccountService accountService)
+        {
+            _accountService = accountService;
+        }
 
         public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams request)
         {

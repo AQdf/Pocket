@@ -1,6 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Sho.BankIntegration.Monobank;
+using Sho.BankIntegration.Monobank.Services;
+using Sho.BankIntegration.Privatbank;
+using Sho.BankIntegration.Privatbank.Services;
 using Sho.Pocket.Application.Assets;
 using Sho.Pocket.Application.Balances;
+using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Application.Currencies;
 using Sho.Pocket.Application.DataExport;
 using Sho.Pocket.Application.ExchangeRates;
@@ -26,12 +33,11 @@ using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
 {
-    public static class ServiceCollectionExtensions
+    public static class ApplicationServicesConfiguration
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
             services.AddSingleton<IDbConfiguration, DbConfiguration>();
-
 
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
@@ -55,16 +61,60 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<ICsvExporter, CsvExporter>();
 
             services.AddScoped<IBankAccountSyncService, BankAccountSyncService>();
-            services.AddScoped<IBankAccountService, MonobankAccountServiceAdapter>();
-            services.AddScoped<IBankAccountService, PrivatbankAccountServiceAdapter>();
             services.AddScoped<IBankAccountServiceResolver, BankAccountServiceResolver>();
 
             services.AddScoped<IExchangeRateService, ExchangeRateService>();
-            services.AddScoped<IExchangeRateProvider, MonobankExchangeRateProvider>();
-            services.AddScoped<IExchangeRateProvider, PrivatbankExchangeRateProvider>();
             services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
             services.AddScoped<IExchangeRateProvider, DefaultExchangeRateProvider>();
             services.AddScoped<IExchangeRateProviderResolver, ExchangeRateProviderResolver>();
+        }
+
+        public static void AddBankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)
+        {
+            services.AddMonobankIntegration(banksSettings);
+            services.AddPrivatbankIntegration(banksSettings);
+        }
+
+        private static void AddMonobankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)
+        {
+            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => MonobankDefaultConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (settings == null || string.IsNullOrWhiteSpace(settings.ApiUri))
+            {
+                throw new Exception($"Missing settings for {MonobankDefaultConfig.BANK_NAME} integration.");
+            }
+
+            services.AddHttpClient<MonobankClient>(c =>
+            {
+                c.BaseAddress = new Uri(settings.ApiUri);
+            });
+
+            services.AddScoped<MonobankAccountService>();
+            services.AddScoped<MonobankExchangeRateService>();
+
+            services.AddScoped<IBankAccountService, MonobankAccountServiceAdapter>();
+            services.AddScoped<IExchangeRateProvider, MonobankExchangeRateProvider>();
+        }
+
+        private static void AddPrivatbankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)
+        {
+            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => PrivatbankDefaultConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
+
+            if (settings == null || string.IsNullOrWhiteSpace(settings.ApiUri))
+            {
+                throw new Exception($"Missing settings for {PrivatbankDefaultConfig.BANK_NAME} integration.");
+            }
+
+            services.AddHttpClient<PrivatbankClient>(c =>
+            {
+                c.BaseAddress = new Uri(settings.ApiUri);
+            });
+
+            services.AddScoped<PrivatbankAccountService>();
+            services.AddScoped<PrivatbankExchangeRateService>();
+
+            services.AddScoped<IBankAccountService, PrivatbankAccountServiceAdapter>();
+            services.AddScoped<IExchangeRateProvider, PrivatbankExchangeRateProvider>();
         }
     }
 }

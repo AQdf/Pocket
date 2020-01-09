@@ -12,9 +12,14 @@ namespace Sho.Pocket.ExchangeRates.Providers
 {
     public class PrivatbankExchangeRateProvider : IExchangeRateProvider
     {
-        public string ProviderName => PrivatbankConfiguration.BANK_NAME;
+        public string ProviderName => PrivatbankDefaultConfig.BANK_NAME;
 
-        private readonly PrivatbankExchangeRateService _exchangeRateService = new PrivatbankExchangeRateService();
+        private readonly PrivatbankExchangeRateService _exchangeRateService;
+
+        public PrivatbankExchangeRateProvider(PrivatbankExchangeRateService exchangeRateService)
+        {
+            _exchangeRateService = exchangeRateService;
+        }
 
         public async Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {

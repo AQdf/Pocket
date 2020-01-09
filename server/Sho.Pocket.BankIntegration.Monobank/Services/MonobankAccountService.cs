@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sho.BankIntegration.Monobank.Models;
@@ -11,6 +10,13 @@ namespace Sho.BankIntegration.Monobank.Services
 {
     public class MonobankAccountService
     {
+        private readonly MonobankClient _monobankClient;
+
+        public MonobankAccountService(MonobankClient monobankClient)
+        {
+            _monobankClient = monobankClient;
+        }
+
         /// <summary>
         /// Gets client accounts.
         /// Monobank API reference: <https://api.monobank.ua/docs/#tag---------------------------->.
@@ -19,17 +25,7 @@ namespace Sho.BankIntegration.Monobank.Services
         /// <returns></returns>
         public async Task<IReadOnlyCollection<MonobankAccount>> GetAccountsAsync(string token)
         {
-            string requestUri = $"{MonobankConfiguration.BANK_API_URL}/personal/client-info";
-            string json;
-
-            using (HttpClient client = new HttpClient())
-            {
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-                request.Headers.Add("X-Token", token);
-                HttpResponseMessage response = await client.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-            }
-
+            string json = await _monobankClient.GetPersonalDataAsync("personal/client-info", token);
             MonobankClientInfo clientInfo = JsonConvert.DeserializeObject<MonobankClientInfo>(json);
 
             IReadOnlyCollection<MonobankAccount> accounts = clientInfo.Accounts
@@ -55,16 +51,7 @@ namespace Sho.BankIntegration.Monobank.Services
         {
             string fromTime = from.ToUnixTime().ToString();
             string toTime = to.ToUnixTime().ToString();
-            string requestUri = $"{MonobankConfiguration.BANK_API_URL}/personal/statement/{account}/{fromTime}/{toTime}";
-            string json;
-
-            using (HttpClient client = new HttpClient())
-            {
-                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);
-                request.Headers.Add("X-Token", token);
-                HttpResponseMessage response = await client.SendAsync(request);
-                json = await response.Content.ReadAsStringAsync();
-            }
+            string json = await _monobankClient.GetPersonalDataAsync($"personal/statement/{account}/{fromTime}/{toTime}", token);
 
             IEnumerable<MonobankStatementItem> items = JsonConvert.DeserializeObject<IEnumerable<MonobankStatementItem>>(json);
 

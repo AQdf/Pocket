@@ -10,7 +10,7 @@
             Sell = sell;
         }
 
-        public string Provider => PrivatbankConfiguration.BANK_NAME;
+        public string Provider => PrivatbankDefaultConfig.BANK_NAME;
 
         public string BaseCurrency { get; }
 

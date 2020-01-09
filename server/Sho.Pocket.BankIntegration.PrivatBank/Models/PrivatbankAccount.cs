@@ -11,7 +11,9 @@
             Currency = currency;
             Balance = balance;
             CreditLimit = creditLimit;
-            Name = !string.IsNullOrWhiteSpace(name) ? name : $"{PrivatbankConfiguration.BANK_NAME}: {balance} {currency}";
+            Name = !string.IsNullOrWhiteSpace(name) 
+                ? name 
+                : $"{PrivatbankDefaultConfig.BANK_NAME}: {balance} {currency}";
         }
 
         /// <summary>

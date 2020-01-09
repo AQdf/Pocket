@@ -1,19 +1,24 @@
-﻿using Sho.BankIntegration.Monobank;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Sho.BankIntegration.Monobank;
 using Sho.BankIntegration.Monobank.Models;
 using Sho.BankIntegration.Monobank.Services;
 using Sho.Pocket.Core.Features.BankSync.Abstractions;
 using Sho.Pocket.Core.Features.BankSync.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.BankIntegration
 {
     public class MonobankAccountServiceAdapter : IBankAccountService
     {
-        public string BankName => MonobankConfiguration.BANK_NAME;
+        public string BankName => MonobankDefaultConfig.BANK_NAME;
 
-        private readonly MonobankAccountService _accountService = new MonobankAccountService();
+        private readonly MonobankAccountService _accountService;
+
+        public MonobankAccountServiceAdapter(MonobankAccountService accountService)
+        {
+            _accountService = accountService;
+        }
 
         public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams requestParams)
         {

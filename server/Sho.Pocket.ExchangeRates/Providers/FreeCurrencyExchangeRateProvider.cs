@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
@@ -18,9 +19,9 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
         private readonly string _uri;
 
-        public FreeCurrencyExchangeRateProvider(ExchangeRateSettings settings)
+        public FreeCurrencyExchangeRateProvider(IOptionsMonitor<ExchangeRateSettings> options)
         {
-            ExchangeRateProviderOption option = settings.Providers.FirstOrDefault(o => o.Name.Equals(ProviderName, StringComparison.OrdinalIgnoreCase));
+            ExchangeRateProviderOption option = options.CurrentValue.Providers.FirstOrDefault(o => o.Name.Equals(ProviderName, StringComparison.OrdinalIgnoreCase));
 
             if (option == null)
             {

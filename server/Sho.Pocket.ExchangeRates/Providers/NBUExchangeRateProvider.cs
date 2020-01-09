@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Application.ExchangeRates.Models;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
@@ -15,13 +16,11 @@ namespace Sho.Pocket.ExchangeRates.Providers
     {
         public string ProviderName => "NBU";
 
-        private const decimal DEFAULT_VALUE = 1.0M;
-
         private readonly string _uri;
 
-        public NBUExchangeRateProvider(ExchangeRateSettings settings)
+        public NBUExchangeRateProvider(IOptionsMonitor<ExchangeRateSettings> options)
         {
-            ExchangeRateProviderOption option = settings.Providers.FirstOrDefault(o => o.Name.Equals(ProviderName, StringComparison.OrdinalIgnoreCase));
+            ExchangeRateProviderOption option = options.CurrentValue.Providers.FirstOrDefault(o => o.Name.Equals(ProviderName, StringComparison.OrdinalIgnoreCase));
 
             if (option == null)
             {

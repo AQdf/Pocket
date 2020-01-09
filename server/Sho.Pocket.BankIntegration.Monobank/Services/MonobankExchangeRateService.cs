@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sho.BankIntegration.Monobank.Models;
@@ -9,6 +8,13 @@ namespace Sho.BankIntegration.Monobank.Services
 {
     public class MonobankExchangeRateService
     {
+        private readonly MonobankClient _monobankClient;
+
+        public MonobankExchangeRateService(MonobankClient monobankClient)
+        {
+            _monobankClient = monobankClient;
+        }
+
         /// <summary>
         /// Gets exchange rates of Monobank. Data is cached and updated no more than 1 time for 5 minutes.
         /// Reference: <https://api.monobank.ua/docs/#tag-------------->
@@ -16,14 +22,7 @@ namespace Sho.BankIntegration.Monobank.Services
         /// <returns></returns>
         public async Task<IReadOnlyCollection<MonobankExchangeRate>> GetBankExchangeRatesAsync()
         {
-            string requestUri = $"{MonobankConfiguration.BANK_API_URL}/bank/currency";
-            string json;
-
-            using (HttpClient client = new HttpClient())
-            {
-                json = await client.GetStringAsync(requestUri);
-            }
-
+            string json = await _monobankClient.GetPublicDataAsync("bank/currency");
             List<MonobankCurrencyInfo> currenciesInfo = JsonConvert.DeserializeObject<List<MonobankCurrencyInfo>>(json);
 
             IReadOnlyCollection<MonobankExchangeRate> rates = currenciesInfo
