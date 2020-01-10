@@ -42,6 +42,6 @@
         /// <summary>
         /// Account friendly name
         /// </summary>
-        public string Name => $"{MonobankDefaultConfig.BANK_NAME}: {Balance} {Currency}";
+        public string Name => $"{MonobankConfig.BANK_NAME}: {Balance} {Currency}";
     }
 }

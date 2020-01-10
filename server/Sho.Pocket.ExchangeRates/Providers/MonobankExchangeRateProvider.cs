@@ -12,7 +12,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
 {
     public class MonobankExchangeRateProvider : IExchangeRateProvider
     {
-        public string ProviderName => MonobankDefaultConfig.BANK_NAME;
+        public string ProviderName => MonobankConfig.BANK_NAME;
 
         private readonly MonobankExchangeRateService _exchangeRateService;
 

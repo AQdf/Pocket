@@ -14,11 +14,11 @@ namespace Sho.BankIntegration.Monobank
 
             if (string.IsNullOrWhiteSpace(_httpClient.BaseAddress.AbsoluteUri))
             {
-                _httpClient.BaseAddress = new Uri(MonobankDefaultConfig.BANK_API_URL);
+                _httpClient.BaseAddress = new Uri(MonobankConfig.BANK_API_URL);
             }
         }
 
-        public async Task<string> GetPublicDataAsync(string relativeUri)
+        internal async Task<string> GetPublicDataAsync(string relativeUri)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(relativeUri);
             response.EnsureSuccessStatusCode();
@@ -26,7 +26,7 @@ namespace Sho.BankIntegration.Monobank
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> GetPersonalDataAsync(string relativeUri, string token)
+        internal async Task<string> GetPersonalDataAsync(string relativeUri, string token)
         {
             Uri requestUri = new Uri(_httpClient.BaseAddress, relativeUri);
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUri);

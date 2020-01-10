@@ -77,11 +77,11 @@ namespace Sho.Pocket.Application.Configuration
 
         private static void AddMonobankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)
         {
-            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => MonobankDefaultConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
+            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => MonobankConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
 
             if (settings == null || string.IsNullOrWhiteSpace(settings.ApiUri))
             {
-                throw new Exception($"Missing settings for {MonobankDefaultConfig.BANK_NAME} integration.");
+                throw new Exception($"Missing settings for {MonobankConfig.BANK_NAME} integration.");
             }
 
             services.AddHttpClient<MonobankClient>(c =>
@@ -98,11 +98,11 @@ namespace Sho.Pocket.Application.Configuration
 
         private static void AddPrivatbankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)
         {
-            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => PrivatbankDefaultConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
+            BankSettings settings = banksSettings.Banks.FirstOrDefault(b => PrivatbankConfig.BANK_NAME.Equals(b.Name, StringComparison.OrdinalIgnoreCase));
 
             if (settings == null || string.IsNullOrWhiteSpace(settings.ApiUri))
             {
-                throw new Exception($"Missing settings for {PrivatbankDefaultConfig.BANK_NAME} integration.");
+                throw new Exception($"Missing settings for {PrivatbankConfig.BANK_NAME} integration.");
             }
 
             services.AddHttpClient<PrivatbankClient>(c =>

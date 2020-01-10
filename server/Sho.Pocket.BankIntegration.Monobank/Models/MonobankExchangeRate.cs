@@ -11,7 +11,7 @@
             RateCross = rateCross;
         }
 
-        public string Provider => MonobankDefaultConfig.BANK_NAME;
+        public string Provider => MonobankConfig.BANK_NAME;
 
         public string BaseCurrency { get; }
 

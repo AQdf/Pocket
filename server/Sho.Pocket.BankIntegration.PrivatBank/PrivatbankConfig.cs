@@ -1,6 +1,6 @@
 ﻿namespace Sho.BankIntegration.Privatbank
 {
-    public static class PrivatbankDefaultConfig
+    public static class PrivatbankConfig
     {
         public const string BANK_NAME = "Privatbank";
 

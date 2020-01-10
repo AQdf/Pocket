@@ -17,11 +17,11 @@ namespace Sho.BankIntegration.Privatbank
 
             if (string.IsNullOrWhiteSpace(_httpClient.BaseAddress.AbsoluteUri))
             {
-                _httpClient.BaseAddress = new Uri(PrivatbankDefaultConfig.BANK_API_URL);
+                _httpClient.BaseAddress = new Uri(PrivatbankConfig.BANK_API_URL);
             }
         }
 
-        public async Task<string> GetPublicDataAsync(string relativeUri)
+        internal async Task<string> GetPublicDataAsync(string relativeUri)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(relativeUri);
             response.EnsureSuccessStatusCode();
@@ -29,7 +29,7 @@ namespace Sho.BankIntegration.Privatbank
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> GetMerchantDataAsync(string relativeUri, string requestXml)
+        internal async Task<string> GetMerchantDataAsync(string relativeUri, string requestXml)
         {
             Uri requestUri = new Uri(_httpClient.BaseAddress, relativeUri);
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUri)

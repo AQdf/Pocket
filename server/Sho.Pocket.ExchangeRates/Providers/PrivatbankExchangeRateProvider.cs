@@ -12,7 +12,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
 {
     public class PrivatbankExchangeRateProvider : IExchangeRateProvider
     {
-        public string ProviderName => PrivatbankDefaultConfig.BANK_NAME;
+        public string ProviderName => PrivatbankConfig.BANK_NAME;
 
         private readonly PrivatbankExchangeRateService _exchangeRateService;
 
