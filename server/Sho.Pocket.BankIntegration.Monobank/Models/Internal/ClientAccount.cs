@@ -1,9 +1,9 @@
-﻿namespace Sho.BankIntegration.Monobank.Models
+﻿namespace Sho.BankIntegration.Monobank.Models.Internal
 {
     /// <summary>
     /// Example: <https://api.monobank.ua/docs/#/definitions/UserInfo>
     /// </summary>
-    internal class MonobankClientAccount
+    internal class ClientAccount
     {
         /// <summary>
         /// Account identifier

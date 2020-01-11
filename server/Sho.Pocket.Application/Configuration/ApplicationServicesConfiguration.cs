@@ -84,7 +84,7 @@ namespace Sho.Pocket.Application.Configuration
                 throw new Exception($"Missing settings for {MonobankConfig.BANK_NAME} integration.");
             }
 
-            services.AddHttpClient<MonobankClient>(c =>
+            services.AddHttpClient<MonobankHttpClient>(c =>
             {
                 c.BaseAddress = new Uri(settings.ApiUri);
             });

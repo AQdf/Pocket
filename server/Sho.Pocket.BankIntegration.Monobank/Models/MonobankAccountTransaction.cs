@@ -7,12 +7,12 @@ namespace Sho.BankIntegration.Monobank.Models
     /// </summary>
     public class MonobankAccountTransaction
     {
-        public MonobankAccountTransaction(string id, DateTime date, string description, string currency, long amount, long balance)
+        public MonobankAccountTransaction(string id, DateTime date, string description, int currencyCode, long amount, long balance)
         {
             Id = id;
             TransactionDate = date;
             Description = description;
-            Currency = currency;
+            Currency = new MonobankCurrency(currencyCode);
             Amount = (decimal)amount / 100;
             Balance = (decimal)balance / 100;
         }
@@ -33,9 +33,9 @@ namespace Sho.BankIntegration.Monobank.Models
         public string Description { get; }
 
         /// <summary>
-        /// Currency name according to ISO 4217.
+        /// Currency according to ISO 4217.
         /// </summary>
-        public string Currency { get; }
+        public MonobankCurrency Currency { get; }
 
         /// <summary>
         /// Amount in account currency.

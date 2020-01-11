@@ -1,10 +1,10 @@
-﻿namespace Sho.BankIntegration.Monobank.Models
+﻿namespace Sho.BankIntegration.Monobank.Models.Internal
 {
     /// <summary>
     /// List of account transactions for the specified time.
     /// Referenece: <https://api.monobank.ua/docs/#/definitions/StatementItems>
     /// </summary>
-    internal class MonobankStatementItem
+    internal class StatementItem
     {
         /// <summary>
         /// Unique identifier of the transaction in Monobank system.

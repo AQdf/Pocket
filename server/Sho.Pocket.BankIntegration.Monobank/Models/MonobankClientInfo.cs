@@ -3,23 +3,30 @@
 namespace Sho.BankIntegration.Monobank.Models
 {
     /// <summary>
-    /// Example: https://api.monobank.ua/docs/#/definitions/UserInfo
+    /// Information about bank client and client accounts.
     /// </summary>
-    internal class MonobankClientInfo
+    public class MonobankClientInfo
     {
+        public MonobankClientInfo(string name, string webHookUrl, IReadOnlyCollection<MonobankAccount> accounts)
+        {
+            Name = name;
+            WebHookUrl = webHookUrl;
+            Accounts = accounts;
+        }
+
         /// <summary>
-        /// Client name
+        /// Bank client name.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// URL to get information about the new transaction
+        /// URL to get information about the new transactions.
         /// </summary>
         public string WebHookUrl { get; set; }
 
         /// <summary>
-        /// Collection of accounts
+        /// Collection of accounts.
         /// </summary>
-        public IReadOnlyCollection<MonobankClientAccount> Accounts { get; set; }
+        public IReadOnlyCollection<MonobankAccount> Accounts { get; set; }
     }
 }

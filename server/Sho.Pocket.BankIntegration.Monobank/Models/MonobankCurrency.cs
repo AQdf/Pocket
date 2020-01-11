@@ -5,27 +5,26 @@ namespace Sho.BankIntegration.Monobank.Models
     /// <summary>
     /// ISO4217 currency. Reference: <https://en.wikipedia.org/wiki/ISO_4217>
     /// </summary>
-    internal class MonobankCurrency
+    public class MonobankCurrency
     {
-        private MonobankCurrency(int code, string name)
+        public MonobankCurrency(int code)
         {
             Code = code;
-            Name = name;
+
+            bool valueExists = _currencyCodes.TryGetValue(code, out string name);
+            Name = valueExists ? name : null;
         }
 
+        /// <summary>
+        /// ISO4217 currency number code.
+        /// </summary>
         public int Code { get; set; }
 
+        /// <summary>
+        /// ISO4217 currency name.
+        /// </summary>
         public string Name { get; set; }
 
-        public static bool TryParse(int code, out MonobankCurrency result)
-        {
-            bool isSuccess = _currencyCodes.TryGetValue(code, out string name);
-            result = new MonobankCurrency(code, name);
-
-            return isSuccess;
-        }
-
-        // TODO: Move to configuration settings
         private static readonly Dictionary<int, string> _currencyCodes = new Dictionary<int, string>
         {
             { 840, "USD" },

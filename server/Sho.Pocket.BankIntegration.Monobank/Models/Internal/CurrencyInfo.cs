@@ -1,9 +1,9 @@
-﻿namespace Sho.BankIntegration.Monobank.Models
+﻿namespace Sho.BankIntegration.Monobank.Models.Internal
 {
     /// <summary>
     /// Example: <https://api.monobank.ua/docs/#/definitions/CurrencyInfo>
     /// </summary>
-    internal class MonobankCurrencyInfo
+    internal class CurrencyInfo
     {
         /// <summary>
         /// Currency code of base currency according to ISO 4217 (int32)
@@ -18,21 +18,24 @@
         /// <summary>
         /// Effective time of exchange rate in seconds in Unix time format (int64)
         /// </summary>
-        public string Date { get; set; }
+        public long Date { get; set; }
 
         /// <summary>
         /// Exchange rate to buy base currency (float)
+        /// Could be missing in response.
         /// </summary>
-        public string RateBuy { get; set; }
+        public decimal? RateBuy { get; set; }
 
         /// <summary>
         /// Exchange rate to sell base currency (float)
+        /// Could be missing in response.
         /// </summary>
-        public string RateSell { get; set; }
+        public decimal? RateSell { get; set; }
 
         /// <summary>
         /// Cross exchange rate (float)
+        /// Could be missing in response.
         /// </summary>
-        public string RateCross { get; set; }
+        public decimal? RateCross { get; set; }
     }
 }

@@ -22,10 +22,10 @@ namespace Sho.Pocket.BankIntegration
 
         public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams requestParams)
         {
-            IReadOnlyCollection<MonobankAccount> accounts = await _accountService.GetAccountsAsync(requestParams.Token);
+            MonobankClientInfo info = await _accountService.GetClientInfoAsync(requestParams.Token);
 
-            List<BankAccountBalance> balances = accounts
-                .Select(a => new BankAccountBalance(BankName, a.Id, a.Name, a.Currency, a.Balance))
+            List<BankAccountBalance> balances = info.Accounts
+                .Select(a => new BankAccountBalance(BankName, a.Id, a.Currency.Name, a.Balance))
                 .ToList();
 
             return balances;
@@ -37,7 +37,7 @@ namespace Sho.Pocket.BankIntegration
                 await _accountService.GetAccountTransactionsAsync(requestParams.Token, requestParams.Account, requestParams.From, requestParams.To);
 
             List<AccountTransaction> transactions = statementItems
-                .Select(i => new AccountTransaction(i.Id, i.TransactionDate, i.Description, i.Currency, i.Amount, i.Balance))
+                .Select(i => new AccountTransaction(i.Id, i.TransactionDate, i.Description, i.Currency.Name, i.Amount, i.Balance))
                 .ToList();
 
             return transactions;

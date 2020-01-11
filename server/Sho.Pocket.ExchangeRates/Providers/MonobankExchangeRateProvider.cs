@@ -26,8 +26,13 @@ namespace Sho.Pocket.ExchangeRates.Providers
             IReadOnlyCollection<MonobankExchangeRate> rates = await _exchangeRateService.GetBankExchangeRatesAsync();
 
             List<ExchangeRateProviderModel> providerRates = rates
-                .Where(r => counterCurrency.Equals(r.CounterCurrency, StringComparison.OrdinalIgnoreCase) && baseCurrencies.Contains(r.BaseCurrency))
-                .Select(r => new ExchangeRateProviderModel(r.Provider, r.BaseCurrency, r.CounterCurrency, r.RateSell ?? r.RateCross.Value))
+                .Where(r => counterCurrency.Equals(r.CounterCurrency.Name, StringComparison.OrdinalIgnoreCase)
+                            && baseCurrencies.Contains(r.BaseCurrency.Name, StringComparer.OrdinalIgnoreCase))
+                .Select(r => new ExchangeRateProviderModel(
+                    r.Provider,
+                    r.BaseCurrency.Name,
+                    r.CounterCurrency.Name,
+                    r.RateSell ?? r.RateCross.Value))
                 .ToList();
 
             return providerRates;
@@ -38,17 +43,20 @@ namespace Sho.Pocket.ExchangeRates.Providers
             IReadOnlyCollection<MonobankExchangeRate> rates = await _exchangeRateService.GetBankExchangeRatesAsync();
 
             MonobankExchangeRate rate = rates.FirstOrDefault(r =>
-                baseCurrency.Equals(r.BaseCurrency, StringComparison.OrdinalIgnoreCase)
-                && counterCurrency.Equals(r.CounterCurrency, StringComparison.OrdinalIgnoreCase));
+                baseCurrency.Equals(r.BaseCurrency.Name, StringComparison.OrdinalIgnoreCase)
+                && counterCurrency.Equals(r.CounterCurrency.Name, StringComparison.OrdinalIgnoreCase));
 
             if (rate != null)
             {
-                return new ExchangeRateProviderModel(rate.Provider, rate.BaseCurrency, rate.CounterCurrency, rate.RateSell ?? rate.RateCross.Value);
+                return new ExchangeRateProviderModel(
+                    rate.Provider,
+                    rate.BaseCurrency.Name,
+                    rate.CounterCurrency.Name,
+                    rate.RateSell ?? rate.RateCross.Value);
             }
             else
             {
-                // TODO: Log Monobank exchange rate not found!
-                return null;
+                throw new Exception($"Failed to get {ProviderName} exchange rate from {baseCurrency} to {counterCurrency}.");
             }
         }
     }
