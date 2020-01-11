@@ -23,7 +23,7 @@ namespace Sho.Pocket.BankIntegration
         public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams request)
         {
             PrivatbankAccount account = await _accountService.GetMerchantAccountAsync(request.Token, request.BankClientId, request.CardNumber);
-            BankAccountBalance balance = new BankAccountBalance(BankName, account.Id, account.Name, account.Currency, account.Balance);
+            BankAccountBalance balance = new BankAccountBalance(BankName, account.Id, account.Currency, account.Balance);
 
             return new List<BankAccountBalance> { balance };
         }

@@ -63,7 +63,7 @@ namespace Sho.Pocket.Application.Features.BankSync
             }
 
             AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
-            List<BankAccount> result = accountBalances.Select(a => new BankAccount(a.AccountId, a.FriendlyName)).ToList();
+            List<BankAccount> result = accountBalances.Select(a => new BankAccount(a.AccountId, a.AccountName)).ToList();
 
             return result;
         }
@@ -102,7 +102,7 @@ namespace Sho.Pocket.Application.Features.BankSync
                 IReadOnlyCollection<BankAccountBalance> accountBalances = await bankAccountservice.GetAccountsAsync(requestParams);
                 accountBalance = accountBalances.FirstOrDefault(ab => ab.AccountId == account.BankAccountId);
 
-                await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.FriendlyName);
+                await _assetBankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
             }
 
             return accountBalance;
