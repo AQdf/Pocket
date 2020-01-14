@@ -12,7 +12,6 @@ namespace Sho.BankIntegration.Monobank.Models
             Code = code;
 
             bool valueFound = _currencyCodes.TryGetValue(code, out string name);
-
             Name = valueFound ? name : null;
         }
 

@@ -58,7 +58,8 @@ namespace Sho.BankIntegration.Monobank.Services
             var items = JsonConvert.DeserializeObject<IEnumerable<StatementItem>>(json);
 
             var transactions = items
-                .Select(t => new MonobankAccountTransaction(t.Id, t.Time.FromUnixTime(), t.Description, t.CurrencyCode, t.Amount, t.Balance))
+                .Select(t => new MonobankAccountTransaction(
+                    t.Id, t.Time.FromUnixTime(), t.Description, t.CurrencyCode, t.Amount, t.Balance, t.Mcc, t.Hold, t.CommissionRate, t.CashbackAmount))
                 .ToList();
 
             return transactions;
