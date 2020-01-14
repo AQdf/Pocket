@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Sho.BankIntegration.Privatbank.Models;
+using Sho.BankIntegration.Privatbank.Models.Internal;
+using Sho.BankIntegration.Privatbank.Utils;
 
 namespace Sho.BankIntegration.Privatbank.Services
 {
@@ -27,33 +31,21 @@ namespace Sho.BankIntegration.Privatbank.Services
 
             foreach (string type in currencyTypes)
             {
-                string json = await _privatbankClient.GetPublicDataAsync($"pubinfo?json&exchange&coursid={type}");
+                HttpResponseMessage response = await _privatbankClient.GetPublicDataAsync($"pubinfo?json&exchange&coursid={type}");
+                string json = await response.Content.ReadAsStringAsync();
+                var ratesResponse = JsonConvert.DeserializeObject<IEnumerable<ExchangeRateResponse>>(json);
 
-                List<PrivatbankExchangeRateResponse> rates = JsonConvert.DeserializeObject<List<PrivatbankExchangeRateResponse>>(json);
-                result.AddRange(ParseExchangeRates(rates));
+                IEnumerable<PrivatbankExchangeRate> rates = ratesResponse
+                    .Select(r => new PrivatbankExchangeRate(
+                        ISO4217CurrencyCompatibility.GetActive(r.Ccy),
+                        ISO4217CurrencyCompatibility.GetActive(r.Base_ccy),
+                        r.Buy,
+                        r.Sale));
+
+                result.AddRange(rates);
             }
 
             return result;
-        }
-
-        private List<PrivatbankExchangeRate> ParseExchangeRates(List<PrivatbankExchangeRateResponse> providerRates)
-        {
-            List<PrivatbankExchangeRate> rates = new List<PrivatbankExchangeRate>();
-
-            foreach (PrivatbankExchangeRateResponse item in providerRates)
-            {
-                if (!string.IsNullOrWhiteSpace(item.Ccy) && !string.IsNullOrWhiteSpace(item.Base_ccy))
-                {
-                    decimal.TryParse(item.Buy, out decimal buy);
-                    decimal.TryParse(item.Sale, out decimal sell);
-                    PrivatbankCurrency baseCurrency = PrivatbankCurrency.GetCompatible(item.Ccy);
-                    PrivatbankCurrency counterCurrency = PrivatbankCurrency.GetCompatible(item.Base_ccy);
-
-                    rates.Add(new PrivatbankExchangeRate(baseCurrency.Name, counterCurrency.Name, buy, sell));
-                }
-            }
-
-            return rates;
         }
     }
 }

@@ -1,43 +1,41 @@
 ﻿namespace Sho.BankIntegration.Privatbank.Models
 {
     /// <summary>
-    /// Privatbank account information
+    /// Privatbank account information.
     /// </summary>
     public class PrivatbankAccount
     {
-        public PrivatbankAccount(string id, string currency, decimal balance, decimal creditLimit, string name)
+        public PrivatbankAccount(string id, string name, string currency, decimal balance, decimal creditLimit)
         {
             Id = id;
+            Name = name;
             Currency = currency;
             Balance = balance;
             CreditLimit = creditLimit;
-            Name = !string.IsNullOrWhiteSpace(name) 
-                ? name 
-                : $"{PrivatbankConfig.BANK_NAME}: {balance} {currency}";
         }
 
         /// <summary>
-        /// Account identifier in Privatbank system
+        /// Account identifier in Privatbank system.
         /// </summary>
         public string Id { get; }
 
         /// <summary>
-        /// Account friendly name
+        /// Account name.
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// Currency name according to ISO 4217
+        /// Currency name according to ISO 4217.
         /// </summary>
         public string Currency { get; }
 
         /// <summary>
-        /// Account balance
+        /// Account balance.
         /// </summary>
         public decimal Balance { get; }
 
         /// <summary>
-        /// Account credit limit
+        /// Account credit limit.
         /// </summary>
         public decimal CreditLimit { get; }
     }

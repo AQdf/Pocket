@@ -1,21 +1,17 @@
-﻿using Sho.BankIntegration.Privatbank.Utils;
+﻿using System;
+using Sho.BankIntegration.Privatbank.Utils;
 
-namespace Sho.BankIntegration.Privatbank.Models
+namespace Sho.BankIntegration.Privatbank.Models.Internal
 {
-    /// <summary>
-    /// Example: <https://api.privatbank.ua/#p24/balance>.
-    /// </summary>
-    /// <param name="password">Private merchant password.</param>
-    /// <param name="merchantId">Merchant id.</param>
-    /// <param name="cardNumber">Merchant assossiated card number.</param>
-    /// <returns></returns>
-    internal class AccountBalanceRequest
+    internal class AccountTransactionsRequest
     {
-        public AccountBalanceRequest(string password, string merchantId, string cardNumber)
+        public AccountTransactionsRequest(string password, string merchantId, string cardNumber, DateTime from, DateTime to)
         {
             Password = password;
             CardNumber = cardNumber;
             MerchantId = merchantId;
+            From = from.ToDotFormatString();
+            To = to.ToDotFormatString();
             Xml = Compose();
         }
 
@@ -35,6 +31,16 @@ namespace Sho.BankIntegration.Privatbank.Models
         public string MerchantId { get; }
 
         /// <summary>
+        /// Start date of the statement period in format 'dd.mm.yyyy'.
+        /// </summary>
+        public string From { get; }
+
+        /// <summary>
+        /// End date of the statement period in format 'dd.mm.yyyy'.
+        /// </summary>
+        public string To { get; }
+
+        /// <summary>
         /// Composed merchant balance request xml.
         /// </summary>
         public string Xml { get; }
@@ -44,7 +50,7 @@ namespace Sho.BankIntegration.Privatbank.Models
         /// </summary>
         private string Compose()
         {
-            string dataTagContent = $"<oper>cmt</oper><wait>0</wait><test>0</test><payment id=\"\"><prop name=\"cardnum\" value=\"{CardNumber}\" /><prop name=\"country\" value=\"UA\" /></payment>";
+            string dataTagContent = $"<oper>cmt</oper><wait>0</wait><test>0</test><payment><prop name=\"sd\" value=\"{From}\" /><prop name=\"ed\" value=\"{To}\" /><prop name=\"card\" value=\"{CardNumber}\" /></payment>";
             string plainSignature = $"{dataTagContent}{Password}";
             string signature = plainSignature.GetHashMd5().GetHashSha1();
             string text = $"<?xml version=\"1.0\" encoding=\"UTF-8\"?><request version=\"1.0\"><merchant><id>{MerchantId}</id><signature>{signature}</signature></merchant><data>{dataTagContent}</data></request>";

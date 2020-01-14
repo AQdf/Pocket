@@ -1,11 +1,11 @@
-﻿using Sho.BankIntegration.Privatbank;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Sho.BankIntegration.Privatbank;
 using Sho.BankIntegration.Privatbank.Models;
 using Sho.BankIntegration.Privatbank.Services;
 using Sho.Pocket.Core.Features.BankSync.Abstractions;
 using Sho.Pocket.Core.Features.BankSync.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.BankIntegration
 {
@@ -30,11 +30,22 @@ namespace Sho.Pocket.BankIntegration
 
         public async Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
         {
-            IReadOnlyCollection<PrivatbankAccountTransaction> items = await _accountService.GetMerchantAccountTransactionsAsync(
+            PrivatbankAccountStatement statement = await _accountService.GetMerchantAccountStatementAsync(
                 requestParams.Token, requestParams.BankClientId, requestParams.Account, requestParams.From, requestParams.To);
 
-            List<AccountTransaction> transactions = items
-                .Select(i => new AccountTransaction(i.AppCode, i.TransactionDate, i.Description, i.Currency, i.Amount, i.Balance))
+            if (statement == null || statement.Items == null)
+            {
+                return new List<AccountTransaction>();
+            }
+
+            List<AccountTransaction> transactions = statement.Items
+                .Select(i => new AccountTransaction(
+                    i.AppCode,
+                    i.TransactionDate,
+                    i.Description,
+                    i.TransactionAmount.Currency,
+                    i.TransactionAmount.Value,
+                    i.AccountBalance.Value))
                 .ToList();
 
             return transactions;

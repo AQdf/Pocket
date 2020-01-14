@@ -21,15 +21,15 @@ namespace Sho.BankIntegration.Privatbank
             }
         }
 
-        internal async Task<string> GetPublicDataAsync(string relativeUri)
+        internal async Task<HttpResponseMessage> GetPublicDataAsync(string relativeUri)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(relativeUri);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            return response;
         }
 
-        internal async Task<string> GetMerchantDataAsync(string relativeUri, string requestXml)
+        internal async Task<HttpResponseMessage> GetMerchantDataAsync(string relativeUri, string requestXml)
         {
             Uri requestUri = new Uri(_httpClient.BaseAddress, relativeUri);
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, requestUri)
@@ -40,7 +40,7 @@ namespace Sho.BankIntegration.Privatbank
             HttpResponseMessage response = await _httpClient.SendAsync(message);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            return response;
         }
     }
 }
