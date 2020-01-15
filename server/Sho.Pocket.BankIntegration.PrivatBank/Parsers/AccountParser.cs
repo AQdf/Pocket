@@ -12,11 +12,6 @@ namespace Sho.BankIntegration.Privatbank.Parsers
             document.LoadXml(xml);
             XmlNode cardBalanceNode = document.SelectSingleNode("response/data/info/cardbalance");
 
-            if (cardBalanceNode == null)
-            {
-                return null;
-            }
-
             string id = GetNodeText(cardBalanceNode, "card/card_number");
             string name = GetNodeText(cardBalanceNode, "card/acc_name");
             string currency = GetNodeText(cardBalanceNode, "card/currency");

@@ -17,11 +17,6 @@ namespace Sho.BankIntegration.Privatbank.Parsers
             document.LoadXml(xml);
             XmlNode statementsNode = document.SelectSingleNode("response/data/info/statements");
 
-            if (statementsNode == null)
-            {
-                return null;
-            }
-
             string status = GetAttributeText(statementsNode, "status");
             string creditString = GetAttributeText(statementsNode, "credit");
             string debetString = GetAttributeText(statementsNode, "debet");
@@ -36,12 +31,12 @@ namespace Sho.BankIntegration.Privatbank.Parsers
 
         private List<PrivatbankAccountTransaction> ParseItems(XmlNodeList statements)
         {
+            List<PrivatbankAccountTransaction> items = new List<PrivatbankAccountTransaction>();
+
             if (statements == null)
             {
-                return null;
+                return items;
             }
-
-            List<PrivatbankAccountTransaction> items = new List<PrivatbankAccountTransaction>();
 
             for (int i = 0; i < statements.Count; i++)
             {
