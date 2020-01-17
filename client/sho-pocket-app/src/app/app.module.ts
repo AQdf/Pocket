@@ -18,7 +18,6 @@ import { AssetComponent } from './components/assets/asset/asset.component';
 import { AssetListComponent } from './components/assets/asset-list/asset-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppRoutingModule } from './/app-routing.module';
-import { SnapshotComponent } from './components/snapshot/snapshot.component';
 import { TotalsComponent } from './components/totals/totals.component';
 import { BalancesComponent } from './components/balances/balances.component';
 import { BalanceComponent } from './components/balances/balance/balance.component';
@@ -38,7 +37,6 @@ import { AccountStatementComponent } from './components/assets/account-statement
     AssetComponent,
     AssetListComponent,
     DashboardComponent,
-    SnapshotComponent,
     TotalsComponent,
     BalancesComponent,
     BalanceComponent,
