@@ -1,6 +1,6 @@
 ﻿using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.Inventory.Models
+namespace Sho.Pocket.Core.Features.Inventory.Models
 {
     public class InvItemImageModel
     {

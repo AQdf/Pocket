@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sho.Pocket.Application.Inventory.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.Inventory.Abstractions;
+using Sho.Pocket.Core.Features.Inventory.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Inventory

@@ -1,9 +1,9 @@
-﻿using Sho.Pocket.Application.Inventory.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.Inventory.Models;
 
-namespace Sho.Pocket.Application.Inventory
+namespace Sho.Pocket.Core.Features.Inventory.Abstractions
 {
     public interface IInventoryService
     {

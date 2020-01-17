@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Inventory;
-using Sho.Pocket.Application.Inventory.Models;
-using Sho.Pocket.Auth.IdentityServer.Models;
-using Sho.Pocket.Auth.IdentityServer.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Auth.IdentityServer.Models;
+using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.Inventory.Abstractions;
+using Sho.Pocket.Core.Features.Inventory.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {

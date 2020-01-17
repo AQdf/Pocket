@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Inventory;
-using Sho.Pocket.Auth.IdentityServer.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.Inventory.Abstractions;
 
 namespace Sho.Pocket.Api.AdminControllers
 {

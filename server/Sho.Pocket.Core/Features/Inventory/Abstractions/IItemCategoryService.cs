@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Application.Inventory
+namespace Sho.Pocket.Core.Features.Inventory.Abstractions
 {
     public interface IItemCategoryService
     {
