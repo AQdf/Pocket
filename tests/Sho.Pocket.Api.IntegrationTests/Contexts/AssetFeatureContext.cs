@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Application.Assets;
-using Sho.Pocket.Application.Assets.Models;
+using Sho.Pocket.Core.Features.Assets.Abstractions;
+using Sho.Pocket.Core.Features.Assets.Models;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {

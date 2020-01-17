@@ -1,9 +1,9 @@
-﻿using Sho.Pocket.Application.Assets.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.Assets.Models;
 
-namespace Sho.Pocket.Application.Assets
+namespace Sho.Pocket.Core.Features.Assets.Abstractions
 {
     public interface IAssetService
     {

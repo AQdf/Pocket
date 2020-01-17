@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
-using Sho.Pocket.Application.Assets.Models;
+using Sho.Pocket.Core.Features.Assets.Models;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 

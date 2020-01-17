@@ -1,7 +1,7 @@
-﻿using Sho.Pocket.Domain.Entities;
-using System;
+﻿using System;
+using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.Assets.Models
+namespace Sho.Pocket.Core.Features.Assets.Models
 {
     public class AssetViewModel
     {

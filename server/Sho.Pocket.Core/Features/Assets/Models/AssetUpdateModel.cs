@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sho.Pocket.Application.Assets.Models
+﻿namespace Sho.Pocket.Core.Features.Assets.Models
 {
     public class AssetUpdateModel
     {

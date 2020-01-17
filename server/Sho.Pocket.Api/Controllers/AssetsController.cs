@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Assets;
-using Sho.Pocket.Application.Assets.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.Assets.Abstractions;
+using Sho.Pocket.Core.Features.Assets.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
