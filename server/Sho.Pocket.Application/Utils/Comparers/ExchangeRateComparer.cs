@@ -1,8 +1,8 @@
-﻿using Sho.Pocket.Core.Features.ExchangeRates.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
-namespace Sho.Pocket.Application.Common.Comparers
+namespace Sho.Pocket.Application.Utils.Comparers
 {
     public class ExchangeRateComparer : IEqualityComparer<ExchangeRateModel>
     {
