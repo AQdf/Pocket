@@ -1,7 +1,6 @@
-﻿using Sho.Pocket.Application.DataExport;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.Application.Balances
+namespace Sho.Pocket.Application.Utils.Csv
 {
     public class CsvExporter : ICsvExporter
     {

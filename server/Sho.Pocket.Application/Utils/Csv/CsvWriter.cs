@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Sho.Pocket.Application.DataExport
+namespace Sho.Pocket.Application.Utils.Csv
 {
     public class CsvWriter
     {

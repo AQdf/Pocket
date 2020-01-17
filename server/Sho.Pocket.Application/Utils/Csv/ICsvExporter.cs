@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.Application.DataExport
+namespace Sho.Pocket.Application.Utils.Csv
 {
     public interface ICsvExporter
     {
