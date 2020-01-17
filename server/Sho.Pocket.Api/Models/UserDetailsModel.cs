@@ -1,8 +1,8 @@
-﻿using Sho.Pocket.Application.UserCurrencies.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Sho.Pocket.Application.UserCurrencies.Models;
 
-namespace Sho.Pocket.Application.Users.Models
+namespace Sho.Pocket.Api.Models
 {
     public class UserDetailsModel
     {
