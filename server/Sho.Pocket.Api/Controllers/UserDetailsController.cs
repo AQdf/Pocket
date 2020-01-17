@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Api.Models;
-using Sho.Pocket.Application.UserCurrencies;
-using Sho.Pocket.Application.UserCurrencies.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
+using Sho.Pocket.Core.Features.UserCurrencies.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {

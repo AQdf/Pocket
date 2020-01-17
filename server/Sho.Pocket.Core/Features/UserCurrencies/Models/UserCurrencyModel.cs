@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sho.Pocket.Application.UserCurrencies.Models
+﻿namespace Sho.Pocket.Core.Features.UserCurrencies.Models
 {
     public class UserCurrencyModel
     {

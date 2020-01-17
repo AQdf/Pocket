@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sho.Pocket.Application.UserCurrencies.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
+using Sho.Pocket.Core.Features.UserCurrencies.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.UserCurrencies

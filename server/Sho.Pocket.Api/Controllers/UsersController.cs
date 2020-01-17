@@ -5,6 +5,7 @@ using Sho.Pocket.Api.Models;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
 
 namespace Sho.Pocket.Api.Controllers
 {

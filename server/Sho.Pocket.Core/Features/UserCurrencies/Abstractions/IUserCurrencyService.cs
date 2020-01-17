@@ -1,9 +1,9 @@
-﻿using Sho.Pocket.Application.UserCurrencies.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.UserCurrencies.Models;
 
-namespace Sho.Pocket.Application.UserCurrencies
+namespace Sho.Pocket.Core.Features.UserCurrencies.Abstractions
 {
     public interface IUserCurrencyService
     {

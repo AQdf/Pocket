@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Sho.Pocket.Application.UserCurrencies.Models;
+using Sho.Pocket.Core.Features.UserCurrencies.Models;
 
 namespace Sho.Pocket.Api.Models
 {

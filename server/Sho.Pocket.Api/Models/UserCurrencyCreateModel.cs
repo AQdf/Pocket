@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Application.UserCurrencies.Models
+﻿namespace Sho.Pocket.Api.Models
 {
     public class UserCurrencyCreateModel
     {
