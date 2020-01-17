@@ -10,8 +10,8 @@ using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.Utils.Csv;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.BankSync.Abstractions;
-using Sho.Pocket.Core.Features.BankSync.Models;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts.Models;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sho.Pocket.Core.Features.BankSync.Models
+namespace Sho.Pocket.Core.Features.BankAccounts.Models
 {
     public class AccountStatementRequestParams
     {

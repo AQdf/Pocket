@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Core.Features.BankSync.Abstractions;
-using Sho.Pocket.Core.Features.BankSync.Models;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts.Models;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.Features.BankSync
+namespace Sho.Pocket.Application.Features.BankAccounts
 {
     public class BankAccountSyncService : IBankAccountSyncService
     {

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Sho.BankIntegration.Monobank;
 using Sho.BankIntegration.Monobank.Models;
 using Sho.BankIntegration.Monobank.Services;
-using Sho.Pocket.Core.Features.BankSync.Abstractions;
-using Sho.Pocket.Core.Features.BankSync.Models;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts.Models;
 
 namespace Sho.Pocket.BankIntegration
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Sho.Pocket.Core.Features.BankSync.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
 
-namespace Sho.Pocket.Application.Features.BankSync
+namespace Sho.Pocket.Application.Features.BankAccounts
 {
     public class BankAccountServiceResolver : IBankAccountServiceResolver
     {

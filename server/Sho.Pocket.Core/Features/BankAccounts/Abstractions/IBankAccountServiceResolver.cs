@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core.Features.BankSync.Abstractions
+﻿namespace Sho.Pocket.Core.Features.BankAccounts.Abstractions
 {
     public interface IBankAccountServiceResolver
     {
