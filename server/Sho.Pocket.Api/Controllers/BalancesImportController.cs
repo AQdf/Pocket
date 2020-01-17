@@ -11,11 +11,11 @@ namespace Sho.Pocket.Api.Controllers
     [Route("api/balances/import")]
     public class BalancesImportController : AuthUserControllerBase
     {
-        private readonly IBalanceService _balanceService;
+        private readonly IBalanceImportService _balanceImportService;
 
-        public BalancesImportController(IBalanceService balanceService, IAuthService authService) : base(authService)
+        public BalancesImportController(IBalanceImportService balanceImportService, IAuthService authService) : base(authService)
         {
-            _balanceService = balanceService;
+            _balanceImportService = balanceImportService;
         }
 
         [HttpPost("json")]
@@ -35,7 +35,7 @@ namespace Sho.Pocket.Api.Controllers
                 using (var stream = new StreamReader(file.OpenReadStream()))
                 {
                     string data = await stream.ReadToEndAsync();
-                    await _balanceService.ImportJsonAsync(user.Id, data);
+                    await _balanceImportService.ImportJsonAsync(user.Id, data);
                 }
             }
             else

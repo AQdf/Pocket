@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Sho.Pocket.Application.Exceptions;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Application.Utils.Csv;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
@@ -27,7 +24,6 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
         private readonly IBankAccountSyncService _accountBankSyncService;
-        private readonly ICsvExporter _csvExporter;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
@@ -36,8 +32,7 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
-            IBankAccountSyncService accountBankSyncService,
-            ICsvExporter balanceExporter)
+            IBankAccountSyncService accountBankSyncService)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
@@ -46,7 +41,6 @@ namespace Sho.Pocket.Application.Balances
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
             _accountBankSyncService = accountBankSyncService;
-            _csvExporter = balanceExporter;
         }
 
         public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
@@ -153,59 +147,6 @@ namespace Sho.Pocket.Application.Balances
             IEnumerable<DateTime> result = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
 
             return result.ToList();
-        }
-
-        public async Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId)
-        {
-            IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userOpenId);
-
-            List<BalanceExportModel> items = balances
-                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.Currency, b.ExchangeRate.Rate, b.ExchangeRate.CounterCurrency))
-                .ToList();
-
-            string csv = _csvExporter.ExportToCsv(items);
-            byte[] bytes = Encoding.Default.GetBytes(csv);
-
-            return bytes;
-        }
-
-        public async Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate)
-        {
-            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
-
-            List<BalanceExportModel> items = balances
-                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset.Name, b.Value, b.Asset.Currency, b.ExchangeRate.Rate, b.ExchangeRate.CounterCurrency))
-                .ToList();
-
-            string csv = JsonConvert.SerializeObject(items);
-            byte[] bytes = Encoding.Default.GetBytes(csv);
-
-            return bytes;
-        }
-
-        public async Task ImportJsonAsync(Guid userOpenId, string jsonData)
-        {
-            List<BalanceExportModel> items = JsonConvert.DeserializeObject<List<BalanceExportModel>>(jsonData);
-            IEnumerable<IGrouping<DateTime, BalanceExportModel>> efeectiveDateGroup = items.GroupBy(i => i.EffectiveDate);
-
-            foreach (IGrouping<DateTime, BalanceExportModel> group in efeectiveDateGroup)
-            {
-                bool exists = await _balanceRepository.ExistsEffectiveDateBalancesAsync(userOpenId, group.Key);
-
-                if (!exists)
-                {
-                    foreach (BalanceExportModel item in group)
-                    {
-                        Asset asset = await _assetRepository.GetByNameAsync(userOpenId, item.Asset);
-
-                        if (asset != null)
-                        {
-                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.ExchangeRate);
-                            Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.Value, rate.Id);
-                        }
-                    }
-                }
-            }
         }
 
         public async Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id)

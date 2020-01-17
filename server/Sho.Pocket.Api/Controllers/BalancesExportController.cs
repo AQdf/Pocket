@@ -10,11 +10,11 @@ namespace Sho.Pocket.Api.Controllers
     [Route("api/balances/export")]
     public class BalancesExportController : AuthUserControllerBase
     {
-        private readonly IBalanceService _balanceService;
+        private readonly IBalanceExportService _balanceExportService;
 
-        public BalancesExportController(IBalanceService balanceService, IAuthService authService) : base(authService)
+        public BalancesExportController(IBalanceExportService balanceExportService, IAuthService authService) : base(authService)
         {
-            _balanceService = balanceService;
+            _balanceExportService = balanceExportService;
         }
 
         [HttpGet("csv")]
@@ -27,7 +27,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            byte[] bytes = await _balanceService.ExportUserBalancesToCsvAsync(user.Id);
+            byte[] bytes = await _balanceExportService.ExportUserBalancesToCsvAsync(user.Id);
 
             return File(bytes, "application/csv");
         }
@@ -42,7 +42,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            byte[] bytes = await _balanceService.ExportJsonAsync(user.Id, effectiveDate);
+            byte[] bytes = await _balanceExportService.ExportJsonAsync(user.Id, effectiveDate);
 
             return File(bytes, "application/json");
         }

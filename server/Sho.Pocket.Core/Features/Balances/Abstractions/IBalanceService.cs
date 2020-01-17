@@ -23,12 +23,6 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 
         Task<List<DateTime>> GetEffectiveDatesAsync(Guid userOpenId);
 
-        Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId);
-
-        Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate);
-
-        Task ImportJsonAsync(Guid userOpenId, string jsonData);
-
         Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id);
     }
 }
