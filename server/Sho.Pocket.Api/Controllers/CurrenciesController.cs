@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Currencies;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Sho.Pocket.Core.Features.Currencies.Abstractions;
 
 namespace Sho.Pocket.Api.Controllers
 {

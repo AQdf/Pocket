@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Sho.Pocket.Application.Currencies
+namespace Sho.Pocket.Core.Features.Currencies.Abstractions
 {
     public interface ICurrencyService
     {

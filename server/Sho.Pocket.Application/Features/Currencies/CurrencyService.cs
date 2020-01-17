@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Currencies

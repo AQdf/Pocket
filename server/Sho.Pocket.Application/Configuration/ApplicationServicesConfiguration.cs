@@ -20,6 +20,7 @@ using Sho.Pocket.BankIntegration;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
 using Sho.Pocket.DataAccess.Sql;
