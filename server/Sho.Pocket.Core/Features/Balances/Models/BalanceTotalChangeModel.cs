@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.Application.Balances.Models
+namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalanceTotalChangeModel
     {

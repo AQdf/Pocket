@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sho.Pocket.Application.Features.Balances.Models
+﻿namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalanceNoteUpdateModel
     {

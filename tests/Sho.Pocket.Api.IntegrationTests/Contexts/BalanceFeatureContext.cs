@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Sho.Pocket.Application.Balances;
-using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Sho.Pocket.Core.Features.Balances.Abstractions;
+using Sho.Pocket.Core.Features.Balances.Models;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
 {

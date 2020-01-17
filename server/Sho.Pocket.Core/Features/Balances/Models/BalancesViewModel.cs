@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
-namespace Sho.Pocket.Application.Balances.Models
+namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalancesViewModel
     {

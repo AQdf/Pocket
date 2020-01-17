@@ -2,7 +2,7 @@
 using Sho.Pocket.Core.Common.Converters;
 using System;
 
-namespace Sho.Pocket.Application.Balances.Models
+namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalanceCreateModel
     {

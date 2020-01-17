@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Sho.Pocket.Application.Features.Balances.Models;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.Balances.Abstractions;
+using Sho.Pocket.Core.Features.Balances.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.Balances

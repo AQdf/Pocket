@@ -1,7 +1,7 @@
 ﻿using System;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.Features.Balances.Models
+namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalanceNoteViewModel
     {

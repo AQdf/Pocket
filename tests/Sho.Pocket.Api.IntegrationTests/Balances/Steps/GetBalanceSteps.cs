@@ -2,8 +2,8 @@
 using System.Linq;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
-using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Core.Features.Assets.Models;
+using Sho.Pocket.Core.Features.Balances.Models;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps

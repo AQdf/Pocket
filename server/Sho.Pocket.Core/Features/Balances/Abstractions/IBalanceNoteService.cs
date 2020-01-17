@@ -1,8 +1,8 @@
-﻿using Sho.Pocket.Application.Features.Balances.Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.Balances.Models;
 
-namespace Sho.Pocket.Application.Features.Balances
+namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalanceNoteService
     {

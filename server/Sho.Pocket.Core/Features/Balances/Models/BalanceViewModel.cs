@@ -5,7 +5,7 @@ using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.Application.Balances.Models
+namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalanceViewModel
     {

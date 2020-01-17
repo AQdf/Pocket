@@ -1,10 +1,11 @@
-﻿using Sho.Pocket.Application.Balances.Models;
-using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.Features.Balances.Abstractions;
+using Sho.Pocket.Core.Features.Balances.Models;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
 {

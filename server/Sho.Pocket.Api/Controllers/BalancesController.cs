@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Balances;
-using Sho.Pocket.Application.Balances.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
+using Sho.Pocket.Core.Features.Balances.Abstractions;
+using Sho.Pocket.Core.Features.Balances.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {

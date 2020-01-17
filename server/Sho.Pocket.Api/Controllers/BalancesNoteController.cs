@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Sho.Pocket.Application.Features.Balances;
-using Sho.Pocket.Application.Features.Balances.Models;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using System;
-using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.Balances.Abstractions;
+using Sho.Pocket.Core.Features.Balances.Models;
 
 namespace Sho.Pocket.Api.Controllers
 {
