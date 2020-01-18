@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { BalanceService } from './balance.service';
+import { BalanceService } from '../balance.service';
 
 describe('BalanceService', () => {
   beforeEach(() => {

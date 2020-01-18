@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { ExchangeRateService } from './exchange-rate.service';
+import { ExchangeRateService } from '../exchange-rate.service';
 
 describe('ExchangeRateService', () => {
   beforeEach(() => {

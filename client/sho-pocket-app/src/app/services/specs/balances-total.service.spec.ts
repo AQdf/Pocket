@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { BalancesTotalService } from './balances-total.service';
+import { BalancesTotalService } from '../balances-total.service';
 
 describe('BalancesTotalService', () => {
   beforeEach(() => {

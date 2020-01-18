@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { AssetService } from './asset.service';
+import { AssetService } from '../asset.service';
 
 describe('AssetService', () => {
   beforeEach(() => {

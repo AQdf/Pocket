@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { BankSyncService } from './bank-sync.service';
+import { BankSyncService } from '../bank-sync.service';
 
 describe('BankSyncService', () => {
   beforeEach(() => {
