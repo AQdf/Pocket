@@ -54,7 +54,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
             AssetViewModel asset = _assetFeatureContext.Assets[assetName];
             ExchangeRate exchangeRate = _exchangeRateFeatureContext.ExchangeRates.Values.First(r => r.EffectiveDate == effectiveDate);
 
-            _balanceCreateModel = new BalanceCreateModel(asset.Id, effectiveDate, amount, exchangeRate.Id);
+            _balanceCreateModel = new BalanceCreateModel(asset.Id, effectiveDate, asset.Currency, amount);
         }
 
         [When(@"I add new balance")]
