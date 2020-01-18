@@ -10,12 +10,12 @@ namespace Sho.Pocket.Core.Features.Balances.Models
         {
         }
 
-        public BalanceCreateModel(Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public BalanceCreateModel(Guid assetId, DateTime effectiveDate, string currency, decimal value)
         {
             AssetId = assetId;
             EffectiveDate = effectiveDate;
+            Currency = currency;
             Value = value;
-            ExchangeRateId = exchangeRateId;
         }
 
         public Guid AssetId { get; set; }
@@ -23,8 +23,8 @@ namespace Sho.Pocket.Core.Features.Balances.Models
         [JsonConverter(typeof(IsoStringDateTimeConverter))]
         public DateTime EffectiveDate { get; set; }
 
-        public decimal Value { get; set; }
+        public string Currency { get; set; }
 
-        public Guid ExchangeRateId { get; set; }
+        public decimal Value { get; set; }
     }
 }

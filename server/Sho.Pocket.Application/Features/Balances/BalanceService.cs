@@ -71,12 +71,9 @@ namespace Sho.Pocket.Application.Balances
                 await PopulateIsBankAccountFieldAsync(userOpenId, items);
             }
 
-            IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
-            List<ExchangeRateModel> ratesModels = rates.Select(r => new ExchangeRateModel(r)).ToList();
-
             IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(userOpenId, balances, effectiveDate);
 
-            BalancesViewModel result = new BalancesViewModel(items, items.Count, totals, ratesModels);
+            BalancesViewModel result = new BalancesViewModel(items, items.Count, totals);
 
             return result;
         }
@@ -92,7 +89,9 @@ namespace Sho.Pocket.Application.Balances
 
         public async Task<BalanceViewModel> AddBalanceAsync(Guid userOpenId, BalanceCreateModel createModel)
         {
-            Balance balance = await _balanceRepository.CreateAsync(userOpenId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, createModel.ExchangeRateId);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(createModel.Currency, createModel.EffectiveDate);
+
+            Balance balance = await _balanceRepository.CreateAsync(userOpenId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
             BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;

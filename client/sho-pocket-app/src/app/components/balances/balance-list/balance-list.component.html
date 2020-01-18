@@ -26,8 +26,8 @@
         <div class="form-row align-items-center p-2">
           <div class="col-md-4">
             <select name="AssetId" class="form-control" placeholder="Asset" required
-              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel" [(ngModel)]="balance.assetId"
-              [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched}"
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel"
+              [(ngModel)]="balance.assetId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched}"
               (change)="this.onAssetChanged($event.target.value)">
               <option value="" disabled selected>
                 Select asset
@@ -39,29 +39,31 @@
           </div>
           <div class="col-md-2">
             <input name="Value" class="form-control" placeholder="Balance" required
-              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #Value="ngModel" [(ngModel)]="balance.value"
-              [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #Value="ngModel"
+              [(ngModel)]="balance.value" [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
           </div>
           <div class="col-md-2">
             <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
           </div>
           <div class="col-md-4">
             <button type="button" class="btn btn-outline-info ml-1"
-              [disabled]="isAddMode && (selectedBalance && selectedBalance.id) !== balance.id" (click)="showForEdit(balance)">
+              [disabled]="isAddMode && (selectedBalance && selectedBalance.id) !== balance.id"
+              (click)="showForEdit(balance)">
               <i class="fa fa-pencil-square-o"></i>
             </button>
             <button type="submit" class="btn btn-outline-info ml-1"
               [disabled]="!balanceForm.valid || (selectedBalance && selectedBalance.id) !== balance.id">
               <i class="fa fa-floppy-o"></i>
             </button>
-            <button type="button" class="btn btn-outline-info ml-1" [disabled]="(selectedBalance && selectedBalance.id) !== balance.id"
-              (click)="resetRecord(balance.id)">
+            <button type="button" class="btn btn-outline-info ml-1"
+              [disabled]="(selectedBalance && selectedBalance.id) !== balance.id" (click)="resetRecord(balance.id)">
               <i class="fa fa-repeat"></i>
             </button>
             <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(balance.id)">
               <i class="fa fa-trash-o"></i>
             </button>
-            <button type="button" *ngIf="balance.isBankAccount" class="btn btn-outline-info ml-3" (click)="onBankAccountSync(balance.id)">
+            <button type="button" *ngIf="balance.isBankAccount" class="btn btn-outline-info ml-3"
+              (click)="onBankAccountSync(balance.id)">
               <i class="fa fa-refresh"></i>
             </button>
           </div>
@@ -74,19 +76,7 @@
 
   <div class="col-md-3">
     <div class="bg-light mb-3 p-2 border rounded">
-      <div class="mb-2">
-        <span>Exchange rates</span>
-      </div>
-      <div *ngFor="let rate of exchangeRates">
-        <div *ngIf="rate.baseCurrency !== rate.counterCurrency" class="input-group mb-3">
-          <div class="input-group-prepend">
-            <button class="btn btn-secondary" (click)="applyExchangeRate(rate)">{{rate.baseCurrency}}</button>
-          </div>
-          <input name="Rate" type="number" class="form-control" placeholder="Rate" required
-            [ngClass]="{'input-invalid': Rate.invalid && Rate.touched }" #Rate="ngModel" [(ngModel)]="rate.value">
-        </div>
-      </div>
+      <app-exchange-rates [effectiveDate]="effectiveDate"></app-exchange-rates>
     </div>
   </div>
-
 </div>

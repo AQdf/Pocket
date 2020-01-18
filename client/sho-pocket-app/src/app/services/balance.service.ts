@@ -28,8 +28,14 @@ export class BalanceService extends BaseService {
     return this.http.get(balancesApiUrl + id, this.getDefaultOptions());
   }
 
-  postBalance(balanceData : Balance) {
-    var body = JSON.stringify(balanceData);
+  postBalance(balance : Balance) {
+    var body = JSON.stringify({
+      assetId: balance.assetId,
+      effectiveDate: balance.effectiveDate,
+      currency: balance.asset.currency,
+      value: balance.value
+    });
+    
     return this.http.post(balancesApiUrl, body, this.getDefaultOptions());
   }
  

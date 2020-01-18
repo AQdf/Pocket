@@ -29,6 +29,7 @@ import { InventoryComponent } from './components/inventory/inventory.component';
 import { InventoryItemsComponent } from './components/inventory/inventory-items/inventory-items.component';
 import { BalanceNoteComponent } from './components/balances/balance-note/balance-note.component';
 import { AccountStatementComponent } from './components/assets/account-statement/account-statement.component';
+import { ExchangeRatesComponent } from './components/exchange-rates/exchange-rates.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { AccountStatementComponent } from './components/assets/account-statement
     InventoryComponent,
     InventoryItemsComponent,
     BalanceNoteComponent,
-    AccountStatementComponent
+    AccountStatementComponent,
+    ExchangeRatesComponent
   ],
   imports: [
     BrowserModule,

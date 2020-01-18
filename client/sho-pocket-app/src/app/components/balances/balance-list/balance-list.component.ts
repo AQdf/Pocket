@@ -10,7 +10,6 @@ import { BalancesTotalService } from '../../../services/balances-total.service';
 import { BalanceTotal } from '../../../models/balance-total.model';
 import { ExchangeRate } from '../../../models/exchange-rate.model';
 import { Balances } from '../../../models/balances.model';
-import { ExchangeRateService } from '../../../services/exchange-rate.service';
 
 @Component({
   selector: 'app-balance-list',
@@ -20,28 +19,26 @@ import { ExchangeRateService } from '../../../services/exchange-rate.service';
 export class BalanceListComponent implements OnInit, OnChanges {
 
   constructor(
-    public balanceService : BalanceService,
-    public assetService : AssetService,
+    private balanceService : BalanceService,
+    private assetService : AssetService,
     private balanceTotalService : BalancesTotalService,
-    private exchangeRateService: ExchangeRateService,
     private toastr : ToastrService) { }
-
-  @Input() effectiveDate: string;
-  @Output() shouldReload = new EventEmitter<boolean>();
- 
-  reloadEffectiveDates(shouldReload: boolean) {
-    this.shouldReload.emit(shouldReload);
-  }
-  
-  selectedBalance: Balance;
-  balances: Balance[];
-  totalBalance: BalanceTotal[];
-  exchangeRates: ExchangeRate[];
-  assetList: Asset[];
-  isAddMode: boolean;
 
   ngOnInit() {
     this.initAssets();
+  }
+
+  @Input() effectiveDate: string;
+  @Output() shouldReload = new EventEmitter<boolean>();
+
+  selectedBalance: Balance;
+  balances: Balance[];
+  totalBalance: BalanceTotal[];
+  assetList: Asset[];
+  isAddMode: boolean;
+
+  reloadEffectiveDates(shouldReload: boolean) {
+    this.shouldReload.emit(shouldReload);
   }
 
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
@@ -55,7 +52,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
     this.balanceService.getBalanceList(this.effectiveDate).subscribe((balances: Balances) => {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
-      this.exchangeRates = balances.exchangeRates;
       if (this.balances.length === 0) {
         this.reloadEffectiveDates(true);
       }
@@ -94,7 +90,7 @@ export class BalanceListComponent implements OnInit, OnChanges {
       this.balanceService.deleteBalance(id).subscribe(x => {
         this.reloadBalances();
         this.balanceTotalService.loadCurrentTotalBalance();
-        this.toastr.success("Deleted Successfully", "Balance");
+        this.toastr.success("Record Deleted.", "Balance");
       })
     }
   }
@@ -110,13 +106,13 @@ export class BalanceListComponent implements OnInit, OnChanges {
     if (form.value.id === null) {
       this.balanceService.postBalance(this.selectedBalance).subscribe(() => {
           this.afterSubmit();
-          this.toastr.success('New Record Added Succcessfully', 'Balance');
+          this.toastr.success('New Record Added.', 'Balance');
         });
     }
     else {
       this.balanceService.putBalance(form.value.id, this.selectedBalance).subscribe(() => {
         this.afterSubmit();
-        this.toastr.info('Record Updated Successfully!', 'Balance');
+        this.toastr.info('Record Updated.', 'Balance');
       });
     }
   }
@@ -151,20 +147,8 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
   onAssetChanged(assetId: string) {
     let asset = this.assetList.find(a => a.id == assetId);
-    let exchangeRate = this.exchangeRates.find(rate => rate.baseCurrency == asset.currency);
     this.selectedBalance.assetId = asset.id;
-    this.selectedBalance.exchangeRateId = exchangeRate.id;
     this.selectedBalance.asset = asset;
-  }
-
-  applyExchangeRate(model: ExchangeRate) {
-    this.exchangeRateService.applyExchangeRate(model).subscribe(success => {
-      if (success) {
-        this.reloadBalances();
-        this.balanceTotalService.loadCurrentTotalBalance();
-        this.toastr.success('Exchange rate applied', 'Balance');
-      }
-    });
   }
 
   onBankAccountSync(balanceId: string) {
