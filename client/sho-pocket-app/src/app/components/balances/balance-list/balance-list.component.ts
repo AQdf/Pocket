@@ -8,7 +8,6 @@ import { Balance } from '../../../models/balance.model'
 import { Asset } from '../../../models/asset.model';
 import { BalancesTotalService } from '../../../services/balances-total.service';
 import { BalanceTotal } from '../../../models/balance-total.model';
-import { ExchangeRate } from '../../../models/exchange-rate.model';
 import { Balances } from '../../../models/balances.model';
 
 @Component({

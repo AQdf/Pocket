@@ -10,7 +10,7 @@ import { AssetComponent } from './components/assets/asset/asset.component';
 import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'balances', component: BalancesComponent, canActivate: [AuthGuard] },
   { path: 'assets', component: AssetsComponent, canActivate: [AuthGuard] },
