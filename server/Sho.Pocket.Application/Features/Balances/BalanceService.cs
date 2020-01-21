@@ -195,7 +195,7 @@ namespace Sho.Pocket.Application.Balances
                 Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);
 
                 var assetModel = new AssetViewModel(balance.Asset);
-                var model = new BalanceViewModel(newBalance, balanceExchangeRate, assetModel);
+                var model = new BalanceViewModel(newBalance, assetModel);
                 result.Add(model);
             }
 
@@ -220,7 +220,7 @@ namespace Sho.Pocket.Application.Balances
                 Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, effectiveDate, 0.0M, exchangeRate.Id);
 
                 var assetModel = new AssetViewModel(asset);
-                var balanceModel = new BalanceViewModel(newBalance, exchangeRate, assetModel);
+                var balanceModel = new BalanceViewModel(newBalance, assetModel);
                 result.Add(balanceModel);
             }
 

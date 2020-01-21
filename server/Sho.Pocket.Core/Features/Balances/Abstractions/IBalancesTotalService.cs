@@ -13,5 +13,7 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
         Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userOpenId, int count);
 
         Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userOpenId, IEnumerable<Balance> balances, DateTime effectiveDate);
+
+        Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userOpenId);
     }
 }

@@ -28,4 +28,8 @@ export class BalancesTotalService extends BaseService {
     options.params.set('count', '100');
     return this.http.get(balancesTotalApiUrl + 'changes', options);
   }
+
+  getBalancesInUserPrimaryCurrency() {
+    return this.http.get(balancesTotalApiUrl + 'primary-currency-balances', this.getDefaultOptions());
+  }
 }

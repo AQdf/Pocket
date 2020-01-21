@@ -32,6 +32,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
                     r.Provider,
                     r.BaseCurrency.Name,
                     r.CounterCurrency.Name,
+                    r.RateBuy ?? r.RateCross.Value,
                     r.RateSell ?? r.RateCross.Value))
                 .ToList();
 
@@ -52,6 +53,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
                     rate.Provider,
                     rate.BaseCurrency.Name,
                     rate.CounterCurrency.Name,
+                    rate.RateBuy ?? rate.RateCross.Value,
                     rate.RateSell ?? rate.RateCross.Value);
             }
             else

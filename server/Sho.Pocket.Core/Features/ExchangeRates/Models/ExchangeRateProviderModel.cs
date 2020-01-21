@@ -2,12 +2,13 @@
 {
     public class ExchangeRateProviderModel
     {
-        public ExchangeRateProviderModel(string provider, string baseCurrency, string counterCurrency, decimal value)
+        public ExchangeRateProviderModel(string provider, string baseCurrency, string counterCurrency, decimal buy, decimal sell)
         {
             Provider = provider;
             BaseCurrency = baseCurrency;
             CounterCurrency = counterCurrency;
-            Value = value;
+            Buy = buy;
+            Sell = sell;
         }
 
         public ExchangeRateProviderModel()
@@ -20,6 +21,8 @@
 
         public string CounterCurrency { get; set; }
 
-        public decimal Value { get; set; }
+        public decimal Buy { get; set; }
+
+        public decimal Sell { get; set; }
     }
 }

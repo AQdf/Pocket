@@ -55,7 +55,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
             Dictionary<string, decimal> jsonObject = JsonConvert.DeserializeObject<Dictionary<string, decimal>>(json);
             decimal rate = jsonObject[code];
 
-            ExchangeRateProviderModel result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, rate);
+            ExchangeRateProviderModel result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, rate, rate);
 
             return result;
         }

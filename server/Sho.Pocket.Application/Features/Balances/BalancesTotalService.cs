@@ -99,13 +99,25 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
+        public async Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userOpenId)
+        {
+            UserCurrency userCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
+            IEnumerable<Balance> balances = await _balanceRepository.GetLatestBalancesAsync(userOpenId);
+
+            List<BalancePrimaryCurrencyModel> result = balances
+                .Select(b => new BalancePrimaryCurrencyModel(userCurrency.Currency, b))
+                .ToList();
+
+            return result;
+        }
+
         private async Task<BalanceTotalModel> CalculateEffectiveDateTotalsAsync(IEnumerable<Balance> balances, string currency, string defaultCurrency, DateTime effectiveDate)
         {
             decimal value = 0;
 
             if (string.Equals(currency, defaultCurrency, StringComparison.InvariantCultureIgnoreCase))
             {
-                value = balances.Select(b => b.Value * b.ExchangeRate?.Rate ?? 0).Sum();
+                value = balances.Select(b => b.Value * b.ExchangeRate?.Buy ?? 0).Sum();
             }
             else
             {
@@ -116,8 +128,8 @@ namespace Sho.Pocket.Application.Balances
                 ExchangeRate currentCurrencyExchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(currency, effectiveDate);
 
                 value = currentCurrencyBalances.Select(b => b.Value).Sum()
-                    + defaultCurrencyBalances.Select(b => b.Value / currentCurrencyExchangeRate.Rate).Sum()
-                    + otherCurrenciesBalances.Select(b => b.Value * b.ExchangeRate.Rate / currentCurrencyExchangeRate.Rate).Sum();
+                    + defaultCurrencyBalances.Select(b => b.Value / currentCurrencyExchangeRate.Buy).Sum()
+                    + otherCurrenciesBalances.Select(b => b.Value * b.ExchangeRate.Buy / currentCurrencyExchangeRate.Buy).Sum();
             }
 
             BalanceTotalModel result = new BalanceTotalModel(effectiveDate, currency, value);

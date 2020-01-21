@@ -19,7 +19,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { TotalsComponent } from './components/totals/totals.component';
 import { BalancesComponent } from './components/balances/balances.component';
-import { BalanceComponent } from './components/balances/balance/balance.component';
 import { BalanceListComponent } from './components/balances/balance-list/balance-list.component';
 import { BalancesChartComponent } from './components/balances-chart/balances-chart.component';
 import { RegistrationComponent } from './components/users/registration/registration.component';
@@ -39,7 +38,6 @@ import { ExchangeRatesComponent } from './components/exchange-rates/exchange-rat
     DashboardComponent,
     TotalsComponent,
     BalancesComponent,
-    BalanceComponent,
     BalanceListComponent,
     BalancesChartComponent,
     RegistrationComponent,

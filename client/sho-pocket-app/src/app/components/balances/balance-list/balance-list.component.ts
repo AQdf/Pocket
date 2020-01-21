@@ -133,8 +133,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
       value: 0.0,
       assetId: '',
       exchangeRateId: '',
-      exchangeRateValue: 0.0,
-      defaultCurrencyValue: 0.0,
       asset: null,
       isBankAccount: false
     }

@@ -1,11 +1,13 @@
 <div class="mb-2">
-  <span>Exchange rates</span>
+  <span>{{this.effectiveDateFriendly}}</span>
 </div>
 
 <div *ngFor="let rate of exchangeRates">
   <div *ngIf="rate.baseCurrency !== rate.counterCurrency" class="input-group mb-3">
-    <input name="Rate" type="number" class="form-control" placeholder="Rate" disabled
-      [ngClass]="{'input-invalid': Rate.invalid && Rate.touched }" #Rate="ngModel" [(ngModel)]="rate.value">
-      <button class="input-group-append btn btn-light" disabled>{{rate.baseCurrency}}</button>
+    <button class="input-group-prepend btn btn-light" disabled>{{rate.baseCurrency}}</button>
+    <input name="Buy" type="number" class="form-control" placeholder="Buy" disabled
+      [ngClass]="{'input-invalid': Buy.invalid && Buy.touched }" #Buy="ngModel" [(ngModel)]="rate.buy">
+    <input name="Sell" type="number" class="form-control" placeholder="Sell" disabled
+      [ngClass]="{'input-invalid': Sell.invalid && Sell.touched }" #Sell="ngModel" [(ngModel)]="rate.sell">
   </div>
 </div>

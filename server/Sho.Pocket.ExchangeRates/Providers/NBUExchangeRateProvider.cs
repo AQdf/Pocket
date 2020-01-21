@@ -43,7 +43,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
             IEnumerable<NBUExchangeRateModel> currencyModels = ParseXmlExchangeRatesResponse(xml, baseCurrencies);
 
             List<ExchangeRateProviderModel> result = currencyModels
-                .Select(m => new ExchangeRateProviderModel(ProviderName, m.Currency, counterCurrency, m.Rate))
+                .Select(m => new ExchangeRateProviderModel(ProviderName, m.Currency, counterCurrency, m.Rate, m.Rate))
                 .ToList();
 
             return result;

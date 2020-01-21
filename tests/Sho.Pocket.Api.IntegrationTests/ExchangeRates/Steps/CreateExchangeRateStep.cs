@@ -27,7 +27,7 @@ namespace Sho.Pocket.Api.IntegrationTests.ExchangeRates.Steps
         {
             DateTime effectiveDate = DateTime.UtcNow.Date.AddDays(dayShift);
 
-            await _exchangeRateFeatureContext.AddExchangeRate(effectiveDate, baseCurrency, counterCurrency, value);
+            await _exchangeRateFeatureContext.AddExchangeRate(effectiveDate, baseCurrency, counterCurrency, value, value);
         }
 
     }

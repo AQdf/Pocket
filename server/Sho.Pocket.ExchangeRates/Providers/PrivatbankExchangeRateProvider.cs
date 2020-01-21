@@ -27,7 +27,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
             List<ExchangeRateProviderModel> providerRates = rates
                 .Where(r => counterCurrency.Equals(r.CounterCurrency, StringComparison.OrdinalIgnoreCase) && baseCurrencies.Contains(r.BaseCurrency))
-                .Select(r => new ExchangeRateProviderModel(r.Provider, r.BaseCurrency, r.CounterCurrency, r.Sell.Value))
+                .Select(r => new ExchangeRateProviderModel(r.Provider, r.BaseCurrency, r.CounterCurrency, r.Buy.Value, r.Sell.Value))
                 .ToList();
 
             return providerRates;
@@ -42,7 +42,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
                 && counterCurrency.Equals(r.CounterCurrency, StringComparison.OrdinalIgnoreCase));
 
             return rate != null 
-                ? new ExchangeRateProviderModel(rate.Provider, rate.BaseCurrency, rate.CounterCurrency, rate.Sell.Value)
+                ? new ExchangeRateProviderModel(rate.Provider, rate.BaseCurrency, rate.CounterCurrency, rate.Buy.Value, rate.Sell.Value)
                 : null;
         }
     }

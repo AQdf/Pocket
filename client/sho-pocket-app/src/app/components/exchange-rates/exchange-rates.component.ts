@@ -11,6 +11,7 @@ import { ExchangeRate } from '../../models/exchange-rate.model';
 export class ExchangeRatesComponent implements OnInit {
 
   @Input() effectiveDate: string;
+  effectiveDateFriendly: string;
   exchangeRates: ExchangeRate[];
 
   constructor(private exchangeRateService: ExchangeRateService) { }
@@ -21,6 +22,7 @@ export class ExchangeRatesComponent implements OnInit {
   ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
     this.effectiveDate = changes.effectiveDate.currentValue;
     if (this.effectiveDate) {
+      this.effectiveDateFriendly = new Date(this.effectiveDate).toDateString();
       this.loadExchangeRates(this.effectiveDate);
     }
   }

@@ -41,12 +41,12 @@ namespace Sho.Pocket.Application.Features.Balances
                 {
                     foreach (BalanceExportModel item in group)
                     {
-                        Asset asset = await _assetRepository.GetByNameAsync(userOpenId, item.Asset);
+                        Asset asset = await _assetRepository.GetByNameAsync(userOpenId, item.AssetName);
 
                         if (asset != null)
                         {
-                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.ExchangeRate);
-                            Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.Value, rate.Id);
+                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.ExchangeRateBuy, item.ExchangeRateSell);
+                            Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.BalanceValue, rate.Id);
                         }
                     }
                 }

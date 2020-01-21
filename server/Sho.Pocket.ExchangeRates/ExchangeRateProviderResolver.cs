@@ -14,7 +14,9 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
         private readonly ExchangeRateSettings _settings;
 
-        public ExchangeRateProviderResolver(IEnumerable<IExchangeRateProvider> exchangeRateProviders, IOptionsMonitor<ExchangeRateSettings> options)
+        public ExchangeRateProviderResolver(
+            IEnumerable<IExchangeRateProvider> exchangeRateProviders,
+            IOptionsMonitor<ExchangeRateSettings> options)
         {
             if (options.CurrentValue == null || options.CurrentValue.Providers == null)
             {
@@ -27,7 +29,8 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
         public IExchangeRateProvider Resolve(string name)
         {
-            IExchangeRateProvider provider = _exchangeRateProviders.FirstOrDefault(p => p.ProviderName.Equals(name, StringComparison.OrdinalIgnoreCase));
+            IExchangeRateProvider provider = _exchangeRateProviders
+                .FirstOrDefault(p => p.ProviderName.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (provider == null)
             {

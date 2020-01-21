@@ -112,4 +112,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_AssetBankAccount_UserBankAuthData]" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="465dc1c5-f649-45f2-a46c-27201fbf887f" ChangeDateTime="01/21/2020 09:43:08">
+    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[Rate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Buy" />
+  </Operation>
 </Operations>

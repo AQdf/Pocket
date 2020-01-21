@@ -15,7 +15,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
         public Task<List<ExchangeRateProviderModel>> FetchCurrencyRatesAsync(List<string> baseCurrencies, string counterCurrency)
         {
             List<ExchangeRateProviderModel> result = baseCurrencies
-                .Select(bc => new ExchangeRateProviderModel(ProviderName, bc, counterCurrency, DEFAULT_VALUE))
+                .Select(bc => new ExchangeRateProviderModel(ProviderName, bc, counterCurrency, DEFAULT_VALUE, DEFAULT_VALUE))
                 .ToList();
 
             return Task.FromResult(result);
@@ -23,7 +23,7 @@ namespace Sho.Pocket.ExchangeRates.Providers
 
         public Task<ExchangeRateProviderModel> FetchRateAsync(string baseCurrency, string counterCurrency)
         {
-            ExchangeRateProviderModel result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, DEFAULT_VALUE);
+            var result = new ExchangeRateProviderModel(ProviderName, baseCurrency, counterCurrency, DEFAULT_VALUE, DEFAULT_VALUE);
 
             return Task.FromResult(result);
         }

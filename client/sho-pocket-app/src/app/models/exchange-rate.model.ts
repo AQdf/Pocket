@@ -3,5 +3,7 @@ export class ExchangeRate {
   effectiveDate: number;
   baseCurrency: string;
   counterCurrency: string;
-  value: number;
+  buy: number;
+  sell: number;
+  provider: string;
 }

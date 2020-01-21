@@ -6,8 +6,6 @@ export class Balance {
   effectiveDate: string;
   value: number;
   exchangeRateId: string;
-  exchangeRateValue: number;
-  defaultCurrencyValue: number;
   asset: Asset;
   isBankAccount: boolean;
 }

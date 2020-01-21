@@ -12,7 +12,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
         }
 
-        public async Task<ExchangeRate> AlterAsync(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal rate, string provider)
+        public async Task<ExchangeRate> AlterAsync(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal buy, decimal sell, string provider)
         {
             string queryText = @"
                 DECLARE @id uniqueidentifier = (
@@ -24,12 +24,12 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 IF @id IS NULL
                     BEGIN
                         SET @id = NEWID();
-                        INSERT INTO ExchangeRate([Id], [EffectiveDate], [BaseCurrency], [CounterCurrency], [Rate], [Provider]) VALUES (
-                        @id, @effectiveDate, @baseCurrency, @counterCurrency, @rate, @provider)
+                        INSERT INTO ExchangeRate([Id], [EffectiveDate], [BaseCurrency], [CounterCurrency], [Buy], [Sell], [Provider]) VALUES (
+                        @id, @effectiveDate, @baseCurrency, @counterCurrency, @buy, @sell, @provider)
                     END
                 ELSE
                     BEGIN
-                        UPDATE ExchangeRate SET Rate = @rate WHERE Id = @id
+                        UPDATE ExchangeRate SET Buy = @buy, Sell = @sell WHERE Id = @id
                     END
 
                 SELECT * FROM ExchangeRate where Id = @id";
@@ -39,7 +39,8 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 effectiveDate,
                 baseCurrency,
                 counterCurrency,
-                rate,
+                buy,
+                sell,
                 @provider
             };
 
@@ -48,16 +49,16 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
             return result;
         }
 
-        public async Task<ExchangeRate> Update(Guid id, decimal rate)
+        public async Task<ExchangeRate> Update(Guid id, decimal buy, decimal sell)
         {
             string queryText = @"
                 UPDATE ExchangeRate
-                SET Rate = @rate
+                SET Buy = @buy, Sell = @sell
                 WHERE Id = @id
 
                 SELECT * FROM ExchangeRate WHERE Id = @id";
 
-            object queryParameters = new { id, rate };
+            object queryParameters = new { id, buy, sell };
 
             ExchangeRate result = await base.UpdateEntity(queryText, queryParameters);
 

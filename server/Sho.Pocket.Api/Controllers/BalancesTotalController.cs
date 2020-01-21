@@ -38,7 +38,26 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/balances-total/USD
+        /// GET: api/balances-total/primary-currency-balances
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("primary-currency-balances")]
+        public async Task<ActionResult<List<BalancePrimaryCurrencyModel>>> GetUserPrimaryCurrencyBalances()
+        {
+            UserViewModel user = await GetCurrentUserAsync();
+
+            if (user == null)
+            {
+                return HandleUserNotFoundResult();
+            }
+
+            List<BalancePrimaryCurrencyModel> result = await _balancesTotalService.GetUserPrimaryCurrencyBalancesAsync(user.Id);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// GET: api/balances-total/changes
         /// </summary>
         /// <returns></returns>
         [HttpGet("changes")]

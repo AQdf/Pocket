@@ -58,7 +58,7 @@ namespace Sho.Pocket.Application.ExchangeRates
                 {
                     foreach (ExchangeRateProviderModel rate in providerRates)
                     {
-                        ExchangeRate exchangeRate = await _exchangeRateRepository.AlterAsync(effectiveDate, rate.BaseCurrency, primaryCurrency.Currency, rate.Value, rate.Provider);
+                        ExchangeRate exchangeRate = await _exchangeRateRepository.AlterAsync(effectiveDate, rate.BaseCurrency, primaryCurrency.Currency, rate.Buy, rate.Sell, rate.Provider);
                         result.Add(new ExchangeRateModel(exchangeRate));
                     }
                 }
@@ -69,7 +69,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         public async Task UpdateExchangeRateAsync(ExchangeRateModel model)
         {
-            await _exchangeRateRepository.Update(model.Id, model.Value);
+            await _exchangeRateRepository.Update(model.Id, model.Buy, model.Sell);
         }
 
         public async Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userOpenId, string providerName)
@@ -98,7 +98,7 @@ namespace Sho.Pocket.Application.ExchangeRates
                     // Workaround to populate UAH to UAH exchange rate
                     if (!result.Any(r => r.BaseCurrency == primaryCurrency && r.CounterCurrency == primaryCurrency))
                     {
-                        result.Add(new ExchangeRateProviderModel(provider.ProviderName, primaryCurrency, primaryCurrency, 1.0M));
+                        result.Add(new ExchangeRateProviderModel(provider.ProviderName, primaryCurrency, primaryCurrency, 1.0M, 1.0M));
                     }
 
                     return result;

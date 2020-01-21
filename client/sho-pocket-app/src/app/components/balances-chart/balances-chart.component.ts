@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'angular-highcharts';
 
-import { BalanceService } from '../../services/balance.service'
-import { BalancesTotalService } from '../../services/balances-total.service'
-
-import { Balance } from'../../models/balance.model'
+import { BalancesTotalService } from '../../services/balances-total.service';
 import { BalanceChanges } from '../../models/balance-changes.model';
+import { BalancePrimaryCurrency } from '../../models/balance-primary-currency.model';
 
 @Component({
   selector: 'app-balances-chart',
@@ -14,11 +12,10 @@ import { BalanceChanges } from '../../models/balance-changes.model';
 })
 export class BalancesChartComponent implements OnInit {
 
-  balances: Balance[];
   chart: Chart;
   balanceChangeCharts: Chart[];
 
-  constructor(private balanceService : BalanceService, private balancesTotalService: BalancesTotalService) { }
+  constructor(private balancesTotalService: BalancesTotalService) { }
 
   ngOnInit() {
     this.initBalancePieChartData();
@@ -27,11 +24,9 @@ export class BalancesChartComponent implements OnInit {
 
   initBalancePieChartData()
   {
-    this.balanceService.getLatestBalances()
-    .subscribe((balances: any) => {
+    this.balancesTotalService.getBalancesInUserPrimaryCurrency().subscribe((balances: BalancePrimaryCurrency[]) => {
       if (balances) {
-        this.balances = balances.items;
-        this.createBalanceChart(this.balances);
+        this.createBalancePieChart(balances);
       }
     });
   }
@@ -47,18 +42,19 @@ export class BalancesChartComponent implements OnInit {
     });
   }
 
-  createBalanceChart(balances: Balance[]) {
+  createBalancePieChart(balances: BalancePrimaryCurrency[]) {
     let chartData = [];  
     for (var i = 0; i < balances.length; i++) {  
         chartData.push({  
-            "name": balances[i].asset.name,  
-            "y": balances[i].defaultCurrencyValue,  
+            "name": balances[i].assetName,  
+            "y": balances[i].primaryCurrencyValue,  
             sliced: true,  
             selected: true  
         })  
     }
 
     let effectiveDate = new Date(balances[0].effectiveDate).toDateString();
+    let currency = balances[0].primaryCurrency;
 
     this.chart = new Chart({  
         chart: {  
@@ -75,7 +71,7 @@ export class BalancesChartComponent implements OnInit {
             height: 700
         },  
         title: {  
-            text: '',
+            text: currency,
         },  
         subtitle: {  
             text: effectiveDate  
@@ -122,10 +118,10 @@ export class BalancesChartComponent implements OnInit {
           type: 'line',
         },
         title: {
-            text: ''
+            text: currency
         },
         subtitle: {
-            text: currency
+            text: ''
         },
         xAxis: {
             type: 'datetime',

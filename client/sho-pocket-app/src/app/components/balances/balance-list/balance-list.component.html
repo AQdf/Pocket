@@ -20,7 +20,7 @@
       <form #balanceForm="ngForm" (ngSubmit)="onSubmit(balanceForm)">
 
         <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balance.id">
-        <input type="hidden" name="exchangeRateId" #ExchangeRateValue="ngModel" [(ngModel)]="balance.exchangeRateId">
+        <input type="hidden" name="exchangeRateId" #ExchangeRateId="ngModel" [(ngModel)]="balance.exchangeRateId">
         <input type="hidden" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
 
         <div class="form-row align-items-center p-2">

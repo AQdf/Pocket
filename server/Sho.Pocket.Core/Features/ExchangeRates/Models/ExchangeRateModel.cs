@@ -17,7 +17,9 @@ namespace Sho.Pocket.Core.Features.ExchangeRates.Models
             EffectiveDate = exchangeRate.EffectiveDate;
             BaseCurrency = exchangeRate.BaseCurrency;
             CounterCurrency = exchangeRate.CounterCurrency;
-            Value = exchangeRate.Rate;
+            Buy = exchangeRate.Buy;
+            Sell = exchangeRate.Sell;
+            Provider = exchangeRate.Provider;
         }
 
         public Guid Id { get; set; }
@@ -29,6 +31,10 @@ namespace Sho.Pocket.Core.Features.ExchangeRates.Models
 
         public string CounterCurrency { get; set; }
 
-        public decimal Value { get; set; }
+        public decimal Buy { get; set; }
+
+        public decimal Sell { get; set; }
+
+        public string Provider { get; set; }
     }
 }
