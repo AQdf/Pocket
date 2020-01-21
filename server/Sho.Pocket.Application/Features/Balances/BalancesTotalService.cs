@@ -12,17 +12,19 @@ namespace Sho.Pocket.Application.Balances
     public class BalancesTotalService : IBalancesTotalService
     {
         private readonly IBalanceRepository _balanceRepository;
-        private readonly IExchangeRateRepository _exchangeRateRepository;
+
         private readonly IUserCurrencyRepository _userCurrencyRepository;
+
+        private readonly IBalanceTotalCalculator _balanceTotalCalculator;
 
         public BalancesTotalService(
             IBalanceRepository balanceRepository,
-            IExchangeRateRepository exchangeRateRepository,
-            IUserCurrencyRepository userCurrencyRepository)
+            IUserCurrencyRepository userCurrencyRepository,
+            IBalanceTotalCalculator balanceTotalCalculator)
         {
             _balanceRepository = balanceRepository;
-            _exchangeRateRepository = exchangeRateRepository;
             _userCurrencyRepository = userCurrencyRepository;
+            _balanceTotalCalculator = balanceTotalCalculator;
         }
 
         public async Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId)
@@ -38,19 +40,7 @@ namespace Sho.Pocket.Application.Balances
 
             IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
 
-            if (!balances.Any())
-            {
-                return null;
-            }
-
-            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userOpenId);
-            string primaryCurrency = userCurrencies.Where(uc => uc.IsPrimary).Select(uc => uc.Currency).FirstOrDefault();
-
-            IEnumerable<Task<BalanceTotalModel>> totalsCalculationTasks = userCurrencies
-                .Select(uc => CalculateEffectiveDateTotalsAsync(balances, uc.Currency, primaryCurrency, latestEffectiveDate));
-
-            BalanceTotalModel[] balanceTotals = await Task.WhenAll(totalsCalculationTasks);
-            List<BalanceTotalModel> result = balanceTotals.OrderBy(uc => uc.Currency).ToList();
+            List<BalanceTotalModel> result = await CalculateTotalsAsync(userOpenId, balances, latestEffectiveDate);
 
             return result;
         }
@@ -75,7 +65,7 @@ namespace Sho.Pocket.Application.Balances
                 foreach (var effectiveDate in filterEffectiveDates)
                 {
                     var effectiveBalances = balances.Where(b => b.EffectiveDate == effectiveDate).ToList();
-                    BalanceTotalModel balanceTotal = await CalculateEffectiveDateTotalsAsync(effectiveBalances, currency.Currency, primaryCurrency, effectiveDate);
+                    BalanceTotalModel balanceTotal = await _balanceTotalCalculator.CalculateAsync(effectiveBalances, currency.Currency, primaryCurrency, effectiveDate);
                     values.Add(balanceTotal);
                 }
 
@@ -90,11 +80,13 @@ namespace Sho.Pocket.Application.Balances
             IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userOpenId);
             string primaryCurrency = userCurrencies.Where(uc => uc.IsPrimary).Select(uc => uc.Currency).FirstOrDefault();
 
-            IEnumerable<Task<BalanceTotalModel>> totalsCalculationTasks = userCurrencies
-                .Select(c => CalculateEffectiveDateTotalsAsync(balances, c.Currency, primaryCurrency, effectiveDate));
+            List<BalanceTotalModel> result = new List<BalanceTotalModel>();
 
-            BalanceTotalModel[] balanceTotals = await Task.WhenAll(totalsCalculationTasks);
-            List<BalanceTotalModel> result = balanceTotals.OrderBy(c => c.Currency).ToList();
+            foreach (var uc in userCurrencies)
+            {
+                BalanceTotalModel totals = await _balanceTotalCalculator.CalculateAsync(balances, uc.Currency, primaryCurrency, effectiveDate);
+                result.Add(totals);
+            }
 
             return result;
         }
@@ -107,32 +99,6 @@ namespace Sho.Pocket.Application.Balances
             List<BalancePrimaryCurrencyModel> result = balances
                 .Select(b => new BalancePrimaryCurrencyModel(userCurrency.Currency, b))
                 .ToList();
-
-            return result;
-        }
-
-        private async Task<BalanceTotalModel> CalculateEffectiveDateTotalsAsync(IEnumerable<Balance> balances, string currency, string defaultCurrency, DateTime effectiveDate)
-        {
-            decimal value = 0;
-
-            if (string.Equals(currency, defaultCurrency, StringComparison.InvariantCultureIgnoreCase))
-            {
-                value = balances.Select(b => b.Value * b.ExchangeRate?.Buy ?? 0).Sum();
-            }
-            else
-            {
-                List<Balance> currentCurrencyBalances = balances.Where(b => string.Equals(b.Asset.Currency, currency, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                List<Balance> defaultCurrencyBalances = balances.Where(b => string.Equals(b.Asset.Currency, defaultCurrency, StringComparison.InvariantCultureIgnoreCase)).ToList();
-                List<Balance> otherCurrenciesBalances = balances.Where(b => !string.Equals(b.Asset.Currency, currency) && !string.Equals(b.Asset.Currency, defaultCurrency)).ToList();
-
-                ExchangeRate currentCurrencyExchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(currency, effectiveDate);
-
-                value = currentCurrencyBalances.Select(b => b.Value).Sum()
-                    + defaultCurrencyBalances.Select(b => b.Value / currentCurrencyExchangeRate.Buy).Sum()
-                    + otherCurrenciesBalances.Select(b => b.Value * b.ExchangeRate.Buy / currentCurrencyExchangeRate.Buy).Sum();
-            }
-
-            BalanceTotalModel result = new BalanceTotalModel(effectiveDate, currency, value);
 
             return result;
         }

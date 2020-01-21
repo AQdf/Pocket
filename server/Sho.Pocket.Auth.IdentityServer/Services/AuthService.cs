@@ -18,6 +18,11 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
         {
             ApplicationUser user = await _userManager.FindByIdAsync(id);
 
+            if (user == null)
+            {
+                return null;
+            }
+
             UserViewModel model = new UserViewModel(user.Id, user.Email);
 
             return model;
@@ -26,6 +31,11 @@ namespace Sho.Pocket.Auth.IdentityServer.Services
         public async Task<UserViewModel> GetUserByEmail(string email)
         {
             ApplicationUser user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return null;
+            }
 
             UserViewModel model = new UserViewModel(user.Id, user.Email);
 

@@ -17,8 +17,8 @@ namespace Sho.Pocket.Core.Features.ExchangeRates.Models
             EffectiveDate = exchangeRate.EffectiveDate;
             BaseCurrency = exchangeRate.BaseCurrency;
             CounterCurrency = exchangeRate.CounterCurrency;
-            Buy = exchangeRate.Buy;
-            Sell = exchangeRate.Sell;
+            Buy = exchangeRate.BuyRate;
+            Sell = exchangeRate.SellRate;
             Provider = exchangeRate.Provider;
         }
 

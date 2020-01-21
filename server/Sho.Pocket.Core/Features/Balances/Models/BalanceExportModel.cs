@@ -11,9 +11,9 @@ namespace Sho.Pocket.Core.Features.Balances.Models
             AssetName = asset.Name;
             BalanceValue = balanceValue;
             Currency = asset.Currency;
-            ExchangeRateBuy = exchangeRate.Buy;
-            ExchangeRateSell = exchangeRate.Sell;
-            ExchangeRateProvider = exchangeRate.Provider;
+            BuyRate = exchangeRate.BuyRate;
+            SellRate = exchangeRate.SellRate;
+            RateProvider = exchangeRate.Provider;
             CounterCurrency = exchangeRate.CounterCurrency;
         }
 
@@ -25,11 +25,11 @@ namespace Sho.Pocket.Core.Features.Balances.Models
 
         public string Currency { get; set; }
 
-        public decimal ExchangeRateBuy { get; set; }
+        public decimal BuyRate { get; set; }
 
-        public decimal ExchangeRateSell { get; set; }
+        public decimal SellRate { get; set; }
 
-        public string ExchangeRateProvider { get; set; }
+        public string RateProvider { get; set; }
 
         public string CounterCurrency { get; set; }
     }

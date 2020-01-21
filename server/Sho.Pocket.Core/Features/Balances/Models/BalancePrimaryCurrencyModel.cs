@@ -11,7 +11,7 @@ namespace Sho.Pocket.Core.Features.Balances.Models
             PrimaryCurrency = primaryCurrency;
             EffectiveDate = balance.EffectiveDate;
             Value = balance.Value;
-            Rate = balance.ExchangeRate.Sell;
+            Rate = balance.ExchangeRate.SellRate;
         }
 
         public string AssetName { get; set; }

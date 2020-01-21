@@ -17,7 +17,8 @@ namespace Sho.Pocket.DataAccess.Sql.UserCurrencies
             const string queryText =
                 @"SELECT [UserOpenId], [Currency], [IsPrimary]
                 FROM [dbo].[UserCurrency]
-                WHERE [UserOpenId] = @userOpenId";
+                WHERE [UserOpenId] = @userOpenId
+                ORDER BY [Currency]";
             object queryParams = new { userOpenId };
 
             IEnumerable<UserCurrency> result = await base.GetEntities(queryText, queryParams);

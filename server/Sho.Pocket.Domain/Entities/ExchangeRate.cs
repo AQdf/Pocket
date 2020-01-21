@@ -12,9 +12,9 @@ namespace Sho.Pocket.Domain.Entities
 
         public string CounterCurrency { get; set; }
 
-        public decimal Buy { get; set; }
+        public decimal BuyRate { get; set; }
 
-        public decimal Sell { get; set; }
+        public decimal SellRate { get; set; }
 
         public string Provider { get; set; }
     }

@@ -45,7 +45,7 @@ namespace Sho.Pocket.Application.Features.Balances
 
                         if (asset != null)
                         {
-                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.ExchangeRateBuy, item.ExchangeRateSell);
+                            ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.BuyRate, item.SellRate);
                             Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.BalanceValue, rate.Id);
                         }
                     }

@@ -50,6 +50,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IBalanceNoteService, BalanceNoteService>();
             services.AddScoped<IBalanceExportService, BalanceExportService>();
             services.AddScoped<IBalanceImportService, BalanceImportService>();
+            services.AddScoped<IBalanceTotalCalculator, BalanceTotalCalculator>();
             services.AddScoped<ICurrencyService, CurrencyService>();
             services.AddScoped<IInventoryService, InventoryService>();
             services.AddScoped<IItemCategoryService, ItemCategoryService>();

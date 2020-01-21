@@ -34,8 +34,8 @@ namespace Sho.Pocket.Api.Controllers
 
         protected ActionResult HandleUserNotFoundResult()
         {
-            object error = "User not found";
-            return BadRequest(error);
+            object error = "User not found!";
+            return Unauthorized(error);
         }
 
         protected ActionResult HandleResult(object result)

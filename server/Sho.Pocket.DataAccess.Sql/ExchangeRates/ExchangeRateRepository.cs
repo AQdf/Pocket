@@ -24,12 +24,12 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 IF @id IS NULL
                     BEGIN
                         SET @id = NEWID();
-                        INSERT INTO ExchangeRate([Id], [EffectiveDate], [BaseCurrency], [CounterCurrency], [Buy], [Sell], [Provider]) VALUES (
+                        INSERT INTO ExchangeRate([Id], [EffectiveDate], [BaseCurrency], [CounterCurrency], [BuyRate], [SellRate], [Provider]) VALUES (
                         @id, @effectiveDate, @baseCurrency, @counterCurrency, @buy, @sell, @provider)
                     END
                 ELSE
                     BEGIN
-                        UPDATE ExchangeRate SET Buy = @buy, Sell = @sell WHERE Id = @id
+                        UPDATE ExchangeRate SET BuyRate = @buy, SellRate = @sell WHERE Id = @id
                     END
 
                 SELECT * FROM ExchangeRate where Id = @id";
@@ -41,7 +41,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
                 counterCurrency,
                 buy,
                 sell,
-                @provider
+                provider
             };
 
             ExchangeRate result = await base.InsertEntity(queryText, queryParameters);
@@ -53,7 +53,7 @@ namespace Sho.Pocket.DataAccess.Sql.ExchangeRates
         {
             string queryText = @"
                 UPDATE ExchangeRate
-                SET Buy = @buy, Sell = @sell
+                SET BuyRate = @buy, SellRate = @sell
                 WHERE Id = @id
 
                 SELECT * FROM ExchangeRate WHERE Id = @id";
