@@ -53,7 +53,7 @@
             </button>
             <button type="submit" class="btn btn-outline-info ml-1"
               [disabled]="!balanceForm.valid || (selectedBalance && selectedBalance.id) !== balance.id">
-              <i class="fa fa-floppy-o"></i>
+              <i class="fa fa-save"></i>
             </button>
             <button type="button" class="btn btn-outline-info ml-1"
               [disabled]="(selectedBalance && selectedBalance.id) !== balance.id" (click)="resetRecord(balance.id)">
