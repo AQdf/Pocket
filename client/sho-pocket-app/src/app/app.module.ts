@@ -6,7 +6,6 @@ import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
 import { ChartModule } from 'angular-highcharts';
 
-// import { AuthXHRBackend } from './auth-xhr-backend';
 import { AuthGuard } from './auth.guard';
 import { HttpErrorInterceptor } from './common/http-error.interceptor';
 import { AuthHeaderInterceptor } from './common/auth-header.interceptor';
@@ -28,6 +27,7 @@ import { InventoryItemsComponent } from './components/inventory/inventory-items/
 import { BalanceNoteComponent } from './components/balances/balance-note/balance-note.component';
 import { AccountStatementComponent } from './components/assets/account-statement/account-statement.component';
 import { ExchangeRatesComponent } from './components/exchange-rates/exchange-rates.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,8 @@ import { ExchangeRatesComponent } from './components/exchange-rates/exchange-rat
     InventoryItemsComponent,
     BalanceNoteComponent,
     AccountStatementComponent,
-    ExchangeRatesComponent
+    ExchangeRatesComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
