@@ -1,32 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded margin-bottom-20">
-  <div class="navbar-collapse" id="navbarText">
-      <ul *ngIf="status" class="navbar-nav mr-auto">
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/balances" routerLinkActive="active">Balances<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/assets" routerLinkActive="active">Assets<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/inventory" routerLinkActive="active">Inventory<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" (click)="logout()" href="#">Logout</a>
-          </li>
-      </ul>
-      <ul *ngIf="!status" class="nav navbar-nav">
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/login" routerLinkActive="active">Login<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link" routerLink="/register" routerLinkActive="active">Register<span class="sr-only">(current)</span></a>
-          </li>
-      </ul>
-      <span *ngIf="status" class="navbar-text">
-          <app-totals></app-totals>
-      </span>
-  </div>
+<nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+    <div class="sidebar-sticky">
+        <ul *ngIf="status" class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/balances" routerLinkActive="active">Balances<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/assets" routerLinkActive="active">Assets<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/inventory" routerLinkActive="active">Inventory<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logout()" href="#">Logout</a>
+            </li>
+        </ul>
+        <ul *ngIf="!status" class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/login" routerLinkActive="active">Login<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/register" routerLinkActive="active">Register<span
+                        class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+
+        <div *ngIf="status">
+            <hr>
+            <app-totals></app-totals>
+            <hr>
+        </div>
+
+    </div>
 </nav>
