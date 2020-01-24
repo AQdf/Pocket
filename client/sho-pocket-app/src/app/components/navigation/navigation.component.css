@@ -3,7 +3,8 @@ hr {
 }
 
 .sidebar {
-  position: fixed;
+  width: 200px;
+  height: 100vh;
   top: 0;
   bottom: 0;
   left: 0;
@@ -12,9 +13,8 @@ hr {
 }
 
 .sidebar-sticky {
+  position: fixed;
   position: -webkit-sticky;
-  position: sticky;
-  height: calc(100vh - 48px);
   padding-top: .5rem;
   overflow-x: hidden;
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */

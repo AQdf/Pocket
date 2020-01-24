@@ -11,7 +11,7 @@
 <div class="row" [hidden]="!effectiveDate">
 
   <div class="col-md-9 p-3 bg-light border rounded">
-    <div class="p-2" [hidden]="!(balances && balances.length > 0)">
+    <div class="pb-3" [hidden]="!(balances && balances.length > 0)">
       <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm" (click)="addBalance()">
         <span class="">Add record</span>
       </button>
@@ -23,7 +23,7 @@
         <input type="hidden" name="exchangeRateId" #ExchangeRateId="ngModel" [(ngModel)]="balance.exchangeRateId">
         <input type="hidden" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
 
-        <div class="form-row align-items-center p-2">
+        <div class="form-row align-items-center pb-3">
           <div class="col-md-4">
             <select name="AssetId" class="form-control" placeholder="Asset" required
               [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel"

@@ -1,66 +1,75 @@
-<div class="col-auto mt-2">
-    <button type="button" [disabled]="isAddMode" class="btn btn-md btn-info" (click)="addAsset()">
-      New record
-    </button>
+<div class="container-fluid">
+
+  <div class="row pb-2 pt-3">
+    <div class="col">
+      <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm" (click)="addAsset()">
+        Add record
+      </button>
+    </div>
   </div>
 
-<div *ngFor="let asset of assetList">
-  <form class="m-2" #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+  <div class="row mt-2">
+    <div class="col">
+      <div *ngFor="let asset of assetList">
 
-    <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
+        <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+          <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
+          <div class="form-row align-items-center pb-3">
+            <div class="col-md-4">
+              <input name="Name" class="form-control" placeholder="Name" required
+                [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
+                [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
+            </div>
+            <div class="col-md-2">
+              <select name="Currency" class="form-control" placeholder="Currency" required
+                [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
+                [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
+                (change)="this.onCurrencyAdded($event.target.value)">
+                <option value="" disabled selected>
+                  Select currency
+                </option>
+                <option *ngFor="let currency of currenciesList" value={{currency}}>
+                  {{currency}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <select name="IsActive" class="form-control" placeholder="Active" required
+                [disabled]="asset.id !== currentEditRecordId" #IsActive="ngModel" [(ngModel)]="asset.isActive"
+                [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
+                <option value="true" selected>
+                  Active
+                </option>
+                <option value="false">
+                  Inactive
+                </option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button type="button" class="btn btn-outline-info ml-1"
+                [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)">
+                <i class="fa fa-pencil-square-o"></i>
+              </button>
+              <button type="submit" class="btn btn-outline-info ml-1"
+                [disabled]="!assetForm.valid || currentEditRecordId !== asset.id">
+                <i class="fa fa-floppy-o"></i>
+              </button>
+              <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== asset.id"
+                (click)="resetRecord(asset.id)">
+                <i class="fa fa-repeat"></i>
+              </button>
+              <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
+                <i class="fa fa-trash-o"></i>
+              </button>
+              <a class="ml-1" [routerLink]="['/asset/', asset.id]">
+                <button type="button" class="btn btn-md btn-outline-info">Bank Sync</button>
+              </a>
+            </div>
+          </div>
+        </form>
 
-    <div class="form-row align-items-center p-2">
-      <div class="col-md-4">
-        <input name="Name" class="form-control" placeholder="Name" required
-          [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
-          [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
-      </div>
-      <div class="col-md-2">
-        <select name="Currency" class="form-control" placeholder="Currency" required
-          [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
-          [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
-          (change)="this.onCurrencyAdded($event.target.value)">
-          <option value="" disabled selected>
-            Select currency
-          </option>
-          <option *ngFor="let currency of currenciesList" value={{currency}}>
-            {{currency}}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-2">
-          <select name="IsActive" class="form-control" placeholder="Active" required
-          [disabled]="asset.id !== currentEditRecordId" #IsActive="ngModel" [(ngModel)]="asset.isActive"
-          [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
-          <option value="true" selected>
-            Active
-          </option>
-          <option value="false">
-            Inactive
-          </option>
-        </select>
-      </div>
-      <div class="col-md-4">
-        <button type="button" class="btn btn-outline-info ml-1"
-          [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)">
-          <i class="fa fa-pencil-square-o"></i>
-        </button>
-        <button type="submit" class="btn btn-outline-info ml-1"
-          [disabled]="!assetForm.valid || currentEditRecordId !== asset.id">
-          <i class="fa fa-floppy-o"></i>
-        </button>
-        <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== asset.id"
-          (click)="resetRecord(asset.id)">
-          <i class="fa fa-repeat"></i>
-        </button>
-        <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
-          <i class="fa fa-trash-o"></i>
-        </button>
-        <a class="ml-1" [routerLink]="['/asset/', asset.id]">
-          <button type="button" class="btn btn-md btn-outline-info">Bank Sync</button>
-        </a>
       </div>
     </div>
+  </div>
 
-  </form>
 </div>
