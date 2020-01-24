@@ -19,7 +19,7 @@ export class UserService {
   // Observable navItem stream
   authNavStatus$ = this._authNavStatusSource.asObservable();
 
-  private loggedIn = false;
+  private loggedIn: boolean = false;
 
   constructor(private http: HttpClient, private userDetailsService: UserDetailsService) {
     this.loggedIn = !!localStorage.getItem('auth_token');
@@ -34,7 +34,7 @@ export class UserService {
     let requestOptions = { headers: headers };
 
     return this.http.post(usersApiUrl + 'register', body, requestOptions);
-  }  
+  }
 
   login(email, password) {
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -47,6 +47,7 @@ export class UserService {
         this._authNavStatusSource.next(true);
 
         this.userDetailsService.getUserDetails().subscribe((userDetails: UserDetails) => {
+          localStorage.setItem('user_email', userDetails.email);
           localStorage.setItem('default_currencies', JSON.stringify(userDetails.defaultCurrencies));
           localStorage.setItem('primary_currency', userDetails.primaryCurrency);
         });

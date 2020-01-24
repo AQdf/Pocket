@@ -1,42 +1,52 @@
 <nav class="d-none d-md-block sidebar">
+  <div class="container-fluid">
     <div class="sidebar-sticky">
-        <ul *ngIf="status" class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard<span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/balances" routerLinkActive="active">Balances<span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/assets" routerLinkActive="active">Assets<span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/inventory" routerLinkActive="active">Inventory<span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" (click)="logout()" href="#">Logout</a>
-            </li>
-        </ul>
-        <ul *ngIf="!status" class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/login" routerLinkActive="active">Login<span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLink="/register" routerLinkActive="active">Register<span
-                        class="sr-only">(current)</span></a>
-            </li>
-        </ul>
 
-        <div *ngIf="status">
-            <hr>
-            <app-totals></app-totals>
-            <hr>
-        </div>
+      <div *ngIf="status">
+        <hr>
+        <img src="../../../assets/images/user-photo-placeholder.svg" class="rounded mx-auto d-block" alt="...">
+        <hr>
+      </div>
+
+      <ul *ngIf="status" class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard<span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/balances" routerLinkActive="active">Balances<span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/assets" routerLinkActive="active">Assets<span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/inventory" routerLinkActive="active">Inventory<span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="logout()" href="#">Logout</a>
+        </li>
+      </ul>
+
+      <ul *ngIf="!status" class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login<span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/register" routerLinkActive="active">Register<span
+              class="sr-only">(current)</span></a>
+        </li>
+      </ul>
+
+      <div *ngIf="status">
+        <hr>
+        <app-totals></app-totals>
+        <hr>
+      </div>
 
     </div>
+  </div>
 </nav>
