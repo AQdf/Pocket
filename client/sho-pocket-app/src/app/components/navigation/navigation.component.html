@@ -1,32 +1,44 @@
-<nav class="d-none d-md-block sidebar">
-  <div class="container-fluid">
+<div class="d-flex flex-column" style="height: 100%;">
+  <nav class="sidebar" [ngClass]="{'collapsed-sidebar': collapsed}">
     <div class="sidebar-sticky">
 
-      <div *ngIf="status">
+      <div class="sidebar-toggler">
+        <button (click)="toggleSidebar()">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+
+      <div *ngIf="status" [ngClass]="{'d-none': collapsed}">
         <hr>
         <img src="../../../assets/images/user-photo-placeholder.svg" class="rounded mx-auto d-block" alt="...">
         <hr>
       </div>
 
-      <ul *ngIf="status" class="nav flex-column">
+      <ul *ngIf="status" class="nav d-flex flex-column">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard<span
-              class="sr-only">(current)</span></a>
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+            <i class="nav-item-icon fa fa-dashboard"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Dashboard</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/balances" routerLinkActive="active">Balances<span
-              class="sr-only">(current)</span></a>
+          <a class="nav-link" routerLink="/balances" routerLinkActive="active">
+            <i class="nav-item-icon fa fa-money"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Balances</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/assets" routerLinkActive="active">Assets<span
-              class="sr-only">(current)</span></a>
+          <a class="nav-link" routerLink="/assets" routerLinkActive="active">
+            <i class="nav-item-icon fa fa-credit-card"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Assets</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/inventory" routerLinkActive="active">Inventory<span
-              class="sr-only">(current)</span></a>
+          <a class="nav-link" routerLink="/inventory" routerLinkActive="active">
+            <i class="nav-item-icon fa fa-archive"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Inventory</span>
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="logout()" href="#">Logout</a>
+          <a class="nav-link" (click)="logout()" href="#">
+            <i class="nav-item-icon fa fa-sign-out"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Logout</span>
+          </a>
         </li>
       </ul>
 
@@ -41,12 +53,13 @@
         </li>
       </ul>
 
-      <div *ngIf="status">
+      <div *ngIf="status" [ngClass]="{'d-none': collapsed}">
         <hr>
         <app-totals></app-totals>
         <hr>
       </div>
 
     </div>
-  </div>
-</nav>
+  </nav>
+
+</div>

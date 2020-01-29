@@ -12,11 +12,13 @@ export class NavigationComponent implements OnInit {
 
   status: boolean = false;
   subscription: Subscription;
+  collapsed: boolean = true;
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
     this.subscription = this.userService.authNavStatus$.subscribe(status => this.status = status);
+    this.collapsed = JSON.parse(localStorage.getItem('sidebar-collapsed'));
   }
  
   ngOnDestroy() {
@@ -26,5 +28,10 @@ export class NavigationComponent implements OnInit {
 
   logout() {
     this.userService.logout();
+  }
+
+  toggleSidebar() {
+    this.collapsed = !this.collapsed;
+    localStorage.setItem('sidebar-collapsed', this.collapsed.toString())
   }
 }
