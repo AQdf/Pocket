@@ -8,19 +8,19 @@
         </button>
       </div>
 
-      <hr>
       <div class="profile" [ngClass]="{'d-none': collapsed}">
+        <hr>
         <img src="../../../assets/images/user-photo-placeholder.svg" class="rounded" alt="...">
         <span>{{this.userEmail}}</span>
         <ul class="nav d-flex flex-column mx-auto d-block">
           <li class="nav-item">
             <a class="nav-link" (click)="logout()" href="#">
-              <i class="nav-item-icon fa fa-sign-out"></i><span class="icon-text">Logout</span>
+              <i class="fa fa-sign-out"></i><span class="icon-text">Logout</span>
             </a>
           </li>
         </ul>
+        <hr>
       </div>
-      <hr>
 
       <ul class="nav d-flex flex-column">
         <li class="nav-item">
