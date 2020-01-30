@@ -42,6 +42,6 @@ export class RegistrationComponent implements OnInit {
   getCurrenciesList() {
     this.currencyService.getCurrenciesList().subscribe((response: string[]) => {
       this.currenciesList = response;
-    });
+    }, (errors: ResponseError[]) => this.errors = errors);
   }
 }

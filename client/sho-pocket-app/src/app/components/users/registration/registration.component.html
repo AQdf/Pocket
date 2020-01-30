@@ -1,6 +1,11 @@
 <div id="register-page">
 <div class="d-flex flex-column mx-auto register-wrapper">
 
+  <blockquote class="blockquote text-center">
+    <h4>Welcome to Pocket</h4>
+    <h6>Start your journey</h6>
+  </blockquote>
+
   <ul class="nav flex-row nav-wrapper">
     <li class="nav-item">
       <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
@@ -45,7 +50,7 @@
       <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Sign Up</button>
     </div>
 
-    <div *ngIf="errors" class="alert alert-danger" role="alert">
+    <div *ngIf="errors" class="alert alert-danger mt-3" role="alert">
       <div *ngFor="let error of errors">{{error.description}}</div>
     </div>
   </form>
