@@ -8,13 +8,21 @@
         </button>
       </div>
 
-      <div *ngIf="status" [ngClass]="{'d-none': collapsed}">
-        <hr>
-        <img src="../../../assets/images/user-photo-placeholder.svg" class="rounded mx-auto d-block" alt="...">
-        <hr>
+      <hr>
+      <div class="profile" [ngClass]="{'d-none': collapsed}">
+        <img src="../../../assets/images/user-photo-placeholder.svg" class="rounded" alt="...">
+        <span>{{this.userEmail}}</span>
+        <ul class="nav d-flex flex-column mx-auto d-block">
+          <li class="nav-item">
+            <a class="nav-link" (click)="logout()" href="#">
+              <i class="nav-item-icon fa fa-sign-out"></i><span class="icon-text">Logout</span>
+            </a>
+          </li>
+        </ul>
       </div>
+      <hr>
 
-      <ul *ngIf="status" class="nav d-flex flex-column">
+      <ul class="nav d-flex flex-column">
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
             <i class="nav-item-icon fa fa-dashboard"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Dashboard</span>
@@ -35,25 +43,9 @@
             <i class="nav-item-icon fa fa-archive"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Inventory</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="logout()" href="#">
-            <i class="nav-item-icon fa fa-sign-out"></i><span class="icon-text" [ngClass]="{'d-none': collapsed}">Logout</span>
-          </a>
-        </li>
       </ul>
 
-      <ul *ngIf="!status" class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/login" routerLinkActive="active">Login<span
-              class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/register" routerLinkActive="active">Register<span
-              class="sr-only">(current)</span></a>
-        </li>
-      </ul>
-
-      <div *ngIf="status" [ngClass]="{'d-none': collapsed}">
+      <div [ngClass]="{'d-none': collapsed}">
         <hr>
         <app-totals></app-totals>
         <hr>

@@ -1,16 +1,16 @@
-<div class="row">
-  <div class="col-md-6 new-user-alert">
-    <div *ngIf="brandNew" class="alert alert-success" role="alert">
-      <strong>All set!</strong> Please login with your account
-    </div>
-    <h2>Login</h2>
-  </div>
-</div>
+<div id="login-page">
+  <div class="d-flex flex-column mx-auto login-wrapper">
 
-<div class="row">
-  <div class="col-md-5">
-    <form #f="ngForm" novalidate (ngSubmit)="login(f)">
+    <ul class="nav flex-row nav-wrapper">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+      </li>
+    </ul>
 
+    <form class="login-form" #f="ngForm" novalidate (ngSubmit)="login(f)">
       <div class="form-group">
         <input id="email" type="text" required name="email" class="form-control" placeholder="Email"
           [ngModel]="credentials.email" #email="ngModel" tmFocus validateEmail>
@@ -22,14 +22,12 @@
           ngModel>
       </div>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Login</button>
-      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Login</button>
 
       <div *ngIf="errors" class="alert alert-danger" role="alert">
         <div *ngFor="let error of errors">{{error.description}}</div>
       </div>
-
     </form>
+
   </div>
 </div>

@@ -1,55 +1,54 @@
-<div class="row">
-  <div class="col-md-6">
-    <h2>Register</h2>
-  </div>
+<div id="register-page">
+<div class="d-flex flex-column mx-auto register-wrapper">
+
+  <ul class="nav flex-row nav-wrapper">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/register" routerLinkActive="active">Register</a>
+    </li>
+  </ul>
+
+  <form class="register-form" #f="ngForm" novalidate (ngSubmit)="registerUser(f)">
+    <div class="form-group">
+      <input type="text" class="form-control" id="first-name" placeholder="First name" name="firstName" tmFocus ngModel>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" id="last-name" placeholder="Last name" name="lastName" ngModel>
+    </div>
+    <div class="form-group">
+      <input id="email" type="text" required name="email" validateEmail class="form-control" placeholder="Email" ngModel
+        #email="ngModel">
+      <small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger">Please enter a valid
+        email</small>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" id="password" name="password" placeholder="Password" ngModel>
+    </div>
+    <div class="form-group">
+      <select name="primaryCurrency" class="form-control" placeholder="Currency" required #PrimaryCurrency="ngModel"
+        ngModel>
+        <option value="" disabled selected>
+          Select currency
+        </option>
+        <option *ngFor="let currency of currenciesList" value={{currency}}>
+          {{currency}}
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" id="location" placeholder="Location" required name="location" ngModel>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Sign Up</button>
+    </div>
+
+    <div *ngIf="errors" class="alert alert-danger" role="alert">
+      <div *ngFor="let error of errors">{{error.description}}</div>
+    </div>
+  </form>
+
 </div>
-
-<div class="row">
-  <div class="col-md-6">
-      <form #f="ngForm" novalidate (ngSubmit)="registerUser(f)">
-          <div class="form-group">
-              <label for="first-name">First name</label>
-              <input type="text" class="form-control" id="first-name" placeholder="First name" name="firstName" tmFocus ngModel>              
-          </div>
-          <div class="form-group">
-              <label for="last-name">Last name</label>
-              <input type="text" class="form-control" id="last-name" placeholder="Last name" name="lastName" ngModel>              
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-          	<input id="email" type="text" required name="email" validateEmail class="form-control" placeholder="Email" ngModel  #email="ngModel">
-            <small [hidden]="email.valid || (email.pristine && !submitted)" class="text-danger">Please enter a valid email</small>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Password" ngModel>
-          </div>
-          <div class="form-group">
-            <label for="primaryCurrency">Currency</label>
-            <select name="primaryCurrency" class="form-control" placeholder="Currency" required #PrimaryCurrency="ngModel" ngModel>
-              <option value="" disabled selected>
-                Select currency
-              </option>
-              <option *ngFor="let currency of currenciesList" value={{currency}}>
-                {{currency}}
-              </option>
-            </select>
-          </div>
-          <div class="form-group">
-             <label for="location">Location</label>
-             <input type="text" class="form-control" id="location" placeholder="Location" required name="location" ngModel>
-          </div>
-
-          <div class="form-group">
-              <button type="submit" class="btn btn-primary" [disabled]="f.invalid || isRequesting">Sign Up</button>
-          </div>
-
-          <div *ngIf="errors" class="alert alert-danger" role="alert">
-            <div *ngFor="let error of errors">{{error.description}}</div>
-          </div>
-          
-        </form>
-   </div>
 </div>
-
-
