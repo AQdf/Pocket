@@ -13,7 +13,6 @@ import { AuthHeaderInterceptor } from './common/auth-header.interceptor';
 import { AppComponent } from './app.component';
 import { AssetsComponent } from './components/assets/assets.component';
 import { AssetComponent } from './components/assets/asset/asset.component';
-import { AssetListComponent } from './components/assets/asset-list/asset-list.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { TotalsComponent } from './components/totals/totals.component';
@@ -34,7 +33,6 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     AppComponent,
     AssetsComponent,
     AssetComponent,
-    AssetListComponent,
     DashboardComponent,
     TotalsComponent,
     BalancesComponent,
