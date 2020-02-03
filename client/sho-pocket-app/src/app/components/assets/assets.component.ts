@@ -90,13 +90,6 @@ export class AssetsComponent implements OnInit {
     }
   }
 
-  resetRecord(id: string) {
-    this.assetService.getAsset(id).subscribe((result: Asset) => {
-      let index = this.assetList.findIndex(f => f.id === id)
-      this.assetList[index] = result;
-    })
-  }
-
   addAsset() {
     let newAsset = {
       id: null,

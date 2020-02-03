@@ -1,26 +1,32 @@
 <div class="container-fluid">
+<div class="d-flex flex-column">
 
-  <div class="row pb-2 pt-3">
-    <div class="col">
-      <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm" (click)="addAsset()">
-        Add
-      </button>
-    </div>
+  <div>
+    <h1>Assets</h1>
+    <hr>
   </div>
 
-  <div class="row mt-2">
-    <div class="col">
-      <div *ngFor="let asset of assetList">
+  <div class="card-deck-wrapper">
+    
+    <div class="btn-add-wrapper">
+      <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm btn-add" (click)="addAsset()">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
 
-        <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
-          <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
-          <div class="form-row align-items-center pb-3">
-            <div class="col-md-4">
+    <div class="card-deck">
+      <div *ngFor="let asset of assetList">
+        <div class="card bg-light card-wrapper text-center">
+          <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+            <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
+
+            <div class="card-text">
               <input name="Name" class="form-control" placeholder="Name" required
                 [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
                 [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
             </div>
-            <div class="col-md-2">
+
+            <div class="card-text">
               <select name="Currency" class="form-control" placeholder="Currency" required
                 [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
                 [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
@@ -33,7 +39,8 @@
                 </option>
               </select>
             </div>
-            <div class="col-md-2">
+
+            <div class="card-text">
               <select name="IsActive" class="form-control" placeholder="Active" required
                 [disabled]="asset.id !== currentEditRecordId" #IsActive="ngModel" [(ngModel)]="asset.isActive"
                 [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
@@ -45,31 +52,36 @@
                 </option>
               </select>
             </div>
-            <div class="col-md-4">
-              <button type="button" class="btn btn-outline-info ml-1"
-                [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)">
-                <i class="fa fa-pencil-square-o"></i>
-              </button>
-              <button type="submit" class="btn btn-outline-info ml-1"
-                [disabled]="!assetForm.valid || currentEditRecordId !== asset.id">
-                <i class="fa fa-floppy-o"></i>
-              </button>
-              <button type="button" class="btn btn-outline-info ml-1" [disabled]="currentEditRecordId !== asset.id"
-                (click)="resetRecord(asset.id)">
-                <i class="fa fa-repeat"></i>
-              </button>
-              <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
-                <i class="fa fa-trash-o"></i>
-              </button>
-              <a class="ml-1" [routerLink]="['/asset/', asset.id]">
-                <button type="button" class="btn btn-md btn-outline-info">Bank Sync</button>
-              </a>
-            </div>
-          </div>
-        </form>
 
+            <div class="card-footer">
+              <div class="d-flex flex-row">
+                <button type="button" class="btn btn-outline-info ml-1"
+                  [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)"
+                  [hidden]="currentEditRecordId === asset.id || isAddMode">
+                  <i class="fa fa-pencil-square-o"></i>
+                </button>
+                <button type="submit" class="btn btn-outline-info ml-1"
+                  [disabled]="!assetForm.valid || currentEditRecordId !== asset.id"
+                  [hidden]="currentEditRecordId !== asset.id">
+                  <i class="fa fa-floppy-o"></i>
+                </button>
+                <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
+                  <i class="fa fa-trash-o"></i>
+                </button>
+                <a class="ml-1" [routerLink]="['/asset-settings/', asset.id]">
+                  <button type="button" class="btn btn-md btn-outline-info"
+                    [hidden]="currentEditRecordId === asset.id && isAddMode">
+                    <i class="fa fa-gear"></i>
+                  </button>
+                </a>
+              </div>
+            </div>
+
+          </form>
+        </div>
       </div>
     </div>
   </div>
 
+</div>
 </div>

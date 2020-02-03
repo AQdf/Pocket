@@ -1,0 +1,75 @@
+<div class="container-fluid">
+  <div class="d-flex flex-column">
+
+    <div class="header-wrapper bg-light border rounded">
+      <div class="header">
+        <a [routerLink]="['/assets/']">
+          <button type="button" class="btn btn-md btn-info">Back</button>
+        </a>
+        <div *ngIf="asset" class="header-title">
+          <h4>{{asset.name}} asset bank sync settings</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section bg-light border rounded">
+      <form #bankForm="ngForm" (ngSubmit)="onBankFormSubmit(bankForm)">
+
+        <div class="settings-control row form-group required">
+          <label for="bankName" class="col-form-label col-4 col-md-3">Bank</label>
+          <select id="bankName" class="form-control col" [disabled]="isConnected" name="BankName"
+            #BankName="ngModel" [(ngModel)]="selectedBank" placeholder="Bank" required>
+            <option value="" disabled selected>Select bank</option>
+            <option *ngFor="let bank of banksList" value={{bank}}>{{bank}}</option>
+          </select>
+        </div>
+
+        <div class="settings-control row form-group required">
+          <label for="token" class="col-form-label col-4 col-md-3">Token</label>
+          <input id="token" class="form-control col" name="Token" [disabled]="isConnected" #Token="ngModel"
+            [(ngModel)]="token" required>
+        </div>
+
+        <div class="settings-control row form-group">
+          <label for="bankClientId" class="col-form-label col-4 col-md-3">Client Id</label>
+          <input id="bankClientId" class="form-control col" name="BankClientId" [disabled]="isConnected" #BankClientId="ngModel" [(ngModel)]="bankClientId">
+        </div>
+
+        <div class="settings-control row form-group">
+          <label for="bankAccountId" class="col-form-label col-4 col-md-3">Account Id</label>
+          <input id="bankAccountId" class="form-control col" name="BankAccountId" [disabled]="isConnected"
+            #BankAccountId="ngModel" [(ngModel)]="bankAccountId">
+        </div>
+
+        <button type="submit" class="btn btn-outline-info" *ngIf="!isConnected"
+          [disabled]="!bankForm.valid">Submit</button>
+
+      </form>
+    </div>
+
+    <div class="settings-section bg-light border rounded" *ngIf="authDataSubmitted">
+      <form #accountForm="ngForm" (ngSubmit)="onAccountFormSubmit(accountForm)">
+
+        <div class="settings-control row form-group">
+          <label for="account" class="col-form-label col-4 col-md-3">Account</label>
+          <select id="account" class="form-control col" [disabled]="isConnected" name="Account"
+            placeholder="Account" #Account="ngModel" [(ngModel)]="selectedAccount" required>
+            <option value="" disabled selected>Select account</option>
+            <option *ngFor="let account of bankAccountsList" [ngValue]="account">{{account.name}}</option>
+          </select>
+        </div>
+
+        <button type="submit" *ngIf="!isConnected" class="btn btn-outline-info"
+          [disabled]="!accountForm.valid">Connect</button>
+        <button type="button" *ngIf="isConnected" class="btn btn-outline-info"
+          (click)="disconnectAccount()">Disonnect</button>
+
+      </form>
+    </div>
+
+    <div class="settings-section bg-light border rounded" *ngIf="isConnected">
+      <app-account-statement></app-account-statement>
+    </div>
+
+  </div>
+</div>

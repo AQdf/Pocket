@@ -10,10 +10,10 @@ import { AssetBankAccount } from '../../../models/asset-bank-account';
 
 @Component({
   selector: 'app-asset',
-  templateUrl: './asset.component.html',
-  styleUrls: ['./asset.component.css']
+  templateUrl: './asset-settings.component.html',
+  styleUrls: ['./asset-settings.component.css']
 })
-export class AssetComponent implements OnInit {
+export class AssetSettingsComponent implements OnInit {
 
   constructor(
     private assetService : AssetService,
