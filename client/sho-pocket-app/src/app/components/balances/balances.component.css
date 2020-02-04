@@ -1,13 +1,42 @@
+.controls {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+}
+
+.control {
+  margin-right: 10px;
+}
+
 .upload-btn-wrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+  width: 100%;
+}
+
+.upload-btn-wrapper label {
+  width: 100%;
 }
 
 .upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
+  display:none;
+}
+
+.upload-btn-wrapper label {
+  margin: 0;
+  padding: 0;
+}
+
+#balance-list {
+  margin-top: 1rem;
+}
+
+@media (max-width: 615px) { 
+  .controls {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .control {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
 }

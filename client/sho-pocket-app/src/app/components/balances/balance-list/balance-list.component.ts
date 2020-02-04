@@ -71,13 +71,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
     }
   }
 
-  resetRecord(id: string) {
-    this.balanceService.getBalance(id).subscribe((result: Balance) => {
-      let index = this.balances.findIndex(f => f.id === id)
-      this.balances[index] = result;
-    })
-  }
-
   onDelete(id: string) {
     if (id === null) {
       this.balances.shift();

@@ -1,16 +1,14 @@
-<div class="row bg-light mb-3 pt-2 pb-2 border rounded">
-  <div class="col-auto input-group" [hidden]="!(balances && balances.length > 0)">
+<div id="totals" class="bg-light border">
+  <div class="input-group" [hidden]="!(balances && balances.length > 0)">
     <div *ngFor="let total of totalBalance">
       <div class="input-group pl-3">
-        <h4>{{total.value | number:'1.0-0' }} {{total.currency}}</h4>
+        <span>{{total.value | number:'1.0-0' }} {{total.currency}}</span>
       </div>
     </div>
   </div>
 </div>
 
-<div class="row" [hidden]="!effectiveDate">
-
-  <div class="col-md-9 p-3 bg-light border rounded">
+<div id="list" class="p-3 bg-light border" [hidden]="!effectiveDate">
     <div class="pb-3" [hidden]="!(balances && balances.length > 0)">
       <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm" (click)="addBalance()">
         <span class="">Add record</span>
@@ -45,7 +43,7 @@
           <div class="col-md-2">
             <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 controls">
             <button type="button" class="btn btn-outline-info ml-1"
               [disabled]="isAddMode && (selectedBalance && selectedBalance.id) !== balance.id"
               (click)="showForEdit(balance)">
@@ -54,10 +52,6 @@
             <button type="submit" class="btn btn-outline-info ml-1"
               [disabled]="!balanceForm.valid || (selectedBalance && selectedBalance.id) !== balance.id">
               <i class="fa fa-save"></i>
-            </button>
-            <button type="button" class="btn btn-outline-info ml-1"
-              [disabled]="(selectedBalance && selectedBalance.id) !== balance.id" (click)="resetRecord(balance.id)">
-              <i class="fa fa-repeat"></i>
             </button>
             <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(balance.id)">
               <i class="fa fa-trash-o"></i>
@@ -73,10 +67,3 @@
     </div>
     <app-balance-note [effectiveDate]="effectiveDate"></app-balance-note>
   </div>
-
-  <div class="col-md-3">
-    <div class="bg-light mb-3 p-2 border rounded">
-      <app-exchange-rates [effectiveDate]="effectiveDate"></app-exchange-rates>
-    </div>
-  </div>
-</div>

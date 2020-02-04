@@ -1,0 +1,19 @@
+#totals {
+  padding-top: .8rem;
+  padding-bottom: .8rem;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+}
+
+#list {
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+}
+
+@media (max-width: 768px) { 
+  .controls {
+    padding-top: .5rem;
+  }
+}
