@@ -2,7 +2,7 @@
   <div class="d-flex flex-column">
 
     <div>
-      <h1>Balances</h1>
+      <span class="page-header">Balances</span>
       <hr>
     </div>
 
@@ -19,7 +19,8 @@
         </button>
 
         <div class="controls-group btn-group" role="group">
-          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
             Export/Import
           </button>
           <div class="dropdown-menu" aria-labelledby="exportImportGroup">
@@ -28,7 +29,8 @@
             <div class="upload-btn-wrapper">
               <label>
                 <span class=" dropdown-item">Import JSON</span>
-                <input type="file" class="custom-file-input" #file placeholder="Import JSON" (change)="importJson(file.files)">
+                <input type="file" class="custom-file-input" #file placeholder="Import JSON"
+                  (change)="importJson(file.files)">
               </label>
             </div>
           </div>
@@ -37,10 +39,9 @@
       </div>
     </div>
 
-    <app-balance-list id="balance-list" [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload()"></app-balance-list>
-
-    <div class="bg-light mb-3 p-2 border rounded">
-      <app-exchange-rates [effectiveDate]="selectedEffectiveDate"></app-exchange-rates>
+    <div id="balances-wrapper">
+      <app-balance-list id="balance-list-wrapper" class="flex-fill" [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload()"></app-balance-list>
+      <app-exchange-rates id="rates-wrapper" [effectiveDate]="selectedEffectiveDate"></app-exchange-rates>
     </div>
 
   </div>

@@ -13,6 +13,7 @@ export class ExchangeRatesComponent implements OnInit {
   @Input() effectiveDate: string;
   effectiveDateFriendly: string;
   exchangeRates: ExchangeRate[];
+  collapsed: boolean = false;
 
   constructor(private exchangeRateService: ExchangeRateService) { }
 
@@ -31,5 +32,9 @@ export class ExchangeRatesComponent implements OnInit {
     this.exchangeRateService.getExchangeRates(effectiveDate).subscribe((response: ExchangeRate[]) => {
       this.exchangeRates = response;
     });
+  }
+
+  togglePanel() {
+    this.collapsed = !this.collapsed;
   }
 }

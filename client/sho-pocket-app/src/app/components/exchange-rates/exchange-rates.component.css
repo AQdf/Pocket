@@ -1,0 +1,50 @@
+#rates-panel {
+  padding: 1rem;
+}
+
+#rates {
+  max-width: 500px;
+  padding: 10px;
+}
+
+.toggle-panel {
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px solid #dee2e6;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.toggle-panel:hover {
+  cursor: pointer;
+}
+
+.toggle-button {
+  text-align: left;
+  width: 100%;
+  height: 100%;
+}
+
+.toggle-icon {
+  margin-right: 1rem;
+}
+
+.form-control {
+  background-color: #f8f9fa!important;
+  border-top: none!important;
+  border-left: none!important;
+  border-right: none!important;
+}
+
+.header {
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+.form-control-header {
+  font-weight: 500;
+}
+
+.currency-wrapper {
+  width: 200px!important;
+}
