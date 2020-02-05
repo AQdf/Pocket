@@ -24,15 +24,17 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
         private void Configure()
         {
             IServiceCollection services = new ServiceCollection();
+            services.AddOptions();
 
             DbSettings dbSettings = new DbSettings
             {
                 DbConnectionString = ConfigurationConstants.DB_CONNECTION
             };
 
-            services.AddSingleton(s => dbSettings);
-
-            services.AddOptions();
+            services.Configure<DbSettings>(settings =>
+            {
+                settings.DbConnectionString = dbSettings.DbConnectionString;
+            });
 
             List<ExchangeRateProviderOption> exchangeRateProviders = new List<ExchangeRateProviderOption>
             {
