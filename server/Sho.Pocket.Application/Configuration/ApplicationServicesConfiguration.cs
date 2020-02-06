@@ -18,6 +18,7 @@ using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Application.Utils.Csv;
 using Sho.Pocket.BankIntegration;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
@@ -25,24 +26,17 @@ using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.Inventory.Abstractions;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
-using Sho.Pocket.DataAccess.Sql;
-using Sho.Pocket.DataAccess.Sql.Assets;
-using Sho.Pocket.DataAccess.Sql.Balances;
-using Sho.Pocket.DataAccess.Sql.Banks;
-using Sho.Pocket.DataAccess.Sql.Currencies;
-using Sho.Pocket.DataAccess.Sql.ExchangeRates;
-using Sho.Pocket.DataAccess.Sql.Inventory;
-using Sho.Pocket.DataAccess.Sql.ItemCategories;
-using Sho.Pocket.DataAccess.Sql.UserCurrencies;
+using Sho.Pocket.DataAccess.Sql.Dapper;
+using Sho.Pocket.DataAccess.Sql.Dapper.Repositories;
 using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
 {
     public static class ApplicationServicesConfiguration
     {
-        public static void AddApplicationServices(this IServiceCollection services)
+        public static void AddApplicationServices(this IServiceCollection services, DbSettings dbSettings)
         {
-            services.AddSingleton<IDbConfiguration, DbConfiguration>();
+            services.AddSingleton<IDbInitializer, DapperDbInitializer>();
 
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();

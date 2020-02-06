@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Balances
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class BalanceNoteRepository : BaseRepository<BalanceNote>, IBalanceNoteRepository
     {
-        public BalanceNoteRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public BalanceNoteRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

@@ -1,22 +1,22 @@
-﻿using Dapper;
-using Microsoft.Extensions.Options;
-using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using Dapper;
+using Microsoft.Extensions.Options;
+using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql
+namespace Sho.Pocket.DataAccess.Sql.Dapper
 {
-    public class DbConfiguration : IDbConfiguration
+    public class DapperDbInitializer : IDbInitializer
     {
-        public string DbConnectionString { get; }
+        private readonly string _connectionString;
 
         private readonly List<Currency> _defaultCurrencies;
 
-        public DbConfiguration(IOptionsMonitor<DbSettings> options)
+        public DapperDbInitializer(IOptionsMonitor<DbSettings> options)
         {
-            DbConnectionString = options.CurrentValue.DbConnectionString;
+            _connectionString = options.CurrentValue.DbConnectionString;
 
             _defaultCurrencies = new List<Currency>
             {
@@ -47,7 +47,7 @@ namespace Sho.Pocket.DataAccess.Sql
                     INSERT INTO [dbo].[Currency] ([Name]) VALUES (@Name)
                 END";
 
-            using (IDbConnection db = new SqlConnection(DbConnectionString))
+            using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 db.Execute(queryText, _defaultCurrencies);
             }
@@ -61,7 +61,7 @@ namespace Sho.Pocket.DataAccess.Sql
                     INSERT INTO [dbo].[Bank] ([Name], [Country], [Active], [ApiUrl], [SyncFreqInSeconds]) VALUES ('Monobank', 'Ukraine', 1, NULL, NULL)
                 END";
 
-            using (IDbConnection db = new SqlConnection(DbConnectionString))
+            using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 db.Execute(queryText);
             }

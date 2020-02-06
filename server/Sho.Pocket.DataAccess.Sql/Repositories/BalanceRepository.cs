@@ -5,16 +5,18 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Balances
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class BalanceRepository : BaseRepository<Balance>, IBalanceRepository
     {
-        private const string SCRIPTS_DIR_NAME = "Balances.Scripts";
+        private const string SCRIPTS_DIR_NAME = "Scripts";
 
-        public BalanceRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public BalanceRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 
@@ -74,7 +76,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
 
             IEnumerable<Balance> resultItems;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 resultItems = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
                     (balance, asset, rate) =>
@@ -146,7 +148,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
 
             IEnumerable<DateTime> result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryAsync<DateTime>(queryText, queryParams);
             }
@@ -170,7 +172,7 @@ namespace Sho.Pocket.DataAccess.Sql.Balances
         {
             IEnumerable<Balance> result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
                     (balance, asset, rate) =>

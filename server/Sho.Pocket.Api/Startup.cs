@@ -11,8 +11,7 @@ using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Auth.IdentityServer.Configuration;
 using Sho.Pocket.Auth.IdentityServer.Configuration.Models;
-using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.DataAccess.Sql;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api
@@ -43,6 +42,10 @@ namespace Sho.Pocket.Api
             .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
+            DbSettings dbSettings = new DbSettings();
+            Configuration.GetSection("DbSettings").Bind(dbSettings);
+            dbSettings.DbConnectionString = Configuration.GetConnectionString("DbConnectionString");
+
             services.Configure<DbSettings>(settings =>
             {
                 Configuration.GetSection("DbSettings").Bind(settings);
@@ -60,9 +63,9 @@ namespace Sho.Pocket.Api
 
             services.Configure<ExchangeRateSettings>(Configuration.GetSection(nameof(ExchangeRateSettings)));
 
+            services.AddApplicationServices(dbSettings);
             services.AddApplicationAuth(authSettings);
             services.AddBankIntegration(banksSettings);
-            services.AddApplicationServices();
 
             services.AddSwagger();
         }
@@ -71,8 +74,8 @@ namespace Sho.Pocket.Api
         public void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env,
-            IDbConfiguration dbConfiguration,
-            IAuthDbInitializer authDbConfiguration)
+            IDbInitializer dbInitializer,
+            IAuthDbInitializer authDbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -94,8 +97,8 @@ namespace Sho.Pocket.Api
                 endpoints.MapControllers();
             });
 
-            app.SeedApplicationData(dbConfiguration);
-            app.SeedApplicationAuthData(authDbConfiguration);
+            dbInitializer.SeedStorageData();
+            authDbInitializer.SeedApplicationAuthData();
 
             app.UseMiddleware<PocketExceptionMiddleware>();
 

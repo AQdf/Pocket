@@ -1,16 +1,18 @@
-﻿using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Assets
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class AssetRepository : BaseRepository<Asset>, IAssetRepository
     {
-        private const string SCRIPTS_DIR_NAME = "Assets.Scripts";
+        private const string SCRIPTS_DIR_NAME = "Scripts";
 
-        public AssetRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public AssetRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

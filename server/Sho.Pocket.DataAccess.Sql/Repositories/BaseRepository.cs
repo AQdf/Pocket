@@ -1,29 +1,31 @@
-﻿using Dapper;
-using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using Dapper;
+using Microsoft.Extensions.Options;
+using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
-        public readonly IDbConfiguration DbConfiguration;
+        public readonly string ConnectionString;
 
-        public BaseRepository(IDbConfiguration dbConfiguration)
+        public BaseRepository(IOptionsMonitor<DbSettings> options)
         {
-            DbConfiguration = dbConfiguration;
+            ConnectionString = options.CurrentValue.DbConnectionString;
         }
 
         public async Task<IEnumerable<T>> GetEntities(string queryText, object queryParameters = null)
         {
             IEnumerable<T> result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryAsync<T>(queryText, queryParameters);
             }
@@ -35,7 +37,7 @@ namespace Sho.Pocket.DataAccess.Sql
         {
             T result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryFirstOrDefaultAsync<T>(queryText, queryParameters);
             }
@@ -47,7 +49,7 @@ namespace Sho.Pocket.DataAccess.Sql
         {
             T result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryFirstOrDefaultAsync<T>(queryText, queryParameters);
             }
@@ -59,7 +61,7 @@ namespace Sho.Pocket.DataAccess.Sql
         {
             T result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.QueryFirstAsync<T>(queryText, queryParameters);
             }
@@ -69,7 +71,7 @@ namespace Sho.Pocket.DataAccess.Sql
 
         public async Task DeleteEntity(string queryText, object queryParameters = null)
         {
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 await db.ExecuteScalarAsync(queryText, queryParameters);
             }
@@ -79,7 +81,7 @@ namespace Sho.Pocket.DataAccess.Sql
         {
             bool result;
 
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 result = await db.ExecuteScalarAsync<bool>(queryText, queryParameters);
             }
@@ -89,7 +91,7 @@ namespace Sho.Pocket.DataAccess.Sql
 
         public async Task ExecuteScript(string queryText, object queryParameters = null)
         {
-            using (IDbConnection db = new SqlConnection(DbConfiguration.DbConnectionString))
+            using (IDbConnection db = new SqlConnection(ConnectionString))
             {
                 await db.ExecuteScalarAsync(queryText, queryParameters);
             }
@@ -100,7 +102,7 @@ namespace Sho.Pocket.DataAccess.Sql
             string result;
 
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = $"Sho.Pocket.DataAccess.Sql.{dirPath}.{fileName}";
+            var resourceName = $"Sho.Pocket.DataAccess.Sql.Dapper.{dirPath}.{fileName}";
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             using (StreamReader reader = new StreamReader(stream))

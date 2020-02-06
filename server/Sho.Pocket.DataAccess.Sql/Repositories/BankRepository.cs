@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Banks
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class BankRepository : BaseRepository<Bank>, IBankRepository
     {
-        public BankRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public BankRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

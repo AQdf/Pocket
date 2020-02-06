@@ -37,10 +37,10 @@ namespace Sho.Pocket.Auth.IdentityServer.Configuration
             _userManager = userManager;
         }
 
-        public async Task SeedApplicationAuthData()
+        public void SeedApplicationAuthData()
         {
-            await EnsureRoles();
-            await EnsureDefaultUser();
+            EnsureRoles().Wait();
+            EnsureDefaultUser().Wait();
         }
 
         private async Task EnsureRoles()

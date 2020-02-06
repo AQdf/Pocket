@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Banks
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class AssetBankAccountRepository : BaseRepository<AssetBankAccount>, IAssetBankAccountRepository
     {
-        public AssetBankAccountRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public AssetBankAccountRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

@@ -1,15 +1,17 @@
-﻿using Sho.Pocket.Core.DataAccess;
-using Sho.Pocket.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.Domain.Entities;
 
-namespace Sho.Pocket.DataAccess.Sql.Currencies
+namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class CurrencyRepository : BaseRepository<Currency>, ICurrencyRepository
     {
-        private const string SCRIPTS_DIR_NAME = "Currencies.Scripts";
+        private const string SCRIPTS_DIR_NAME = "Scripts";
 
-        public CurrencyRepository(IDbConfiguration dbConfiguration) : base(dbConfiguration)
+        public CurrencyRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

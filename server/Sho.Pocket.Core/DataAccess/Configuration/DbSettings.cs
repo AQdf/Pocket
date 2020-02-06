@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.DataAccess.Sql
+﻿namespace Sho.Pocket.Core.DataAccess.Configuration
 {
     public class DbSettings
     {
