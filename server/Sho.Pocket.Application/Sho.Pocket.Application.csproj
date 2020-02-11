@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.BankIntegration\Sho.Pocket.BankIntegration.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql\Sho.Pocket.DataAccess.Sql.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql.Dapper\Sho.Pocket.DataAccess.Sql.Dapper.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />
     <ProjectReference Include="..\Sho.Pocket.ExchangeRates\Sho.Pocket.ExchangeRates.csproj" />
   </ItemGroup>
