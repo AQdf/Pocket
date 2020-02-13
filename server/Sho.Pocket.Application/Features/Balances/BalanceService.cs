@@ -64,6 +64,7 @@ namespace Sho.Pocket.Application.Balances
             List<BalanceViewModel> items = balances
                 .Select(b => new BalanceViewModel(b))
                 .OrderBy(i => i.Asset.Currency)
+                .ThenBy(i => i.Asset.Name)
                 .ToList();
 
             if (effectiveDate == DateTime.UtcNow.Date)
