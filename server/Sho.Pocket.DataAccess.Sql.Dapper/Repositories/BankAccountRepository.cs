@@ -9,9 +9,9 @@ using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
-    public class AssetBankAccountRepository : BaseRepository<AssetBankAccount>, IBankAccountRepository
+    public class BankAccountRepository : BaseRepository<AssetBankAccount>, IBankAccountRepository
     {
-        public AssetBankAccountRepository(IOptionsMonitor<DbSettings> options) : base(options)
+        public BankAccountRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 

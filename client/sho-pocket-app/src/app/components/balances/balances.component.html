@@ -6,6 +6,10 @@
       <hr>
     </div>
 
+    <div class="mb-3">
+      <app-effective-date></app-effective-date>
+    </div>
+
     <div class="bg-light border rounded" [hidden]="!selectedEffectiveDate">
       <div class="controls">
         <select class="control rounded" placeholder="Date" required [(ngModel)]="selectedEffectiveDate"
