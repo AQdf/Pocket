@@ -13,19 +13,19 @@ using Sho.Pocket.Application.ExchangeRates;
 using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.Features.Balances;
 using Sho.Pocket.Application.Features.BankAccounts;
+using Sho.Pocket.Application.Features.BankIntegration;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Application.Utils.Csv;
-using Sho.Pocket.BankIntegration;
-using Sho.Pocket.Core.DataAccess;
+using Sho.Pocket.BankIntegration.Abstractions;
+using Sho.Pocket.BankIntegration.Providers;
 using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
 using Sho.Pocket.DataAccess.Sql.Dapper.Configuration;
-using Sho.Pocket.DataAccess.Sql.Dapper.Repositories;
 using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
@@ -48,8 +48,9 @@ namespace Sho.Pocket.Application.Configuration
 
             services.AddScoped<ICsvExporter, CsvExporter>();
 
-            services.AddScoped<IBankAccountSyncService, BankAccountSyncService>();
-            services.AddScoped<IBankAccountServiceResolver, BankAccountServiceResolver>();
+            services.AddScoped<IBankAccountService, BankAccountService>();
+            services.AddScoped<IBankService, BankService>();
+            services.AddScoped<IBankIntegrationServiceResolver, BankIntegrationServiceResolver>();
 
             services.AddScoped<IExchangeRateService, ExchangeRateService>();
             services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
@@ -80,7 +81,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<MonobankAccountService>();
             services.AddScoped<MonobankExchangeRateService>();
 
-            services.AddScoped<IBankAccountService, MonobankAccountServiceAdapter>();
+            services.AddScoped<IBankIntegrationService, MonobankIntegrationService>();
             services.AddScoped<IExchangeRateProvider, MonobankExchangeRateProvider>();
         }
 
@@ -101,7 +102,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<PrivatbankAccountService>();
             services.AddScoped<PrivatbankExchangeRateService>();
 
-            services.AddScoped<IBankAccountService, PrivatbankAccountServiceAdapter>();
+            services.AddScoped<IBankIntegrationService, PrivatbankIntegrationService>();
             services.AddScoped<IExchangeRateProvider, PrivatbankExchangeRateProvider>();
         }
     }

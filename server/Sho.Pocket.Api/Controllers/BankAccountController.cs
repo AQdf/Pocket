@@ -1,23 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Api.Models;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.BankAccounts.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
     [Route("api/bank-sync")]
-    public class AssetBankSyncController : AuthUserControllerBase
+    public class BankAccountController : AuthUserControllerBase
     {
-        private readonly IBankAccountSyncService _accountBankSyncService;
+        private readonly IBankAccountService _bankAccountService;
 
-        public AssetBankSyncController(IBankAccountSyncService accountBankSyncService, IAuthService authService) : base(authService)
+        public BankAccountController(
+            IBankAccountService bankAccountService,
+            IAuthService authService)
+            : base(authService)
         {
-            _accountBankSyncService = accountBankSyncService;
+            _bankAccountService = bankAccountService;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<string> result = await _accountBankSyncService.GetSupportedBanksAsync();
+            List<string> result = _bankAccountService.GetSupportedBanks();
 
             return HandleResult(result);
         }
@@ -44,7 +47,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("{assetId}")]
-        public async Task<ActionResult<AssetBankAccountViewModel>> GetBankAccountSyncData(Guid assetId)
+        public async Task<ActionResult<BankAccountModel>> GetBankAccountSyncData(Guid assetId)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -53,9 +56,9 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            AssetBankAccountViewModel result = await _accountBankSyncService.GetAssetBankAccountAsync(user.Id, assetId);
+            BankAccountModel result = await _bankAccountService.GetBankAccountAsync(user.Id, assetId);
 
-            return new ActionResult<AssetBankAccountViewModel>(result);
+            return new ActionResult<BankAccountModel>(result);
         }
 
         /// <summary>
@@ -63,7 +66,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("transactions/{assetId}")]
-        public async Task<ActionResult<List<AssetBankAccountViewModel>>> GetAssetBankAccountTransactions(Guid assetId)
+        public async Task<ActionResult<List<BankAccountModel>>> GetAssetBankAccountTransactions(Guid assetId)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -72,7 +75,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<AssetTransactionViewModel> result = await _accountBankSyncService.GetAssetBankAccountTransactionsAsync(user.Id, assetId);
+            List<BankAccountTransactionModel> result = await _bankAccountService.GetBankAccountTransactionsAsync(user.Id, assetId);
 
             return Ok(result);
         }
@@ -82,7 +85,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("auth")]
-        public async Task<ActionResult<List<ExternalBankAccount>>> SubmitBankClientAuthData([FromBody] AssetBankAccountAuthDataRequest request)
+        public async Task<ActionResult<List<ExternalBankAccountModel>>> SubmitBankClientAuthData([FromBody] AssetBankAccountAuthDataRequest request)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -91,7 +94,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<ExternalBankAccount> result = await _accountBankSyncService.SubmitBankClientAuthDataAsync(user.Id, request.AssetId, request.BankName, request.Token, request.BankClientId, request.CardNumber);
+            List<ExternalBankAccountModel> result = await _bankAccountService.SubmitBankClientAuthDataAsync(user.Id, request.AssetId, request.BankName, request.Token, request.BankClientId, request.CardNumber);
 
             return Ok(result);
         }
@@ -110,7 +113,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            bool result = await _accountBankSyncService
+            bool result = await _bankAccountService
                 .ConnectAssetWithBankAcountAsync(user.Id, createRequest.AssetId, createRequest.BankName, createRequest.AccountName, createRequest.BankAccountId);
 
             return Ok(result);
@@ -130,7 +133,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            bool result = await _accountBankSyncService.DisconnectAssetWithBankAcountAsync(user.Id, assetId);
+            bool result = await _bankAccountService.DisconnectAssetWithBankAcountAsync(user.Id, assetId);
 
             return Ok(result);
         }

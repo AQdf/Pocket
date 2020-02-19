@@ -8,7 +8,7 @@ using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Models;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.BankAccounts.Models;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
@@ -23,7 +23,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
-        private readonly IBankAccountSyncService _accountBankSyncService;
+        private readonly IBankAccountService _bankAccountService;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
@@ -32,7 +32,7 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
-            IBankAccountSyncService accountBankSyncService)
+            IBankAccountService bankAccountService)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
@@ -40,7 +40,7 @@ namespace Sho.Pocket.Application.Balances
             _exchangeRateRepository = exchangeRateRepository;
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
-            _accountBankSyncService = accountBankSyncService;
+            _bankAccountService = bankAccountService;
         }
 
         public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
@@ -154,7 +154,7 @@ namespace Sho.Pocket.Application.Balances
             BalanceViewModel balanceViewModel;
             Balance balance = await _balanceRepository.GetByIdAsync(userOpenId, id);
 
-            BankAccountBalance bankAccountBalance = await _accountBankSyncService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+            BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
 
             if (bankAccountBalance != null)
             {
@@ -185,7 +185,7 @@ namespace Sho.Pocket.Application.Balances
 
                 if (bankAccounts.Any(ba => ba.AssetId == balance.AssetId))
                 {
-                    BankAccountBalance bankAccountBalance = await _accountBankSyncService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+                    BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
 
                     if (bankAccountBalance != null)
                     {

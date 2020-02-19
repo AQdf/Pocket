@@ -12,7 +12,6 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Configuration
             services.AddScoped<IDbInitializer, DapperDbInitializer>();
 
             services.AddScoped<IAssetRepository, AssetRepository>();
-            services.AddScoped<IBankRepository, BankRepository>();
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
             services.AddScoped<IBalanceNoteRepository, BalanceNoteRepository>();

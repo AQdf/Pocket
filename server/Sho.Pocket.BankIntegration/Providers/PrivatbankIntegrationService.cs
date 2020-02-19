@@ -4,42 +4,43 @@ using System.Threading.Tasks;
 using Sho.BankIntegration.Privatbank;
 using Sho.BankIntegration.Privatbank.Models;
 using Sho.BankIntegration.Privatbank.Services;
-using Sho.Pocket.Core.Features.BankAccounts.Abstractions;
+using Sho.Pocket.BankIntegration.Abstractions;
+using Sho.Pocket.BankIntegration.Models;
 using Sho.Pocket.Core.Features.BankAccounts.Models;
 
-namespace Sho.Pocket.BankIntegration
+namespace Sho.Pocket.BankIntegration.Providers
 {
-    public class PrivatbankAccountServiceAdapter : IBankAccountService
+    public class PrivatbankIntegrationService : IBankIntegrationService
     {
         public string BankName => PrivatbankConfig.BANK_NAME;
 
         private readonly PrivatbankAccountService _accountService;
 
-        public PrivatbankAccountServiceAdapter(PrivatbankAccountService accountService)
+        public PrivatbankIntegrationService(PrivatbankAccountService accountService)
         {
             _accountService = accountService;
         }
 
-        public async Task<IReadOnlyCollection<BankAccountBalance>> GetAccountsAsync(BankAccountsRequestParams request)
+        public async Task<IReadOnlyCollection<ExternalAccountBalanceModel>> GetAccountsAsync(BankAccountsRequestParams request)
         {
             PrivatbankAccount account = await _accountService.GetMerchantAccountAsync(request.Token, request.BankClientId, request.CardNumber);
-            BankAccountBalance balance = new BankAccountBalance(BankName, account.Id, account.Currency, account.Balance);
+            ExternalAccountBalanceModel balance = new ExternalAccountBalanceModel(BankName, account.Id, account.Currency, account.Balance);
 
-            return new List<BankAccountBalance> { balance };
+            return new List<ExternalAccountBalanceModel> { balance };
         }
 
-        public async Task<IReadOnlyCollection<AccountTransaction>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
+        public async Task<IReadOnlyCollection<ExternalAccountTransactionModel>> GetAccountTransactionsAsync(AccountStatementRequestParams requestParams)
         {
             PrivatbankAccountStatement statement = await _accountService.GetMerchantAccountStatementAsync(
                 requestParams.Token, requestParams.BankClientId, requestParams.Account, requestParams.From, requestParams.To);
 
             if (statement == null || statement.Items == null)
             {
-                return new List<AccountTransaction>();
+                return new List<ExternalAccountTransactionModel>();
             }
 
-            List<AccountTransaction> transactions = statement.Items
-                .Select(i => new AccountTransaction(
+            List<ExternalAccountTransactionModel> transactions = statement.Items
+                .Select(i => new ExternalAccountTransactionModel(
                     i.AppCode,
                     i.TransactionDate,
                     i.Description,

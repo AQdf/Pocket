@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Sho.Pocket.Core.Features.BankAccounts.Models
+namespace Sho.Pocket.BankIntegration.Models
 {
-    public class AssetTransactionViewModel
+    public class ExternalAccountTransactionModel
     {
-        public AssetTransactionViewModel(Guid assetId, DateTime date, string description, string currency, decimal amount, decimal balance)
+        public ExternalAccountTransactionModel(string id, DateTime date, string description, string currency, decimal amount, decimal balance)
         {
-            AssetId = assetId;
+            Id = id;
             TransactionDate = date;
             Description = description;
             Currency = currency;
@@ -15,9 +15,9 @@ namespace Sho.Pocket.Core.Features.BankAccounts.Models
         }
 
         /// <summary>
-        /// Unique identifier of the asset.
+        /// Unique identifier of the transaction in external system.
         /// </summary>
-        public Guid AssetId { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Date and time of the transaction.

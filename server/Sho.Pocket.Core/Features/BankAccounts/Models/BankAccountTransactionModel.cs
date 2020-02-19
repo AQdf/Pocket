@@ -1,12 +1,13 @@
-﻿using System;
+﻿
+using System;
 
 namespace Sho.Pocket.Core.Features.BankAccounts.Models
 {
-    public class AccountTransaction
+    public class BankAccountTransactionModel
     {
-        public AccountTransaction(string id, DateTime date, string description, string currency, decimal amount, decimal balance)
+        public BankAccountTransactionModel(Guid assetId, DateTime date, string description, string currency, decimal amount, decimal balance)
         {
-            Id = id;
+            AssetId = assetId;
             TransactionDate = date;
             Description = description;
             Currency = currency;
@@ -15,9 +16,9 @@ namespace Sho.Pocket.Core.Features.BankAccounts.Models
         }
 
         /// <summary>
-        /// Unique identifier of the transaction in external system.
+        /// Unique identifier of the asset.
         /// </summary>
-        public string Id { get; set; }
+        public Guid AssetId { get; set; }
 
         /// <summary>
         /// Date and time of the transaction.

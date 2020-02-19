@@ -3,13 +3,13 @@ using System;
 
 namespace Sho.Pocket.Core.Features.BankAccounts.Models
 {
-    public class AssetBankAccountViewModel
+    public class BankAccountModel
     {
-        public AssetBankAccountViewModel()
+        public BankAccountModel()
         {
         }
 
-        public AssetBankAccountViewModel(Domain.Entities.AssetBankAccount account)
+        public BankAccountModel(AssetBankAccount account)
         {
             AssetId = account.AssetId;
             BankName = account.BankName;

@@ -17,6 +17,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBalanceRepository, BalanceRepository>();
+            services.AddScoped<IBalanceNoteRepository, BalanceNoteRepository>();
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             services.AddScoped<IExchangeRateRepository, ExchangeRateRepository>();
