@@ -51,7 +51,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<ExchangeRate> Update(Guid id, decimal buy, decimal sell)
+        public async Task<ExchangeRate> UpdateAsync(Guid id, decimal buy, decimal sell)
         {
             string queryText = @"
                 UPDATE ExchangeRate
@@ -67,7 +67,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<ExchangeRate> GetCurrencyExchangeRate(string baseCurrency, DateTime effectiveDate)
+        public async Task<ExchangeRate> GetCurrencyExchangeRateAsync(string baseCurrency, DateTime effectiveDate)
         {
             string queryText = @"SELECT * FROM ExchangeRate WHERE BaseCurrency = @baseCurrency AND EffectiveDate = @effectiveDate";
             object queryParameters = new { baseCurrency, effectiveDate };

@@ -14,7 +14,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
     {
         private readonly IBankAccountServiceResolver _bankAccountServiceResolver;
 
-        private readonly IAssetBankAccountRepository _assetBankAccountRepository;
+        private readonly IBankAccountRepository _assetBankAccountRepository;
 
         private readonly IBankRepository _bankRepository;
 
@@ -22,7 +22,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
 
         public BankAccountSyncService(
             IBankAccountServiceResolver bankAccountServiceResolver,
-            IAssetBankAccountRepository assetBankAccountRepository,
+            IBankAccountRepository assetBankAccountRepository,
             IBankRepository bankRepository,
             IMemoryCache cache)
         {
@@ -50,7 +50,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
             return result;
         }
 
-        public async Task<List<BankAccount>> SubmitBankClientAuthDataAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId, string cardNumber)
+        public async Task<List<ExternalBankAccount>> SubmitBankClientAuthDataAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId, string cardNumber)
         {
             //TODO: Catch errors. Verify if token is correct and then save it to database. Encrypt this token.
             BankAccountsRequestParams clientData = new BankAccountsRequestParams(token, bankClientId, cardNumber);
@@ -62,8 +62,8 @@ namespace Sho.Pocket.Application.Features.BankAccounts
                 throw new Exception($"Sync with bank {bankName} failed.");
             }
 
-            AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
-            List<BankAccount> result = accountBalances.Select(a => new BankAccount(a.AccountId, a.AccountName)).ToList();
+            Domain.Entities.AssetBankAccount bankAccount = await _assetBankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
+            List<ExternalBankAccount> result = accountBalances.Select(a => new ExternalBankAccount(a.AccountId, a.AccountName)).ToList();
 
             return result;
         }
@@ -111,7 +111,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
         public async Task<List<AssetTransactionViewModel>> GetAssetBankAccountTransactionsAsync(Guid userId, Guid assetId)
         {
             string cacheKey = $"{assetId}_{nameof(AssetTransactionViewModel)}s";
-            AssetBankAccount account = await _assetBankAccountRepository.GetAsync(userId, assetId);
+            Domain.Entities.AssetBankAccount account = await _assetBankAccountRepository.GetAsync(userId, assetId);
 
             if (account == null)
             {

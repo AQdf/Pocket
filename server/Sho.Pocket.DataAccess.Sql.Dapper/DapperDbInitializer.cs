@@ -33,6 +33,14 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper
             }
         }
 
+        public void EnsureCreated()
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                System.Console.WriteLine($"Dapper SQL connection state: db.State");
+            }
+        }
+
         public void SeedStorageData()
         {
             AddDefaultCurrencies();

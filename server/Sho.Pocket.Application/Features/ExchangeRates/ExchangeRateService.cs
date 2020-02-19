@@ -69,7 +69,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         public async Task UpdateExchangeRateAsync(ExchangeRateModel model)
         {
-            await _exchangeRateRepository.Update(model.Id, model.Buy, model.Sell);
+            await _exchangeRateRepository.UpdateAsync(model.Id, model.Buy, model.Sell);
         }
 
         public async Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userOpenId, string providerName)

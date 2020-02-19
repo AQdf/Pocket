@@ -57,7 +57,7 @@ export class BalanceService extends BaseService {
     return this.http.delete(balancesApiUrl + id, this.getDefaultOptions());
   }
 
-  loadEffectiveDatesList() {
+  getEffectiveDates() {
     return this.http.get(balancesApiUrl + 'effective-dates', this.getDefaultOptions());
   }
 
@@ -115,6 +115,6 @@ export class BalanceService extends BaseService {
   }
 
   reload() {
-    this.loadEffectiveDatesList();
+    this.getEffectiveDates();
   }
 }

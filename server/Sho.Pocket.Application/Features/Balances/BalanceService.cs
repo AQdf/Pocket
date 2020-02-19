@@ -19,7 +19,7 @@ namespace Sho.Pocket.Application.Balances
     {
         private readonly IBalanceRepository _balanceRepository;
         private readonly IAssetRepository _assetRepository;
-        private readonly IAssetBankAccountRepository _assetBankAccountRepository;
+        private readonly IBankAccountRepository _assetBankAccountRepository;
         private readonly IExchangeRateRepository _exchangeRateRepository;
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
@@ -28,7 +28,7 @@ namespace Sho.Pocket.Application.Balances
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
-            IAssetBankAccountRepository assetBankAccountRepository,
+            IBankAccountRepository assetBankAccountRepository,
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
@@ -90,7 +90,7 @@ namespace Sho.Pocket.Application.Balances
 
         public async Task<BalanceViewModel> AddBalanceAsync(Guid userOpenId, BalanceCreateModel createModel)
         {
-            ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRate(createModel.Currency, createModel.EffectiveDate);
+            ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRateAsync(createModel.Currency, createModel.EffectiveDate);
 
             Balance balance = await _balanceRepository.CreateAsync(userOpenId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
             BalanceViewModel result = new BalanceViewModel(balance);

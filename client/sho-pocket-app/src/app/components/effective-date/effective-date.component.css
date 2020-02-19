@@ -1,0 +1,63 @@
+#date {
+  display: flex;
+  flex-direction: column;
+  width: 310px;
+  height: 150px;
+  background-color: #f7f7f7;
+  padding: 1em;
+  border: 1px solid #dadada;
+  border-radius: 3px;
+}
+
+#clear-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+button.focus, button:focus {
+  box-shadow: none;
+  color: #fff;
+  background-color: #138496;
+}
+
+#result {
+  display: flex;
+  flex-direction: row;
+}
+
+#result .form-control {
+  margin-right: 5px;
+}
+
+.date-part {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.date-part .item {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  margin-right: 0.5em;
+}
+
+.highlight {
+  color: #fff;
+  border-color: #117a8b;
+  box-shadow: 0 0 0 0.2rem rgba(58,176,195,.5);
+}
+
+.date-part::-webkit-scrollbar {
+  height: 1em;
+}
+ 
+.date-part::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 3px #5bc0de;
+}
+ 
+.date-part::-webkit-scrollbar-thumb {
+  background-color: #5bc0de;
+  outline: 1px solid #5bc0de;
+}

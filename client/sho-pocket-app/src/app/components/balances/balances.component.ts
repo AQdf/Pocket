@@ -26,7 +26,7 @@ export class BalancesComponent implements OnInit {
   }
 
   loadEffectiveDates() {
-    this.balanceService.loadEffectiveDatesList().subscribe((result: string[]) => {
+    this.balanceService.getEffectiveDates().subscribe((result: string[]) => {
       if(result.length > 0) {
         this.effectiveDatesList = result;
         this.selectedEffectiveDate = this.effectiveDatesList[0];

@@ -82,7 +82,7 @@ namespace Sho.Pocket.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("auth")]
-        public async Task<ActionResult<List<BankAccount>>> SubmitBankClientAuthData([FromBody] AssetBankAccountAuthDataRequest request)
+        public async Task<ActionResult<List<ExternalBankAccount>>> SubmitBankClientAuthData([FromBody] AssetBankAccountAuthDataRequest request)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -91,7 +91,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<BankAccount> result = await _accountBankSyncService.SubmitBankClientAuthDataAsync(user.Id, request.AssetId, request.BankName, request.Token, request.BankClientId, request.CardNumber);
+            List<ExternalBankAccount> result = await _accountBankSyncService.SubmitBankClientAuthDataAsync(user.Id, request.AssetId, request.BankName, request.Token, request.BankClientId, request.CardNumber);
 
             return Ok(result);
         }

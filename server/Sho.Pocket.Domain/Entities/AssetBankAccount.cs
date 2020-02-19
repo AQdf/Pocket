@@ -4,6 +4,19 @@ namespace Sho.Pocket.Domain.Entities
 {
     public class AssetBankAccount : BaseEntity
     {
+        public AssetBankAccount()
+        {
+        }
+
+        public AssetBankAccount(Guid id, Guid assetId, string bankName, string token, string bankClientId)
+        {
+            Id = id;
+            AssetId = assetId;
+            BankName = bankName;
+            Token = token;
+            BankClientId = bankClientId;
+        }
+
         public Guid Id { get; set; }
 
         public Guid AssetId { get; set; }
@@ -19,5 +32,7 @@ namespace Sho.Pocket.Domain.Entities
         public string Token { get; set; }
 
         public string BankClientId { get; set; }
+
+        public virtual Asset Asset { get; set; }
     }
 }

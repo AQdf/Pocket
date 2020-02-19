@@ -9,7 +9,7 @@ namespace Sho.Pocket.Core.Features.BankAccounts.Models
         {
         }
 
-        public AssetBankAccountViewModel(AssetBankAccount account)
+        public AssetBankAccountViewModel(Domain.Entities.AssetBankAccount account)
         {
             AssetId = account.AssetId;
             BankName = account.BankName;

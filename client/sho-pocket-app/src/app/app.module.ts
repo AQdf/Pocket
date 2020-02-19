@@ -21,12 +21,11 @@ import { BalanceListComponent } from './components/balances/balance-list/balance
 import { BalancesChartComponent } from './components/balances-chart/balances-chart.component';
 import { RegistrationComponent } from './components/users/registration/registration.component';
 import { LoginComponent } from './components/users/login/login.component';
-import { InventoryComponent } from './components/inventory/inventory.component';
-import { InventoryItemsComponent } from './components/inventory/inventory-items/inventory-items.component';
 import { BalanceNoteComponent } from './components/balances/balance-note/balance-note.component';
 import { AccountStatementComponent } from './components/assets/account-statement/account-statement.component';
 import { ExchangeRatesComponent } from './components/exchange-rates/exchange-rates.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { EffectiveDateComponent } from './components/effective-date/effective-date.component';
 
 @NgModule({
   declarations: [
@@ -40,12 +39,11 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     BalancesChartComponent,
     RegistrationComponent,
     LoginComponent,
-    InventoryComponent,
-    InventoryItemsComponent,
     BalanceNoteComponent,
     AccountStatementComponent,
     ExchangeRatesComponent,
     NavigationComponent,
+    EffectiveDateComponent,
   ],
   imports: [
     BrowserModule,

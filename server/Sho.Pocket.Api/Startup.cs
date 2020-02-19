@@ -97,6 +97,7 @@ namespace Sho.Pocket.Api
                 endpoints.MapControllers();
             });
 
+            dbInitializer.EnsureCreated();
             dbInitializer.SeedStorageData();
             authDbInitializer.SeedApplicationAuthData();
 

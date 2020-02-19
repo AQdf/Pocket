@@ -1,8 +1,8 @@
 ﻿namespace Sho.Pocket.Core.Features.BankAccounts.Models
 {
-    public class BankAccount
+    public class ExternalBankAccount
     {
-        public BankAccount(string id, string name)
+        public ExternalBankAccount(string id, string name)
         {
             Id = id;
             Name = name;

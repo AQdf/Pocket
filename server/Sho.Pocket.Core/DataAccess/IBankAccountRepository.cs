@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Sho.Pocket.Core.DataAccess
 {
-    public interface IAssetBankAccountRepository
+    public interface IBankAccountRepository
     {
         Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId);
 

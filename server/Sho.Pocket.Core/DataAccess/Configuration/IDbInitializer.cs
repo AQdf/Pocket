@@ -3,5 +3,7 @@
     public interface IDbInitializer
     {
         void SeedStorageData();
+
+        void EnsureCreated();
     }
 }

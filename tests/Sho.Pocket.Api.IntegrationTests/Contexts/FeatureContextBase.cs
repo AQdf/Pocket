@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Application.Configuration;
 using Sho.Pocket.Auth.IdentityServer.Models;
-using Sho.Pocket.DataAccess.Sql;
+using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api.IntegrationTests.Contexts
@@ -43,7 +43,7 @@ namespace Sho.Pocket.Api.IntegrationTests.Contexts
 
             services.Configure<ExchangeRateSettings>(o => { o.Providers = exchangeRateProviders; });
 
-            services.AddApplicationServices();
+            services.AddApplicationServices(dbSettings);
 
             _serviceProvider = services.BuildServiceProvider();
         }

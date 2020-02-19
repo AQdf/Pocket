@@ -9,12 +9,10 @@ namespace Sho.Pocket.Core.DataAccess
     {
         Task<ExchangeRate> AlterAsync(DateTime effectiveDate, string baseCurrency, string counterCurrency, decimal buy, decimal sell, string provider = null);
 
-        Task<ExchangeRate> Update(Guid id, decimal buy, decimal sell);
+        Task<ExchangeRate> UpdateAsync(Guid id, decimal buy, decimal sell);
 
-        Task<ExchangeRate> GetCurrencyExchangeRate(string baseCurrency, DateTime effectiveDate);
+        Task<ExchangeRate> GetCurrencyExchangeRateAsync(string baseCurrency, DateTime effectiveDate);
 
         Task<IEnumerable<ExchangeRate>> GetByEffectiveDateAsync(DateTime effectiveDate);
-
-        Task<bool> Exists(string baseCurrency, DateTime effectiveDate);
     }
 }
