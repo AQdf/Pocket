@@ -18,6 +18,11 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<bool> ExistsAssetBalanceAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
         {
             throw new NotImplementedException();

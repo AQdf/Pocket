@@ -16,9 +16,15 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
         }
 
-        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId)
+        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId, bool includeInactive)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllAssets.sql");
+            string queryText = @"SELECT * FROM [dbo].[Asset] WHERE [UserOpenId] = @userOpenId";
+
+            if (!includeInactive)
+            {
+                queryText += " AND [IsActive] = 1";
+            }
+
             object queryParams = new { userOpenId };
 
             IEnumerable<Asset> result = await base.GetEntities(queryText, queryParams);
@@ -65,35 +71,6 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             object queryParameters = new { userOpenId, id };
 
             await base.DeleteEntity(queryText, queryParameters);
-        }
-
-        public async Task<IEnumerable<Asset>> GetActiveAssetsAsync()
-        {
-            string query = @"
-                SELECT [Asset].[Id] AS [ID]
-                      ,[Asset].[Name] AS [Name]
-                      ,[Asset].[IsActive] AS [IsActive]
-                      ,[Asset].[Currency] AS [Currency]
-                FROM [dbo].[Asset]
-                WHERE [Asset].[IsActive] = 1
-                ORDER BY [Asset].[Name] ASC";
-
-            IEnumerable<Asset> result = await base.GetEntities(query);
-
-            return result;
-        }
-
-        public async Task<bool> ExistsAssetBalanceAsync(Guid id)
-        {
-            string queryText = @"
-                if exists (select top 1 1 from Balance where AssetId = @id)
-                select 1 else select 0";
-
-            object queryParams = new { id };
-
-            bool result = await base.Exists(queryText, queryParams);
-
-            return result;
         }
 
         public async Task<Asset> GetByNameAsync(Guid userOpenId, string name)

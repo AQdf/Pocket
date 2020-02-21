@@ -1,7 +1,7 @@
-﻿using Sho.Pocket.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Core.DataAccess
 {
@@ -26,5 +26,7 @@ namespace Sho.Pocket.Core.DataAccess
         Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId);
 
         Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate);
+
+        Task<bool> ExistsAssetBalanceAsync(Guid id);
     }
 }

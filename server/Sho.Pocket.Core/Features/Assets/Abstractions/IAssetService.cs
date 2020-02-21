@@ -7,7 +7,7 @@ namespace Sho.Pocket.Core.Features.Assets.Abstractions
 {
     public interface IAssetService
     {
-        Task<List<AssetViewModel>> GetAssetsAsync(Guid userOpenId);
+        Task<List<AssetViewModel>> GetAssetsAsync(Guid userOpenId, bool includeInactive);
 
         Task<AssetViewModel> GetAssetAsync(Guid userOpenId, Guid id);
 

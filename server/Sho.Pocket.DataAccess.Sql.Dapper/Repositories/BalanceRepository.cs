@@ -186,5 +186,18 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
             return result;
         }
+
+        public async Task<bool> ExistsAssetBalanceAsync(Guid id)
+        {
+            string queryText = @"
+                if exists (select top 1 1 from Balance where AssetId = @id)
+                select 1 else select 0";
+
+            object queryParams = new { id };
+
+            bool result = await base.Exists(queryText, queryParams);
+
+            return result;
+        }
     }
 }

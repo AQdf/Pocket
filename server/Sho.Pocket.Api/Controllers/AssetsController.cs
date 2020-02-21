@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Sho.Pocket.Auth.IdentityServer.Models;
 using Sho.Pocket.Auth.IdentityServer.Services;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Assets.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Sho.Pocket.Api.Controllers
 {
@@ -20,11 +20,11 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/assets
+        /// GET: api/assets/all/true
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public async Task<ActionResult<List<AssetViewModel>>> GetCurrentUserAssets()
+        [HttpGet("all/{includeInactive}")]
+        public async Task<ActionResult<List<AssetViewModel>>> GetCurrentUserAssets(bool includeInactive)
         {
             UserViewModel user = await GetCurrentUserAsync();
 
@@ -33,7 +33,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            List<AssetViewModel> result = await _assetService.GetAssetsAsync(user.Id);
+            List<AssetViewModel> result = await _assetService.GetAssetsAsync(user.Id, includeInactive);
 
             return HandleResult(result);
         }

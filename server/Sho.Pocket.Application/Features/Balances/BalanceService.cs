@@ -206,7 +206,7 @@ namespace Sho.Pocket.Application.Balances
         private async Task<List<BalanceViewModel>> AddAssetsBalancesAsync(Guid userOpenId, DateTime effectiveDate)
         {
             List<BalanceViewModel> result = new List<BalanceViewModel>();
-            IEnumerable<Asset> activeAssets = await _assetRepository.GetActiveAssetsAsync();
+            IEnumerable<Asset> activeAssets = await _assetRepository.GetByUserIdAsync(userOpenId, false);
 
             if (!activeAssets.Any())
             {

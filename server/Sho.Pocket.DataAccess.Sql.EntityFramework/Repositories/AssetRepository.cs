@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 
@@ -8,44 +11,58 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 {
     public class AssetRepository : IAssetRepository
     {
-        public Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive)
+        private readonly DbSet<Asset> _set;
+
+        public AssetRepository(PocketDbContext context)
         {
-            throw new NotImplementedException();
+            _set = context.Set<Asset>();
         }
 
-        public Task<bool> ExistsAssetBalanceAsync(Guid id)
+        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId, bool includeInactive)
         {
-            throw new NotImplementedException();
+            IQueryable<Asset> query = _set.Where(a => a.UserOpenId == userOpenId);
+
+            if (!includeInactive)
+            {
+                query.Where(a => a.IsActive);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public Task<IEnumerable<Asset>> GetActiveAssetsAsync()
+        public async Task<Asset> GetByIdAsync(Guid userOpenId, Guid id)
         {
-            throw new NotImplementedException();
+            return await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
         }
 
-        public Task<Asset> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Asset> GetByNameAsync(Guid userOpenId, string name)
         {
-            throw new NotImplementedException();
+            return await _set.SingleAsync(a => a.Name == name && a.UserOpenId == userOpenId);
         }
 
-        public Task<Asset> GetByNameAsync(Guid userOpenId, string name)
+        public async Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive)
         {
-            throw new NotImplementedException();
+            Asset asset = new Asset(Guid.NewGuid(), name, currency, isActive, userOpenId);
+            EntityEntry<Asset> result = await _set.AddAsync(asset);
+
+            return result.Entity;
         }
 
-        public Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId)
+        public async Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive)
         {
-            throw new NotImplementedException();
+            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
+            asset.Name = name;
+            asset.Currency = currency;
+            asset.IsActive = isActive;
+            _set.Update(asset);
+
+            return asset;
         }
 
-        public Task RemoveAsync(Guid userOpenId, Guid assetId)
+        public async Task RemoveAsync(Guid userOpenId, Guid id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive)
-        {
-            throw new NotImplementedException();
+            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
+            _set.Remove(asset);
         }
     }
 }

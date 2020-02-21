@@ -12,6 +12,8 @@ const assetsApiUrl = environment.baseApiUrl + 'assets/';
   providedIn: 'root'
 })
 export class AssetService extends BaseService {
+
+  // TODO: Remove this property
   currenciesList: string[];
 
   constructor(private http: HttpClient) {
@@ -27,13 +29,14 @@ export class AssetService extends BaseService {
     return this.http.post(assetsApiUrl, body, this.getDefaultOptions());
   }
  
-  putAsset(id, assetData) {
+  putAsset(id: string, assetData: Asset) {
     var body = JSON.stringify(assetData);
     return this.http.put(assetsApiUrl + id, body, this.getDefaultOptions());
   }
  
   getAssetList() {
-    return this.http.get(assetsApiUrl, this.getDefaultOptions());
+    let includeInactive = true;
+    return this.http.get(assetsApiUrl + "all/" + includeInactive, this.getDefaultOptions());
   }
  
   deleteAsset(id: string) {

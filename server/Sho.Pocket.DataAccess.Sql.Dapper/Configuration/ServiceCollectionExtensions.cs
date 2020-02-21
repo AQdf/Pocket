@@ -10,6 +10,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Configuration
         public static void AddDapperDataAccess(this IServiceCollection services)
         {
             services.AddScoped<IDbInitializer, DapperDbInitializer>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAssetRepository, AssetRepository>();
             services.AddScoped<IBankAccountRepository, BankAccountRepository>();
