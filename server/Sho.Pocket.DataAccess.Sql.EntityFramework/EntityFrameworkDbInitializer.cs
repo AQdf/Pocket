@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
 
@@ -12,7 +14,9 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
 
         private readonly List<Currency> _defaultCurrencies;
 
-        public EntityFrameworkDbInitializer(PocketDbContext context, IOptionsMonitor<DbSettings> options)
+        public EntityFrameworkDbInitializer(
+            PocketDbContext context,
+            IOptionsMonitor<DbSettings> options)
         {
             _context = context;
 
@@ -51,9 +55,12 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
 
         private void AddDefaultCurrencies()
         {
-            List<Currency> dbCurrencies = _context.Set<Currency>().ToList();
-            var currenciesToInsert = _defaultCurrencies.Where(dc => !dbCurrencies.Any(c => c.Equals(dc)));
-            _context.Set<Currency>().AddRange(currenciesToInsert);
+            DbSet<Currency> set = _context.Set<Currency>();
+            List<Currency> dbCurrencies = set.ToList();
+            IEnumerable<Currency> currenciesToInsert = _defaultCurrencies
+                .Where(dc => !dbCurrencies.Any(c => c.Name.Equals(dc.Name, System.StringComparison.OrdinalIgnoreCase)));
+            
+            set.AddRange(currenciesToInsert);
         }
     }
 }

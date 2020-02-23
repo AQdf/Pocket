@@ -36,8 +36,8 @@ namespace Sho.Pocket.Domain.Entities
 
         public Guid UserOpenId { get; set; }
 
-        public Asset Asset { get; set; }
+        public virtual Asset Asset { get; set; }
 
-        public ExchangeRate ExchangeRate { get; set; }
+        public virtual ExchangeRate ExchangeRate { get; set; }
     }
 }

@@ -28,6 +28,6 @@ namespace Sho.Pocket.Domain.Entities
 
         public Guid UserOpenId { get; set; }
 
-        public IList<Balance> Balances { get; set; }
+        public virtual IList<Balance> Balances { get; set; }
     }
 }

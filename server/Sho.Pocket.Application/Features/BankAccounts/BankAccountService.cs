@@ -105,7 +105,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
             }
 
             BankModel bank = _bankService.GetBank(account.BankName);
-            TimeSpan syncSpan = DateTime.UtcNow - account.LastSyncDateTime;
+            TimeSpan syncSpan = DateTime.UtcNow - account.LastSyncDateTime.Value;
             BankAccountBalance accountBalance = null;
 
             if (syncSpan.TotalSeconds > bank.SyncFreqInSeconds)

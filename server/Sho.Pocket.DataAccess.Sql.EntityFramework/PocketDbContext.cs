@@ -29,7 +29,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
             modelBuilder.Entity<Asset>().ToTable("Asset");
             modelBuilder.Entity<Balance>().ToTable("Balance");
             modelBuilder.Entity<BalanceNote>().ToTable("BalanceNote");
-            modelBuilder.Entity<AssetBankAccount>().ToTable("BankAccount");
+            modelBuilder.Entity<AssetBankAccount>().ToTable("AssetBankAccount");
             modelBuilder.Entity<Currency>().ToTable("Currency");
             modelBuilder.Entity<ExchangeRate>().ToTable("ExchangeRate");
             modelBuilder.Entity<UserCurrency>().ToTable("UserCurrency");
@@ -45,8 +45,8 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
             });
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);
-            modelBuilder.Entity<Balance>().HasOne(a => a.Asset).WithMany().HasForeignKey(c => c.AssetId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Balance>().HasOne(a => a.ExchangeRate).WithMany().HasForeignKey(c => c.ExchangeRateId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Balance>().HasOne<Asset>().WithMany().HasForeignKey(c => c.AssetId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Balance>().HasOne<ExchangeRate>().WithMany().HasForeignKey(c => c.ExchangeRateId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Balance>(eb =>
             {
                 eb.Property(i => i.EffectiveDate).HasColumnType("date").IsRequired();

@@ -25,7 +25,7 @@ namespace Sho.Pocket.Domain.Entities
 
         public string BankAccountId { get; set; }
 
-        public DateTime LastSyncDateTime { get; set; }
+        public DateTime? LastSyncDateTime { get; set; }
 
         public string BankAccountName { get; set; }
 

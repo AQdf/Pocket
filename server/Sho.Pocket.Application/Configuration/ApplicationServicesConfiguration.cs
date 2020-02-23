@@ -25,7 +25,7 @@ using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
-using Sho.Pocket.DataAccess.Sql.Dapper.Configuration;
+using Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration;
 using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
@@ -34,7 +34,7 @@ namespace Sho.Pocket.Application.Configuration
     {
         public static void AddApplicationServices(this IServiceCollection services, DbSettings dbSettings)
         {
-            services.AddDapperDataAccess();
+            services.AddEntityFrameworkDataAccess(dbSettings);
 
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
