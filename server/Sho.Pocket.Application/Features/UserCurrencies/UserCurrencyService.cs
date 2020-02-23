@@ -13,9 +13,12 @@ namespace Sho.Pocket.Application.UserCurrencies
     {
         private readonly IUserCurrencyRepository _userCurrencyRepository;
 
-        public UserCurrencyService(IUserCurrencyRepository userCurrencyRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public UserCurrencyService(IUserCurrencyRepository userCurrencyRepository, IUnitOfWork unitOfWork)
         {
             _userCurrencyRepository = userCurrencyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<UserCurrencyModel>> GetUserCurrenciesAsync(Guid userOpenId)
@@ -41,6 +44,7 @@ namespace Sho.Pocket.Application.UserCurrencies
             if (userCurrency == null)
             {
                 userCurrency = await _userCurrencyRepository.CreateAsync(userOpenId, currency, isPrimary);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             UserCurrencyModel result = new UserCurrencyModel(userCurrency.Currency, userCurrency.IsPrimary);
@@ -50,23 +54,24 @@ namespace Sho.Pocket.Application.UserCurrencies
 
         public async Task<bool> DeleteUserCurrencyAsync(Guid userOpenId, string currency)
         {
-            var isPrimaryCurrency = await _userCurrencyRepository.CheckIsPrimaryAsync(userOpenId, currency);
+            bool isPrimaryCurrency = await _userCurrencyRepository.CheckIsPrimaryAsync(userOpenId, currency);
 
-            if (!isPrimaryCurrency)
+            if (isPrimaryCurrency)
             {
-                bool result = await _userCurrencyRepository.DeleteAsync(userOpenId, currency);
+                throw new Exception($"You cannot delete primary currency {currency}");
+            }
 
-                return result;
-            }
-            else
-            {
-                return false;
-            }
+            bool result = await _userCurrencyRepository.DeleteAsync(userOpenId, currency);
+            await _unitOfWork.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<UserCurrencyModel> SetUserPrimaryCurrencyAsync(Guid userOpenId, string currency)
         {
             UserCurrency userCurrency = await _userCurrencyRepository.SetPrimaryAsync(userOpenId, currency);
+            await _unitOfWork.SaveChangesAsync();
+
             UserCurrencyModel result = new UserCurrencyModel(userCurrency.Currency, userCurrency.IsPrimary);
 
             return result;

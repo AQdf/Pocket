@@ -25,6 +25,11 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ExchangeRate> GetCurrencyExchangeRateAsync(string baseCurrency, DateTime effectiveDate)
+        {
+            return await _set.FirstOrDefaultAsync(r => r.BaseCurrency == baseCurrency && r.EffectiveDate == effectiveDate.Date);
+        }
+
         public async Task<ExchangeRate> UpdateAsync(Guid id, decimal buy, decimal sell)
         {
             ExchangeRate exchangeRate = await _set.FirstOrDefaultAsync(r => r.Id == id);
@@ -58,11 +63,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             }
 
             return result.Entity;
-        }
-
-        public async Task<ExchangeRate> GetCurrencyExchangeRateAsync(string baseCurrency, DateTime effectiveDate)
-        {
-            return await _set.FirstOrDefaultAsync(r => r.BaseCurrency == baseCurrency && r.EffectiveDate == effectiveDate.Date);
         }
     }
 }

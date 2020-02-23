@@ -20,16 +20,20 @@ namespace Sho.Pocket.Application.ExchangeRates
 
         private readonly IUserCurrencyRepository _userCurrencyRepository;
 
+        private readonly IUnitOfWork _unitOfWork;
+
         public ExchangeRateService(
             IExchangeRateRepository exchangeRateRepository,
             ICurrencyRepository currencyRepository,
             IExchangeRateProviderResolver exchangeRateProviderResolver,
-            IUserCurrencyRepository userCurrencyRepository)
+            IUserCurrencyRepository userCurrencyRepository,
+            IUnitOfWork unitOfWork)
         {
             _exchangeRateRepository = exchangeRateRepository;
             _currencyRepository = currencyRepository;
             _exchangeRateProviderResolver = exchangeRateProviderResolver;
             _userCurrencyRepository = userCurrencyRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<ExchangeRateModel>> GetExchangeRatesAsync(DateTime effectiveDate)
@@ -61,6 +65,8 @@ namespace Sho.Pocket.Application.ExchangeRates
                         ExchangeRate exchangeRate = await _exchangeRateRepository.AlterAsync(effectiveDate, rate.BaseCurrency, primaryCurrency.Currency, rate.Buy, rate.Sell, rate.Provider);
                         result.Add(new ExchangeRateModel(exchangeRate));
                     }
+
+                    await _unitOfWork.SaveChangesAsync();
                 }
             }
 
@@ -70,6 +76,7 @@ namespace Sho.Pocket.Application.ExchangeRates
         public async Task UpdateExchangeRateAsync(ExchangeRateModel model)
         {
             await _exchangeRateRepository.UpdateAsync(model.Id, model.Buy, model.Sell);
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userOpenId, string providerName)

@@ -16,6 +16,11 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             _set = context.Set<Currency>();
         }
 
+        public async Task<IEnumerable<Currency>> GetAllAsync()
+        {
+            return await _set.ToListAsync();
+        }
+
         public async Task<Currency> CreateAsync(string name)
         {
             Currency currency = new Currency(name);
@@ -27,11 +32,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
         public async Task<bool> ExistsAsync(string name)
         {
             return await _set.AnyAsync(c => c.Name == name);
-        }
-
-        public async Task<IEnumerable<Currency>> GetAllAsync()
-        {
-            return await _set.ToListAsync();
         }
     }
 }
