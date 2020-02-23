@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 
@@ -7,29 +9,50 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 {
     public class BalanceNoteRepository : IBalanceNoteRepository
     {
-        public Task<BalanceNote> AlterAsync(Guid userOpenId, DateTime effectiveDate, string content)
+        private readonly DbSet<BalanceNote> _set;
+
+        public BalanceNoteRepository(PocketDbContext context)
         {
-            throw new NotImplementedException();
+            _set = context.Set<BalanceNote>();
         }
 
-        public Task<BalanceNote> CreateAsync(Guid userOpenId, DateTime effectiveDate, string content)
+        public async Task<BalanceNote> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate)
         {
-            throw new NotImplementedException();
+            return await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.EffectiveDate == effectiveDate.Date);
         }
 
-        public Task<BalanceNote> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<BalanceNote> GetByIdAsync(Guid userOpenId, Guid id)
         {
-            throw new NotImplementedException();
+            return await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.Id == id);
         }
 
-        public Task<BalanceNote> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<BalanceNote> AlterAsync(Guid userOpenId, DateTime effectiveDate, string content)
         {
-            throw new NotImplementedException();
+            BalanceNote note =  await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.EffectiveDate == effectiveDate.Date);
+
+            note = note != null 
+                ? await UpdateAsync(userOpenId, note.Id, content) 
+                : await CreateAsync(userOpenId, effectiveDate, content);
+
+            return note;
         }
 
-        public Task<BalanceNote> UpdateAsync(Guid userOpenId, Guid id, string content)
+        public async Task<BalanceNote> CreateAsync(Guid userOpenId, DateTime effectiveDate, string content)
         {
-            throw new NotImplementedException();
+            BalanceNote note = new BalanceNote(Guid.NewGuid(), effectiveDate, content, userOpenId);
+
+            EntityEntry<BalanceNote> result = await _set.AddAsync(note);
+
+            return result.Entity;
+        }
+
+        public async Task<BalanceNote> UpdateAsync(Guid userOpenId, Guid id, string content)
+        {
+            BalanceNote note = await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.Id == id);
+            note.Content = content;
+            EntityEntry<BalanceNote> result = _set.Update(note);
+
+            return result.Entity;
         }
     }
 }
