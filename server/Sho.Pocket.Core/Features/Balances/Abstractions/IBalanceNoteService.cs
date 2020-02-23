@@ -11,9 +11,5 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
         Task<BalanceNoteViewModel> GetNoteByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate);
 
         Task<BalanceNoteViewModel> AlterNoteAsync(Guid userOpenId, DateTime effectiveDate, string content);
-
-        Task<BalanceNoteViewModel> AddNoteAsync(Guid userOpenId, DateTime effectiveDate, string content);
-
-        Task<BalanceNoteViewModel> UpdateNoteAsync(Guid userOpenId, Guid id, string content);
     }
 }

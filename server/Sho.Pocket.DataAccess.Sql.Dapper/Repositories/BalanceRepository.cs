@@ -102,20 +102,6 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> AddEffectiveBalances(DateTime currentEffectiveDate)
-        {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalancesTemplate.sql");
-
-            object queryParameters = new
-            {
-                effectiveDate = currentEffectiveDate,
-            };
-
-            IEnumerable<Balance> result = await base.GetEntities(queryText, queryParameters);
-
-            return result;
-        }
-
         public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
         {
             string queryText = @"
@@ -187,13 +173,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<bool> ExistsAssetBalanceAsync(Guid id)
+        public async Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId)
         {
             string queryText = @"
-                if exists (select top 1 1 from Balance where AssetId = @id)
+                if exists (select top 1 1 from Balance where UserOpenId = @userOpenId and AssetId = @assetId)
                 select 1 else select 0";
 
-            object queryParams = new { id };
+            object queryParams = new { userOpenId, assetId };
 
             bool result = await base.Exists(queryText, queryParams);
 

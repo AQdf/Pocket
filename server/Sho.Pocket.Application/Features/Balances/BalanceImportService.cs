@@ -18,14 +18,18 @@ namespace Sho.Pocket.Application.Features.Balances
 
         private readonly IExchangeRateRepository _exchangeRateRepository;
 
+        private readonly IUnitOfWork _unitOfWork;
+
         public BalanceImportService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
-            IExchangeRateRepository exchangeRateRepository)
+            IExchangeRateRepository exchangeRateRepository,
+            IUnitOfWork unitOfWork)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _exchangeRateRepository = exchangeRateRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ImportJsonAsync(Guid userOpenId, string jsonData)
@@ -51,6 +55,8 @@ namespace Sho.Pocket.Application.Features.Balances
                     }
                 }
             }
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

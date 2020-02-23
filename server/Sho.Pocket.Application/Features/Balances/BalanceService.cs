@@ -24,6 +24,7 @@ namespace Sho.Pocket.Application.Balances
         private readonly IExchangeRateService _exchangeRateService;
         private readonly IBalancesTotalService _balancesTotalService;
         private readonly IBankAccountService _bankAccountService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
@@ -32,7 +33,8 @@ namespace Sho.Pocket.Application.Balances
             IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
-            IBankAccountService bankAccountService)
+            IBankAccountService bankAccountService,
+            IUnitOfWork unitOfWork)
         {
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
@@ -41,6 +43,7 @@ namespace Sho.Pocket.Application.Balances
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
             _bankAccountService = bankAccountService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
@@ -93,6 +96,8 @@ namespace Sho.Pocket.Application.Balances
             ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRateAsync(createModel.Currency, createModel.EffectiveDate);
 
             Balance balance = await _balanceRepository.CreateAsync(userOpenId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
+            await _unitOfWork.SaveChangesAsync();
+
             BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;
@@ -130,6 +135,8 @@ namespace Sho.Pocket.Application.Balances
         public async Task<BalanceViewModel> UpdateBalanceAsync(Guid userOpenId, Guid id, BalanceUpdateModel updateModel)
         {
             Balance balance= await _balanceRepository.UpdateAsync(userOpenId, id, updateModel.AssetId, updateModel.Value);
+            await _unitOfWork.SaveChangesAsync();
+
             BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;
@@ -138,6 +145,7 @@ namespace Sho.Pocket.Application.Balances
         public async Task<bool> DeleteBalanceAsync(Guid userOpenId, Guid id)
         {
             bool result = await _balanceRepository.RemoveAsync(userOpenId, id);
+            await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
@@ -165,6 +173,8 @@ namespace Sho.Pocket.Application.Balances
             {
                 balanceViewModel = new BalanceViewModel(balance);
             }
+
+            await _unitOfWork.SaveChangesAsync();
 
             return balanceViewModel;
         }
@@ -200,6 +210,8 @@ namespace Sho.Pocket.Application.Balances
                 result.Add(model);
             }
 
+            await _unitOfWork.SaveChangesAsync();
+
             return result;
         }
 
@@ -224,6 +236,8 @@ namespace Sho.Pocket.Application.Balances
                 var balanceModel = new BalanceViewModel(newBalance, assetModel);
                 result.Add(balanceModel);
             }
+
+            await _unitOfWork.SaveChangesAsync();
 
             return result;
         }

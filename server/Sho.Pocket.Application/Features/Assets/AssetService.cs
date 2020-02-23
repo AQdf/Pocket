@@ -67,7 +67,7 @@ namespace Sho.Pocket.Application.Assets
                 throw new Exception($"Asset {id} not found!");
             }
 
-            bool balanceExists = await _balanceRepository.ExistsAssetBalanceAsync(id);
+            bool balanceExists = await _balanceRepository.ExistsAssetBalanceAsync(userOpenId, id);
 
             if (balanceExists && asset.Currency != model.Currency)
             {
@@ -85,7 +85,7 @@ namespace Sho.Pocket.Application.Assets
         public async Task<bool> DeleteAsync(Guid userOpenId, Guid id)
         {
             bool isSuccess = false;
-            bool exists = await _balanceRepository.ExistsAssetBalanceAsync(id);
+            bool exists = await _balanceRepository.ExistsAssetBalanceAsync(userOpenId, id);
 
             if (!exists)
             {

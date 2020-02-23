@@ -10,8 +10,6 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<BalanceNote> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate);
 
-        Task<BalanceNote> AlterAsync(Guid userOpenId, DateTime effectiveDate, string content);
-
         Task<BalanceNote> CreateAsync(Guid userOpenId, DateTime effectiveDate, string content);
 
         Task<BalanceNote> UpdateAsync(Guid userOpenId, Guid id, string content);

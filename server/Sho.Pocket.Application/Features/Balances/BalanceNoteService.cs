@@ -11,9 +11,12 @@ namespace Sho.Pocket.Application.Features.Balances
     {
         private readonly IBalanceNoteRepository _balanceNoteRepository;
 
-        public BalanceNoteService(IBalanceNoteRepository balanceNoteRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public BalanceNoteService(IBalanceNoteRepository balanceNoteRepository, IUnitOfWork unitOfWork)
         {
             _balanceNoteRepository = balanceNoteRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<BalanceNoteViewModel> GetNoteByIdAsync(Guid userOpenId, Guid id)
@@ -40,23 +43,13 @@ namespace Sho.Pocket.Application.Features.Balances
 
         public async Task<BalanceNoteViewModel> AlterNoteAsync(Guid userOpenId, DateTime effectiveDate, string content)
         {
-            BalanceNote note = await _balanceNoteRepository.AlterAsync(userOpenId, effectiveDate, content);
-            BalanceNoteViewModel result = new BalanceNoteViewModel(note);
+            BalanceNote note = await _balanceNoteRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
 
-            return result;
-        }
+            note = note != null
+                ? await _balanceNoteRepository.UpdateAsync(userOpenId, note.Id, content)
+                : await _balanceNoteRepository.CreateAsync(userOpenId, effectiveDate, content);
 
-        public async Task<BalanceNoteViewModel> AddNoteAsync(Guid userOpenId, DateTime effectiveDate, string content)
-        {
-            BalanceNote note = await _balanceNoteRepository.CreateAsync(userOpenId, effectiveDate, content);
-            BalanceNoteViewModel result = new BalanceNoteViewModel(note);
-
-            return result;
-        }
-
-        public async Task<BalanceNoteViewModel> UpdateNoteAsync(Guid userOpenId, Guid id, string content)
-        {
-            BalanceNote note = await _balanceNoteRepository.UpdateAsync(userOpenId, id, content);
+            await _unitOfWork.SaveChangesAsync();
             BalanceNoteViewModel result = new BalanceNoteViewModel(note);
 
             return result;

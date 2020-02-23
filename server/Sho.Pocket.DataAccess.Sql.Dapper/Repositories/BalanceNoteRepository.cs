@@ -41,41 +41,6 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<BalanceNote> AlterAsync(Guid userOpenId, DateTime effectiveDate, string content)
-        {
-            string queryText = @"
-                DECLARE @id uniqueidentifier = (
-	                SELECT TOP 1 Id FROM [BalanceNote]
-	                WHERE [EffectiveDate] = @effectiveDate)
-
-                IF @id IS NULL
-	                BEGIN
-		                SET @id = NEWID();
-                        INSERT INTO [dbo].[BalanceNote] ([Id], [EffectiveDate], [Content], [UserOpenId])
-                        VALUES (@id, @effectiveDate, @content, @userOpenId)
-	                END
-                ELSE
-	                BEGIN
-		                UPDATE [dbo].[BalanceNote]
-		                SET [Content] = @content
-		                WHERE [Id] = @id AND [UserOpenId] = @userOpenId
-	                END
-
-                SELECT [Id], [EffectiveDate], [Content], [UserOpenId]
-                FROM [dbo].[BalanceNote] WHERE [Id] = @id";
-
-            object queryParameters = new
-            {
-                effectiveDate,
-                userOpenId,
-                content
-            };
-
-            BalanceNote result = await base.InsertEntity(queryText, queryParameters);
-
-            return result;
-        }
-
         public async Task<BalanceNote> CreateAsync(Guid userOpenId, DateTime effectiveDate, string content)
         {
             string queryText = @"

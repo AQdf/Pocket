@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
 
@@ -8,59 +11,114 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 {
     public class BalanceRepository : IBalanceRepository
     {
-        public Task<IEnumerable<Balance>> AddEffectiveBalances(DateTime currentEffectiveDate)
+        private readonly DbSet<Balance> _set;
+
+        public BalanceRepository(PocketDbContext context)
         {
-            throw new NotImplementedException();
+            _set = context.Set<Balance>();
         }
 
-        public Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
         {
-            throw new NotImplementedException();
+            IQueryable<Balance> query = _set.Where(b => b.UserOpenId == userOpenId);
+
+            if (includeRelated)
+            {
+                AddIncludeRelatedQuery(query);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public Task<bool> ExistsAssetBalanceAsync(Guid id)
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
         {
-            throw new NotImplementedException();
+            Balance effectiveBalance = await _set
+                .Where(b => b.UserOpenId == userOpenId)
+                .OrderByDescending(b => b.EffectiveDate)
+                .FirstOrDefaultAsync();
+
+            if (effectiveBalance == null)
+            {
+                return new List<Balance>();
+            }
+
+            IQueryable<Balance> query = _set
+                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveBalance.EffectiveDate);
+
+            if (includeRelated)
+            {
+                AddIncludeRelatedQuery(query);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
         {
-            throw new NotImplementedException();
+            IQueryable<Balance> query = _set.Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date);
+
+            if (includeRelated)
+            {
+                AddIncludeRelatedQuery(query);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
         {
-            throw new NotImplementedException();
+            return await _set
+                .Where(b => b.UserOpenId == userOpenId)
+                .Select(b => b.EffectiveDate)
+                .OrderByDescending(date => date)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
+        public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
         {
-            throw new NotImplementedException();
+            return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserOpenId == userOpenId);
         }
 
-        public Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
-            throw new NotImplementedException();
+            Balance balance = new Balance(Guid.NewGuid(), assetId, effectiveDate, value, exchangeRateId, userOpenId);
+            EntityEntry<Balance> result = await _set.AddAsync(balance);
+
+            return result.Entity;
         }
 
-        public Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
         {
-            throw new NotImplementedException();
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userOpenId);
+            balance.AssetId = assetId;
+            balance.Value = value;
+            EntityEntry<Balance> result = _set.Update(balance);
+
+            return result.Entity;
         }
 
-        public Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
+        public async Task<bool> RemoveAsync(Guid userOpenId, Guid id)
         {
-            throw new NotImplementedException();
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userOpenId);
+            _set.Remove(balance);
+
+            return true;
         }
 
-        public Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId)
+        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
         {
-            throw new NotImplementedException();
+            return await _set.AnyAsync(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date);
         }
 
-        public Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
+        public async Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId)
         {
-            throw new NotImplementedException();
+            return await _set.AnyAsync(b => b.UserOpenId == userOpenId && b.AssetId == assetId);
+        }
+
+        private void AddIncludeRelatedQuery(IQueryable<Balance> query)
+        {
+            query.Include(b => b.Asset)
+                .Include(b => b.ExchangeRate);
         }
     }
 }

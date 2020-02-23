@@ -26,17 +26,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.Id == id);
         }
 
-        public async Task<BalanceNote> AlterAsync(Guid userOpenId, DateTime effectiveDate, string content)
-        {
-            BalanceNote note =  await _set.FirstOrDefaultAsync(n => n.UserOpenId == userOpenId && n.EffectiveDate == effectiveDate.Date);
-
-            note = note != null 
-                ? await UpdateAsync(userOpenId, note.Id, content) 
-                : await CreateAsync(userOpenId, effectiveDate, content);
-
-            return note;
-        }
-
         public async Task<BalanceNote> CreateAsync(Guid userOpenId, DateTime effectiveDate, string content)
         {
             BalanceNote note = new BalanceNote(Guid.NewGuid(), effectiveDate, content, userOpenId);
