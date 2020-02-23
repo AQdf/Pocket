@@ -93,7 +93,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<AssetBankAccount> GetAsync(Guid userId, Guid assetId)
+        public async Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId)
         {
             const string queryText = @"
                 DECLARE @id uniqueidentifier = (SELECT [Id] FROM [Asset] WHERE [UserOpenId] = @userId AND [Id] = @assetId)

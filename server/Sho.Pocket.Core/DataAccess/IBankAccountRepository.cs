@@ -9,7 +9,7 @@ namespace Sho.Pocket.Core.DataAccess
     {
         Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId);
 
-        Task<AssetBankAccount> GetAsync(Guid userId, Guid assetId);
+        Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId);
 
         Task<AssetBankAccount> AlterAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId);
 

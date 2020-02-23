@@ -18,9 +18,14 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             _set = context.Set<AssetBankAccount>();
         }
 
-        public async Task<AssetBankAccount> GetAsync(Guid userId, Guid assetId)
+        public async Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId)
         {
             return await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+        }
+
+        public async Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId)
+        {
+            return await _set.Where(ba => ba.Asset.UserOpenId == userId).ToListAsync();
         }
 
         public async Task<AssetBankAccount> AlterAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId)
@@ -44,12 +49,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return result.Entity;
         }
 
-        public async Task DeleteAsync(Guid userId, Guid assetId)
-        {
-            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
-            _set.Remove(bankAccount);
-        }
-
         public async Task<AssetBankAccount> UpdateAccountAsync(Guid userId, Guid assetId, string accountName, string accountId)
         {
             AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
@@ -70,6 +69,12 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return result.Entity;
         }
 
+        public async Task DeleteAsync(Guid userId, Guid assetId)
+        {
+            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            _set.Remove(bankAccount);
+        }
+
         public async Task<bool> ExistsAsync(Guid userId, Guid assetId)
         {
             return await _set.AnyAsync(
@@ -77,11 +82,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
                 && ba.Asset.UserOpenId == userId 
                 && !string.IsNullOrWhiteSpace(ba.BankAccountId));
 
-        }
-
-        public async Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId)
-        {
-            return await _set.Where(ba => ba.Asset.UserOpenId == userId).ToListAsync();
         }
     }
 }

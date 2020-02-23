@@ -20,23 +20,27 @@ namespace Sho.Pocket.Application.Features.BankAccounts
 
         private readonly IBankAccountRepository _bankAccountRepository;
 
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IMemoryCache _cache;
 
         public BankAccountService(
             IBankIntegrationServiceResolver bankIntegrationServiceResolver,
             IBankService bankService,
             IBankAccountRepository assetBankAccountRepository,
+            IUnitOfWork unitOfWork,
             IMemoryCache cache)
         {
             _bankService = bankService;
             _bankIntegrationServiceResolver = bankIntegrationServiceResolver;
             _bankAccountRepository = assetBankAccountRepository;
+            _unitOfWork = unitOfWork;
             _cache = cache;
         }
 
         public async Task<BankAccountModel> GetBankAccountAsync(Guid userId, Guid assetId)
         {
-            AssetBankAccount assetBankAccount = await _bankAccountRepository.GetAsync(userId, assetId);
+            AssetBankAccount assetBankAccount = await _bankAccountRepository.GetByAssetIdAsync(userId, assetId);
             BankAccountModel result = assetBankAccount != null 
                 ? new BankAccountModel(assetBankAccount) 
                 : null;
@@ -65,6 +69,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
             }
 
             AssetBankAccount bankAccount = await _bankAccountRepository.AlterAsync(userId, assetId, bankName, token, bankClientId);
+            await _unitOfWork.SaveChangesAsync();
 
             List<ExternalBankAccountModel> result = accountBalances
                 .Select(a => new ExternalBankAccountModel(a.AccountId, a.AccountName))
@@ -77,6 +82,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
             (Guid userId, Guid assetId, string bankName, string accountName, string bankAccountId)
         {
             await _bankAccountRepository.UpdateAccountAsync(userId, assetId, accountName, bankAccountId);
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
@@ -84,13 +90,14 @@ namespace Sho.Pocket.Application.Features.BankAccounts
         public async Task<bool> DisconnectAssetWithBankAcountAsync(Guid userId, Guid assetId)
         {
             await _bankAccountRepository.DeleteAsync(userId, assetId);
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<BankAccountBalance> GetBankAccountBalanceAsync(Guid userId, Guid assetId)
         {
-            AssetBankAccount account = await _bankAccountRepository.GetAsync(userId, assetId);
+            AssetBankAccount account = await _bankAccountRepository.GetByAssetIdAsync(userId, assetId);
 
             if (account == null)
             {
@@ -110,6 +117,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
                 accountBalance = new BankAccountBalance(external.BankName, external.AccountId, external.Currency, external.Balance);
 
                 await _bankAccountRepository.UpdateLastSyncAsync(userId, assetId, DateTime.UtcNow, accountBalance.AccountName);
+                await _unitOfWork.SaveChangesAsync();
             }
 
             return accountBalance;
@@ -118,7 +126,7 @@ namespace Sho.Pocket.Application.Features.BankAccounts
         public async Task<List<BankAccountTransactionModel>> GetBankAccountTransactionsAsync(Guid userId, Guid assetId)
         {
             string cacheKey = $"{assetId}_{nameof(BankAccountTransactionModel)}s";
-            AssetBankAccount account = await _bankAccountRepository.GetAsync(userId, assetId);
+            AssetBankAccount account = await _bankAccountRepository.GetByAssetIdAsync(userId, assetId);
 
             if (account == null)
             {
