@@ -20,14 +20,13 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
         {
-            IQueryable<Balance> query = _set.Where(b => b.UserOpenId == userOpenId);
+            List<Balance> result = await _set
+                .Include(b => b.Asset)
+                .Include(b => b.ExchangeRate)
+                .Where(b => b.UserOpenId == userOpenId)
+                .ToListAsync();
 
-            if (includeRelated)
-            {
-                AddIncludeRelatedQuery(query);
-            }
-
-            return await query.ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
@@ -42,36 +41,36 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
                 return new List<Balance>();
             }
 
-            IQueryable<Balance> query = _set
-                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveBalance.EffectiveDate);
+            List<Balance> result = await _set
+                .Include(b => b.Asset)
+                .Include(b => b.ExchangeRate)
+                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveBalance.EffectiveDate)
+                .ToListAsync();
 
-            if (includeRelated)
-            {
-                AddIncludeRelatedQuery(query);
-            }
-
-            return await query.ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
         {
-            IQueryable<Balance> query = _set.Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date);
+            List<Balance> result = await _set
+                .Include(b => b.Asset)
+                .Include(b => b.ExchangeRate)
+                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date)
+                .ToListAsync();
 
-            if (includeRelated)
-            {
-                AddIncludeRelatedQuery(query);
-            }
-
-            return await query.ToListAsync();
+            return result;
         }
 
         public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
         {
-            return await _set
+            List<DateTime> result = await _set
                 .Where(b => b.UserOpenId == userOpenId)
                 .Select(b => b.EffectiveDate)
+                .Distinct()
                 .OrderByDescending(date => date)
                 .ToListAsync();
+
+            return result;
         }
 
         public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
@@ -113,12 +112,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
         public async Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId)
         {
             return await _set.AnyAsync(b => b.UserOpenId == userOpenId && b.AssetId == assetId);
-        }
-
-        private void AddIncludeRelatedQuery(IQueryable<Balance> query)
-        {
-            query.Include(b => b.Asset)
-                .Include(b => b.ExchangeRate);
         }
     }
 }

@@ -55,13 +55,18 @@ namespace Sho.Pocket.Api
             AuthSettings authSettings = new AuthSettings();
             Configuration.GetSection("AuthSettings").Bind(authSettings);
             authSettings.UsersDbConnectionString = Configuration.GetConnectionString("UsersDbConnectionString");
-            services.Configure<AuthSettings>(options => options = authSettings);
+
+            services.Configure<AuthSettings>(settings =>
+            {
+                Configuration.GetSection("AuthSettings").Bind(settings);
+                settings.UsersDbConnectionString = Configuration.GetConnectionString("UsersDbConnectionString");
+            });
 
             BankIntegrationSettings banksSettings = new BankIntegrationSettings();
             Configuration.GetSection("BankIntegrationSettings").Bind(banksSettings);
             services.Configure<BankIntegrationSettings>(Configuration.GetSection("BankIntegrationSettings"));
 
-            services.Configure<ExchangeRateSettings>(Configuration.GetSection(nameof(ExchangeRateSettings)));
+            services.Configure<ExchangeRateSettings>(Configuration.GetSection("ExchangeRateSettings"));
 
             services.AddApplicationServices(dbSettings);
             services.AddApplicationAuth(authSettings);

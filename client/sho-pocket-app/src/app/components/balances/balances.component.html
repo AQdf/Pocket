@@ -8,6 +8,9 @@
 
     <div class="mb-3">
       <app-effective-date></app-effective-date>
+      <button type="button" class="control btn btn-info" (click)="addBalances()">
+        Add balances
+      </button>
     </div>
 
     <div class="bg-light border rounded" [hidden]="!selectedEffectiveDate">
@@ -18,9 +21,6 @@
             {{effectiveDate | date:'mediumDate'}}
           </option>
         </select>
-        <button type="button" class="control btn btn-info" (click)="addBalances()">
-          Add balances
-        </button>
 
         <div class="controls-group btn-group" role="group">
           <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div id="balances-wrapper">
+    <div id="balances-wrapper" [hidden]="!selectedEffectiveDate">
       <app-balance-list id="balance-list-wrapper" class="flex-fill" [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload()"></app-balance-list>
       <app-exchange-rates id="rates-wrapper" [effectiveDate]="selectedEffectiveDate"></app-exchange-rates>
     </div>

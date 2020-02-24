@@ -91,10 +91,9 @@ export class AssetsComponent implements OnInit {
   }
 
   addAsset() {
-    let newAsset = {
+    let newAsset: Asset = {
       id: null,
       name: '',
-      value: 0.0,
       currency: '',
       isActive: true
     }
@@ -106,7 +105,7 @@ export class AssetsComponent implements OnInit {
   }
 
   onCurrencyAdded(value: string) {
-    let currency = this.assetService.currenciesList.find(c => c == value);
+    let currency = this.currenciesList.find(c => c == value);
     this.selectedAsset.currency = currency;
   }
 

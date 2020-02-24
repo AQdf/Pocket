@@ -1,87 +1,86 @@
 <div class="container-fluid">
-<div class="d-flex flex-column">
+  <div class="d-flex flex-column">
 
-  <div>
-    <span class="page-header">Assets</span>
-    <hr>
-  </div>
-
-  <div class="card-deck-wrapper">
-    
-    <div class="btn-add-wrapper">
-      <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm btn-add" (click)="addAsset()">
-        <i class="fa fa-plus"></i>
-      </button>
+    <div>
+      <span class="page-header">Assets</span>
+      <hr>
     </div>
 
-    <div class="card-deck">
-      <div *ngFor="let asset of assetList">
-        <div class="card bg-light card-wrapper text-center">
-          <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
-            <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
+    <div class="card-deck-wrapper">
 
-            <div class="card-text">
-              <input name="Name" class="form-control" placeholder="Name" required
-                [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
-                [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
-            </div>
+      <div class="btn-add-wrapper">
+        <button type="button" [disabled]="isAddMode" class="btn btn-outline-info btn-sm btn-add" (click)="addAsset()">
+          <i class="fa fa-plus"></i>
+        </button>
+      </div>
 
-            <div class="card-text">
-              <select name="Currency" class="form-control" placeholder="Currency" required
-                [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
-                [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
-                (change)="this.onCurrencyAdded($event.target.value)">
-                <option value="" disabled selected>
-                  Select currency
-                </option>
-                <option *ngFor="let currency of currenciesList" value={{currency}}>
-                  {{currency}}
-                </option>
-              </select>
-            </div>
+      <div class="card-deck">
+        <div *ngFor="let asset of assetList">
+          <div class="card bg-light card-wrapper text-center">
+            <form #assetForm="ngForm" (ngSubmit)="onSubmit(assetForm)">
+              <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
 
-            <div class="card-text">
-              <select name="IsActive" class="form-control" placeholder="Active" required
-                [disabled]="asset.id !== currentEditRecordId" #IsActive="ngModel" [(ngModel)]="asset.isActive"
-                [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
-                <option value="true" selected>
-                  Active
-                </option>
-                <option value="false">
-                  Inactive
-                </option>
-              </select>
-            </div>
-
-            <div class="card-footer">
-              <div class="d-flex flex-row">
-                <button type="button" class="btn btn-outline-info ml-1"
-                  [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)"
-                  [hidden]="currentEditRecordId === asset.id || isAddMode">
-                  <i class="fa fa-pencil-square-o"></i>
-                </button>
-                <button type="submit" class="btn btn-outline-info ml-1"
-                  [disabled]="!assetForm.valid || currentEditRecordId !== asset.id"
-                  [hidden]="currentEditRecordId !== asset.id">
-                  <i class="fa fa-floppy-o"></i>
-                </button>
-                <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
-                  <i class="fa fa-trash-o"></i>
-                </button>
-                <a class="ml-1" [routerLink]="['/asset-settings/', asset.id]">
-                  <button type="button" class="btn btn-md btn-outline-info"
-                    [hidden]="currentEditRecordId === asset.id && isAddMode">
-                    <i class="fa fa-gear"></i>
-                  </button>
-                </a>
+              <div class="card-text">
+                <input name="Name" class="form-control" placeholder="Name" required
+                  [disabled]="asset.id !== currentEditRecordId" #Name="ngModel" [(ngModel)]="asset.name"
+                  [ngClass]="{'input-invalid': Name.invalid && Name.touched }">
               </div>
-            </div>
 
-          </form>
+              <div class="card-text">
+                <select name="Currency" class="form-control" placeholder="Currency" required
+                  [disabled]="asset.id !== currentEditRecordId" #Currency="ngModel" [(ngModel)]="asset.currency"
+                  [ngClass]="{'input-invalid': Currency.invalid && Currency.touched}"
+                  (change)="this.onCurrencyAdded($event.target.value)">
+                  <option value="" disabled selected>
+                    Select currency
+                  </option>
+                  <option *ngFor="let currency of currenciesList" value={{currency}}>
+                    {{currency}}
+                  </option>
+                </select>
+              </div>
+
+              <div class="card-text">
+                <select name="IsActive" class="form-control" required [disabled]="asset.id !== currentEditRecordId"
+                  #IsActive="ngModel" [(ngModel)]="asset.isActive"
+                  [ngClass]="{'input-invalid': IsActive.invalid && IsActive.touched}">
+                  <option value="true" selected>
+                    Active
+                  </option>
+                  <option value="false">
+                    Inactive
+                  </option>
+                </select>
+              </div>
+
+              <div class="card-footer">
+                <div class="d-flex flex-row">
+                  <button type="button" class="btn btn-outline-info ml-1"
+                    [disabled]="isAddMode && currentEditRecordId !== asset.id" (click)="showForEdit(asset)"
+                    [hidden]="currentEditRecordId === asset.id || isAddMode">
+                    <i class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button type="submit" class="btn btn-outline-info ml-1"
+                    [disabled]="!assetForm.valid || currentEditRecordId !== asset.id"
+                    [hidden]="currentEditRecordId !== asset.id">
+                    <i class="fa fa-floppy-o"></i>
+                  </button>
+                  <button type="button" class="btn text-danger btn-outline-info ml-1" (click)="onDelete(asset.id)">
+                    <i class="fa fa-trash-o"></i>
+                  </button>
+                  <div *ngIf="asset && asset.id !== null">
+                    <a class="ml-1" [routerLink]="['/asset-settings/', asset.id]">
+                      <button type="button" class="btn btn-md btn-outline-info"><i class="fa fa-gear"></i></button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-</div>
+  </div>
 </div>

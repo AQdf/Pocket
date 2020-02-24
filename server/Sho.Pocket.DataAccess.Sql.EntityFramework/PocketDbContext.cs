@@ -36,6 +36,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
 
             modelBuilder.Entity<Asset>().HasKey(c => c.Id);
             modelBuilder.Entity<Asset>().HasOne<Currency>().WithMany().HasForeignKey(c => c.Currency).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Asset>().HasMany(a => a.Balances).WithOne(b => b.Asset).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Asset>(eb =>
             {
                 eb.Property(a => a.Name).HasColumnType("nvarchar(50)").IsRequired();
@@ -45,12 +46,13 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
             });
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);
-            modelBuilder.Entity<Balance>().HasOne<Asset>().WithMany().HasForeignKey(c => c.AssetId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Balance>().HasOne<ExchangeRate>().WithMany().HasForeignKey(c => c.ExchangeRateId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Balance>().HasOne(b => b.Asset).WithMany(a => a.Balances).HasForeignKey(c => c.AssetId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Balance>().HasOne(b => b.ExchangeRate).WithMany().HasForeignKey(c => c.ExchangeRateId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Balance>(eb =>
             {
                 eb.Property(i => i.EffectiveDate).HasColumnType("date").IsRequired();
                 eb.Property(i => i.Value).HasColumnType("money").IsRequired();
+                eb.Property(i => i.UserOpenId).HasColumnType("uniqueidentifier").IsRequired();
             });
 
             modelBuilder.Entity<BalanceNote>().HasKey(c => c.Id);
