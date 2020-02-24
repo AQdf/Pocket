@@ -13,7 +13,7 @@ namespace Sho.Pocket.Domain.Entities
             Id = id;
             EffectiveDate = effectiveDate;
             Content = content;
-            UserOpenId = userId;
+            UserId = userId;
         }
 
         public Guid Id { get; set; }
@@ -22,6 +22,6 @@ namespace Sho.Pocket.Domain.Entities
 
         public string Content { get; set; }
 
-        public Guid UserOpenId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

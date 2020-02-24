@@ -20,22 +20,22 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<IEnumerable<UserCurrency>> GetByUserIdAsync(Guid userId)
         {
-            return await _set.Where(uc => uc.UserOpenId == userId).ToListAsync();
+            return await _set.Where(uc => uc.UserId == userId).ToListAsync();
         }
 
         public async Task<UserCurrency> GetAsync(Guid userId, string currency)
         {
-            return await _set.FirstAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
+            return await _set.FirstAsync(uc => uc.Currency == currency && uc.UserId == userId);
         }
 
         public async Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userId)
         {
-            return await _set.FirstAsync(uc => uc.UserOpenId == userId && uc.IsPrimary);
+            return await _set.FirstAsync(uc => uc.UserId == userId && uc.IsPrimary);
         }
 
-        public Task<UserCurrency> GetCurrencyAsync(Guid userId, string currency)
+        public async Task<UserCurrency> GetCurrencyAsync(Guid userId, string currency)
         {
-            throw new NotImplementedException();
+            return await _set.FirstOrDefaultAsync(uc => uc.UserId == userId && uc.Currency == currency);
         }
 
         public async Task<UserCurrency> CreateAsync(Guid userId, string currency, bool isPrimary)
@@ -48,7 +48,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<UserCurrency> SetPrimaryAsync(Guid userId, string currency)
         {
-            List<UserCurrency> userCurrencies = await _set.Where(uc => uc.UserOpenId == userId).ToListAsync();
+            List<UserCurrency> userCurrencies = await _set.Where(uc => uc.UserId == userId).ToListAsync();
             userCurrencies.Select(uc => uc.IsPrimary = false);
             UserCurrency primary = userCurrencies.First(uc => uc.Currency == currency);
 
@@ -57,7 +57,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<bool> DeleteAsync(Guid userId, string currency)
         {
-            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
+            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserId == userId);
 
             if (userCurrency != null)
             {
@@ -72,12 +72,12 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<bool> ExistsAsync(Guid userId, string currency)
         {
-            return await _set.AnyAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
+            return await _set.AnyAsync(uc => uc.Currency == currency && uc.UserId == userId);
         }
 
         public async Task<bool> CheckIsPrimaryAsync(Guid userId, string currency)
         {
-            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
+            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserId == userId);
 
             return userCurrency != null 
                 ? userCurrency.IsPrimary 

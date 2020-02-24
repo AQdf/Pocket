@@ -1,136 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
   <Operation Name="Rename Refactor" Key="2836f567-8c0f-47f9-b0b0-38ab3afd76c1" ChangeDateTime="07/26/2018 16:52:22">
-    <Property Name="ElementName" Value="[dbo].[Asset].[N]" />
+    <Property Name="ElementName" Value="[Asset].[N]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[Asset]" />
+    <Property Name="ParentElementName" Value="[Asset]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Name" />
   </Operation>
   <Operation Name="Rename Refactor" Key="94766311-ba92-4e36-8e3e-bfdcc41f5b5b" ChangeDateTime="07/26/2018 21:30:47">
-    <Property Name="ElementName" Value="[dbo].[Asset].[Balane]" />
+    <Property Name="ElementName" Value="[Asset].[Balane]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[Asset]" />
+    <Property Name="ParentElementName" Value="[Asset]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Balance" />
   </Operation>
   <Operation Name="Rename Refactor" Key="47aceb4e-2c79-406a-b166-fb6490af7303" ChangeDateTime="08/27/2018 17:24:22">
-    <Property Name="ElementName" Value="[dbo].[FK_Balance_ToAsset]" />
+    <Property Name="ElementName" Value="[FK_Balance_ToAsset]" />
     <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
-    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementName" Value="[Balance]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_Balance_Asset]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="9ac2be6e-4ae1-407b-911b-f539771595ed" ChangeDateTime="08/27/2018 17:24:35">
-    <Property Name="ElementName" Value="[dbo].[FK_Balance_ToTable]" />
+    <Property Name="ElementName" Value="[FK_Balance_ToTable]" />
     <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
-    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementName" Value="[Balance]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_Balance_ExchangeRate]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="e2e6247f-fee3-43c6-96da-ee20a370d7b6" ChangeDateTime="08/27/2018 17:27:29">
-    <Property Name="ElementName" Value="[dbo].[Balance].[IX_Balance_Column]" />
+    <Property Name="ElementName" Value="[Balance].[IX_Balance_Column]" />
     <Property Name="ElementType" Value="SqlIndex" />
-    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementName" Value="[Balance]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[IX_Balance_AssetId]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="4df36508-75bb-48c0-97a1-a84439539602" ChangeDateTime="08/27/2018 17:45:30">
-    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[USDtoUAH]" />
+    <Property Name="ElementName" Value="[ExchangeRate].[USDtoUAH]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementName" Value="[ExchangeRate]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BaseCurrencyId" />
   </Operation>
   <Operation Name="Rename Refactor" Key="e1d08a39-6480-4bc2-b5c0-7378d9931823" ChangeDateTime="08/27/2018 17:45:41">
-    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[EURtoUAH]" />
+    <Property Name="ElementName" Value="[ExchangeRate].[EURtoUAH]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementName" Value="[ExchangeRate]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="CounterCurrencyId" />
   </Operation>
   <Operation Name="Rename Refactor" Key="417e6c7f-48ed-4635-a1c5-4814c5cdaa9f" ChangeDateTime="08/27/2018 18:08:28">
-    <Property Name="ElementName" Value="[dbo].[Balance].[UAH]" />
+    <Property Name="ElementName" Value="[Balance].[UAH]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[Balance]" />
+    <Property Name="ParentElementName" Value="[Balance]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Value" />
   </Operation>
   <Operation Name="Rename Refactor" Key="b5940252-73c5-49c2-885f-8776d9694825" ChangeDateTime="05/20/2019 16:00:17">
-    <Property Name="ElementName" Value="[dbo].[ItemCategory].[Id]" />
+    <Property Name="ElementName" Value="[ItemCategory].[Id]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ItemCategory]" />
+    <Property Name="ParentElementName" Value="[ItemCategory]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Name" />
   </Operation>
   <Operation Name="Rename Refactor" Key="d353cc5d-73f0-47b0-96ea-af7416f3cbdb" ChangeDateTime="05/20/2019 16:00:55">
-    <Property Name="ElementName" Value="[dbo].[ItemCategory].[Name]" />
+    <Property Name="ElementName" Value="[ItemCategory].[Name]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ItemCategory]" />
+    <Property Name="ParentElementName" Value="[ItemCategory]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Id" />
   </Operation>
   <Operation Name="Rename Refactor" Key="fc8ad9b9-b0f9-4528-9177-031e24dac7fd" ChangeDateTime="05/20/2019 16:04:43">
-    <Property Name="ElementName" Value="[dbo].[FK_InventoryItem_ToTable]" />
+    <Property Name="ElementName" Value="[FK_InventoryItem_ToTable]" />
     <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
-    <Property Name="ParentElementName" Value="[dbo].[InventoryItem]" />
+    <Property Name="ParentElementName" Value="[InventoryItem]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_InventoryItem_ToItemCategory]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="d6df3edf-840f-439b-91b5-6ebc0bcfcd87" ChangeDateTime="05/21/2019 13:43:54">
-    <Property Name="ElementName" Value="[dbo].[InventoryItem].[CategoryId]" />
+    <Property Name="ElementName" Value="[InventoryItem].[CategoryId]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[InventoryItem]" />
+    <Property Name="ParentElementName" Value="[InventoryItem]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Category" />
   </Operation>
   <Operation Name="Rename Refactor" Key="0c1144ae-84a1-4c51-946f-a304abdd614b" ChangeDateTime="11/30/2019 19:44:23">
-    <Property Name="ElementName" Value="[dbo].[Bank].[Id]" />
+    <Property Name="ElementName" Value="[Bank].[Id]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[Bank]" />
+    <Property Name="ParentElementName" Value="[Bank]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Name" />
   </Operation>
   <Operation Name="Rename Refactor" Key="da0b9dc9-545b-4c67-ab58-95fa1ec1fc8b" ChangeDateTime="11/30/2019 19:55:31">
-    <Property Name="ElementName" Value="[dbo].[UserBankAuthData].[BankId]" />
+    <Property Name="ElementName" Value="[UserBankAuthData].[BankId]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[UserBankAuthData]" />
+    <Property Name="ParentElementName" Value="[UserBankAuthData]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BankName" />
   </Operation>
   <Operation Name="Rename Refactor" Key="c61113eb-1468-473e-ae75-c02a8b3d952c" ChangeDateTime="11/30/2019 20:15:05">
-    <Property Name="ElementName" Value="[dbo].[FK_AssetBankAccount_ToTable]" />
+    <Property Name="ElementName" Value="[FK_AssetBankAccount_ToTable]" />
     <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
-    <Property Name="ParentElementName" Value="[dbo].[AssetBankAccount]" />
+    <Property Name="ParentElementName" Value="[AssetBankAccount]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_AssetBankAccount_Asset]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="c3407f32-0d8d-483f-b4d9-cac63eb42795" ChangeDateTime="12/01/2019 00:36:02">
-    <Property Name="ElementName" Value="[dbo].[FK_AssetBankAccount_ToTable]" />
+    <Property Name="ElementName" Value="[FK_AssetBankAccount_ToTable]" />
     <Property Name="ElementType" Value="SqlForeignKeyConstraint" />
-    <Property Name="ParentElementName" Value="[dbo].[AssetBankAccount]" />
+    <Property Name="ParentElementName" Value="[AssetBankAccount]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="[FK_AssetBankAccount_UserBankAuthData]" />
   </Operation>
   <Operation Name="Rename Refactor" Key="465dc1c5-f649-45f2-a46c-27201fbf887f" ChangeDateTime="01/21/2020 09:43:08">
-    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[Rate]" />
+    <Property Name="ElementName" Value="[ExchangeRate].[Rate]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementName" Value="[ExchangeRate]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="Buy" />
   </Operation>
   <Operation Name="Rename Refactor" Key="8e317621-bac5-4faf-9c6f-843766368193" ChangeDateTime="01/21/2020 13:46:10">
-    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[Buy]" />
+    <Property Name="ElementName" Value="[ExchangeRate].[Buy]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementName" Value="[ExchangeRate]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="BuyRate" />
   </Operation>
   <Operation Name="Rename Refactor" Key="f06fa3de-7e2e-4630-9bd8-7d1704c84999" ChangeDateTime="01/21/2020 13:46:13">
-    <Property Name="ElementName" Value="[dbo].[ExchangeRate].[Sell]" />
+    <Property Name="ElementName" Value="[ExchangeRate].[Sell]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
-    <Property Name="ParentElementName" Value="[dbo].[ExchangeRate]" />
+    <Property Name="ParentElementName" Value="[ExchangeRate]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="SellRate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="444f3b72-8b78-47e4-aeb6-45956cb4dc86" ChangeDateTime="02/24/2020 13:55:05">
+    <Property Name="ElementName" Value="[Asset].[UserOpenId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Asset]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="83a2fb08-d865-4b03-a219-b137aaa1d374" ChangeDateTime="02/24/2020 13:55:14">
+    <Property Name="ElementName" Value="[Balance].[UserOpenId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Balance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2fdeacf6-f5fe-4673-9d17-f816ebd40708" ChangeDateTime="02/24/2020 13:55:19">
+    <Property Name="ElementName" Value="[BalanceNote].[UserOpenId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[BalanceNote]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e29c62c9-800d-4489-9255-70081629344a" ChangeDateTime="02/24/2020 13:55:30">
+    <Property Name="ElementName" Value="[UserCurrency].[UserOpenId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[UserCurrency]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="UserId" />
   </Operation>
 </Operations>

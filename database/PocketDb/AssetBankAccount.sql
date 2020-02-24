@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[AssetBankAccount]
+﻿CREATE TABLE [AssetBankAccount]
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
     [AssetId] UNIQUEIDENTIFIER NOT NULL UNIQUE, 
@@ -8,6 +8,5 @@
     [BankAccountName] NVARCHAR(200) NULL, 
     [Token] NVARCHAR(MAX) NULL, 
     [BankClientId] VARCHAR(50) NULL, 
-    CONSTRAINT [FK_AssetBankAccount_Bank] FOREIGN KEY ([BankName]) REFERENCES [Bank]([Name]), 
-    CONSTRAINT [FK_AssetBankAccount_Asset] FOREIGN KEY ([AssetId]) REFERENCES [Asset]([Id])
+    CONSTRAINT [FK_AssetBankAccount_Asset_AssetId] FOREIGN KEY ([AssetId]) REFERENCES [Asset]([Id])
 )

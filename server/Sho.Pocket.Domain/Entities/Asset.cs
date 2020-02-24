@@ -15,7 +15,7 @@ namespace Sho.Pocket.Domain.Entities
             Name = name;
             Currency = currency;
             IsActive = isActive;
-            UserOpenId = userId;
+            UserId = userId;
         }
 
         public Guid Id { get; set; }
@@ -26,7 +26,7 @@ namespace Sho.Pocket.Domain.Entities
 
         public bool IsActive { get; set; }
 
-        public Guid UserOpenId { get; set; }
+        public Guid UserId { get; set; }
 
         public virtual ICollection<Balance> Balances { get; set; }
     }

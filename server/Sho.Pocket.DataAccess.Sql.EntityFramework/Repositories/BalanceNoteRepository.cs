@@ -18,12 +18,12 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<BalanceNote> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate)
         {
-            return await _set.FirstOrDefaultAsync(n => n.UserOpenId == userId && n.EffectiveDate == effectiveDate.Date);
+            return await _set.FirstOrDefaultAsync(n => n.UserId == userId && n.EffectiveDate == effectiveDate.Date);
         }
 
         public async Task<BalanceNote> GetByIdAsync(Guid userId, Guid id)
         {
-            return await _set.FirstOrDefaultAsync(n => n.UserOpenId == userId && n.Id == id);
+            return await _set.FirstOrDefaultAsync(n => n.UserId == userId && n.Id == id);
         }
 
         public async Task<BalanceNote> CreateAsync(Guid userId, DateTime effectiveDate, string content)
@@ -37,7 +37,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<BalanceNote> UpdateAsync(Guid userId, Guid id, string content)
         {
-            BalanceNote note = await _set.FirstOrDefaultAsync(n => n.UserOpenId == userId && n.Id == id);
+            BalanceNote note = await _set.FirstOrDefaultAsync(n => n.UserId == userId && n.Id == id);
             note.Content = content;
             EntityEntry<BalanceNote> result = _set.Update(note);
 

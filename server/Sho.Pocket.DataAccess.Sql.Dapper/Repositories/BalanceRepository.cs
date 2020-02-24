@@ -22,7 +22,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllBalances.sql");
+            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetUserBalances.sql");
             object queryParams = new { userId };
 
             IEnumerable<Balance> result = includeRelated
@@ -35,10 +35,10 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true)
         {
             string queryText = @"
-                select * from Balance
-                join Asset on Asset.Id = Balance.AssetId
-                left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
-                where Balance.EffectiveDate = @effectiveDate and Balance.UserOpenId = @userId";
+                SELECT * FROM [Balance]
+                JOIN [Asset] ON [Asset].[Id] = [Balance].[AssetId]
+                LEFT JOIN [ExchangeRate] ON [ExchangeRate].[Id] = [Balance].[ExchangeRateId]
+                WHERE [Balance].[UserId] = @userId AND [Balance].[EffectiveDate] = @effectiveDate";
 
             object queryParams = new { userId, effectiveDate };
 
@@ -52,12 +52,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
         {
             string queryText = @"
-                declare @latestDate datetime2(7) = (select top 1 EffectiveDate from Balance order by EffectiveDate desc)
+                DECLARE @latestDate datetime2(7) = (SELECT TOP 1 [EffectiveDate] FROM [Balance] ORDER BY [EffectiveDate] DESC)
 
-                select * from Balance
-                join Asset on Asset.Id = Balance.AssetId
-                left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
-                where Balance.EffectiveDate = @latestDate and Balance.UserOpenId = @userId";
+                SELCET * FROM [Balance]
+                JOIN [Asset] ON [Asset].[Id] = [Balance].[AssetId]
+                LEFT JOIN [ExchangeRate] on [ExchangeRate].[Id] = [Balance].[ExchangeRateId]
+                WHERE [Balance].[EffectiveDate] = @latestDate AND [Balance].[UserId] = @userId";
 
             object queryParams = new { userId };
 
@@ -70,7 +70,11 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<Balance> GetByIdAsync(Guid userId, Guid id)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
+            string queryText = @"
+                SELECT * FROM [Balance] b 
+                JOIN [Asset] a ON a.[Id] = b.[AssetId]
+                JOIN [ExchangeRate] r ON r.[Id] = b.[ExchangeRateId]
+                WHERE b.[Id] = @id AND b.[UserId] = @userId";
 
             object queryParameters = new { userId, id };
 
@@ -93,7 +97,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
+            string queryText = @"
+                DECLARE @id UNIQUEIDENTIFIER = NEWID();
+
+                INSERT INTO [Balance] ([Id], [AssetId], [Value], [ExchangeRateId], [EffectiveDate], [UserId]) values
+                    (@id, @assetId, @value, @exchangeRateId, @effectiveDate, @userId)
+
+                SELECT * FROM [Balance] WHERE [Id] = @id";
 
             object queryParameters = new { userId, assetId, effectiveDate, value, exchangeRateId };
 
@@ -105,12 +115,11 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<Balance> UpdateAsync(Guid userId, Guid id, Guid assetId, decimal value)
         {
             string queryText = @"
-                update Balance
-                set [Value] = @value, [AssetId] = @assetId
-                where Id = @id and UserOpenId = @userId
+                UPDATE [Balance]
+                SET [Value] = @value, [AssetId] = @assetId
+                WHERE [Id] = @id AND [UserId] = @userId
 
-                select * from Balance
-                where Id = @id";
+                SELECT * FROM [Balance] WHERE [Id] = @id";
 
             object queryParameters = new { userId, id, assetId, value };
 
@@ -119,7 +128,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<bool> RemoveAsync(Guid userId, Guid id)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
+            string queryText = @"DELETE FROM [Balance] WHERE [Id] = @id AND [UserId] = @userId";
             object queryParams = new { userId, id };
 
             await base.DeleteEntity(queryText, queryParams);
@@ -129,7 +138,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userId)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
+            string queryText = @"
+                SELECT [EffectiveDate] FROM [Balance]
+                WHERE [UserId] = @userId
+                GROUP BY [EffectiveDate]
+                ORDER BY [EffectiveDate] DESC";
+
             object queryParams = new { userId };
 
             IEnumerable<DateTime> result;
@@ -145,7 +159,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userId, DateTime effectiveDate)
         {
             string queryText = @"
-                IF EXISTS (SELECT TOP 1 1 FROM [dbo].[Balance] WHERE [UserOpenId] = @userId AND [EffectiveDate] = @effectiveDate)
+                IF EXISTS (SELECT TOP 1 1 FROM [Balance] WHERE [UserId] = @userId AND [EffectiveDate] = @effectiveDate)
                 SELECT 1 ELSE SELECT 0";
 
             object queryParams = new { userId, effectiveDate };
@@ -176,8 +190,8 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<bool> ExistsAssetBalanceAsync(Guid userId, Guid assetId)
         {
             string queryText = @"
-                if exists (select top 1 1 from Balance where UserOpenId = @userId and AssetId = @assetId)
-                select 1 else select 0";
+                IF EXISTS (SELECT TOP 1 1 FROM [Balance] WHERE [UserId] = @userId AND AssetId = @assetId)
+                SELECT 1 ELSE SELECT 0";
 
             object queryParams = new { userId, assetId };
 

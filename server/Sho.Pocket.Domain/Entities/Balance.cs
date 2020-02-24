@@ -21,7 +21,7 @@ namespace Sho.Pocket.Domain.Entities
             EffectiveDate = effectiveDate;
             Value = value;
             ExchangeRateId = exchangeRateId;
-            UserOpenId = userId;
+            UserId = userId;
         }
 
         public Guid Id { get; set; }
@@ -34,7 +34,7 @@ namespace Sho.Pocket.Domain.Entities
 
         public Guid ExchangeRateId { get; set; }
 
-        public Guid UserOpenId { get; set; }
+        public Guid UserId { get; set; }
 
         public virtual Asset Asset { get; set; }
 

@@ -10,12 +10,12 @@ namespace Sho.Pocket.Domain.Entities
 
         public UserCurrency(Guid userId, string currency, bool isPrimary)
         {
-            UserOpenId = userId;
+            UserId = userId;
             Currency = currency;
             IsPrimary = isPrimary;
         }
 
-        public Guid UserOpenId { get; set; }
+        public Guid UserId { get; set; }
 
         public string Currency { get; set; }
 

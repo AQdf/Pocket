@@ -10,15 +10,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class AssetRepository : BaseRepository<Asset>, IAssetRepository
     {
-        private const string SCRIPTS_DIR_NAME = "Scripts";
-
         public AssetRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
 
         public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userId, bool includeInactive)
         {
-            string queryText = @"SELECT * FROM [dbo].[Asset] WHERE [UserOpenId] = @userId";
+            string queryText = @"SELECT * FROM [Asset] WHERE [UserId] = @userId";
 
             if (!includeInactive)
             {
@@ -34,7 +32,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<Asset> GetByIdAsync(Guid userId, Guid id)
         {
-            const string queryText = @"select top 1 * from Asset where Id = @id and UserOpenId = @userId";
+            string queryText = @"SELECT TOP 1 * FROM [Asset] WHERE [Id] = @id AND [UserId] = @userId";
             object queryParams = new { userId, id, };
 
             Asset result = await base.GetEntity(queryText, queryParams);
@@ -44,7 +42,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
+            string queryText = @"
+                DECLARE @id UNIQUEIDENTIFIER = NEWID()
+                INSERT INTO [Asset] ([Id], [Name], [Currency], [IsActive], [UserId]) values
+                    (@id, @name, @currency, @isActive, @userId)
+
+                SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
             object queryParameters = new { userId, name, currency, isActive, };
 
@@ -55,7 +58,14 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive)
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
+            string queryText = @"
+                UPDATE [Asset]
+                SET [Name] = @name,
+	                [Currency] = @currency,
+	                [IsActive] = @isActive
+                WHERE [Id] = @id AND [UserId] = @userId
+
+                SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
             object queryParameters = new { userId, id, name, currency, isActive, };
 
@@ -66,7 +76,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task RemoveAsync(Guid userId, Guid id)
         {
-            string queryText = @"delete from Asset where Id = @id and UserOpenId = @userId";
+            string queryText = @"DELETE FROM [Asset] WHERE [Id] = @id AND [UserId] = @userId";
 
             object queryParameters = new { userId, id };
 
@@ -77,8 +87,8 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
             string query = @"
                 SELECT [Id], [Name], [IsActive], [Currency]
-                FROM [dbo].[Asset]
-                WHERE [UserOpenId] = @userId AND [Name] = @name";
+                FROM [Asset]
+                WHERE [UserId] = @userId AND [Name] = @name";
 
             object queryParams = new { userId, name };
 

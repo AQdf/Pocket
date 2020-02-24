@@ -20,17 +20,17 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId)
         {
-            return await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            return await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
         }
 
         public async Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId)
         {
-            return await _set.Where(ba => ba.Asset.UserOpenId == userId).ToListAsync();
+            return await _set.Where(ba => ba.Asset.UserId == userId).ToListAsync();
         }
 
         public async Task<AssetBankAccount> AlterAsync(Guid userId, Guid assetId, string bankName, string token, string bankClientId)
         {
-            AssetBankAccount bankAccount = await _set.FirstOrDefaultAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            AssetBankAccount bankAccount = await _set.FirstOrDefaultAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
             EntityEntry<AssetBankAccount> result;
 
             if (bankAccount != null)
@@ -51,7 +51,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<AssetBankAccount> UpdateAccountAsync(Guid userId, Guid assetId, string accountName, string accountId)
         {
-            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
             bankAccount.BankAccountName = accountName;
             bankAccount.BankAccountId = accountId;
             EntityEntry<AssetBankAccount> result = _set.Update(bankAccount);
@@ -61,7 +61,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<AssetBankAccount> UpdateLastSyncAsync(Guid userId, Guid assetId, DateTime lastSyncDateTime, string accountName)
         {
-            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
             bankAccount.LastSyncDateTime = lastSyncDateTime;
             bankAccount.BankAccountName = accountName;
             EntityEntry<AssetBankAccount> result = _set.Update(bankAccount);
@@ -71,7 +71,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task DeleteAsync(Guid userId, Guid assetId)
         {
-            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserOpenId == userId);
+            AssetBankAccount bankAccount = await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
             _set.Remove(bankAccount);
         }
 
@@ -79,7 +79,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
         {
             return await _set.AnyAsync(
                 ba => ba.AssetId == assetId 
-                && ba.Asset.UserOpenId == userId 
+                && ba.Asset.UserId == userId 
                 && !string.IsNullOrWhiteSpace(ba.BankAccountId));
 
         }

@@ -9,8 +9,6 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
     public class CurrencyRepository : BaseRepository<Currency>, ICurrencyRepository
     {
-        private const string SCRIPTS_DIR_NAME = "Scripts";
-
         public CurrencyRepository(IOptionsMonitor<DbSettings> options) : base(options)
         {
         }
@@ -18,11 +16,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<Currency> CreateAsync(string name)
         {
             string queryText = @"
-                if not exists (select top 1 1 from Currency where Name = @name)
-                begin
-                    insert into Currency (Name) values (@name);
-                end
-                select * from Currency where Name = @name";
+                IF NOT EXISTS (SELECT TOP 1 1 FROM [Currency] WHERE [Name] = @name)
+                BEGIN
+                    INSERT INTO [Currency] (Name) VALUES (@name);
+                END
+                SELECT * FROM [Currency] WHERE [Name] = @name";
+
             object queryParams = new { name };
 
             Currency result = await base.InsertEntity(queryText, queryParams);
@@ -33,8 +32,9 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<bool> ExistsAsync(string name)
         {
             string queryText = @"
-                if exists (select top 1 1 from Currency where Name = @name)
-                select 1 else select 0";
+                IF EXISTS (SELECT TOP 1 1 FROM [Currency] WHERE [Name] = @name)
+                SELECT 1 ELSE SELECT 0";
+
             object queryParams = new { name };
 
             bool result = await base.Exists(queryText, queryParams);
@@ -44,7 +44,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<IEnumerable<Currency>> GetAllAsync()
         {
-            string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllCurrencies.sql");
+            string queryText = @"SELECT * FROM [Currency] ORDER BY [Name] asc";
 
             IEnumerable<Currency> result = await base.GetEntities(queryText);
 

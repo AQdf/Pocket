@@ -44,34 +44,19 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper
         public void SeedStorageData()
         {
             AddDefaultCurrencies();
-            AddSupportedBanks();
         }
 
         private void AddDefaultCurrencies()
         {
             string queryText = @"
-                IF NOT EXISTS (select top 1 1 from [dbo].[Currency] where [Name] = @Name)
+                IF NOT EXISTS (select top 1 1 from [Currency] where [Name] = @Name)
                 BEGIN
-                    INSERT INTO [dbo].[Currency] ([Name]) VALUES (@Name)
+                    INSERT INTO [Currency] ([Name]) VALUES (@Name)
                 END";
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 db.Execute(queryText, _defaultCurrencies);
-            }
-        }
-
-        private void AddSupportedBanks()
-        {
-            string queryText = @"
-                IF NOT EXISTS (select top 1 1 from [dbo].[Bank] where [Name] = 'Monobank')
-                BEGIN
-                    INSERT INTO [dbo].[Bank] ([Name], [Country], [Active], [ApiUrl], [SyncFreqInSeconds]) VALUES ('Monobank', 'Ukraine', 1, NULL, NULL)
-                END";
-
-            using (IDbConnection db = new SqlConnection(_connectionString))
-            {
-                db.Execute(queryText);
             }
         }
     }

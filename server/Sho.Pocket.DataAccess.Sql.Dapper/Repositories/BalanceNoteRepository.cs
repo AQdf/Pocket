@@ -15,10 +15,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<BalanceNote> GetByIdAsync(Guid userId, Guid id)
         {
-            string queryText = @"
-                SELECT [Id], [EffectiveDate], [Content], [UserOpenId]
-                FROM [dbo].[BalanceNote]
-                WHERE [UserOpenId] = @userId AND [Id] = @id";
+            string queryText = @"SELECT * FROM [BalanceNote] WHERE [UserId] = @userId AND [Id] = @id";
 
             object queryParams = new { userId, id };
 
@@ -30,9 +27,8 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<BalanceNote> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate)
         {
             string queryText = @"
-                SELECT [Id], [EffectiveDate], [Content], [UserOpenId]
-                FROM [dbo].[BalanceNote]
-                WHERE [UserOpenId] = @userId AND [EffectiveDate] = @effectiveDate";
+                SELECT * FROM [BalanceNote]
+                WHERE [UserId] = @userId AND [EffectiveDate] = @effectiveDate";
 
             object queryParams = new { userId, effectiveDate };
 
@@ -46,11 +42,10 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             string queryText = @"
                 DECLARE @id uniqueidentifier = NEWID();
 
-                INSERT INTO [dbo].[BalanceNote] ([Id], [EffectiveDate], [Content], [UserOpenId])
+                INSERT INTO [BalanceNote] ([Id], [EffectiveDate], [Content], [UserId])
                 VALUES (@id, @effectiveDate, @content, @userId)
 
-                SELECT [Id], [EffectiveDate], [Content], [UserOpenId]
-                FROM [dbo].[BalanceNote] WHERE [Id] = @id";
+                SELECT * FROM [BalanceNote] WHERE [Id] = @id";
 
             object queryParams = new { userId, effectiveDate, content };
 
@@ -62,12 +57,11 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<BalanceNote> UpdateAsync(Guid userId, Guid id, string content)
         {
             string queryText = @"
-                UPDATE [dbo].[BalanceNote]
+                UPDATE [BalanceNote]
                 SET [Content] = @content
-                WHERE [Id] = @id AND [UserOpenId] = @userId
+                WHERE [Id] = @id AND [UserId] = @userId
 
-                SELECT [Id], [EffectiveDate], [Content], [UserOpenId]
-                FROM [dbo].[BalanceNote] WHERE [Id] = @id";
+                SELECT * FROM [BalanceNote] WHERE [Id] = @id";
 
             object queryParams = new { userId, id, content };
 

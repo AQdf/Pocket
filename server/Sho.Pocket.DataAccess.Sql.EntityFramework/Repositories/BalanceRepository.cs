@@ -23,7 +23,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userId)
+                .Where(b => b.UserId == userId)
                 .ToListAsync();
 
             return result;
@@ -32,7 +32,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
         public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
         {
             Balance effectiveBalance = await _set
-                .Where(b => b.UserOpenId == userId)
+                .Where(b => b.UserId == userId)
                 .OrderByDescending(b => b.EffectiveDate)
                 .FirstOrDefaultAsync();
 
@@ -44,7 +44,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userId && b.EffectiveDate == effectiveBalance.EffectiveDate)
+                .Where(b => b.UserId == userId && b.EffectiveDate == effectiveBalance.EffectiveDate)
                 .ToListAsync();
 
             return result;
@@ -55,7 +55,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userId && b.EffectiveDate == effectiveDate.Date)
+                .Where(b => b.UserId == userId && b.EffectiveDate == effectiveDate.Date)
                 .ToListAsync();
 
             return result;
@@ -64,7 +64,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
         public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userId)
         {
             List<DateTime> result = await _set
-                .Where(b => b.UserOpenId == userId)
+                .Where(b => b.UserId == userId)
                 .Select(b => b.EffectiveDate)
                 .Distinct()
                 .OrderByDescending(date => date)
@@ -75,7 +75,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<Balance> GetByIdAsync(Guid userId, Guid id)
         {
-            return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserOpenId == userId);
+            return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
         }
 
         public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
@@ -88,7 +88,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<Balance> UpdateAsync(Guid userId, Guid id, Guid assetId, decimal value)
         {
-            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userId);
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserId == userId);
             balance.AssetId = assetId;
             balance.Value = value;
             EntityEntry<Balance> result = _set.Update(balance);
@@ -98,7 +98,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<bool> RemoveAsync(Guid userId, Guid id)
         {
-            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userId);
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserId == userId);
             _set.Remove(balance);
 
             return true;
@@ -106,12 +106,12 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userId, DateTime effectiveDate)
         {
-            return await _set.AnyAsync(b => b.UserOpenId == userId && b.EffectiveDate == effectiveDate.Date);
+            return await _set.AnyAsync(b => b.UserId == userId && b.EffectiveDate == effectiveDate.Date);
         }
 
         public async Task<bool> ExistsAssetBalanceAsync(Guid userId, Guid assetId)
         {
-            return await _set.AnyAsync(b => b.UserOpenId == userId && b.AssetId == assetId);
+            return await _set.AnyAsync(b => b.UserId == userId && b.AssetId == assetId);
         }
     }
 }

@@ -63,13 +63,8 @@
     <Build Include="Currency.sql" />
     <Build Include="ExchangeRate.sql" />
     <Build Include="Balance.sql" />
-    <Build Include="ItemCategory.sql" />
-    <Build Include="InventoryItem.sql" />
-    <Build Include="InvItemImage.sql" />
-    <Build Include="InvItemLink.sql" />
     <Build Include="UserCurrency.sql" />
     <Build Include="BalanceNote.sql" />
-    <Build Include="Bank.sql" />
     <Build Include="AssetBankAccount.sql" />
   </ItemGroup>
   <ItemGroup>

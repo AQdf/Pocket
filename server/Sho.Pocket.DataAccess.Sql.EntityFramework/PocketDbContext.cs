@@ -42,7 +42,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
                 eb.Property(a => a.Name).HasColumnType("nvarchar(50)").IsRequired();
                 eb.Property(a => a.Currency).HasColumnType("char(3)").IsRequired();
                 eb.Property(a => a.IsActive).HasColumnType("bit").IsRequired();
-                eb.Property(a => a.UserOpenId).HasColumnType("uniqueidentifier").IsRequired();
+                eb.Property(a => a.UserId).HasColumnType("uniqueidentifier").IsRequired();
             });
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);
@@ -52,7 +52,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
             {
                 eb.Property(i => i.EffectiveDate).HasColumnType("date").IsRequired();
                 eb.Property(i => i.Value).HasColumnType("money").IsRequired();
-                eb.Property(i => i.UserOpenId).HasColumnType("uniqueidentifier").IsRequired();
+                eb.Property(i => i.UserId).HasColumnType("uniqueidentifier").IsRequired();
             });
 
             modelBuilder.Entity<BalanceNote>().HasKey(c => c.Id);
@@ -93,11 +93,11 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
                 eb.Property(i => i.Provider).HasColumnType("varchar(50)").IsRequired();
             });
 
-            modelBuilder.Entity<UserCurrency>().HasKey(c => new { c.UserOpenId, c.Currency });
+            modelBuilder.Entity<UserCurrency>().HasKey(c => new { c.UserId, c.Currency });
             modelBuilder.Entity<UserCurrency>().HasOne<Currency>().WithMany().HasForeignKey(c => c.Currency).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserCurrency>(eb =>
             {
-                eb.Property(c => c.UserOpenId).HasColumnType("uniqueidentifier").IsRequired();
+                eb.Property(c => c.UserId).HasColumnType("uniqueidentifier").IsRequired();
                 eb.Property(c => c.Currency).HasColumnType("char(3)").IsRequired();
                 eb.Property(i => i.IsPrimary).HasColumnType("bit").IsRequired();
             });

@@ -5,19 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\DeactivateAsset.sql" />
-    <EmbeddedResource Include="Scripts\DeleteAsset.sql" />
-    <EmbeddedResource Include="Scripts\GetAllAssets.sql" />
-    <EmbeddedResource Include="Scripts\InsertAsset.sql" />
-    <EmbeddedResource Include="Scripts\UpdateAsset.sql" />
-    <EmbeddedResource Include="Scripts\DeleteBalance.sql" />
-    <EmbeddedResource Include="Scripts\GetBalance.sql" />
-    <EmbeddedResource Include="Scripts\GetAllBalances.sql" />
-    <EmbeddedResource Include="Scripts\GetBalancesEffectiveDates.sql" />
-    <EmbeddedResource Include="Scripts\InsertBalancesTemplate.sql" />
-    <EmbeddedResource Include="Scripts\InsertBalance.sql" />
-    <EmbeddedResource Include="Scripts\UpdateBalance.sql" />
-    <EmbeddedResource Include="Scripts\GetAllCurrencies.sql" />
+    <EmbeddedResource Include="Scripts\GetUserBalances.sql" />
   </ItemGroup>
 
   <ItemGroup>

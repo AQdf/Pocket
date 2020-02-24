@@ -26,9 +26,9 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
                     [AssetBankAccount].[BankAccountName] AS BankAccountName,
                     [AssetBankAccount].[Token] AS Token,
                     [AssetBankAccount].[BankClientId] AS BankClientId
-                FROM [dbo].[AssetBankAccount]
-                LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
-                WHERE [Asset].[UserOpenId] = @userId";
+                FROM [AssetBankAccount]
+                LEFT JOIN [Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+                WHERE [Asset].[UserId] = @userId";
 
             object queryParams = new { userId };
             IEnumerable<AssetBankAccount> result = await base.GetEntities(queryText, queryParams);
@@ -40,24 +40,24 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
             string queryText = @"
                 DECLARE @id uniqueidentifier = (
-	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
-                    LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
-	                WHERE [Asset].[UserOpenId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
+	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [AssetBankAccount]
+                    LEFT JOIN [Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[UserId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
 
                 IF @id IS NULL
 	                BEGIN
 		                SET @id = NEWID();
-                        INSERT INTO [dbo].[AssetBankAccount] ([Id], [AssetId], [BankName], [Token], [BankClientId])
+                        INSERT INTO [AssetBankAccount] ([Id], [AssetId], [BankName], [Token], [BankClientId])
                         VALUES (@id, @assetId, @bankName, @token, @bankClientId)
 	                END
                 ELSE
 	                BEGIN
-		                UPDATE [dbo].[AssetBankAccount]
+		                UPDATE [AssetBankAccount]
 		                SET [AssetId] = @assetId, [BankName] = @bankName, [Token] = @token, [BankClientId] = @bankClientId
 		                WHERE [Id] = @id
 	                END
 
-                SELECT * FROM [dbo].[AssetBankAccount] WHERE [Id] = @id";
+                SELECT * FROM [AssetBankAccount] WHERE [Id] = @id";
 
             object queryParameters = new
             {
@@ -77,15 +77,15 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
             const string queryText = @"
                 DECLARE @id uniqueidentifier = (
-	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
-                    LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
-	                WHERE [Asset].[UserOpenId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
+	                SELECT TOP 1 [AssetBankAccount].[Id] FROM [AssetBankAccount]
+                    LEFT JOIN [Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[UserId] = @userId AND [AssetBankAccount].[AssetId] = @assetId)
 
-		        UPDATE [dbo].[AssetBankAccount]
+		        UPDATE [AssetBankAccount]
 		        SET [BankAccountName] = @accountName, [BankAccountId] = @bankAccountId
 		        WHERE [Id] = @id
 
-                SELECT * FROM [dbo].[AssetBankAccount] WHERE [Id] = @id";
+                SELECT * FROM [AssetBankAccount] WHERE [Id] = @id";
 
             object queryParams = new { userId, assetId, accountName, bankAccountId };
             AssetBankAccount result = await base.UpdateEntity(queryText, queryParams);
@@ -96,9 +96,9 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId)
         {
             const string queryText = @"
-                DECLARE @id uniqueidentifier = (SELECT [Id] FROM [Asset] WHERE [UserOpenId] = @userId AND [Id] = @assetId)
+                DECLARE @id uniqueidentifier = (SELECT [Id] FROM [Asset] WHERE [UserId] = @userId AND [Id] = @assetId)
 
-                SELECT * FROM [dbo].[AssetBankAccount]
+                SELECT * FROM [AssetBankAccount]
                 WHERE [AssetId] = @id";
 
             object queryParams = new { userId, assetId };
@@ -110,9 +110,9 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task DeleteAsync(Guid userId, Guid assetId)
         {
             const string queryText = @"
-                DECLARE @id uniqueidentifier = (SELECT [Id] FROM [Asset] WHERE [UserOpenId] = @userId AND [Id] = @assetId)
+                DECLARE @id uniqueidentifier = (SELECT [Id] FROM [Asset] WHERE [UserId] = @userId AND [Id] = @assetId)
 
-                DELETE FROM [dbo].[AssetBankAccount]
+                DELETE FROM [AssetBankAccount]
                 WHERE [AssetId] = @id";
 
             object queryParams = new { userId, assetId };
@@ -123,17 +123,17 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
             const string queryText = @"
                 DECLARE @assetBankAccountId UNIQUEIDENTIFIER = (
-	                SELECT [AssetBankAccount].[Id] FROM [dbo].[AssetBankAccount]
-	                LEFT JOIN [dbo].[Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
-	                WHERE [Asset].[Id] = @assetId AND [Asset].[UserOpenId] = @userId)
+	                SELECT [AssetBankAccount].[Id] FROM [AssetBankAccount]
+	                LEFT JOIN [Asset] ON [Asset].[Id] = [AssetBankAccount].[AssetId]
+	                WHERE [Asset].[Id] = @assetId AND [Asset].[UserId] = @userId)
 
                 IF (@assetBankAccountId IS NOT NULL)
                 BEGIN
-	                UPDATE [dbo].[AssetBankAccount]
+	                UPDATE [AssetBankAccount]
 	                SET [LastSyncDateTime] = @lastSyncDateTime, [BankAccountName] = @bankAccountName
 	                WHERE [AssetId] = @assetId
 
-	                SELECT * FROM [dbo].[AssetBankAccount]
+	                SELECT * FROM [AssetBankAccount]
 	                WHERE [Id] = @assetBankAccountId
                 END";
 

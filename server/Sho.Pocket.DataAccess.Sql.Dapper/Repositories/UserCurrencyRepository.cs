@@ -16,11 +16,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<IEnumerable<UserCurrency>> GetByUserIdAsync(Guid userId)
         {
-            const string queryText =
-                @"SELECT [UserOpenId], [Currency], [IsPrimary]
-                FROM [dbo].[UserCurrency]
-                WHERE [UserOpenId] = @userId
-                ORDER BY [Currency]";
+            const string queryText = @"SELECT * FROM [UserCurrency] WHERE [UserId] = @userId ORDER BY [Currency]";
             object queryParams = new { userId };
 
             IEnumerable<UserCurrency> result = await base.GetEntities(queryText, queryParams);
@@ -30,10 +26,10 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<UserCurrency> GetCurrencyAsync(Guid userId, string currency)
         {
-            const string queryText =
-                @"SELECT TOP 1 [UserOpenId], [Currency], [IsPrimary]
-                FROM [dbo].[UserCurrency]
-                WHERE [Currency] = @currency and [UserOpenId] = @userId";
+            const string queryText = @"
+                SELECT TOP 1 * FROM [UserCurrency]
+                WHERE [Currency] = @currency and [UserId] = @userId";
+
             object queryParams = new { userId, currency };
 
             UserCurrency result = await base.GetEntity(queryText, queryParams);
@@ -43,14 +39,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<UserCurrency> CreateAsync(Guid userId, string currency, bool isPrimary)
         {
-            const string queryText =
-                @"INSERT INTO [dbo].[UserCurrency]
-                ([UserOpenId], [Currency], [IsPrimary])
+            const string queryText =@"
+                INSERT INTO [UserCurrency]
+                ([UserId], [Currency], [IsPrimary])
                 VALUES (@userId, @currency, @isPrimary)
 
-                SELECT [UserOpenId], [Currency], [IsPrimary]
-                FROM [dbo].[UserCurrency]
-                WHERE [Currency] = @currency and [UserOpenId] = @userId";
+                SELECT * FROM [UserCurrency] WHERE [Currency] = @currency and [UserId] = @userId";
             object queryParams = new { userId, currency, isPrimary };
 
             UserCurrency result = await base.InsertEntity(queryText, queryParams);
@@ -66,18 +60,17 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<UserCurrency> SetPrimaryAsync(Guid userId, string currency)
         {
-            const string queryText =
-                @"UPDATE [dbo].[UserCurrency]
+            const string queryText = @"
+                UPDATE [UserCurrency]
                 SET [IsPrimary] = 0
-                WHERE [UserOpenId] = @userId
+                WHERE [UserId] = @userId
 
-                UPDATE [dbo].[UserCurrency]
+                UPDATE [UserCurrency]
                 SET [IsPrimary] = 1
-                WHERE [Currency] = @currency AND [UserOpenId] = @userId
+                WHERE [Currency] = @currency AND [UserId] = @userId
 
-                SELECT [UserOpenId], [Currency], [IsPrimary]
-                FROM [dbo].[UserCurrency]
-                WHERE [Currency] = @currency AND [UserOpenId] = @userId";
+                SELECT * FROM [UserCurrency] WHERE [Currency] = @currency AND [UserId] = @userId";
+
             object queryParams = new { userId, currency };
 
             UserCurrency result = await base.UpdateEntity(queryText, queryParams);
@@ -87,9 +80,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<bool> DeleteAsync(Guid userId, string currency)
         {
-            string queryText =
-                @"DELETE FROM [dbo].[UserCurrency]
-                WHERE [Currency] = @currency AND [UserOpenId] = @userId";
+            string queryText = @"DELETE FROM [UserCurrency] WHERE [Currency] = @currency AND [UserId] = @userId";
             object queryParameters = new { userId, currency };
 
             await base.DeleteEntity(queryText, queryParameters);
@@ -99,10 +90,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userId)
         {
-            const string queryText =
-                @"SELECT TOP 1 [UserOpenId], [Currency], [IsPrimary]
-                FROM [dbo].[UserCurrency]
-                WHERE [UserOpenId] = @userId AND [IsPrimary] = 1";
+            const string queryText = @"SELECT TOP 1 * FROM [UserCurrency] WHERE [UserId] = @userId AND [IsPrimary] = 1";
             object queryParams = new { userId };
 
             UserCurrency result = await base.GetEntity(queryText, queryParams);
@@ -112,8 +100,8 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
         public async Task<bool> CheckIsPrimaryAsync(Guid userId, string currency)
         {
-            const string queryText =
-                @"IF EXISTS (SELECT TOP 1 1 FROM [dbo].[UserCurrency] WHERE [Currency] = @currency AND [UserOpenId] = @userId AND [IsPrimary] = 1)
+            const string queryText =@"
+                IF EXISTS (SELECT TOP 1 1 FROM [UserCurrency] WHERE [Currency] = @currency AND [UserId] = @userId AND [IsPrimary] = 1)
                 SELECT 1 ELSE SELECT 0";
             object queryParams = new { userId, currency };
 
