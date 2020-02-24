@@ -7,18 +7,18 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IUserCurrencyRepository
     {
-        Task<IEnumerable<UserCurrency>> GetByUserIdAsync(Guid userOpenId);
+        Task<IEnumerable<UserCurrency>> GetByUserIdAsync(Guid userId);
 
-        Task<UserCurrency> GetCurrencyAsync(Guid userOpenId, string currency);
+        Task<UserCurrency> GetCurrencyAsync(Guid userId, string currency);
 
-        Task<UserCurrency> CreateAsync(Guid userOpenId, string currency, bool isPrimary);
+        Task<UserCurrency> CreateAsync(Guid userId, string currency, bool isPrimary);
 
-        Task<bool> DeleteAsync(Guid userOpenId, string currency);
+        Task<bool> DeleteAsync(Guid userId, string currency);
 
-        Task<UserCurrency> SetPrimaryAsync(Guid userOpenId, string currency);
+        Task<UserCurrency> SetPrimaryAsync(Guid userId, string currency);
 
-        Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userOpenId);
+        Task<UserCurrency> GetPrimaryCurrencyAsync(Guid userId);
 
-        Task<bool> CheckIsPrimaryAsync(Guid userOpenId, string currency);
+        Task<bool> CheckIsPrimaryAsync(Guid userId, string currency);
     }
 }

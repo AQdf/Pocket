@@ -18,21 +18,21 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             _set = context.Set<Balance>();
         }
 
-        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true)
         {
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userOpenId)
+                .Where(b => b.UserOpenId == userId)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
         {
             Balance effectiveBalance = await _set
-                .Where(b => b.UserOpenId == userOpenId)
+                .Where(b => b.UserOpenId == userId)
                 .OrderByDescending(b => b.EffectiveDate)
                 .FirstOrDefaultAsync();
 
@@ -44,27 +44,27 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveBalance.EffectiveDate)
+                .Where(b => b.UserOpenId == userId && b.EffectiveDate == effectiveBalance.EffectiveDate)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true)
         {
             List<Balance> result = await _set
                 .Include(b => b.Asset)
                 .Include(b => b.ExchangeRate)
-                .Where(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date)
+                .Where(b => b.UserOpenId == userId && b.EffectiveDate == effectiveDate.Date)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
+        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userId)
         {
             List<DateTime> result = await _set
-                .Where(b => b.UserOpenId == userOpenId)
+                .Where(b => b.UserOpenId == userId)
                 .Select(b => b.EffectiveDate)
                 .Distinct()
                 .OrderByDescending(date => date)
@@ -73,22 +73,22 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return result;
         }
 
-        public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Balance> GetByIdAsync(Guid userId, Guid id)
         {
-            return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserOpenId == userOpenId);
+            return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserOpenId == userId);
         }
 
-        public async Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
-            Balance balance = new Balance(Guid.NewGuid(), assetId, effectiveDate, value, exchangeRateId, userOpenId);
+            Balance balance = new Balance(Guid.NewGuid(), assetId, effectiveDate, value, exchangeRateId, userId);
             EntityEntry<Balance> result = await _set.AddAsync(balance);
 
             return result.Entity;
         }
 
-        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
+        public async Task<Balance> UpdateAsync(Guid userId, Guid id, Guid assetId, decimal value)
         {
-            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userOpenId);
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userId);
             balance.AssetId = assetId;
             balance.Value = value;
             EntityEntry<Balance> result = _set.Update(balance);
@@ -96,22 +96,22 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return result.Entity;
         }
 
-        public async Task<bool> RemoveAsync(Guid userOpenId, Guid id)
+        public async Task<bool> RemoveAsync(Guid userId, Guid id)
         {
-            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userOpenId);
+            Balance balance = await _set.SingleAsync(b => b.Id == id && b.UserOpenId == userId);
             _set.Remove(balance);
 
             return true;
         }
 
-        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userId, DateTime effectiveDate)
         {
-            return await _set.AnyAsync(b => b.UserOpenId == userOpenId && b.EffectiveDate == effectiveDate.Date);
+            return await _set.AnyAsync(b => b.UserOpenId == userId && b.EffectiveDate == effectiveDate.Date);
         }
 
-        public async Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId)
+        public async Task<bool> ExistsAssetBalanceAsync(Guid userId, Guid assetId)
         {
-            return await _set.AnyAsync(b => b.UserOpenId == userOpenId && b.AssetId == assetId);
+            return await _set.AnyAsync(b => b.UserOpenId == userId && b.AssetId == assetId);
         }
     }
 }

@@ -14,14 +14,14 @@ namespace Sho.Pocket.Domain.Entities
             DateTime effectiveDate,
             decimal value,
             Guid exchangeRateId,
-            Guid userOpenId)
+            Guid userId)
         {
             Id = id;
             AssetId = assetId;
             EffectiveDate = effectiveDate;
             Value = value;
             ExchangeRateId = exchangeRateId;
-            UserOpenId = userOpenId;
+            UserOpenId = userId;
         }
 
         public Guid Id { get; set; }

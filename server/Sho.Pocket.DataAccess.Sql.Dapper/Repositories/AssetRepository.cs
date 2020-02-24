@@ -16,71 +16,71 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
         }
 
-        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId, bool includeInactive)
+        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userId, bool includeInactive)
         {
-            string queryText = @"SELECT * FROM [dbo].[Asset] WHERE [UserOpenId] = @userOpenId";
+            string queryText = @"SELECT * FROM [dbo].[Asset] WHERE [UserOpenId] = @userId";
 
             if (!includeInactive)
             {
                 queryText += " AND [IsActive] = 1";
             }
 
-            object queryParams = new { userOpenId };
+            object queryParams = new { userId };
 
             IEnumerable<Asset> result = await base.GetEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<Asset> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Asset> GetByIdAsync(Guid userId, Guid id)
         {
-            const string queryText = @"select top 1 * from Asset where Id = @id and UserOpenId = @userOpenId";
-            object queryParams = new { userOpenId, id, };
+            const string queryText = @"select top 1 * from Asset where Id = @id and UserOpenId = @userId";
+            object queryParams = new { userId, id, };
 
             Asset result = await base.GetEntity(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive)
+        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertAsset.sql");
 
-            object queryParameters = new { userOpenId, name, currency, isActive, };
+            object queryParameters = new { userId, name, currency, isActive, };
 
             Asset result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive)
+        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "UpdateAsset.sql");
 
-            object queryParameters = new { userOpenId, id, name, currency, isActive, };
+            object queryParameters = new { userId, id, name, currency, isActive, };
 
             Asset result = await base.UpdateEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task RemoveAsync(Guid userOpenId, Guid id)
+        public async Task RemoveAsync(Guid userId, Guid id)
         {
-            string queryText = @"delete from Asset where Id = @id and UserOpenId = @userOpenId";
+            string queryText = @"delete from Asset where Id = @id and UserOpenId = @userId";
 
-            object queryParameters = new { userOpenId, id };
+            object queryParameters = new { userId, id };
 
             await base.DeleteEntity(queryText, queryParameters);
         }
 
-        public async Task<Asset> GetByNameAsync(Guid userOpenId, string name)
+        public async Task<Asset> GetByNameAsync(Guid userId, string name)
         {
             string query = @"
                 SELECT [Id], [Name], [IsActive], [Currency]
                 FROM [dbo].[Asset]
-                WHERE [UserOpenId] = @userOpenId AND [Name] = @name";
+                WHERE [UserOpenId] = @userId AND [Name] = @name";
 
-            object queryParams = new { userOpenId, name };
+            object queryParams = new { userId, name };
 
             Asset result = await base.GetEntity(query, queryParams);
 

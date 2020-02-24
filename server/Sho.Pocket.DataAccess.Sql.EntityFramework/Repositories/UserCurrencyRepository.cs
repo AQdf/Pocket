@@ -33,7 +33,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await _set.FirstAsync(uc => uc.UserOpenId == userId && uc.IsPrimary);
         }
 
-        public Task<UserCurrency> GetCurrencyAsync(Guid userOpenId, string currency)
+        public Task<UserCurrency> GetCurrencyAsync(Guid userId, string currency)
         {
             throw new NotImplementedException();
         }
@@ -75,9 +75,9 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await _set.AnyAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
         }
 
-        public async Task<bool> CheckIsPrimaryAsync(Guid userOpenId, string currency)
+        public async Task<bool> CheckIsPrimaryAsync(Guid userId, string currency)
         {
-            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserOpenId == userOpenId);
+            UserCurrency userCurrency = await _set.FirstOrDefaultAsync(uc => uc.Currency == currency && uc.UserOpenId == userId);
 
             return userCurrency != null 
                 ? userCurrency.IsPrimary 

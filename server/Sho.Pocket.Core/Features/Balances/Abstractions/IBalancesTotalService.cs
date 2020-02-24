@@ -8,12 +8,12 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalancesTotalService
     {
-        Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId);
+        Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userId);
 
-        Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userOpenId, int count);
+        Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userId, int count);
 
-        Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userOpenId, IEnumerable<Balance> balances, DateTime effectiveDate);
+        Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userId, IEnumerable<Balance> balances, DateTime effectiveDate);
 
-        Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userOpenId);
+        Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userId);
     }
 }

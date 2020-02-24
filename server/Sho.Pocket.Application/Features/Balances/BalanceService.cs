@@ -46,23 +46,23 @@ namespace Sho.Pocket.Application.Balances
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId)
+        public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userId)
         {
             BalancesViewModel result = null;
-            List<DateTime> effectiveDates = await GetEffectiveDatesAsync(userOpenId);
+            List<DateTime> effectiveDates = await GetEffectiveDatesAsync(userId);
 
             if (effectiveDates != null && effectiveDates.Any())
             {
                 DateTime latestDate = effectiveDates.FirstOrDefault();
-                result = await GetUserEffectiveBalancesAsync(userOpenId, latestDate);
+                result = await GetUserEffectiveBalancesAsync(userId, latestDate);
             }
 
             return result;
         }
 
-        public async Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userId, DateTime effectiveDate)
         {
-            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
+            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, effectiveDate);
 
             List<BalanceViewModel> items = balances
                 .Select(b => new BalanceViewModel(b))
@@ -72,30 +72,30 @@ namespace Sho.Pocket.Application.Balances
 
             if (effectiveDate == DateTime.UtcNow.Date)
             {
-                await PopulateIsBankAccountFieldAsync(userOpenId, items);
+                await PopulateIsBankAccountFieldAsync(userId, items);
             }
 
-            IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(userOpenId, balances, effectiveDate);
+            IEnumerable<BalanceTotalModel> totals = await _balancesTotalService.CalculateTotalsAsync(userId, balances, effectiveDate);
 
             BalancesViewModel result = new BalancesViewModel(items, items.Count, totals);
 
             return result;
         }
 
-        public async Task<BalanceViewModel> GetUserBalanceAsync(Guid userOpenId, Guid id)
+        public async Task<BalanceViewModel> GetUserBalanceAsync(Guid userId, Guid id)
         {
-            Balance balance = await _balanceRepository.GetByIdAsync(userOpenId, id);
+            Balance balance = await _balanceRepository.GetByIdAsync(userId, id);
 
             BalanceViewModel result = new BalanceViewModel(balance);
 
             return result;
         }
 
-        public async Task<BalanceViewModel> AddBalanceAsync(Guid userOpenId, BalanceCreateModel createModel)
+        public async Task<BalanceViewModel> AddBalanceAsync(Guid userId, BalanceCreateModel createModel)
         {
             ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRateAsync(createModel.Currency, createModel.EffectiveDate);
 
-            Balance balance = await _balanceRepository.CreateAsync(userOpenId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
+            Balance balance = await _balanceRepository.CreateAsync(userId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
             await _unitOfWork.SaveChangesAsync();
 
             BalanceViewModel result = new BalanceViewModel(balance);
@@ -103,9 +103,9 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public async Task<List<BalanceViewModel>> AddEffectiveBalancesTemplate(Guid userOpenId)
+        public async Task<List<BalanceViewModel>> AddEffectiveBalancesTemplate(Guid userId)
         {
-            IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
+            IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userId);
             DateTime today = DateTime.UtcNow.Date;
             bool todayBalancesExists = effectiveDates.Contains(today);
 
@@ -116,25 +116,25 @@ namespace Sho.Pocket.Application.Balances
                 if (effectiveDates.Any())
                 {
                     DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
-                    result = await AddBalancesByTemplateAsync(userOpenId, latestEffectiveDate, today);
+                    result = await AddBalancesByTemplateAsync(userId, latestEffectiveDate, today);
                 }
                 else
                 {
-                    result = await AddAssetsBalancesAsync(userOpenId, today);
+                    result = await AddAssetsBalancesAsync(userId, today);
                 }
             }
             else
             {
-                IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, today);
+                IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, today);
                 result = balances.Select(b => new BalanceViewModel(b)).ToList();
             }
 
             return result;
         }
 
-        public async Task<BalanceViewModel> UpdateBalanceAsync(Guid userOpenId, Guid id, BalanceUpdateModel updateModel)
+        public async Task<BalanceViewModel> UpdateBalanceAsync(Guid userId, Guid id, BalanceUpdateModel updateModel)
         {
-            Balance balance= await _balanceRepository.UpdateAsync(userOpenId, id, updateModel.AssetId, updateModel.Value);
+            Balance balance= await _balanceRepository.UpdateAsync(userId, id, updateModel.AssetId, updateModel.Value);
             await _unitOfWork.SaveChangesAsync();
 
             BalanceViewModel result = new BalanceViewModel(balance);
@@ -142,31 +142,31 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public async Task<bool> DeleteBalanceAsync(Guid userOpenId, Guid id)
+        public async Task<bool> DeleteBalanceAsync(Guid userId, Guid id)
         {
-            bool result = await _balanceRepository.RemoveAsync(userOpenId, id);
+            bool result = await _balanceRepository.RemoveAsync(userId, id);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<List<DateTime>> GetEffectiveDatesAsync(Guid userOpenId)
+        public async Task<List<DateTime>> GetEffectiveDatesAsync(Guid userId)
         {
-            IEnumerable<DateTime> result = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
+            IEnumerable<DateTime> result = await _balanceRepository.GetOrderedEffectiveDatesAsync(userId);
 
             return result.ToList();
         }
 
-        public async Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id)
+        public async Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userId, Guid id)
         {
             BalanceViewModel balanceViewModel;
-            Balance balance = await _balanceRepository.GetByIdAsync(userOpenId, id);
+            Balance balance = await _balanceRepository.GetByIdAsync(userId, id);
 
-            BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+            BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userId, balance.AssetId);
 
             if (bankAccountBalance != null)
             {
-                Balance updatedBalance = await _balanceRepository.UpdateAsync(userOpenId, id, balance.AssetId, bankAccountBalance.Balance);
+                Balance updatedBalance = await _balanceRepository.UpdateAsync(userId, id, balance.AssetId, bankAccountBalance.Balance);
                 balanceViewModel = new BalanceViewModel(updatedBalance);
             }
             else
@@ -179,12 +179,12 @@ namespace Sho.Pocket.Application.Balances
             return balanceViewModel;
         }
 
-        private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userOpenId, DateTime latestEffectiveDate, DateTime effectiveDate)
+        private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userId, DateTime latestEffectiveDate, DateTime effectiveDate)
         {
-            IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
-            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
+            IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userId, latestEffectiveDate);
+            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userId, effectiveDate);
 
-            IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userOpenId);
+            IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userId);
             List<BalanceViewModel> result = new List<BalanceViewModel>();
 
             foreach (Balance balance in latestBalances)
@@ -195,7 +195,7 @@ namespace Sho.Pocket.Application.Balances
 
                 if (bankAccounts.Any(ba => ba.AssetId == balance.AssetId))
                 {
-                    BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userOpenId, balance.AssetId);
+                    BankAccountBalance bankAccountBalance = await _bankAccountService.GetBankAccountBalanceAsync(userId, balance.AssetId);
 
                     if (bankAccountBalance != null)
                     {
@@ -203,7 +203,7 @@ namespace Sho.Pocket.Application.Balances
                     }
                 }
 
-                Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);
+                Balance newBalance = await _balanceRepository.CreateAsync(userId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);
 
                 var assetModel = new AssetViewModel(balance.Asset);
                 var model = new BalanceViewModel(newBalance, assetModel);
@@ -215,22 +215,22 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        private async Task<List<BalanceViewModel>> AddAssetsBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        private async Task<List<BalanceViewModel>> AddAssetsBalancesAsync(Guid userId, DateTime effectiveDate)
         {
             List<BalanceViewModel> result = new List<BalanceViewModel>();
-            IEnumerable<Asset> activeAssets = await _assetRepository.GetByUserIdAsync(userOpenId, false);
+            IEnumerable<Asset> activeAssets = await _assetRepository.GetByUserIdAsync(userId, false);
 
             if (!activeAssets.Any())
             {
                 throw new UserHasNoAssetsException();
             }
 
-            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userOpenId, effectiveDate);
+            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userId, effectiveDate);
 
             foreach (Asset asset in activeAssets)
             {
                 ExchangeRateModel exchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == asset.Currency);
-                Balance newBalance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, effectiveDate, 0.0M, exchangeRate.Id);
+                Balance newBalance = await _balanceRepository.CreateAsync(userId, asset.Id, effectiveDate, 0.0M, exchangeRate.Id);
 
                 var assetModel = new AssetViewModel(asset);
                 var balanceModel = new BalanceViewModel(newBalance, assetModel);

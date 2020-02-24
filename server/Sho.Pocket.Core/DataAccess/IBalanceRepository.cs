@@ -7,24 +7,24 @@ namespace Sho.Pocket.Core.DataAccess
 {
     public interface IBalanceRepository
     {
-        Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true);
+        Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true);
 
-        Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true);
+        Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true);
 
-        Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true);
+        Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true);
 
-        Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId);
+        Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userId);
 
-        Task<Balance> GetByIdAsync(Guid userOpenId, Guid id);
+        Task<Balance> GetByIdAsync(Guid userId, Guid id);
 
-        Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);
+        Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId);
 
-        Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value);
+        Task<Balance> UpdateAsync(Guid userId, Guid id, Guid assetId, decimal value);
 
-        Task<bool> RemoveAsync(Guid userOpenId, Guid balanceId);
+        Task<bool> RemoveAsync(Guid userId, Guid balanceId);
 
-        Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate);
+        Task<bool> ExistsEffectiveDateBalancesAsync(Guid userId, DateTime effectiveDate);
 
-        Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId);
+        Task<bool> ExistsAssetBalanceAsync(Guid userId, Guid assetId);
     }
 }

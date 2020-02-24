@@ -32,25 +32,25 @@ namespace Sho.Pocket.Application.Features.Balances
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ImportJsonAsync(Guid userOpenId, string jsonData)
+        public async Task ImportJsonAsync(Guid userId, string jsonData)
         {
             List<BalanceExportModel> items = JsonConvert.DeserializeObject<List<BalanceExportModel>>(jsonData);
             IEnumerable<IGrouping<DateTime, BalanceExportModel>> efeectiveDateGroup = items.GroupBy(i => i.EffectiveDate);
 
             foreach (IGrouping<DateTime, BalanceExportModel> group in efeectiveDateGroup)
             {
-                bool exists = await _balanceRepository.ExistsEffectiveDateBalancesAsync(userOpenId, group.Key);
+                bool exists = await _balanceRepository.ExistsEffectiveDateBalancesAsync(userId, group.Key);
 
                 if (!exists)
                 {
                     foreach (BalanceExportModel item in group)
                     {
-                        Asset asset = await _assetRepository.GetByNameAsync(userOpenId, item.AssetName);
+                        Asset asset = await _assetRepository.GetByNameAsync(userId, item.AssetName);
 
                         if (asset != null)
                         {
                             ExchangeRate rate = await _exchangeRateRepository.AlterAsync(item.EffectiveDate, item.Currency, item.CounterCurrency, item.BuyRate, item.SellRate);
-                            Balance balance = await _balanceRepository.CreateAsync(userOpenId, asset.Id, item.EffectiveDate, item.BalanceValue, rate.Id);
+                            Balance balance = await _balanceRepository.CreateAsync(userId, asset.Id, item.EffectiveDate, item.BalanceValue, rate.Id);
                         }
                     }
                 }

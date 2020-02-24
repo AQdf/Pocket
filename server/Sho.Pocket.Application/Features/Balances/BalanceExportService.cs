@@ -23,9 +23,9 @@ namespace Sho.Pocket.Application.Features.Balances
             _csvExporter = balanceExporter;
         }
 
-        public async Task<byte[]> ExportUserBalancesToCsvAsync(Guid userOpenId)
+        public async Task<byte[]> ExportUserBalancesToCsvAsync(Guid userId)
         {
-            IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userOpenId);
+            IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userId);
 
             List<BalanceExportModel> items = balances
                 .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.ExchangeRate, b.Value))
@@ -37,9 +37,9 @@ namespace Sho.Pocket.Application.Features.Balances
             return bytes;
         }
 
-        public async Task<byte[]> ExportJsonAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<byte[]> ExportJsonAsync(Guid userId, DateTime effectiveDate)
         {
-            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
+            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, effectiveDate);
 
             List<BalanceExportModel> items = balances
                 .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.ExchangeRate, b.Value))

@@ -8,9 +8,9 @@ namespace Sho.Pocket.Domain.Entities
         {
         }
 
-        public UserCurrency(Guid userOpenId, string currency, bool isPrimary)
+        public UserCurrency(Guid userId, string currency, bool isPrimary)
         {
-            UserOpenId = userOpenId;
+            UserOpenId = userId;
             Currency = currency;
             IsPrimary = isPrimary;
         }

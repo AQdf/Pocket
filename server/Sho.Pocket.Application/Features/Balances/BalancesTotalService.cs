@@ -27,9 +27,9 @@ namespace Sho.Pocket.Application.Balances
             _balanceTotalCalculator = balanceTotalCalculator;
         }
 
-        public async Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userOpenId)
+        public async Task<List<BalanceTotalModel>> GetLatestTotalBalanceAsync(Guid userId)
         {
-            IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
+            IEnumerable<DateTime> effectiveDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userId);
 
             if (!effectiveDates.Any())
             {
@@ -38,22 +38,22 @@ namespace Sho.Pocket.Application.Balances
 
             DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
 
-            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userOpenId, latestEffectiveDate);
+            IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, latestEffectiveDate);
 
-            List<BalanceTotalModel> result = await CalculateTotalsAsync(userOpenId, balances, latestEffectiveDate);
+            List<BalanceTotalModel> result = await CalculateTotalsAsync(userId, balances, latestEffectiveDate);
 
             return result;
         }
 
-        public async Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userOpenId, int count)
+        public async Task<List<BalanceTotalChangeModel>> GetUserBalanceChangesAsync(Guid userId, int count)
         {
-            IEnumerable<DateTime> effectivateDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userOpenId);
+            IEnumerable<DateTime> effectivateDates = await _balanceRepository.GetOrderedEffectiveDatesAsync(userId);
             IEnumerable<DateTime> filterEffectiveDates = effectivateDates.Take(count);
 
-            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userOpenId);
+            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userId);
             string primaryCurrency = userCurrencies.Where(uc => uc.IsPrimary).Select(uc => uc.Currency).FirstOrDefault();
 
-            IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userOpenId);
+            IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userId);
             List<Balance> balancesToDate = balances.Where(b => b.EffectiveDate <= filterEffectiveDates.Last()).ToList();
 
             List<BalanceTotalChangeModel> result = new List<BalanceTotalChangeModel>();
@@ -75,9 +75,9 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public async Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userOpenId, IEnumerable<Balance> balances, DateTime effectiveDate)
+        public async Task<List<BalanceTotalModel>> CalculateTotalsAsync(Guid userId, IEnumerable<Balance> balances, DateTime effectiveDate)
         {
-            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userOpenId);
+            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userId);
             string primaryCurrency = userCurrencies.Where(uc => uc.IsPrimary).Select(uc => uc.Currency).FirstOrDefault();
 
             List<BalanceTotalModel> result = new List<BalanceTotalModel>();
@@ -91,10 +91,10 @@ namespace Sho.Pocket.Application.Balances
             return result;
         }
 
-        public async Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userOpenId)
+        public async Task<List<BalancePrimaryCurrencyModel>> GetUserPrimaryCurrencyBalancesAsync(Guid userId)
         {
-            UserCurrency userCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
-            IEnumerable<Balance> balances = await _balanceRepository.GetLatestBalancesAsync(userOpenId);
+            UserCurrency userCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userId);
+            IEnumerable<Balance> balances = await _balanceRepository.GetLatestBalancesAsync(userId);
 
             List<BalancePrimaryCurrencyModel> result = balances
                 .Select(b => new BalancePrimaryCurrencyModel(userCurrency.Currency, b))

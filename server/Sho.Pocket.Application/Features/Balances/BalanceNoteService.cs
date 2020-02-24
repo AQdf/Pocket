@@ -19,17 +19,17 @@ namespace Sho.Pocket.Application.Features.Balances
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BalanceNoteViewModel> GetNoteByIdAsync(Guid userOpenId, Guid id)
+        public async Task<BalanceNoteViewModel> GetNoteByIdAsync(Guid userId, Guid id)
         {
-            BalanceNote note = await _balanceNoteRepository.GetByIdAsync(userOpenId, id);
+            BalanceNote note = await _balanceNoteRepository.GetByIdAsync(userId, id);
             BalanceNoteViewModel result = new BalanceNoteViewModel(note);
 
             return result;
         }
 
-        public async Task<BalanceNoteViewModel> GetNoteByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<BalanceNoteViewModel> GetNoteByEffectiveDateAsync(Guid userId, DateTime effectiveDate)
         {
-            BalanceNote note = await _balanceNoteRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
+            BalanceNote note = await _balanceNoteRepository.GetByEffectiveDateAsync(userId, effectiveDate);
 
             BalanceNoteViewModel result = null;
 
@@ -41,13 +41,13 @@ namespace Sho.Pocket.Application.Features.Balances
             return result;
         }
 
-        public async Task<BalanceNoteViewModel> AlterNoteAsync(Guid userOpenId, DateTime effectiveDate, string content)
+        public async Task<BalanceNoteViewModel> AlterNoteAsync(Guid userId, DateTime effectiveDate, string content)
         {
-            BalanceNote note = await _balanceNoteRepository.GetByEffectiveDateAsync(userOpenId, effectiveDate);
+            BalanceNote note = await _balanceNoteRepository.GetByEffectiveDateAsync(userId, effectiveDate);
 
             note = note != null
-                ? await _balanceNoteRepository.UpdateAsync(userOpenId, note.Id, content)
-                : await _balanceNoteRepository.CreateAsync(userOpenId, effectiveDate, content);
+                ? await _balanceNoteRepository.UpdateAsync(userId, note.Id, content)
+                : await _balanceNoteRepository.CreateAsync(userId, effectiveDate, content);
 
             await _unitOfWork.SaveChangesAsync();
             BalanceNoteViewModel result = new BalanceNoteViewModel(note);

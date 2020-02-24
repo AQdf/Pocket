@@ -6,10 +6,10 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalanceNoteService
     {
-        Task<BalanceNoteViewModel> GetNoteByIdAsync(Guid userOpenId, Guid id);
+        Task<BalanceNoteViewModel> GetNoteByIdAsync(Guid userId, Guid id);
 
-        Task<BalanceNoteViewModel> GetNoteByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate);
+        Task<BalanceNoteViewModel> GetNoteByEffectiveDateAsync(Guid userId, DateTime effectiveDate);
 
-        Task<BalanceNoteViewModel> AlterNoteAsync(Guid userOpenId, DateTime effectiveDate, string content);
+        Task<BalanceNoteViewModel> AlterNoteAsync(Guid userId, DateTime effectiveDate, string content);
     }
 }

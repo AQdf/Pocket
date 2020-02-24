@@ -44,7 +44,7 @@ namespace Sho.Pocket.Application.ExchangeRates
             return result;
         }
 
-        public async Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userOpenId, DateTime effectiveDate)
+        public async Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userId, DateTime effectiveDate)
         {
             IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
             IEnumerable<string> currencies = currenciesEntities.Select(c => c.Name);
@@ -55,7 +55,7 @@ namespace Sho.Pocket.Application.ExchangeRates
 
             if (missingCurrencies.Any())
             {
-                UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
+                UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userId);
                 IReadOnlyCollection<ExchangeRateProviderModel> providerRates = await TryFetchRatesAsync(primaryCurrency.Currency, missingCurrencies);
 
                 if (providerRates != null)
@@ -79,11 +79,11 @@ namespace Sho.Pocket.Application.ExchangeRates
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userOpenId, string providerName)
+        public async Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userId, string providerName)
         {
             IEnumerable<Currency> currenciesEntities = await _currencyRepository.GetAllAsync();
             List<string> currencies = currenciesEntities.Select(c => c.Name).ToList();
-            UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userOpenId);
+            UserCurrency primaryCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userId);
 
             IExchangeRateProvider provider = _exchangeRateProviderResolver.Resolve(providerName);
             IReadOnlyCollection<ExchangeRateProviderModel> result = await provider.FetchCurrencyRatesAsync(currencies, primaryCurrency.Currency);

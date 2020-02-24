@@ -5,6 +5,6 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalanceImportService
     {
-        Task ImportJsonAsync(Guid userOpenId, string jsonData);
+        Task ImportJsonAsync(Guid userId, string jsonData);
     }
 }

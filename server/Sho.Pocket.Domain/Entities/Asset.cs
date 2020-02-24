@@ -9,13 +9,13 @@ namespace Sho.Pocket.Domain.Entities
         {
         }
 
-        public Asset(Guid id, string name, string currency, bool isActive, Guid userOpenId)
+        public Asset(Guid id, string name, string currency, bool isActive, Guid userId)
         {
             Id = id;
             Name = name;
             Currency = currency;
             IsActive = isActive;
-            UserOpenId = userOpenId;
+            UserOpenId = userId;
         }
 
         public Guid Id { get; set; }

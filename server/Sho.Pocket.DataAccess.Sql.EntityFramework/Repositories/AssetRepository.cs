@@ -18,9 +18,9 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             _set = context.Set<Asset>();
         }
 
-        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userOpenId, bool includeInactive)
+        public async Task<IEnumerable<Asset>> GetByUserIdAsync(Guid userId, bool includeInactive)
         {
-            IQueryable<Asset> query = _set.Where(a => a.UserOpenId == userOpenId);
+            IQueryable<Asset> query = _set.Where(a => a.UserOpenId == userId);
 
             if (!includeInactive)
             {
@@ -30,27 +30,27 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task<Asset> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Asset> GetByIdAsync(Guid userId, Guid id)
         {
-            return await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
+            return await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userId);
         }
 
-        public async Task<Asset> GetByNameAsync(Guid userOpenId, string name)
+        public async Task<Asset> GetByNameAsync(Guid userId, string name)
         {
-            return await _set.SingleAsync(a => a.Name == name && a.UserOpenId == userOpenId);
+            return await _set.SingleAsync(a => a.Name == name && a.UserOpenId == userId);
         }
 
-        public async Task<Asset> CreateAsync(Guid userOpenId, string name, string currency, bool isActive)
+        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive)
         {
-            Asset asset = new Asset(Guid.NewGuid(), name, currency, isActive, userOpenId);
+            Asset asset = new Asset(Guid.NewGuid(), name, currency, isActive, userId);
             EntityEntry<Asset> result = await _set.AddAsync(asset);
 
             return result.Entity;
         }
 
-        public async Task<Asset> UpdateAsync(Guid userOpenId, Guid id, string name, string currency, bool isActive)
+        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive)
         {
-            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
+            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userId);
             asset.Name = name;
             asset.Currency = currency;
             asset.IsActive = isActive;
@@ -59,9 +59,9 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return asset;
         }
 
-        public async Task RemoveAsync(Guid userOpenId, Guid id)
+        public async Task RemoveAsync(Guid userId, Guid id)
         {
-            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userOpenId);
+            Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserOpenId == userId);
             _set.Remove(asset);
         }
     }

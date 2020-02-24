@@ -20,10 +20,10 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
         }
 
-        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetAllBalances.sql");
-            object queryParams = new { userOpenId };
+            object queryParams = new { userId };
 
             IEnumerable<Balance> result = includeRelated
                 ? await GetAllWithRelatedEntities(queryText, queryParams)
@@ -32,15 +32,15 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userOpenId, DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true)
         {
             string queryText = @"
                 select * from Balance
                 join Asset on Asset.Id = Balance.AssetId
                 left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
-                where Balance.EffectiveDate = @effectiveDate and Balance.UserOpenId = @userOpenId";
+                where Balance.EffectiveDate = @effectiveDate and Balance.UserOpenId = @userId";
 
-            object queryParams = new { userOpenId, effectiveDate };
+            object queryParams = new { userId, effectiveDate };
 
             IEnumerable<Balance> result = includeRelated
                 ? await GetAllWithRelatedEntities(queryText, queryParams)
@@ -49,7 +49,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userOpenId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
         {
             string queryText = @"
                 declare @latestDate datetime2(7) = (select top 1 EffectiveDate from Balance order by EffectiveDate desc)
@@ -57,9 +57,9 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
                 select * from Balance
                 join Asset on Asset.Id = Balance.AssetId
                 left join ExchangeRate on ExchangeRate.Id = Balance.ExchangeRateId
-                where Balance.EffectiveDate = @latestDate and Balance.UserOpenId = @userOpenId";
+                where Balance.EffectiveDate = @latestDate and Balance.UserOpenId = @userId";
 
-            object queryParams = new { userOpenId };
+            object queryParams = new { userId };
 
             IEnumerable<Balance> result = includeRelated
                 ? await GetAllWithRelatedEntities(queryText, queryParams)
@@ -68,11 +68,11 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<Balance> GetByIdAsync(Guid userOpenId, Guid id)
+        public async Task<Balance> GetByIdAsync(Guid userId, Guid id)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalance.sql");
 
-            object queryParameters = new { userOpenId, id };
+            object queryParameters = new { userId, id };
 
             IEnumerable<Balance> resultItems;
 
@@ -91,46 +91,46 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return resultItems.FirstOrDefault();
         }
 
-        public async Task<Balance> CreateAsync(Guid userOpenId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "InsertBalance.sql");
 
-            object queryParameters = new { userOpenId, assetId, effectiveDate, value, exchangeRateId };
+            object queryParameters = new { userId, assetId, effectiveDate, value, exchangeRateId };
 
             Balance result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<Balance> UpdateAsync(Guid userOpenId, Guid id, Guid assetId, decimal value)
+        public async Task<Balance> UpdateAsync(Guid userId, Guid id, Guid assetId, decimal value)
         {
             string queryText = @"
                 update Balance
                 set [Value] = @value, [AssetId] = @assetId
-                where Id = @id and UserOpenId = @userOpenId
+                where Id = @id and UserOpenId = @userId
 
                 select * from Balance
                 where Id = @id";
 
-            object queryParameters = new { userOpenId, id, assetId, value };
+            object queryParameters = new { userId, id, assetId, value };
 
             return await base.UpdateEntity(queryText, queryParameters);
         }
 
-        public async Task<bool> RemoveAsync(Guid userOpenId, Guid id)
+        public async Task<bool> RemoveAsync(Guid userId, Guid id)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "DeleteBalance.sql");
-            object queryParams = new { userOpenId, id };
+            object queryParams = new { userId, id };
 
             await base.DeleteEntity(queryText, queryParams);
 
             return true;
         }
 
-        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userOpenId)
+        public async Task<IEnumerable<DateTime>> GetOrderedEffectiveDatesAsync(Guid userId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetBalancesEffectiveDates.sql");
-            object queryParams = new { userOpenId };
+            object queryParams = new { userId };
 
             IEnumerable<DateTime> result;
 
@@ -142,13 +142,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userOpenId, DateTime effectiveDate)
+        public async Task<bool> ExistsEffectiveDateBalancesAsync(Guid userId, DateTime effectiveDate)
         {
             string queryText = @"
-                IF EXISTS (SELECT TOP 1 1 FROM [dbo].[Balance] WHERE [UserOpenId] = @userOpenId AND [EffectiveDate] = @effectiveDate)
+                IF EXISTS (SELECT TOP 1 1 FROM [dbo].[Balance] WHERE [UserOpenId] = @userId AND [EffectiveDate] = @effectiveDate)
                 SELECT 1 ELSE SELECT 0";
 
-            object queryParams = new { userOpenId, effectiveDate };
+            object queryParams = new { userId, effectiveDate };
             bool result = await base.Exists(queryText, queryParams);
 
             return result;
@@ -173,13 +173,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<bool> ExistsAssetBalanceAsync(Guid userOpenId, Guid assetId)
+        public async Task<bool> ExistsAssetBalanceAsync(Guid userId, Guid assetId)
         {
             string queryText = @"
-                if exists (select top 1 1 from Balance where UserOpenId = @userOpenId and AssetId = @assetId)
+                if exists (select top 1 1 from Balance where UserOpenId = @userId and AssetId = @assetId)
                 select 1 else select 0";
 
-            object queryParams = new { userOpenId, assetId };
+            object queryParams = new { userId, assetId };
 
             bool result = await base.Exists(queryText, queryParams);
 

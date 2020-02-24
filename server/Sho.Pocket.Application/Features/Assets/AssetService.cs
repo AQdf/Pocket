@@ -27,17 +27,17 @@ namespace Sho.Pocket.Application.Assets
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<AssetViewModel>> GetAssetsAsync(Guid userOpenId, bool includeInactive)
+        public async Task<List<AssetViewModel>> GetAssetsAsync(Guid userId, bool includeInactive)
         {
-            IEnumerable<Asset> assets = await _assetRepository.GetByUserIdAsync(userOpenId, includeInactive);
+            IEnumerable<Asset> assets = await _assetRepository.GetByUserIdAsync(userId, includeInactive);
             List<AssetViewModel> result = assets.Select(a => new AssetViewModel(a)).ToList();
 
             return result;
         }
 
-        public async Task<AssetViewModel> GetAssetAsync(Guid userOpenId, Guid id)
+        public async Task<AssetViewModel> GetAssetAsync(Guid userId, Guid id)
         {
-            Asset asset = await _assetRepository.GetByIdAsync(userOpenId, id);
+            Asset asset = await _assetRepository.GetByIdAsync(userId, id);
 
             if (asset == null)
             {
@@ -49,32 +49,32 @@ namespace Sho.Pocket.Application.Assets
             return result;
         }
 
-        public async Task<AssetViewModel> AddAssetAsync(Guid userOpenId, AssetCreateModel createModel)
+        public async Task<AssetViewModel> AddAssetAsync(Guid userId, AssetCreateModel createModel)
         {
-            Asset asset = await _assetRepository.CreateAsync(userOpenId, createModel.Name, createModel.Currency, createModel.IsActive);
+            Asset asset = await _assetRepository.CreateAsync(userId, createModel.Name, createModel.Currency, createModel.IsActive);
             await _unitOfWork.SaveChangesAsync(); 
             AssetViewModel result = new AssetViewModel(asset);
 
             return result;
         }
 
-        public async Task<AssetViewModel> UpdateAsync(Guid userOpenId, Guid id, AssetUpdateModel model)
+        public async Task<AssetViewModel> UpdateAsync(Guid userId, Guid id, AssetUpdateModel model)
         {
-            Asset asset = await _assetRepository.GetByIdAsync(userOpenId, id);
+            Asset asset = await _assetRepository.GetByIdAsync(userId, id);
 
             if (asset == null)
             {
                 throw new Exception($"Asset {id} not found!");
             }
 
-            bool balanceExists = await _balanceRepository.ExistsAssetBalanceAsync(userOpenId, id);
+            bool balanceExists = await _balanceRepository.ExistsAssetBalanceAsync(userId, id);
 
             if (balanceExists && asset.Currency != model.Currency)
             {
                 throw new Exception($"Can't update currency of the Asset {id} if Asset's Balance exists!");
             }
 
-            Asset result = await _assetRepository.UpdateAsync(userOpenId, id, model.Name, model.Currency, model.IsActive);
+            Asset result = await _assetRepository.UpdateAsync(userId, id, model.Name, model.Currency, model.IsActive);
             await _unitOfWork.SaveChangesAsync();
 
             AssetViewModel viewModel = new AssetViewModel(result);
@@ -82,14 +82,14 @@ namespace Sho.Pocket.Application.Assets
             return viewModel;
         }
 
-        public async Task<bool> DeleteAsync(Guid userOpenId, Guid id)
+        public async Task<bool> DeleteAsync(Guid userId, Guid id)
         {
             bool isSuccess = false;
-            bool exists = await _balanceRepository.ExistsAssetBalanceAsync(userOpenId, id);
+            bool exists = await _balanceRepository.ExistsAssetBalanceAsync(userId, id);
 
             if (!exists)
             {
-                await _assetRepository.RemoveAsync(userOpenId, id);
+                await _assetRepository.RemoveAsync(userId, id);
                 await _unitOfWork.SaveChangesAsync();
 
                 isSuccess = true;

@@ -7,22 +7,22 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalanceService
     {
-        Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userOpenId);
+        Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userId);
 
-        Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userOpenId, DateTime effectiveDate);
+        Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userId, DateTime effectiveDate);
 
-        Task<BalanceViewModel> GetUserBalanceAsync(Guid userOpenId, Guid id);
+        Task<BalanceViewModel> GetUserBalanceAsync(Guid userId, Guid id);
 
-        Task<BalanceViewModel> AddBalanceAsync(Guid userOpenId, BalanceCreateModel createModel);
+        Task<BalanceViewModel> AddBalanceAsync(Guid userId, BalanceCreateModel createModel);
 
-        Task<List<BalanceViewModel>> AddEffectiveBalancesTemplate(Guid userOpenId);
+        Task<List<BalanceViewModel>> AddEffectiveBalancesTemplate(Guid userId);
 
-        Task<BalanceViewModel> UpdateBalanceAsync(Guid userOpenId, Guid id, BalanceUpdateModel updateModel);
+        Task<BalanceViewModel> UpdateBalanceAsync(Guid userId, Guid id, BalanceUpdateModel updateModel);
 
-        Task<bool> DeleteBalanceAsync(Guid userOpenId, Guid Id);
+        Task<bool> DeleteBalanceAsync(Guid userId, Guid Id);
 
-        Task<List<DateTime>> GetEffectiveDatesAsync(Guid userOpenId);
+        Task<List<DateTime>> GetEffectiveDatesAsync(Guid userId);
 
-        Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userOpenId, Guid id);
+        Task<BalanceViewModel> SyncBankAccountBalanceAsync(Guid userId, Guid id);
     }
 }

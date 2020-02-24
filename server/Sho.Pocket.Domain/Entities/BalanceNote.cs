@@ -8,12 +8,12 @@ namespace Sho.Pocket.Domain.Entities
         {
         }
 
-        public BalanceNote(Guid id, DateTime effectiveDate, string content, Guid userOpenId)
+        public BalanceNote(Guid id, DateTime effectiveDate, string content, Guid userId)
         {
             Id = id;
             EffectiveDate = effectiveDate;
             Content = content;
-            UserOpenId = userOpenId;
+            UserOpenId = userId;
         }
 
         public Guid Id { get; set; }

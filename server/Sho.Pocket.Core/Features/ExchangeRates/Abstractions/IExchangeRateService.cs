@@ -9,10 +9,10 @@ namespace Sho.Pocket.Application.ExchangeRates.Abstractions
     {
         Task<List<ExchangeRateModel>> GetExchangeRatesAsync(DateTime effectiveDate);
 
-        Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userOpenId, DateTime effectiveDate);
+        Task<List<ExchangeRateModel>> AddDefaultExchangeRates(Guid userId, DateTime effectiveDate);
 
         Task UpdateExchangeRateAsync(ExchangeRateModel model);
 
-        Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userOpenId, string providerName);
+        Task<IReadOnlyCollection<ExchangeRateProviderModel>> FetchProviderExchangeRateAsync(Guid userId, string providerName);
     }
 }

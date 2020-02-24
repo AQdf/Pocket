@@ -21,29 +21,29 @@ namespace Sho.Pocket.Application.UserCurrencies
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<UserCurrencyModel>> GetUserCurrenciesAsync(Guid userOpenId)
+        public async Task<List<UserCurrencyModel>> GetUserCurrenciesAsync(Guid userId)
         {
-            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userOpenId);
+            IEnumerable<UserCurrency> userCurrencies = await _userCurrencyRepository.GetByUserIdAsync(userId);
             List<UserCurrencyModel> result = userCurrencies?.Select(uc => new UserCurrencyModel(uc.Currency, uc.IsPrimary)).ToList();
 
             return result;
         }
 
-        public async Task<UserCurrencyModel> GetUserCurrencyAsync(Guid userOpenId, string currency)
+        public async Task<UserCurrencyModel> GetUserCurrencyAsync(Guid userId, string currency)
         {
-            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userOpenId, currency);
+            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userId, currency);
             UserCurrencyModel result = new UserCurrencyModel(userCurrency.Currency, userCurrency.IsPrimary);
 
             return result;
         }
 
-        public async Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userOpenId, string currency, bool isPrimary)
+        public async Task<UserCurrencyModel> AddUserCurrencyAsync(Guid userId, string currency, bool isPrimary)
         {
-            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userOpenId, currency);
+            UserCurrency userCurrency = await _userCurrencyRepository.GetCurrencyAsync(userId, currency);
 
             if (userCurrency == null)
             {
-                userCurrency = await _userCurrencyRepository.CreateAsync(userOpenId, currency, isPrimary);
+                userCurrency = await _userCurrencyRepository.CreateAsync(userId, currency, isPrimary);
                 await _unitOfWork.SaveChangesAsync();
             }
 
@@ -52,24 +52,24 @@ namespace Sho.Pocket.Application.UserCurrencies
             return result;
         }
 
-        public async Task<bool> DeleteUserCurrencyAsync(Guid userOpenId, string currency)
+        public async Task<bool> DeleteUserCurrencyAsync(Guid userId, string currency)
         {
-            bool isPrimaryCurrency = await _userCurrencyRepository.CheckIsPrimaryAsync(userOpenId, currency);
+            bool isPrimaryCurrency = await _userCurrencyRepository.CheckIsPrimaryAsync(userId, currency);
 
             if (isPrimaryCurrency)
             {
                 throw new Exception($"You cannot delete primary currency {currency}");
             }
 
-            bool result = await _userCurrencyRepository.DeleteAsync(userOpenId, currency);
+            bool result = await _userCurrencyRepository.DeleteAsync(userId, currency);
             await _unitOfWork.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<UserCurrencyModel> SetUserPrimaryCurrencyAsync(Guid userOpenId, string currency)
+        public async Task<UserCurrencyModel> SetUserPrimaryCurrencyAsync(Guid userId, string currency)
         {
-            UserCurrency userCurrency = await _userCurrencyRepository.SetPrimaryAsync(userOpenId, currency);
+            UserCurrency userCurrency = await _userCurrencyRepository.SetPrimaryAsync(userId, currency);
             await _unitOfWork.SaveChangesAsync();
 
             UserCurrencyModel result = new UserCurrencyModel(userCurrency.Currency, userCurrency.IsPrimary);
