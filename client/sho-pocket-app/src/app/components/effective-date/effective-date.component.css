@@ -1,23 +1,19 @@
 #date {
   display: flex;
   flex-direction: column;
-  width: 310px;
-  height: 200px;
   background-color: #f7f7f7;
-  padding: 1em;
-  border: 1px solid #dadada;
-  border-radius: 3px;
+  margin-right: 0.5em;
 }
 
-#clear-btn {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+.highlight {
+  border-color: #117a8b;
+  box-shadow: 0 0 0 0.2rem rgba(58,176,195,.5);
 }
 
 button.focus, button:focus {
   box-shadow: none;
   color: #fff;
-  background-color: #138496;
+  background-color: #117a8b;
 }
 
 #result {
@@ -34,18 +30,32 @@ button.focus, button:focus {
   flex-direction: row;
   flex-wrap: wrap;
   overflow-x: auto;
+  position: absolute;
+  padding: 0.5em;
+  color: #fff;
+  background-color: #138496;
+  border: 1px solid #138496;
+  border-radius: 3px;
+  width: 325px;
+  max-height: 200px;
+  transform: translate3d(5px, 45px, 0px);
+  top: 0px;
+  left: 0px;
+  z-index: 1001;
 }
 
 .date-part .item {
-  margin-top: 1em;
+  color: #fff;
+  border-color: #fff;
+  margin-top: 0.5em;
   margin-bottom: 0.5em;
   margin-right: 0.5em;
 }
 
-.highlight {
+button.focus, button:focus {
+  box-shadow: none;
   color: #fff;
-  border-color: #117a8b;
-  box-shadow: 0 0 0 0.2rem rgba(58,176,195,.5);
+  background-color: #117a8b;
 }
 
 .date-part::-webkit-scrollbar {
@@ -59,4 +69,26 @@ button.focus, button:focus {
 .date-part::-webkit-scrollbar-thumb {
   background-color: #5bc0de;
   outline: 1px solid #5bc0de;
+}
+
+#today-btn {
+  min-width: 60px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+#year-btn {
+  min-width: 60px;
+}
+
+#month-btn {
+  min-width: 120px;
+}
+
+#day-btn {
+  min-width: 60px;
+}
+
+.date-part-required {
+  box-shadow: 0 0 0 0.1rem #ee7076;
 }

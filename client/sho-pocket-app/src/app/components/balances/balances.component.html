@@ -7,39 +7,36 @@
     </div>
 
     <div class="mb-3">
-      <app-effective-date></app-effective-date>
       <button type="button" class="control btn btn-info" (click)="addBalances()">
         Add balances
       </button>
+      <div class="controls-group btn-group" role="group">
+        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Export/Import
+        </button>
+        <div class="dropdown-menu" aria-labelledby="exportImportGroup">
+          <button type="button" class="dropdown-item" (click)="exportToCsv()">Export CSV</button>
+          <button type="button" class="dropdown-item" (click)="exportToJson()">Export JSON</button>
+          <div class="upload-btn-wrapper">
+            <label>
+              <span class=" dropdown-item">Import JSON</span>
+              <input type="file" class="custom-file-input" #file placeholder="Import JSON"
+                (change)="importJson(file.files)">
+            </label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="bg-light border rounded" [hidden]="!selectedEffectiveDate">
       <div class="controls">
-        <select class="control rounded" placeholder="Date" required [(ngModel)]="selectedEffectiveDate"
+        <app-effective-date (effectiveDateEvent)="this.onDateChange($event)"></app-effective-date>
+        <!-- <select class="control rounded" placeholder="Date" required [(ngModel)]="selectedEffectiveDate"
           (change)="this.onDateChange($event.target.value)">
           <option *ngFor="let effectiveDate of effectiveDatesList" value={{effectiveDate}}>
             {{effectiveDate | date:'mediumDate'}}
           </option>
-        </select>
-
-        <div class="controls-group btn-group" role="group">
-          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            Export/Import
-          </button>
-          <div class="dropdown-menu" aria-labelledby="exportImportGroup">
-            <button type="button" class="dropdown-item" (click)="exportToCsv()">Export CSV</button>
-            <button type="button" class="dropdown-item" (click)="exportToJson()">Export JSON</button>
-            <div class="upload-btn-wrapper">
-              <label>
-                <span class=" dropdown-item">Import JSON</span>
-                <input type="file" class="custom-file-input" #file placeholder="Import JSON"
-                  (change)="importJson(file.files)">
-              </label>
-            </div>
-          </div>
-        </div>
-
+        </select> -->
       </div>
     </div>
 

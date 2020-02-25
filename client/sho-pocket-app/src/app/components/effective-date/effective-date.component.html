@@ -1,26 +1,47 @@
 <div id="date">
-  <div id="result" class="input-group input-group-sm">
-    <input type="text" class="form-control" [ngClass]="{'highlight': !selectedYear}" placeholder="Year" value="{{selectedYear}}" disabled>
-    <input type="text" class="form-control" [ngClass]="{'highlight': selectedYear && !selectedMonth}" placeholder="Month" value="{{monthNames[selectedMonth]}}" disabled>
-    <input type="text" class="form-control" [ngClass]="{'highlight': selectedYear && selectedMonth && !selectedDay}" placeholder="Day" value="{{selectedDay}}" disabled>
-    <button id="clear-btn" class="btn btn-info btn-sm" (click)="clear()">Clear</button>
-  </div>
+  <div id="result" class="input-group input-group">
 
-  <div class="date-part" [hidden]="selectedYear || !(years && years.length > 0)">
-    <div *ngFor="let year of years">
-      <button class="btn btn-outline-info btn-sm item" (click)="selectYear(year)">{{year}}</button>
-    </div>
-  </div>
+    <button id="year-btn" class="form-control date-part-header"
+        (click)="onYearClick()" 
+        [disabled]="!(years && years.length > 0)">
+      {{selectedYear || "Year"}}
+    </button>
 
-  <div class="date-part" [hidden]="!selectedYear || selectedMonth || !(months && months.length > 0)">
-    <div *ngFor="let month of months">
-      <button class="btn btn-outline-info btn-sm item" (click)="selectMonth(month)">{{monthNames[month]}}</button>
-    </div>
-  </div>
+    <button id="month-btn" class="form-control date-part-header"
+        (click)="onMonthClick()" 
+        [ngClass]="{'date-part-required': selectedYear && selectedMonth === null }" 
+        [disabled]="!selectedYear">
+      {{monthNames[selectedMonth] || "Month"}}
+    </button>
 
-  <div class="date-part" [hidden]="!selectedYear || !selectedMonth || !(days && days.length > 0)">
-    <div *ngFor="let day of days">
-      <button class="btn btn-outline-info btn-sm item" (click)="selectDay(day)">{{day}}</button>
+    <button id="day-btn" class="form-control date-part-header"
+        (click)="onDayClick()" 
+        [ngClass]="{'date-part-required': selectedYear && selectedMonth !== null && !selectedDay }"
+        [disabled]="!selectedYear || selectedMonth === null">
+      {{selectedDay || "Day"}}
+    </button>
+
+    <button id="today-btn" class="btn btn-info" (click)="setToday()">
+      Today
+    </button>
+
+    <div class="date-part" [hidden]="!selectingYear || !(years && years.length > 0)">
+      <div *ngFor="let year of years">
+        <button class="btn btn-sm btn-outline-info item" (click)="selectYear(year)">{{year}}</button>
+      </div>
     </div>
+  
+    <div class="date-part" [hidden]="!selectedYear || !selectingMonth || selectingDay">
+      <div *ngFor="let month of months">
+        <button class="btn  btn-sm btn-outline-info item" (click)="selectMonth(month)">{{monthNames[month]}}</button>
+      </div>
+    </div>
+  
+    <div class="date-part" [hidden]="!selectedYear || selectedMonth === null || !selectingDay">
+      <div *ngFor="let day of days">
+        <button class="btn btn-sm btn-outline-info item" (click)="selectDay(day)">{{day}}</button>
+      </div>
+    </div>
+
   </div>
 </div>

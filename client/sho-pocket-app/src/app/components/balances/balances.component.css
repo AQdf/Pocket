@@ -43,16 +43,6 @@
 }
 
 @media (max-width: 615px) { 
-  .controls {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .control {
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-
   .rates-wrapper {
     margin-left: 0;
   }
