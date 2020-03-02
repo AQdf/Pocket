@@ -1,4 +1,4 @@
-<div id="date">
+<div id="date" *ngIf="(effectiveDates && effectiveDates.length > 0)">
   <div id="result" class="input-group input-group">
 
     <button id="year-btn" class="form-control date-part-header"
@@ -44,4 +44,8 @@
     </div>
 
   </div>
+</div>
+
+<div *ngIf="!(effectiveDates && effectiveDates.length > 0)">
+  <span>No data to display. Please add your balances using 'Add balances' button.</span>
 </div>

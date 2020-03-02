@@ -17,7 +17,7 @@
           <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="asset.id">
 
           <div class="form-row align-items-center pb-3">
-            <div class="col-md-5">
+            <div class="col-md-4">
               <input name="name" class="form-control" placeholder="Name" required
                 [disabled]="!(selectedAsset && selectedAsset.id === asset.id)" #name="ngModel" [(ngModel)]="asset.name"
                 [ngClass]="{'input-invalid': name.invalid && name.touched }">
@@ -53,7 +53,7 @@
                 </option>
               </select>
             </div>
-            <div class="col-md-2 controls">
+            <div class="col-md-3 controls">
               <div class="input-group">
                 <button type="button" class="btn btn-outline-info ml-1" (click)="showForEdit(asset)"
                   [hidden]="isAddMode || (selectedAsset && selectedAsset.id === asset.id)">

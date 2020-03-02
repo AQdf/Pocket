@@ -4,9 +4,11 @@ import { ToastrService } from 'ngx-toastr';
 
 import { AssetService } from '../../../services/asset.service';
 import { BalanceService } from '../../../services/balance.service';
+import { BalancesTotalService } from '../../../services/balances-total.service';
+import { EffectiveDateService } from '../../../services/effective-date.service';
+
 import { Balance } from '../../../models/balance.model'
 import { Asset } from '../../../models/asset.model';
-import { BalancesTotalService } from '../../../services/balances-total.service';
 import { BalanceTotal } from '../../../models/balance-total.model';
 import { Balances } from '../../../models/balances.model';
 
@@ -17,16 +19,6 @@ import { Balances } from '../../../models/balances.model';
 })
 export class BalanceListComponent implements OnInit, OnChanges {
 
-  constructor(
-    private balanceService : BalanceService,
-    private assetService : AssetService,
-    private balanceTotalService : BalancesTotalService,
-    private toastr : ToastrService) { }
-
-  ngOnInit() {
-    this.initAssets();
-  }
-
   @Input() effectiveDate: string;
   @Output() shouldReload = new EventEmitter<boolean>();
 
@@ -36,14 +28,26 @@ export class BalanceListComponent implements OnInit, OnChanges {
   assetList: Asset[];
   isAddMode: boolean;
 
-  reloadEffectiveDates(shouldReload: boolean) {
-    this.shouldReload.emit(shouldReload);
+  constructor(
+    private balanceService: BalanceService,
+    private assetService: AssetService,
+    private balanceTotalService: BalancesTotalService,
+    private effectiveDateService: EffectiveDateService,
+    private toastr: ToastrService) { }
+
+  ngOnInit() {
+    this.initAssets();
   }
 
-  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+  reloadEffectiveDates() {
+    this.effectiveDateService.notifyReload();
+  }
+
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     this.effectiveDate = changes.effectiveDate.currentValue;
     if (this.effectiveDate) {
       this.reloadBalances();
+      this.balanceTotalService.loadCurrentTotalBalance();
     }
   }
 
@@ -52,7 +56,7 @@ export class BalanceListComponent implements OnInit, OnChanges {
       this.balances = balances.items;
       this.totalBalance = balances.totalBalance;
       if (this.balances.length === 0) {
-        this.reloadEffectiveDates(true);
+        this.reloadEffectiveDates();
       }
     });
   }
@@ -80,8 +84,7 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
     if (confirm('Are you sure to delete this record ?') == true) {
       this.balanceService.deleteBalance(id).subscribe(x => {
-        this.reloadBalances();
-        this.balanceTotalService.loadCurrentTotalBalance();
+        this.afterSubmit();
         this.toastr.success("Record Deleted.", "Balance");
       })
     }
@@ -96,13 +99,13 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
   onSubmit(form: NgForm) {
     if (form.value.id === null) {
-      this.balanceService.postBalance(this.selectedBalance).subscribe(() => {
-          this.afterSubmit();
-          this.toastr.success('New Record Added.', 'Balance');
-        });
+      this.balanceService.postBalance(form.value).subscribe(() => {
+        this.afterSubmit();
+        this.toastr.success('New Record Added.', 'Balance');
+      });
     }
     else {
-      this.balanceService.putBalance(form.value.id, this.selectedBalance).subscribe(() => {
+      this.balanceService.putBalance(form.value.id, form.value).subscribe(() => {
         this.afterSubmit();
         this.toastr.info('Record Updated.', 'Balance');
       });
@@ -111,7 +114,6 @@ export class BalanceListComponent implements OnInit, OnChanges {
 
   afterSubmit() {
     this.reloadBalances();
-    this.balanceTotalService.loadCurrentTotalBalance();
     this.selectedBalance = null;
     this.isAddMode = false;
   }
@@ -120,12 +122,11 @@ export class BalanceListComponent implements OnInit, OnChanges {
     var balanceDate = this.effectiveDate;
     var formattedDate = balanceDate.substring(0, balanceDate.indexOf('T'));
 
-    let newBalance: Balance =  {
+    let newBalance: Balance = {
       id: null,
       effectiveDate: formattedDate,
       value: 0.0,
       assetId: '',
-      exchangeRateId: '',
       asset: null,
       isBankAccount: false
     }

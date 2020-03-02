@@ -17,15 +17,14 @@
     <div *ngFor="let balance of balances">
       <form #balanceForm="ngForm" (ngSubmit)="onSubmit(balanceForm)">
 
-        <input type="hidden" name="id" #Id="ngModel" [(ngModel)]="balance.id">
-        <input type="hidden" name="exchangeRateId" #ExchangeRateId="ngModel" [(ngModel)]="balance.exchangeRateId">
-        <input type="hidden" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
+        <input type="hidden" name="id" #id="ngModel" [(ngModel)]="balance.id">
+        <input type="hidden" name="effectiveDate" #effectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
 
         <div class="form-row align-items-center pb-3">
           <div class="col-md-5">
-            <select name="AssetId" class="form-control" placeholder="Asset" required
-              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel"
-              [(ngModel)]="balance.assetId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched}"
+            <select name="assetId" class="form-control" placeholder="Asset" required
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #assetId="ngModel"
+              [(ngModel)]="balance.assetId" [ngClass]="{'input-invalid': assetId.invalid && assetId.touched}"
               (change)="this.onAssetChanged($event.target.value)">
               <option value="" disabled selected>
                 Select asset
@@ -37,9 +36,9 @@
           </div>
           <div class="col-md-4">
             <div class="input-group">
-              <input name="Value" class="form-control" placeholder="Balance" required
-              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #Value="ngModel"
-              [ngModel]="balance.value | currency:'':''" [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
+              <input name="value" class="form-control" placeholder="Balance" required
+              [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #value="ngModel"
+              [ngModel]="balance.value | currency:'':''" [ngClass]="{'input-invalid': value.invalid && value.touched }">
               <div class="input-group-append">
                 <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
               </div>
