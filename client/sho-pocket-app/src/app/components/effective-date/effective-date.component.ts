@@ -1,8 +1,8 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { from } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { distinct, map, toArray, filter } from 'rxjs/operators';
 
-import { BalanceService } from '../../services/balance.service'
+import { EffectiveDateService } from '../../services/effective-date.service'
 
 @Component({
   selector: 'app-effective-date',
@@ -12,7 +12,8 @@ import { BalanceService } from '../../services/balance.service'
 export class EffectiveDateComponent implements OnInit {
 
   @Output() effectiveDateEvent = new EventEmitter<string>();
-
+  subscription: Subscription;
+  
   selectedEffectiveDate: string;
   effectiveDates: Date[];
   years: number[];
@@ -28,14 +29,16 @@ export class EffectiveDateComponent implements OnInit {
   selectedDay: number;
   monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  constructor(private balanceService: BalanceService) { }
-
-  ngOnInit() {
-    this.getEffectiveDates();
+  constructor(private effectiveDateService: EffectiveDateService) {
+    this.subscription = effectiveDateService.effectiveDatesReload$.subscribe(() => this.reload());
   }
 
-  getEffectiveDates() {
-    this.balanceService.getEffectiveDates().subscribe((effectiveDates: Date[]) => {
+  ngOnInit() {
+    this.reload();
+  }
+
+  reload() {
+    this.effectiveDateService.getEffectiveDates().subscribe((effectiveDates: Date[]) => {
       this.effectiveDates = effectiveDates;
       this.setToday();
     });
@@ -44,12 +47,21 @@ export class EffectiveDateComponent implements OnInit {
   setToday() {
     if (this.effectiveDates.length > 0) {
       let latestDate = new Date(this.effectiveDates[0]);
-      this.selectedEffectiveDate =  new Date(this.effectiveDates[0]).toISOString();
+      this.selectedEffectiveDate = latestDate.toISOString()
 
       this.setYears();
       this.selectYear(latestDate.getFullYear());
       this.selectMonth(latestDate.getMonth());
       this.selectDay(latestDate.getDate());
+    } else {
+      this.years = null;
+      this.months = null;
+      this.days = null;
+      this.selectedYear = null;
+      this.selectedMonth = null;
+      this.selectedDay = null;
+      this.selectedEffectiveDate = null;
+      this.effectiveDateEvent.emit(this.selectedEffectiveDate);
     }
   }
 
@@ -102,7 +114,8 @@ export class EffectiveDateComponent implements OnInit {
     this.selectingYear = false;
     this.selectingMonth = false;
     this.selectingDay = false;
-    let date = new Date(this.selectedYear, this.selectedMonth, this.selectedDay);
+    let date = new Date(Date.UTC(this.selectedYear, this.selectedMonth, this.selectedDay));
+
     this.selectedEffectiveDate = date.toISOString();
     this.effectiveDateEvent.emit(this.selectedEffectiveDate);
   }

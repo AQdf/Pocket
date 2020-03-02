@@ -112,8 +112,8 @@ namespace Sho.Pocket.Application.Balances
             foreach (Balance balance in balances)
             {
                 ExchangeRate rate = exchangeRates.First(r => 
-                    r.BaseCurrency == userCurrency.Currency
-                    && r.CounterCurrency == balance.Asset.Currency);
+                    r.BaseCurrency == balance.Asset.Currency
+                    && r.CounterCurrency == userCurrency.Currency);
 
                 result.Add(new BalancePrimaryCurrencyModel(userCurrency.Currency, balance, rate));
             }

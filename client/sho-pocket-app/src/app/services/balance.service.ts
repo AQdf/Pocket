@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 
 import { environment } from '../../environments/environment';
@@ -32,7 +32,6 @@ export class BalanceService extends BaseService {
     var body = JSON.stringify({
       assetId: balance.assetId,
       effectiveDate: balance.effectiveDate,
-      currency: balance.asset.currency,
       value: balance.value
     });
     
@@ -55,10 +54,6 @@ export class BalanceService extends BaseService {
 
   deleteBalance(id: string) {
     return this.http.delete(balancesApiUrl + id, this.getDefaultOptions());
-  }
-
-  getEffectiveDates() {
-    return this.http.get(balancesApiUrl + 'effective-dates', this.getDefaultOptions());
   }
 
   addBalancesByTemplate() {
@@ -112,9 +107,5 @@ export class BalanceService extends BaseService {
     formData.append('file', fileToUpload, fileToUpload.name);
  
     return this.http.post(balancesApiUrl + 'import/json', formData, {reportProgress: true, observe: 'events'});
-  }
-
-  reload() {
-    this.getEffectiveDates();
   }
 }
