@@ -22,7 +22,7 @@
         <input type="hidden" name="EffectiveDate" #EffectiveDate="ngModel" [(ngModel)]="balance.effectiveDate">
 
         <div class="form-row align-items-center pb-3">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <select name="AssetId" class="form-control" placeholder="Asset" required
               [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #AssetId="ngModel"
               [(ngModel)]="balance.assetId" [ngClass]="{'input-invalid': AssetId.invalid && AssetId.touched}"
@@ -35,15 +35,17 @@
               </option>
             </select>
           </div>
-          <div class="col-md-2">
-            <input name="Value" class="form-control" placeholder="Balance" required
+          <div class="col-md-4">
+            <div class="input-group">
+              <input name="Value" class="form-control" placeholder="Balance" required
               [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #Value="ngModel"
-              [(ngModel)]="balance.value" [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
+              [ngModel]="balance.value | currency:'':''" [ngClass]="{'input-invalid': Value.invalid && Value.touched }">
+              <div class="input-group-append">
+                <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
+              </div>
+            </div>
           </div>
-          <div class="col-md-2">
-            <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
-          </div>
-          <div class="col-md-4 controls">
+          <div class="col-md-3 controls">
             <button type="button" class="btn btn-outline-info ml-1"
               [disabled]="isAddMode && (selectedBalance && selectedBalance.id) !== balance.id"
               (click)="showForEdit(balance)">

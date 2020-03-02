@@ -13,9 +13,9 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<Asset> GetByNameAsync(Guid userId, string name);
 
-        Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive);
+        Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive, decimal value, DateTime updatedOn);
 
-        Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive);
+        Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive, decimal value, DateTime updatedOn);
 
         Task RemoveAsync(Guid userId, Guid assetId);
     }

@@ -40,34 +40,36 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive)
+        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
         {
             string queryText = @"
                 DECLARE @id UNIQUEIDENTIFIER = NEWID()
-                INSERT INTO [Asset] ([Id], [Name], [Currency], [IsActive], [UserId]) values
-                    (@id, @name, @currency, @isActive, @userId)
+                INSERT INTO [Asset] ([Id], [Name], [Currency], [IsActive], [UserId], [Value], [UpdatedOn]) values
+                    (@id, @name, @currency, @isActive, @userId, @value, @updatedOn)
 
                 SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
-            object queryParameters = new { userId, name, currency, isActive, };
+            object queryParameters = new { userId, name, currency, isActive, value, updatedOn};
 
             Asset result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive)
+        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
         {
             string queryText = @"
                 UPDATE [Asset]
                 SET [Name] = @name,
 	                [Currency] = @currency,
-	                [IsActive] = @isActive
+	                [IsActive] = @isActive,
+                    [Value] = @value,
+                    [UpdatedOn] = @updatedOn
                 WHERE [Id] = @id AND [UserId] = @userId
 
                 SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
-            object queryParameters = new { userId, id, name, currency, isActive, };
+            object queryParameters = new { userId, id, name, currency, isActive, value, updatedOn };
 
             Asset result = await base.UpdateEntity(queryText, queryParameters);
 
@@ -86,8 +88,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         public async Task<Asset> GetByNameAsync(Guid userId, string name)
         {
             string query = @"
-                SELECT [Id], [Name], [IsActive], [Currency]
-                FROM [Asset]
+                SELECT * FROM [Asset]
                 WHERE [UserId] = @userId AND [Name] = @name";
 
             object queryParams = new { userId, name };

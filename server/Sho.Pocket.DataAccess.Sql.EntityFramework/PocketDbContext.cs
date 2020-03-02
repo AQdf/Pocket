@@ -43,6 +43,8 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
                 eb.Property(a => a.Currency).HasColumnType("char(3)").IsRequired();
                 eb.Property(a => a.IsActive).HasColumnType("bit").IsRequired();
                 eb.Property(a => a.UserId).HasColumnType("uniqueidentifier").IsRequired();
+                eb.Property(a => a.Value).HasColumnType("money").IsRequired().HasDefaultValue(0);
+                eb.Property(a => a.UpdatedOn).HasColumnType("datetime2(7)").IsRequired().HasDefaultValueSql("GETUTCDATE()");
             });
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);

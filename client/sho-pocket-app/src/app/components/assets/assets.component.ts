@@ -15,7 +15,6 @@ export class AssetsComponent implements OnInit {
 
   assetList: Asset[];
   selectedAsset: Asset;
-  currentEditRecordId: string;
   currenciesList: string[];
   isAddMode: boolean;
 
@@ -36,26 +35,21 @@ export class AssetsComponent implements OnInit {
   }
 
   showForEdit(asset: Asset) {
-    if (this.currentEditRecordId === asset.id) {
-      this.currentEditRecordId = null;
-    } else {
-      this.currentEditRecordId = asset.id;
-    }
+    this.selectedAsset = asset;
   }
 
   onDelete(id: string) {
-    if (id === null)
-    {
+    if (id === null) {
       this.assetList.shift();
       this.isAddMode = false;
       return;
     }
 
     if (confirm('Are you sure to delete this record?') == true) {
-      this.assetService.deleteAsset(id)
-      .subscribe(result => {
+      this.assetService.deleteAsset(id).subscribe(result => {
         if (result) {
-          this.loadAssetList();
+          var listIndex = this.assetList.findIndex(a => a.id === id);
+          this.assetList.splice(listIndex, 1);
           this.toastr.success("Deleted Successfully","Asset");
         } else {
           this.toastr.error("Delete failed! Possibly, cannot delete asset because balance for asset exists","Asset");
@@ -66,28 +60,43 @@ export class AssetsComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     if (form.value.id == null) {
-      this.assetService.postAsset(this.selectedAsset)
-        .subscribe(asset => {
-          this.toastr.success('New Record Added Succcessfully', 'Asset');
-          this.loadAssetList();
-          this.currentEditRecordId = null;
+      this.assetService.postAsset(form.value).subscribe((result: Asset) => {
+        if (result) {
+          var listIndex = this.assetList.findIndex(a => a.id === null);
+          this.assetList[listIndex] = result;
+          this.selectedAsset = null;
           this.isAddMode = false;
-        });
-    }
-    else {
-      this.assetService.putAsset(form.value.id, form.value)
-      .subscribe((asset: Asset) => {
-        if(asset) {
-          var listIndex = this.assetList.findIndex(a => a.id === asset.id);
-          this.assetList[listIndex] = asset;
-          this.toastr.success('Updated Successfully!', 'Asset');
-          this.currentEditRecordId = null;
-          this.isAddMode = false;
+          this.toastr.success('Added Succcessfully!', 'Asset');
         } else {
-          this.toastr.error('Update failed! Possibly, cannot update asset currency because balance for asset exists', 'Asset');
+          this.toastr.error('Create failed!', 'Asset');
         }
       });
     }
+    else {
+      if (!this.assetHasChanged(form.value)) {
+        this.selectedAsset = null;
+        this.isAddMode = false;
+      } else {
+        this.assetService.putAsset(form.value.id, form.value).subscribe((result: Asset) => {
+          if (result) {
+            var listIndex = this.assetList.findIndex(a => a.id === result.id);
+            this.assetList[listIndex] = result;
+            this.selectedAsset = null;
+            this.isAddMode = false;
+            this.toastr.success('Updated Successfully!', 'Asset');
+          } else {
+            this.toastr.error('Update failed!', 'Asset');
+          }
+        });
+      }
+    }
+  }
+
+  assetHasChanged(changes: Asset) {
+    return !(changes.name === this.selectedAsset.name
+      && changes.value === this.selectedAsset.value
+      && changes.currency === this.selectedAsset.currency 
+      && changes.isActive === this.selectedAsset.isActive);
   }
 
   addAsset() {
@@ -95,18 +104,14 @@ export class AssetsComponent implements OnInit {
       id: null,
       name: '',
       currency: '',
-      isActive: true
+      isActive: true,
+      value: 0.00,
+      updatedOn: ''
     }
 
     this.assetList.unshift(newAsset);
     this.selectedAsset = newAsset;
-    this.currentEditRecordId = null;
     this.isAddMode = true;
-  }
-
-  onCurrencyAdded(value: string) {
-    let currency = this.currenciesList.find(c => c == value);
-    this.selectedAsset.currency = currency;
   }
 
   getCurrenciesList() {

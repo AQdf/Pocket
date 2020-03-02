@@ -51,7 +51,8 @@ namespace Sho.Pocket.Application.Assets
 
         public async Task<AssetViewModel> AddAssetAsync(Guid userId, AssetCreateModel createModel)
         {
-            Asset asset = await _assetRepository.CreateAsync(userId, createModel.Name, createModel.Currency, createModel.IsActive);
+            Asset asset = await _assetRepository.CreateAsync(
+                userId, createModel.Name, createModel.Currency, createModel.IsActive, createModel.Value, DateTime.UtcNow);
             await _unitOfWork.SaveChangesAsync(); 
             AssetViewModel result = new AssetViewModel(asset);
 
@@ -74,7 +75,7 @@ namespace Sho.Pocket.Application.Assets
                 throw new Exception($"Can't update currency of the Asset {id} if Asset's Balance exists!");
             }
 
-            Asset result = await _assetRepository.UpdateAsync(userId, id, model.Name, model.Currency, model.IsActive);
+            Asset result = await _assetRepository.UpdateAsync(userId, id, model.Name, model.Currency, model.IsActive, model.Value, DateTime.UtcNow);
             await _unitOfWork.SaveChangesAsync();
 
             AssetViewModel viewModel = new AssetViewModel(result);

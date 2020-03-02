@@ -3,4 +3,6 @@ export class Asset {
   name : string;
   currency: string;
   isActive: boolean;
+  value: number;
+  updatedOn: string;
 }

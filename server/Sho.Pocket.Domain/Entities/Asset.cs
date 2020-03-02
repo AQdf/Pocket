@@ -9,13 +9,15 @@ namespace Sho.Pocket.Domain.Entities
         {
         }
 
-        public Asset(Guid id, string name, string currency, bool isActive, Guid userId)
+        public Asset(Guid id, string name, string currency, bool isActive, Guid userId, decimal value, DateTime updatedOn)
         {
             Id = id;
             Name = name;
             Currency = currency;
             IsActive = isActive;
             UserId = userId;
+            Value = value;
+            UpdatedOn = updatedOn;
         }
 
         public Guid Id { get; set; }
@@ -27,6 +29,10 @@ namespace Sho.Pocket.Domain.Entities
         public bool IsActive { get; set; }
 
         public Guid UserId { get; set; }
+
+        public decimal Value { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
 
         public virtual ICollection<Balance> Balances { get; set; }
     }

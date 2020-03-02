@@ -20,7 +20,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
         public async Task<AssetBankAccount> GetByAssetIdAsync(Guid userId, Guid assetId)
         {
-            return await _set.FirstAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
+            return await _set.FirstOrDefaultAsync(ba => ba.AssetId == assetId && ba.Asset.UserId == userId);
         }
 
         public async Task<IList<AssetBankAccount>> GetByUserIdAsync(Guid userId)

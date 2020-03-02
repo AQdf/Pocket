@@ -9,20 +9,14 @@ namespace Sho.Pocket.Core.Features.Assets.Models
         {
         }
 
-        public AssetViewModel(Guid id, string name, string currency, bool isActive)
-        {
-            Id = id;
-            Name = name;
-            Currency = currency;
-            IsActive = isActive;
-        }
-
         public AssetViewModel(Asset asset)
         {
             Id = asset.Id;
             Name = asset.Name;
             Currency = asset.Currency;
             IsActive = asset.IsActive;
+            Value = asset.Value;
+            UpdatedOn = asset.UpdatedOn;
         }
 
         public Guid Id { get; set; }
@@ -32,5 +26,9 @@ namespace Sho.Pocket.Core.Features.Assets.Models
         public string Currency { get; set; }
 
         public bool IsActive { get; set; }
+
+        public decimal Value { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
     }
 }
