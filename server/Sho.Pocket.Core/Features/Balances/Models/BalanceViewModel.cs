@@ -19,7 +19,6 @@ namespace Sho.Pocket.Core.Features.Balances.Models
             AssetId = balance.AssetId;
             EffectiveDate = balance.EffectiveDate;
             Value = balance.Value;
-            ExchangeRateId = balance.ExchangeRateId;
 
             if (balance.Asset != null)
             {
@@ -33,7 +32,6 @@ namespace Sho.Pocket.Core.Features.Balances.Models
             AssetId = balance.AssetId;
             EffectiveDate = balance.EffectiveDate;
             Value = balance.Value;
-            ExchangeRateId = balance.ExchangeRateId;
             Asset = asset;
         }
 
@@ -45,8 +43,6 @@ namespace Sho.Pocket.Core.Features.Balances.Models
         public DateTime EffectiveDate { get; set; }
 
         public decimal Value { get; set; }
-
-        public Guid ExchangeRateId { get; set; }
 
         public AssetViewModel Asset { get; set; }
 

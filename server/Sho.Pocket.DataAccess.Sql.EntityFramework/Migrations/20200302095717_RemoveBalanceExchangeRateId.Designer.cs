@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho.Pocket.DataAccess.Sql.EntityFramework;
 
 namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Migrations
 {
     [DbContext(typeof(PocketDbContext))]
-    partial class PocketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200302095717_RemoveBalanceExchangeRateId")]
+    partial class RemoveBalanceExchangeRateId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

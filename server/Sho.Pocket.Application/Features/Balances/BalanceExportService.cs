@@ -28,7 +28,7 @@ namespace Sho.Pocket.Application.Features.Balances
             IEnumerable<Balance> balances = await _balanceRepository.GetAllAsync(userId);
 
             List<BalanceExportModel> items = balances
-                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.ExchangeRate, b.Value))
+                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.Value))
                 .ToList();
 
             string csv = _csvExporter.ExportToCsv(items);
@@ -42,7 +42,7 @@ namespace Sho.Pocket.Application.Features.Balances
             IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, effectiveDate);
 
             List<BalanceExportModel> items = balances
-                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.ExchangeRate, b.Value))
+                .Select(b => new BalanceExportModel(b.EffectiveDate, b.Asset, b.Value))
                 .ToList();
 
             string csv = JsonConvert.SerializeObject(items);

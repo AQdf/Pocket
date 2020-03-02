@@ -18,18 +18,17 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             _set = context.Set<Balance>();
         }
 
-        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId)
         {
             List<Balance> result = await _set
                 .Include(b => b.Asset)
-                .Include(b => b.ExchangeRate)
                 .Where(b => b.UserId == userId)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId)
         {
             Balance effectiveBalance = await _set
                 .Where(b => b.UserId == userId)
@@ -43,18 +42,16 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 
             List<Balance> result = await _set
                 .Include(b => b.Asset)
-                .Include(b => b.ExchangeRate)
                 .Where(b => b.UserId == userId && b.EffectiveDate == effectiveBalance.EffectiveDate)
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate)
         {
             List<Balance> result = await _set
                 .Include(b => b.Asset)
-                .Include(b => b.ExchangeRate)
                 .Where(b => b.UserId == userId && b.EffectiveDate == effectiveDate.Date)
                 .ToListAsync();
 
@@ -78,9 +75,9 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await _set.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
         }
 
-        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value)
         {
-            Balance balance = new Balance(Guid.NewGuid(), assetId, effectiveDate, value, exchangeRateId, userId);
+            Balance balance = new Balance(Guid.NewGuid(), assetId, effectiveDate, value, userId);
             EntityEntry<Balance> result = await _set.AddAsync(balance);
 
             return result.Entity;

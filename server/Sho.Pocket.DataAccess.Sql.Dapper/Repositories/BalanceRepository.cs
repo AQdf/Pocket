@@ -20,19 +20,17 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
         {
         }
 
-        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetAllAsync(Guid userId)
         {
             string queryText = await GetQueryText(SCRIPTS_DIR_NAME, "GetUserBalances.sql");
             object queryParams = new { userId };
 
-            IEnumerable<Balance> result = includeRelated
-                ? await GetAllWithRelatedEntities(queryText, queryParams)
-                : await base.GetEntities(queryText, queryParams);
+            IEnumerable<Balance> result = await GetAllWithRelatedEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetByEffectiveDateAsync(Guid userId, DateTime effectiveDate)
         {
             string queryText = @"
                 SELECT * FROM [Balance]
@@ -42,14 +40,12 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
             object queryParams = new { userId, effectiveDate };
 
-            IEnumerable<Balance> result = includeRelated
-                ? await GetAllWithRelatedEntities(queryText, queryParams)
-                : await base.GetEntities(queryText, queryParams);
+            IEnumerable<Balance> result = await GetAllWithRelatedEntities(queryText, queryParams);
 
             return result;
         }
 
-        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId, bool includeRelated = true)
+        public async Task<IEnumerable<Balance>> GetLatestBalancesAsync(Guid userId)
         {
             string queryText = @"
                 DECLARE @latestDate datetime2(7) = (SELECT TOP 1 [EffectiveDate] FROM [Balance] ORDER BY [EffectiveDate] DESC)
@@ -61,9 +57,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
             object queryParams = new { userId };
 
-            IEnumerable<Balance> result = includeRelated
-                ? await GetAllWithRelatedEntities(queryText, queryParams)
-                : await base.GetEntities(queryText, queryParams);
+            IEnumerable<Balance> result = await GetAllWithRelatedEntities(queryText, queryParams);
 
             return result;
         }
@@ -82,30 +76,29 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
             using (IDbConnection db = new SqlConnection(ConnectionString))
             {
-                resultItems = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
-                    (balance, asset, rate) =>
+                resultItems = await db.QueryAsync<Balance, Asset, Balance>(queryText,
+                    (balance, asset) =>
                     {
                         balance.Asset = asset;
-                        balance.ExchangeRate = rate;
-
                         return balance;
-                    }, queryParameters);
+                    },
+                    queryParameters);
             }
 
             return resultItems.FirstOrDefault();
         }
 
-        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value, Guid exchangeRateId)
+        public async Task<Balance> CreateAsync(Guid userId, Guid assetId, DateTime effectiveDate, decimal value)
         {
             string queryText = @"
                 DECLARE @id UNIQUEIDENTIFIER = NEWID();
 
-                INSERT INTO [Balance] ([Id], [AssetId], [Value], [ExchangeRateId], [EffectiveDate], [UserId]) values
-                    (@id, @assetId, @value, @exchangeRateId, @effectiveDate, @userId)
+                INSERT INTO [Balance] ([Id], [AssetId], [Value], [EffectiveDate], [UserId]) values
+                    (@id, @assetId, @value, @effectiveDate, @userId)
 
                 SELECT * FROM [Balance] WHERE [Id] = @id";
 
-            object queryParameters = new { userId, assetId, effectiveDate, value, exchangeRateId };
+            object queryParameters = new { userId, assetId, effectiveDate, value};
 
             Balance result = await base.InsertEntity(queryText, queryParameters);
 
@@ -174,14 +167,13 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
             using (IDbConnection db = new SqlConnection(ConnectionString))
             {
-                result = await db.QueryAsync<Balance, Asset, ExchangeRate, Balance>(queryText,
-                    (balance, asset, rate) =>
+                result = await db.QueryAsync<Balance, Asset, Balance>(queryText,
+                    (balance, asset) =>
                     {
                         balance.Asset = asset;
-                        balance.ExchangeRate = rate;
-
                         return balance;
-                    }, queryParams);
+                    },
+                    queryParams);
             }
 
             return result;

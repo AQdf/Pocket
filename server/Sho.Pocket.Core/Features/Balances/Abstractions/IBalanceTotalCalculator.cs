@@ -9,6 +9,5 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
     public interface IBalanceTotalCalculator
     {
         Task<BalanceTotalModel> CalculateAsync(IEnumerable<Balance> balances, string currency, string defaultCurrency, DateTime effectiveDate);
-
     }
 }

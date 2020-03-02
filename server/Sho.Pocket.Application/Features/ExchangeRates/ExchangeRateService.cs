@@ -39,7 +39,10 @@ namespace Sho.Pocket.Application.ExchangeRates
         public async Task<List<ExchangeRateModel>> GetExchangeRatesAsync(DateTime effectiveDate)
         {
             IEnumerable<ExchangeRate> existingRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
-            List<ExchangeRateModel> result = existingRates.Select(r => new ExchangeRateModel(r)).ToList();
+            List<ExchangeRateModel> result = existingRates
+                .Select(r => new ExchangeRateModel(r))
+                .OrderBy(r => r.BaseCurrency)
+                .ToList();
 
             return result;
         }

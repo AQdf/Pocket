@@ -15,15 +15,19 @@ namespace Sho.Pocket.Application.Balances
 
         private readonly IUserCurrencyRepository _userCurrencyRepository;
 
+        private readonly IExchangeRateRepository _exchangeRateRepository;
+
         private readonly IBalanceTotalCalculator _balanceTotalCalculator;
 
         public BalancesTotalService(
             IBalanceRepository balanceRepository,
             IUserCurrencyRepository userCurrencyRepository,
+            IExchangeRateRepository exchangeRateRepository,
             IBalanceTotalCalculator balanceTotalCalculator)
         {
             _balanceRepository = balanceRepository;
             _userCurrencyRepository = userCurrencyRepository;
+            _exchangeRateRepository = exchangeRateRepository;
             _balanceTotalCalculator = balanceTotalCalculator;
         }
 
@@ -95,10 +99,24 @@ namespace Sho.Pocket.Application.Balances
         {
             UserCurrency userCurrency = await _userCurrencyRepository.GetPrimaryCurrencyAsync(userId);
             IEnumerable<Balance> balances = await _balanceRepository.GetLatestBalancesAsync(userId);
+            List<BalancePrimaryCurrencyModel> result = new List<BalancePrimaryCurrencyModel>();
 
-            List<BalancePrimaryCurrencyModel> result = balances
-                .Select(b => new BalancePrimaryCurrencyModel(userCurrency.Currency, b))
-                .ToList();
+            if (balances.Count() == 0)
+            {
+                return result;
+            }
+
+            DateTime effectiveDate = balances.First().EffectiveDate;
+            IEnumerable<ExchangeRate> exchangeRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
+
+            foreach (Balance balance in balances)
+            {
+                ExchangeRate rate = exchangeRates.First(r => 
+                    r.BaseCurrency == userCurrency.Currency
+                    && r.CounterCurrency == balance.Asset.Currency);
+
+                result.Add(new BalancePrimaryCurrencyModel(userCurrency.Currency, balance, rate));
+            }
 
             return result;
         }

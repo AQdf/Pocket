@@ -13,14 +13,12 @@ namespace Sho.Pocket.Domain.Entities
             Guid assetId,
             DateTime effectiveDate,
             decimal value,
-            Guid exchangeRateId,
             Guid userId)
         {
             Id = id;
             AssetId = assetId;
             EffectiveDate = effectiveDate;
             Value = value;
-            ExchangeRateId = exchangeRateId;
             UserId = userId;
         }
 
@@ -32,12 +30,8 @@ namespace Sho.Pocket.Domain.Entities
 
         public decimal Value { get; set; }
 
-        public Guid ExchangeRateId { get; set; }
-
         public Guid UserId { get; set; }
 
         public virtual Asset Asset { get; set; }
-
-        public virtual ExchangeRate ExchangeRate { get; set; }
     }
 }

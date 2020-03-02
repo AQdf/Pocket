@@ -49,7 +49,6 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);
             modelBuilder.Entity<Balance>().HasOne(b => b.Asset).WithMany(a => a.Balances).HasForeignKey(c => c.AssetId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Balance>().HasOne(b => b.ExchangeRate).WithMany().HasForeignKey(c => c.ExchangeRateId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Balance>(eb =>
             {
                 eb.Property(i => i.EffectiveDate).HasColumnType("date").IsRequired();

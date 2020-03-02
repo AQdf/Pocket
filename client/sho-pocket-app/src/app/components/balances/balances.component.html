@@ -31,17 +31,11 @@
     <div class="bg-light border rounded" [hidden]="!selectedEffectiveDate">
       <div class="controls">
         <app-effective-date (effectiveDateEvent)="this.onDateChange($event)"></app-effective-date>
-        <!-- <select class="control rounded" placeholder="Date" required [(ngModel)]="selectedEffectiveDate"
-          (change)="this.onDateChange($event.target.value)">
-          <option *ngFor="let effectiveDate of effectiveDatesList" value={{effectiveDate}}>
-            {{effectiveDate | date:'mediumDate'}}
-          </option>
-        </select> -->
       </div>
     </div>
 
     <div id="balances-wrapper" [hidden]="!selectedEffectiveDate">
-      <app-balance-list id="balance-list-wrapper" class="flex-fill" [effectiveDate]="selectedEffectiveDate" (shouldReload)="reload()"></app-balance-list>
+      <app-balance-list id="balance-list-wrapper" class="flex-fill" [effectiveDate]="selectedEffectiveDate"></app-balance-list>
       <app-exchange-rates id="rates-wrapper" [effectiveDate]="selectedEffectiveDate"></app-exchange-rates>
     </div>
 

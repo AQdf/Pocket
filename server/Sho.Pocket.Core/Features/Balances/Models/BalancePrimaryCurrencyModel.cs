@@ -5,13 +5,13 @@ namespace Sho.Pocket.Core.Features.Balances.Models
 {
     public class BalancePrimaryCurrencyModel
     {
-        public BalancePrimaryCurrencyModel(string primaryCurrency, Balance balance)
+        public BalancePrimaryCurrencyModel(string primaryCurrency, Balance balance, ExchangeRate exchangeRate)
         {
             AssetName = balance.Asset.Name;
             PrimaryCurrency = primaryCurrency;
             EffectiveDate = balance.EffectiveDate;
             Value = balance.Value;
-            Rate = balance.ExchangeRate.SellRate;
+            Rate = exchangeRate.SellRate;
         }
 
         public string AssetName { get; set; }

@@ -93,9 +93,7 @@ namespace Sho.Pocket.Application.Balances
 
         public async Task<BalanceViewModel> AddBalanceAsync(Guid userId, BalanceCreateModel createModel)
         {
-            ExchangeRate exchangeRate = await _exchangeRateRepository.GetCurrencyExchangeRateAsync(createModel.Currency, createModel.EffectiveDate);
-
-            Balance balance = await _balanceRepository.CreateAsync(userId, createModel.AssetId, createModel.EffectiveDate, createModel.Value, exchangeRate.Id);
+            Balance balance = await _balanceRepository.CreateAsync(userId, createModel.AssetId, createModel.EffectiveDate, createModel.Value);
             await _unitOfWork.SaveChangesAsync();
 
             BalanceViewModel result = new BalanceViewModel(balance);
@@ -203,7 +201,7 @@ namespace Sho.Pocket.Application.Balances
                     }
                 }
 
-                Balance newBalance = await _balanceRepository.CreateAsync(userId, balance.AssetId, effectiveDate, value, balanceExchangeRate.Id);
+                Balance newBalance = await _balanceRepository.CreateAsync(userId, balance.AssetId, effectiveDate, value);
 
                 var assetModel = new AssetViewModel(balance.Asset);
                 var model = new BalanceViewModel(newBalance, assetModel);
@@ -230,7 +228,7 @@ namespace Sho.Pocket.Application.Balances
             foreach (Asset asset in activeAssets)
             {
                 ExchangeRateModel exchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == asset.Currency);
-                Balance newBalance = await _balanceRepository.CreateAsync(userId, asset.Id, effectiveDate, 0.0M, exchangeRate.Id);
+                Balance newBalance = await _balanceRepository.CreateAsync(userId, asset.Id, effectiveDate, 0.0M);
 
                 var assetModel = new AssetViewModel(asset);
                 var balanceModel = new BalanceViewModel(newBalance, assetModel);
