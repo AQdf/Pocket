@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sho.Pocket.BankIntegration.Monobank\Sho.BankIntegration.Monobank.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.BankIntegration.PrivatBank\Sho.BankIntegration.Privatbank.csproj" />
+    <PackageReference Include="Shchack.BankIntegration.Monobank" Version="1.0.0" />
+    <PackageReference Include="Shchack.BankIntegration.Privatbank" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
