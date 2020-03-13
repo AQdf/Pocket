@@ -5,29 +5,31 @@ using System.Threading.Tasks;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Models;
+using Sho.Pocket.Core.Features.ExchangeRates;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Balances
 {
     public class BalancesTotalService : IBalancesTotalService
     {
+        private readonly IExchangeRateService _exchangeRateService;
+
         private readonly IBalanceRepository _balanceRepository;
 
         private readonly IUserCurrencyRepository _userCurrencyRepository;
 
-        private readonly IExchangeRateRepository _exchangeRateRepository;
-
         private readonly IBalanceTotalCalculator _balanceTotalCalculator;
 
         public BalancesTotalService(
+            IExchangeRateService exchangeRateService,
             IBalanceRepository balanceRepository,
             IUserCurrencyRepository userCurrencyRepository,
-            IExchangeRateRepository exchangeRateRepository,
             IBalanceTotalCalculator balanceTotalCalculator)
         {
+            _exchangeRateService = exchangeRateService;
             _balanceRepository = balanceRepository;
             _userCurrencyRepository = userCurrencyRepository;
-            _exchangeRateRepository = exchangeRateRepository;
             _balanceTotalCalculator = balanceTotalCalculator;
         }
 
@@ -69,7 +71,10 @@ namespace Sho.Pocket.Application.Balances
                 foreach (var effectiveDate in filterEffectiveDates)
                 {
                     var effectiveBalances = balances.Where(b => b.EffectiveDate == effectiveDate).ToList();
-                    BalanceTotalModel balanceTotal = await _balanceTotalCalculator.CalculateAsync(effectiveBalances, currency.Currency, primaryCurrency, effectiveDate);
+
+                    BalanceTotalModel balanceTotal = await _balanceTotalCalculator
+                        .CalculateAsync(userId, effectiveBalances, currency.Currency, primaryCurrency, effectiveDate);
+
                     values.Add(balanceTotal);
                 }
 
@@ -88,7 +93,8 @@ namespace Sho.Pocket.Application.Balances
 
             foreach (var uc in userCurrencies)
             {
-                BalanceTotalModel totals = await _balanceTotalCalculator.CalculateAsync(balances, uc.Currency, primaryCurrency, effectiveDate);
+                BalanceTotalModel totals = await _balanceTotalCalculator
+                    .CalculateAsync(userId, balances, uc.Currency, primaryCurrency, effectiveDate);
                 result.Add(totals);
             }
 
@@ -107,11 +113,11 @@ namespace Sho.Pocket.Application.Balances
             }
 
             DateTime effectiveDate = balances.First().EffectiveDate;
-            IEnumerable<ExchangeRate> exchangeRates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
+            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.GetExchangeRatesAsync(userId, effectiveDate);
 
             foreach (Balance balance in balances)
             {
-                ExchangeRate rate = exchangeRates.First(r => 
+                ExchangeRateModel rate = exchangeRates.First(r => 
                     r.BaseCurrency == balance.Asset.Currency
                     && r.CounterCurrency == userCurrency.Currency);
 

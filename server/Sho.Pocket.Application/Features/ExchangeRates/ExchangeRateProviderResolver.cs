@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Sho.Pocket.Application.ExchangeRates.Abstractions;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
-namespace Sho.Pocket.ExchangeRates.Providers
+namespace Sho.Pocket.Application.ExchangeRates
 {
     public class ExchangeRateProviderResolver : IExchangeRateProviderResolver
     {

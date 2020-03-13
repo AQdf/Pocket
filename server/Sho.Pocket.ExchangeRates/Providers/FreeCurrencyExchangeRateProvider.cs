@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 

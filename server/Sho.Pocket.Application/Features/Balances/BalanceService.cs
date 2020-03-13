@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Sho.Pocket.Application.Exceptions;
-using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Models;
 using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.BankAccounts.Models;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 
@@ -18,19 +18,23 @@ namespace Sho.Pocket.Application.Balances
     public class BalanceService : IBalanceService
     {
         private readonly IBalanceRepository _balanceRepository;
+
         private readonly IAssetRepository _assetRepository;
+
         private readonly IBankAccountRepository _assetBankAccountRepository;
-        private readonly IExchangeRateRepository _exchangeRateRepository;
+
         private readonly IExchangeRateService _exchangeRateService;
+
         private readonly IBalancesTotalService _balancesTotalService;
+
         private readonly IBankAccountService _bankAccountService;
+
         private readonly IUnitOfWork _unitOfWork;
 
         public BalanceService(
             IBalanceRepository balanceRepository,
             IAssetRepository assetRepository,
             IBankAccountRepository assetBankAccountRepository,
-            IExchangeRateRepository exchangeRateRepository,
             IExchangeRateService exchangeRateService,
             IBalancesTotalService balancesTotalService,
             IBankAccountService bankAccountService,
@@ -39,7 +43,6 @@ namespace Sho.Pocket.Application.Balances
             _balanceRepository = balanceRepository;
             _assetRepository = assetRepository;
             _assetBankAccountRepository = assetBankAccountRepository;
-            _exchangeRateRepository = exchangeRateRepository;
             _exchangeRateService = exchangeRateService;
             _balancesTotalService = balancesTotalService;
             _bankAccountService = bankAccountService;
@@ -111,6 +114,8 @@ namespace Sho.Pocket.Application.Balances
 
             if (!todayBalancesExists)
             {
+                List<ExchangeRateModel> rates = await _exchangeRateService.AddExchangeRatesAsync(userId, today);
+
                 if (effectiveDates.Any())
                 {
                     DateTime latestEffectiveDate = effectiveDates.FirstOrDefault();
@@ -180,15 +185,11 @@ namespace Sho.Pocket.Application.Balances
         private async Task<List<BalanceViewModel>> AddBalancesByTemplateAsync(Guid userId, DateTime latestEffectiveDate, DateTime effectiveDate)
         {
             IEnumerable<Balance> latestBalances = await _balanceRepository.GetByEffectiveDateAsync(userId, latestEffectiveDate);
-            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userId, effectiveDate);
-
             IList<AssetBankAccount> bankAccounts = await _assetBankAccountRepository.GetByUserIdAsync(userId);
             List<BalanceViewModel> result = new List<BalanceViewModel>();
 
             foreach (Balance balance in latestBalances)
             {
-                ExchangeRateModel balanceExchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == balance.Asset.Currency);
-
                 decimal value = balance.Value;
 
                 if (bankAccounts.Any(ba => ba.AssetId == balance.AssetId))
@@ -223,11 +224,8 @@ namespace Sho.Pocket.Application.Balances
                 throw new UserHasNoAssetsException();
             }
 
-            List<ExchangeRateModel> exchangeRates = await _exchangeRateService.AddDefaultExchangeRates(userId, effectiveDate);
-
             foreach (Asset asset in activeAssets)
             {
-                ExchangeRateModel exchangeRate = exchangeRates.FirstOrDefault(r => r.BaseCurrency == asset.Currency);
                 Balance newBalance = await _balanceRepository.CreateAsync(userId, asset.Id, effectiveDate, 0.0M);
 
                 var assetModel = new AssetViewModel(asset);

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Sho.BankIntegration.Monobank;
 using Sho.BankIntegration.Monobank.Models;
 using Sho.BankIntegration.Monobank.Services;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
 namespace Sho.Pocket.ExchangeRates.Providers

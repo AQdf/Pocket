@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 
-namespace Sho.Pocket.Core.Features.ExchangeRates.Abstractions
+namespace Sho.Pocket.Core.Features.ExchangeRates
 {
     public interface IExchangeRateProvider
     {

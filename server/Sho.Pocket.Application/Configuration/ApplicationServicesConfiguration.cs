@@ -10,7 +10,6 @@ using Sho.Pocket.Application.Balances;
 using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Application.Currencies;
 using Sho.Pocket.Application.ExchangeRates;
-using Sho.Pocket.Application.ExchangeRates.Abstractions;
 using Sho.Pocket.Application.Features.Balances;
 using Sho.Pocket.Application.Features.BankAccounts;
 using Sho.Pocket.Application.Features.BankIntegration;
@@ -23,9 +22,10 @@ using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.Currencies.Abstractions;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
 using Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration;
+using Sho.Pocket.ExchangeRates;
 using Sho.Pocket.ExchangeRates.Providers;
 
 namespace Sho.Pocket.Application.Configuration
@@ -53,6 +53,7 @@ namespace Sho.Pocket.Application.Configuration
             services.AddScoped<IBankIntegrationServiceResolver, BankIntegrationServiceResolver>();
 
             services.AddScoped<IExchangeRateService, ExchangeRateService>();
+            services.AddScoped<IExchangeRateExternalService, ExchangeRateExternalService>();
             services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
             services.AddScoped<IExchangeRateProvider, DefaultExchangeRateProvider>();
             services.AddScoped<IExchangeRateProviderResolver, ExchangeRateProviderResolver>();

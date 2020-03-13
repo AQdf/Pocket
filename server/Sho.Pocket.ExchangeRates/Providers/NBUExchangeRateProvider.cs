@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.Extensions.Options;
 using Sho.Pocket.Application.ExchangeRates.Models;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
+using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 

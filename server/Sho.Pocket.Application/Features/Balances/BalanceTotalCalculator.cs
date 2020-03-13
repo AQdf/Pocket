@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Models;
+using Sho.Pocket.Core.Features.ExchangeRates;
+using Sho.Pocket.Core.Features.ExchangeRates.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.Balances
 {
     public class BalanceTotalCalculator : IBalanceTotalCalculator
     {
-        private readonly IExchangeRateRepository _exchangeRateRepository;
+        private readonly IExchangeRateService _exchangeRateService;
 
-        public BalanceTotalCalculator(IExchangeRateRepository exchangeRateRepository)
+        public BalanceTotalCalculator(IExchangeRateService exchangeRateService)
         {
-            _exchangeRateRepository = exchangeRateRepository;
+            _exchangeRateService = exchangeRateService;
         }
 
         public async Task<BalanceTotalModel> CalculateAsync(
+            Guid userId,
             IEnumerable<Balance> balances,
             string currency,
             string primaryCurrency,
             DateTime effectiveDate)
         {
             decimal total = 0.0M;
-            IEnumerable<ExchangeRate> rates = await _exchangeRateRepository.GetByEffectiveDateAsync(effectiveDate);
+            List<ExchangeRateModel> rates = await _exchangeRateService.GetExchangeRatesAsync(userId, effectiveDate);
+
             var groups = balances.GroupBy(b => b.Asset.Currency);
 
             foreach (IGrouping<string, Balance> g in groups)
@@ -48,22 +51,30 @@ namespace Sho.Pocket.Application.Features.Balances
             return new BalanceTotalModel(effectiveDate, currency, total);
         }
 
-        private decimal BuyPrimaryCurrency(IEnumerable<ExchangeRate> rates, string currency, string primaryCurrency, decimal value)
+        private decimal BuyPrimaryCurrency(
+            List<ExchangeRateModel> rates,
+            string currency,
+            string primaryCurrency,
+            decimal value)
         {
-            ExchangeRate rate = rates
+            ExchangeRateModel rate = rates
                 .FirstOrDefault(r => string.Equals(r.BaseCurrency, currency, StringComparison.OrdinalIgnoreCase)
                                   && string.Equals(r.CounterCurrency, primaryCurrency, StringComparison.OrdinalIgnoreCase));
 
-            return value * rate.BuyRate;
+            return value * rate.Buy;
         }
 
-        private decimal SellPrimaryCurrency(IEnumerable<ExchangeRate> rates, string currency, string primaryCurrency, decimal value)
+        private decimal SellPrimaryCurrency(
+            List<ExchangeRateModel> rates,
+            string currency,
+            string primaryCurrency,
+            decimal value)
         {
-            ExchangeRate rate = rates
+            ExchangeRateModel rate = rates
                 .FirstOrDefault(r => string.Equals(r.BaseCurrency, currency, StringComparison.OrdinalIgnoreCase)
                                   && string.Equals(r.CounterCurrency, primaryCurrency, StringComparison.OrdinalIgnoreCase));
 
-            return value / rate.SellRate;
+            return value / rate.Sell;
         }
     }
 }

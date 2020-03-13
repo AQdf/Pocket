@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Sho.Pocket.Core.Features.ExchangeRates.Abstractions;
 
-namespace Sho.Pocket.Application.ExchangeRates.Abstractions
+namespace Sho.Pocket.Core.Features.ExchangeRates
 {
     public interface IExchangeRateProviderResolver
     {
