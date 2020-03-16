@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule} from '@angular/forms'
 import { ToastrModule } from 'ngx-toastr';
-import { ChartModule } from 'angular-highcharts';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 import { AuthGuard } from './auth.guard';
 import { HttpErrorInterceptor } from './common/http-error.interceptor';
@@ -52,7 +52,7 @@ import { EffectiveDateComponent } from './components/effective-date/effective-da
     FormsModule,
     ToastrModule.forRoot(),
     AppRoutingModule,
-    ChartModule
+    HighchartsChartModule
   ],
   providers: [
     AuthGuard,

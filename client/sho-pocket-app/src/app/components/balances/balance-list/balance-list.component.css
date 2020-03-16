@@ -12,6 +12,10 @@
   border-bottom-right-radius: .25rem;
 }
 
+#currency-text {
+  width: 80px;
+}
+
 @media (max-width: 768px) { 
   .controls {
     padding-top: .5rem;

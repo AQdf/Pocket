@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart } from 'angular-highcharts';
+import * as Highcharts from 'highcharts';
 
 import { BalancesTotalService } from '../../services/balances-total.service';
 import { BalanceChanges } from '../../models/balance-changes.model';
@@ -12,8 +12,11 @@ import { BalancePrimaryCurrency } from '../../models/balance-primary-currency.mo
 })
 export class BalancesChartComponent implements OnInit {
 
-  chart: Chart;
-  balanceChangeCharts: Chart[];
+  Highcharts: typeof Highcharts = Highcharts;
+  pieChart: Highcharts.Options;
+  selectedBalanceChangeChart: Highcharts.Options;
+  
+  balanceChanges: BalanceChanges[];
 
   constructor(private balancesTotalService: BalancesTotalService) { }
 
@@ -22,24 +25,29 @@ export class BalancesChartComponent implements OnInit {
     this.initBalanceChangeLineCharts();
   }
 
-  initBalancePieChartData()
-  {
+  initBalancePieChartData() {
     this.balancesTotalService.getBalancesInUserPrimaryCurrency().subscribe((balances: BalancePrimaryCurrency[]) => {
       if (balances) {
-        this.createBalancePieChart(balances);
+        this.pieChart = this.createBalancePieChart(balances);
       }
     });
   }
 
   initBalanceChangeLineCharts() {
-    this.balancesTotalService.getBalanceTotalChanges().subscribe((currenciesTotals:any) => {
+    this.balancesTotalService.getBalanceTotalChanges().subscribe((currenciesTotals: BalanceChanges[]) => {
       if (!currenciesTotals || currenciesTotals.length === 0) {
         return;
       }
-
-      this.balanceChangeCharts = new Array();
-      currenciesTotals.forEach(c => this.balanceChangeCharts.push(this.createBalanceChangeChart(c)));
+      
+      this.balanceChanges = currenciesTotals;
+      this.selectedBalanceChangeChart = this.createBalanceChangeChart(currenciesTotals[0]);
     });
+  }
+
+  selectBalanceChangeChart(e) {
+    let selectedCurrency = e.target.value;
+    let data = this.balanceChanges.find((c: BalanceChanges) => c.currency === selectedCurrency);
+    this.selectedBalanceChangeChart = this.createBalanceChangeChart(data);
   }
 
   createBalancePieChart(balances: BalancePrimaryCurrency[]) {
@@ -56,7 +64,7 @@ export class BalancesChartComponent implements OnInit {
     let effectiveDate = new Date(balances[0].effectiveDate).toDateString();
     let currency = balances[0].primaryCurrency;
 
-    this.chart = new Chart({  
+    let options: Highcharts.Options = {  
         chart: {  
             plotBackgroundColor: null,  
             plotBorderWidth: null,  
@@ -96,13 +104,15 @@ export class BalancesChartComponent implements OnInit {
             type: "pie",
             data: chartData  
         }]  
-    });
+    };
+
+    return options;
   }
 
-  createBalanceChangeChart(changes: BalanceChanges)
-  {
+  createBalanceChangeChart(changes: BalanceChanges) {
     let chartData = [];
     let totals = changes.values;
+
     for (var i = 0; i < totals.length; i++) {
       var formattedDate = new Date(totals[i].effectiveDate);
       var ticks = Date.UTC(formattedDate.getUTCFullYear(), formattedDate.getUTCMonth(), formattedDate.getUTCDate())
@@ -110,15 +120,13 @@ export class BalancesChartComponent implements OnInit {
       chartData.push([ticks, formattedValue]);
     }
 
-    let currency = changes.currency;
-
-    return new Chart({  
+    let options: Highcharts.Options = {
         chart: {
           backgroundColor: "#f9f9f9",
           type: 'line',
         },
         title: {
-            text: currency
+            text: changes.currency
         },
         subtitle: {
             text: ''
@@ -140,6 +148,8 @@ export class BalancesChartComponent implements OnInit {
           type: 'line',
           data: chartData
       }]  
-    })
+    };
+
+    return options;
   }
 }

@@ -6,24 +6,29 @@
     </div>
   </div>
 
-  <div class="row bg-light m-3 border rounded">
-    <div class="col-md-11">
-      <div [chart]="chart"></div>
-    </div>
+  <div class="row bg-light m-3 border rounded" *ngIf="pieChart">
+    <highcharts-chart class="col-md-11" [Highcharts]="Highcharts" [options]="pieChart"></highcharts-chart>
   </div>
 
   <div class="row bg-light pt-2 pb-2 border rounded">
     <div class="col">
-      <span>Balances changes</span>
+      <div id="currency-select" class="input-group">
+        <div class="input-group-prepend">
+          <span id="currency-label" class="input-group-text">Balance changes</span>
+        </div>
+        <select name="currency" class="form-control" placeholder="currency" (change)="selectBalanceChangeChart($event)">
+          <option *ngFor="let balanceChange of balanceChanges" value={{balanceChange.currency}}>
+            {{balanceChange.currency}}
+          </option>
+        </select>
+    </div>
     </div>
   </div>
 
   <div class="row">
     <div class="col">
-      <div *ngFor="let changesChart of balanceChangeCharts">
-        <div class="row bg-light m-3 border rounded">
-          <div class="col-md-11" [chart]="changesChart"></div>
-        </div>
+      <div class="row bg-light m-3 border rounded" *ngIf="selectedBalanceChangeChart">
+        <highcharts-chart class="col-md-11" [Highcharts]="Highcharts" [options]="selectedBalanceChangeChart"></highcharts-chart>
       </div>
     </div>
   </div>

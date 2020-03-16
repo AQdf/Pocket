@@ -1,0 +1,9 @@
+#currency-select {
+  width: 300px;
+}
+
+#currency-label {
+  border: none;
+  background-color: #f8f9fa;
+  padding-left: 0;
+}

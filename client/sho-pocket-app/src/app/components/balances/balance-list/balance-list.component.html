@@ -39,7 +39,7 @@
               <input name="value" class="form-control" placeholder="Balance" required
               [disabled]="balance.id !== (selectedBalance && selectedBalance.id)" #value="ngModel"
               [ngModel]="balance.value | currency:'':''" [ngClass]="{'input-invalid': value.invalid && value.touched }">
-              <div class="input-group-append">
+              <div id="currency-text" class="input-group-append">
                 <input class="form-control" value="{{(balance.asset && balance.asset.currency) || '-'}}" [disabled]="true">
               </div>
             </div>
