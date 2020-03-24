@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Balances.Models;
 using TechTalk.SpecFlow;
@@ -13,32 +10,28 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     [Binding]
     public class AddEffectiveBalancesSteps
     {
-        private List<BalanceViewModel> _balances;
+        private readonly BalanceFeatureContext _context;
 
-        private readonly BalanceFeatureContext _balanceFeatureContext;
+        private readonly UserContext _userContext;
 
-        public AddEffectiveBalancesSteps(BalanceFeatureContext balanceFeatureContext)
+        public AddEffectiveBalancesSteps(BalanceFeatureContext balanceFeatureContext, UserContext userContext)
         {
-            _balanceFeatureContext = balanceFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = balanceFeatureContext;
+            _userContext = userContext;
         }
 
         [When(@"I add effective balances")]
         public async Task WhenIAddEffectiveBalances()
         {
-            _balances = await _balanceFeatureContext.AddEffectiveBalances();
+            await _context.BalanceService.AddEffectiveBalancesTemplate(_userContext.UserId);
         }
 
         [Then(@"balances for today exists")]
-        public void ThenBalanceForTodayExists()
+        public async Task ThenBalanceForTodayExists()
         {
             DateTime today = DateTime.UtcNow.Date;
-            bool exists = _balances.Any(b => b.EffectiveDate == today);
+            BalancesViewModel balances = await _context.BalanceService.GetUserEffectiveBalancesAsync(_userContext.UserId, today);
+            bool exists = balances.Count > 0;
 
             exists.Should().Be(true);
         }

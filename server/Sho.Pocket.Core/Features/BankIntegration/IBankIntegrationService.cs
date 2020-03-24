@@ -1,9 +1,8 @@
-﻿using Sho.Pocket.BankIntegration.Models;
-using Sho.Pocket.Core.Features.BankAccounts.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sho.Pocket.Core.Features.BankIntegration.Models;
 
-namespace Sho.Pocket.BankIntegration.Abstractions
+namespace Sho.Pocket.Core.Features.BankIntegration
 {
     public interface IBankIntegrationService
     {

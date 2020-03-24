@@ -1,6 +1,5 @@
-﻿using Sho.Pocket.Api.IntegrationTests.Common;
+﻿using System.Threading.Tasks;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Currencies.Steps
@@ -8,23 +7,22 @@ namespace Sho.Pocket.Api.IntegrationTests.Currencies.Steps
     [Binding]
     public class CreateCurrencyStep
     {
-        private readonly CurrencyFeatureContext _currencyFeatureContext;
+        private readonly CurrencyFeatureContext _context;
 
         public CreateCurrencyStep(CurrencyFeatureContext currencyFeatureContext)
         {
-            _currencyFeatureContext = currencyFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = currencyFeatureContext;
         }
 
         [Given(@"currency (.*) exists")]
         public async Task GivenCurrency(string currencyName)
         {
-            await _currencyFeatureContext.AddCurrency(currencyName);
+            bool exists = await _context.CurrencyRepository.ExistsAsync(currencyName);
+
+            if (!exists)
+            {
+                await _context.CurrencyRepository.CreateAsync(currencyName);
+            }
         }
     }
 }

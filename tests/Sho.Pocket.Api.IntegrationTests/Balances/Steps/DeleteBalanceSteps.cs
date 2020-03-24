@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Models;
@@ -15,32 +14,34 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private Guid _balanceToDeleteId;
 
+        private readonly DateTime _effectiveDate = DateTime.UtcNow.Date;
+
         private readonly BalanceFeatureContext _balanceFeatureContext;
 
         private readonly AssetFeatureContext _assetFeatureContext;
 
+        private readonly UserContext _userContext;
+
         public DeleteBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
-            AssetFeatureContext assetFeatureManager)
+            AssetFeatureContext assetFeatureManager,
+            UserContext userContext)
         {
             _assetFeatureContext = assetFeatureManager;
             _balanceFeatureContext = balanceFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _userContext = userContext;
         }
 
         [Given(@"I specified balance to delete of asset (.*)")]
-        public void GivenISpecifiedBalanceToDelete(string assetName)
+        public async Task GivenISpecifiedBalanceToDelete(string assetName)
         {
-            DateTime today = DateTime.UtcNow.Date;
-            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = await _assetFeatureContext.AssetService
+                .GetAssetByNameAsync(_userContext.UserId, assetName);
 
-            BalanceViewModel balance = _balanceFeatureContext.Balances.Values
-                .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
+            BalancesViewModel balances = await _balanceFeatureContext.BalanceService
+                .GetUserEffectiveBalancesAsync(_userContext.UserId, _effectiveDate);
+
+            BalanceViewModel balance = balances.Items.Single(b => b.Asset.Name == asset.Name && b.EffectiveDate == _effectiveDate);
 
             _balanceToDeleteId = balance.Id.Value;
         }
@@ -48,13 +49,16 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [When(@"I delete balance")]
         public async Task WhenIDeleteBalance()
         {
-            await _balanceFeatureContext.DeleteBalance(_balanceToDeleteId);
+            await _balanceFeatureContext.BalanceService.DeleteBalanceAsync(_userContext.UserId, _balanceToDeleteId);
         }
         
         [Then(@"balance deleted")]
-        public void ThenBalanceDeleted()
+        public async Task ThenBalanceDeleted()
         {
-            bool exists = _balanceFeatureContext.Balances.ContainsKey(_balanceToDeleteId);
+            BalancesViewModel balances = await _balanceFeatureContext.BalanceService
+                .GetUserEffectiveBalancesAsync(_userContext.UserId, _effectiveDate);
+
+            bool exists = balances.Items.Any(b => b.Id == _balanceToDeleteId);
 
             exists.Should().Be(false);
         }

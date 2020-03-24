@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Models;
@@ -21,24 +20,22 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
 
         private readonly AssetFeatureContext _assetFeatureContext;
 
+        private readonly UserContext _userContext;
+
         public UpdateBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
-            AssetFeatureContext assetFeatureManager)
+            AssetFeatureContext assetFeatureManager,
+            UserContext userContext)
         {
             _assetFeatureContext = assetFeatureManager;
             _balanceFeatureContext = balanceFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _userContext = userContext;
         }
 
         [Given(@"I set balance of asset (.*) value to (.*)")]
-        public void GivenISetBalanceValueTo(string assetName, decimal value)
+        public async Task GivenISetBalanceValueTo(string assetName, decimal value)
         {
-            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = await _assetFeatureContext.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
             _balanceUpdateModel = new BalanceUpdateModel(asset.Id, value);
         }
         
@@ -46,12 +43,15 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         public async Task WhenIUpdateBalanceOfAsset(string assetName)
         {
             DateTime today = DateTime.UtcNow.Date;
-            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = await _assetFeatureContext.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
 
-            BalanceViewModel balance = _balanceFeatureContext.Balances.Values
-                .First(b => b.AssetId == asset.Id && b.EffectiveDate == today);
+            BalancesViewModel balances = await _balanceFeatureContext.BalanceService
+                .GetUserEffectiveBalancesAsync(_userContext.UserId, today);
 
-            _updatedBalance = await _balanceFeatureContext.UpdateBalance(balance.Id.Value, _balanceUpdateModel);
+            BalanceViewModel balance = balances.Items.Single(b => b.Asset.Name.Equals(assetName, StringComparison.OrdinalIgnoreCase));
+
+            _updatedBalance = await _balanceFeatureContext.BalanceService
+                .UpdateBalanceAsync(_userContext.UserId, balance.Id.Value, _balanceUpdateModel);
         }
         
         [Then(@"balance amount updated to (.*)")]

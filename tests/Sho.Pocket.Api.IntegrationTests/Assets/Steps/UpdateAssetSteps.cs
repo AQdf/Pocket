@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
 using TechTalk.SpecFlow;
@@ -11,38 +9,31 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class UpdateAssetSteps
     {
-        AssetUpdateModel _updateModel;
+        private readonly AssetFeatureContext _context;
 
-        AssetViewModel _updatedAsset;
+        private readonly UserContext _userContext;
 
-        private readonly AssetFeatureContext _assetFeatureContext;
+        private AssetUpdateModel _updateModel;
 
-        private readonly AddAssetSteps _addAssetSteps;
+        private AssetViewModel _updatedAsset;
 
-        public UpdateAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
+        public UpdateAssetSteps(AssetFeatureContext assetFeatureContext, UserContext userContext)
         {
-            _assetFeatureContext = assetFeatureContext;
-            _addAssetSteps = addAssetSteps;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = assetFeatureContext;
+            _userContext = userContext;
         }
 
         [Given(@"I set asset name to (.*), currency (.*), is active (.*)")]
         public void GivenSetAssetName(string assetName, string currencyName, bool isActive)
         {
-            _updateModel = new AssetUpdateModel(assetName, currencyName, isActive);
+            _updateModel = new AssetUpdateModel(assetName, currencyName, isActive, 1.0M);
         }
 
-        [When(@"I update asset")]
-        public async Task WhenIUpdateAsset()
+        [When(@"I update asset (.*)")]
+        public async Task WhenIUpdateAsset(string assetName)
         {
-            Guid assetId = _addAssetSteps.CreatedAsset.Id;
-
-            _updatedAsset = await _assetFeatureContext.UpdateAsset(assetId, _updateModel);
+            AssetViewModel assetToUpdate = await _context.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
+            _updatedAsset = await _context.AssetService.UpdateAsync(_userContext.UserId, assetToUpdate.Id, _updateModel);
         }
 
         [Then(@"asset name updated to (.*)")]

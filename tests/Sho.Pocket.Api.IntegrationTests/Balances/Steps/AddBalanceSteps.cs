@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Core.Features.Balances.Models;
-using Sho.Pocket.Domain.Entities;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
@@ -14,45 +12,40 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     [Binding]
     public class AddBalanceSteps
     {
-        private BalanceCreateModel _balanceCreateModel;
-
-        private BalanceViewModel _createdBalance;
-
         private readonly BalanceFeatureContext _balanceFeatureContext;
 
         private readonly AssetFeatureContext _assetFeatureContext;
 
-        private readonly ExchangeRateFeatureContext _exchangeRateFeatureContext;
+        private readonly UserContext _userContext;
+
+        private BalanceCreateModel _balanceCreateModel;
+
+        private BalanceViewModel _createdBalance;
 
         public AddBalanceSteps(
             BalanceFeatureContext balanceFeatureContext,
             AssetFeatureContext assetFeatureContext,
-            ExchangeRateFeatureContext exchangeRateFeatureContext)
+            UserContext userContext)
         {
             _balanceFeatureContext = balanceFeatureContext;
             _assetFeatureContext = assetFeatureContext;
-            _exchangeRateFeatureContext = exchangeRateFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _userContext = userContext;
         }
 
         [Given(@"I have balance of asset (.*), amount (.*), day shift (.*)")]
         public async Task GivenIHaveForTodayBalanceOfAssetActiveAssetAmount(string assetName, decimal amount, int dayShift)
         {
-            GivenBalanceCreateModel(assetName, amount, dayShift);
+            await GivenBalanceCreateModel(assetName, amount, dayShift);
             await WhenIAddNewBalance();
         }
 
         [Given(@"I specified balance of asset (.*), amount (.*), day shift (.*)")]
-        public void GivenBalanceCreateModel(string assetName, decimal amount, int dayShift)
+        public async Task GivenBalanceCreateModel(string assetName, decimal amount, int dayShift)
         {
             DateTime effectiveDate = DateTime.UtcNow.Date.AddDays(dayShift);
-            AssetViewModel asset = _assetFeatureContext.Assets[assetName];
-            ExchangeRate exchangeRate = _exchangeRateFeatureContext.ExchangeRates.Values.First(r => r.EffectiveDate == effectiveDate);
+
+            AssetViewModel asset = await _assetFeatureContext.AssetService
+                .GetAssetByNameAsync(_userContext.UserId, assetName);
 
             _balanceCreateModel = new BalanceCreateModel(asset.Id, effectiveDate, asset.Currency, amount);
         }
@@ -60,7 +53,8 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         [When(@"I add new balance")]
         public async Task WhenIAddNewBalance()
         {
-            _createdBalance = await _balanceFeatureContext.AddBalance(_balanceCreateModel);
+            _createdBalance = await _balanceFeatureContext.BalanceService
+                .AddBalanceAsync(_userContext.UserId, _balanceCreateModel);
         }
 
         [Then(@"balance exists")]
@@ -70,9 +64,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [Then(@"balance asset is (.*)")]
-        public void ThenBalanceAssetIs(string assetName)
+        public async Task ThenBalanceAssetIs(string assetName)
         {
-            AssetViewModel asset = _assetFeatureContext.Assets.Values.First(a => a.Name == assetName);
+            AssetViewModel asset = await _assetFeatureContext.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
 
             _createdBalance.AssetId.Should().Be(asset.Id);
         }
@@ -84,11 +78,12 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         }
 
         [Then(@"balance of (.*) effective date is today")]
-        public void ThenBalanceEffectiveDateIsToday(string assetName)
+        public async Task ThenBalanceEffectiveDateIsToday(string assetName)
         {
-            _createdBalance.Asset.Name.Should().Be(assetName);
-
             DateTime today = DateTime.UtcNow.Date;
+            AssetViewModel asset = await _assetFeatureContext.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
+
+            _createdBalance.AssetId.Should().Be(asset.Id);
             _createdBalance.EffectiveDate.Should().Be(today);
         }
     }

@@ -15,16 +15,14 @@ using Sho.Pocket.Application.Features.BankAccounts;
 using Sho.Pocket.Application.Features.BankIntegration;
 using Sho.Pocket.Application.UserCurrencies;
 using Sho.Pocket.Application.Utils.Csv;
-using Sho.Pocket.BankIntegration.Abstractions;
 using Sho.Pocket.BankIntegration.Providers;
-using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Balances.Abstractions;
 using Sho.Pocket.Core.Features.BankAccounts;
+using Sho.Pocket.Core.Features.BankIntegration;
 using Sho.Pocket.Core.Features.Currencies.Abstractions;
 using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.Core.Features.UserCurrencies.Abstractions;
-using Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration;
 using Sho.Pocket.ExchangeRates;
 using Sho.Pocket.ExchangeRates.Providers;
 
@@ -32,10 +30,8 @@ namespace Sho.Pocket.Application.Configuration
 {
     public static class ApplicationServicesConfiguration
     {
-        public static void AddApplicationServices(this IServiceCollection services, DbSettings dbSettings)
+        public static void AddApplicationServices(this IServiceCollection services)
         {
-            services.AddEntityFrameworkDataAccess(dbSettings);
-
             services.AddScoped<IAssetService, AssetService>();
             services.AddScoped<IBalanceService, BalanceService>();
             services.AddScoped<IBalancesTotalService, BalancesTotalService>();
@@ -54,9 +50,13 @@ namespace Sho.Pocket.Application.Configuration
 
             services.AddScoped<IExchangeRateService, ExchangeRateService>();
             services.AddScoped<IExchangeRateExternalService, ExchangeRateExternalService>();
-            services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
             services.AddScoped<IExchangeRateProvider, DefaultExchangeRateProvider>();
             services.AddScoped<IExchangeRateProviderResolver, ExchangeRateProviderResolver>();
+        }
+
+        public static void AddExchangeRatesIntegration(this IServiceCollection services)
+        {
+            services.AddScoped<IExchangeRateProvider, NBUExchangeRateProvider>();
         }
 
         public static void AddBankIntegration(this IServiceCollection services, BankIntegrationSettings banksSettings)

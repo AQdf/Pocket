@@ -35,7 +35,7 @@ namespace Sho.Pocket.Application.Assets
             return result;
         }
 
-        public async Task<AssetViewModel> GetAssetAsync(Guid userId, Guid id)
+        public async Task<AssetViewModel> GetAssetByIdAsync(Guid userId, Guid id)
         {
             Asset asset = await _assetRepository.GetByIdAsync(userId, id);
 
@@ -97,6 +97,13 @@ namespace Sho.Pocket.Application.Assets
             }
 
             return isSuccess;
+        }
+
+        public async Task<AssetViewModel> GetAssetByNameAsync(Guid userId, string name)
+        {
+            Asset asset = await _assetRepository.GetByNameAsync(userId, name);
+
+            return new AssetViewModel(asset);
         }
     }
 }

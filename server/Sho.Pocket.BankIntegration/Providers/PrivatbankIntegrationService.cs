@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Sho.BankIntegration.Privatbank;
 using Sho.BankIntegration.Privatbank.Models;
 using Sho.BankIntegration.Privatbank.Services;
-using Sho.Pocket.BankIntegration.Abstractions;
-using Sho.Pocket.BankIntegration.Models;
-using Sho.Pocket.Core.Features.BankAccounts.Models;
+using Sho.Pocket.Core.Features.BankIntegration;
+using Sho.Pocket.Core.Features.BankIntegration.Models;
 
 namespace Sho.Pocket.BankIntegration.Providers
 {

@@ -1,9 +1,8 @@
-﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -11,25 +10,22 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     [Binding]
     public class GetAssetsSteps
     {
+        private readonly AssetFeatureContext _context;
+
+        private readonly UserContext _userContext;
+
         private List<AssetViewModel> _assets;
 
-        private readonly AssetFeatureContext _assetFeatureContext;
-
-        public GetAssetsSteps(AssetFeatureContext assetFeatureContext)
+        public GetAssetsSteps(AssetFeatureContext assetFeatureContext, UserContext userContext)
         {
-            _assetFeatureContext = assetFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = assetFeatureContext;
+            _userContext = userContext;
         }
 
         [When(@"I get assets")]
         public async Task WhenIGetAssets()
         {
-            _assets = await _assetFeatureContext.GetAssets();
+            _assets = await _context.AssetService.GetAssetsAsync(_userContext.UserId, true);
         }
         
         [Then(@"my (.*) assets returned")]

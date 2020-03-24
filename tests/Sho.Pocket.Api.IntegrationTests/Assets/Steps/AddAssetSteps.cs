@@ -1,30 +1,27 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
 using TechTalk.SpecFlow;
+using Xunit;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
 {
     [Binding]
     public class AddAssetSteps
     {
-        private readonly AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _context;
+
+        private readonly UserContext _userContext;
 
         private AssetCreateModel _assetCreateModel;
 
-        public AssetViewModel CreatedAsset = null;
+        private AssetViewModel CreatedAsset;
 
-        public AddAssetSteps(AssetFeatureContext assetFeatureContext)
+        public AddAssetSteps(AssetFeatureContext assetFeatureContext, UserContext userContext)
         {
-            _assetFeatureContext = assetFeatureContext;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = assetFeatureContext;
+            _userContext = userContext;
         }
 
         [Given(@"I have active asset (.*) with currency (.*)")]
@@ -37,13 +34,13 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
         [Given(@"I specified asset name (.*), currency (.*), is active (.*)")]
         public void GivenAssetCreateModel(string assetName, string currencyName, bool isActive)
         {
-            _assetCreateModel = new AssetCreateModel(assetName, currencyName, isActive);
+            _assetCreateModel = new AssetCreateModel(assetName, currencyName, isActive, 1.0M);
         }
 
         [When(@"I add the asset")]
         public async Task WhenIAddNewAsset()
         {
-            CreatedAsset = await _assetFeatureContext.AddAsset(_assetCreateModel);
+            CreatedAsset = await _context.AssetService.AddAssetAsync(_userContext.UserId, _assetCreateModel);
         }
         
         [Then(@"asset created")]

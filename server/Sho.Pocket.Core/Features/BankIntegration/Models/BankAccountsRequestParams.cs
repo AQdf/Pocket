@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.Core.Features.BankAccounts.Models
+﻿namespace Sho.Pocket.Core.Features.BankIntegration.Models
 {
     public class BankAccountsRequestParams
     {

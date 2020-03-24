@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Sho.Pocket.BankIntegration.Models;
+using Sho.Pocket.Core.Features.BankIntegration.Models;
 
-namespace Sho.Pocket.BankIntegration.Abstractions
+namespace Sho.Pocket.Core.Features.BankIntegration
 {
     public interface IBankService
     {

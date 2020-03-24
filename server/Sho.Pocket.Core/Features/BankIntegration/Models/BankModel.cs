@@ -1,4 +1,4 @@
-﻿namespace Sho.Pocket.BankIntegration.Models
+﻿namespace Sho.Pocket.Core.Features.BankIntegration.Models
 {
     public class BankModel
     {

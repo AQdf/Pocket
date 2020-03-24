@@ -23,7 +23,7 @@ namespace Sho.Pocket.Api.Controllers
         [HttpGet]
         public async Task<List<string>> GetCurrencies()
         {
-            List<string> result = await _currencyService.GetCurrencies();
+            List<string> result = await _currencyService.GetCurrenciesAsync();
 
             return result;
         }

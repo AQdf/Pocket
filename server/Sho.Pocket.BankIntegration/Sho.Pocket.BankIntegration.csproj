@@ -9,4 +9,8 @@
     <PackageReference Include="Shchack.BankIntegration.Privatbank" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
+  </ItemGroup>
+
 </Project>

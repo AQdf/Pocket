@@ -12,6 +12,7 @@ using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Auth.IdentityServer.Configuration;
 using Sho.Pocket.Auth.IdentityServer.Configuration.Models;
 using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api
@@ -68,8 +69,10 @@ namespace Sho.Pocket.Api
 
             services.Configure<ExchangeRateSettings>(Configuration.GetSection("ExchangeRateSettings"));
 
-            services.AddApplicationServices(dbSettings);
+            services.AddApplicationServices();
+            services.AddEntityFrameworkDataAccess(dbSettings);
             services.AddApplicationAuth(authSettings);
+            services.AddExchangeRatesIntegration();
             services.AddBankIntegration(banksSettings);
 
             services.AddSwagger();

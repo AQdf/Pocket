@@ -1,8 +1,9 @@
-﻿using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Assets.Models;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
 namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
@@ -12,49 +13,42 @@ namespace Sho.Pocket.Api.IntegrationTests.Assets.Steps
     {
         private AssetViewModel _assetToDelete;
 
-        private readonly AssetFeatureContext _assetFeatureContext;
+        private readonly AssetFeatureContext _context;
 
-        private readonly AddAssetSteps _addAssetSteps;
+        private readonly UserContext _userContext;
 
-        public DeleteAssetSteps(AssetFeatureContext assetFeatureContext, AddAssetSteps addAssetSteps)
+        public DeleteAssetSteps(AssetFeatureContext assetFeatureContext, UserContext userContext)
         {
-            _assetFeatureContext = assetFeatureContext;
-            _addAssetSteps = addAssetSteps;
-        }
-
-        [BeforeTestRun]
-        public static void Cleanup()
-        {
-            StorageCleaner.Cleanup();
+            _context = assetFeatureContext;
+            _userContext = userContext;
         }
 
         [Given(@"I specified asset to delete (.*)")]
-        public void GivenSpecifiedAssetToDelete(string assetName)
+        public async Task GivenSpecifiedAssetToDelete(string assetName)
         {
-            if (_addAssetSteps.CreatedAsset.Name == assetName)
-            {
-                _assetToDelete = _addAssetSteps.CreatedAsset;
-            }
+            _assetToDelete = await _context.AssetService.GetAssetByNameAsync(_userContext.UserId, assetName);
         }
 
-        [When(@"I delete asset (.*)")]
-        public async Task WhenIDeleteAsset(string assetName)
+        [When(@"I delete asset")]
+        public async Task WhenIDeleteAsset()
         {
-            await _assetFeatureContext.DeleteAsset(_assetToDelete.Id, assetName);
+            await _context.AssetService.DeleteAsync(_userContext.UserId, _assetToDelete.Id);
         }
         
         [Then(@"asset deleted")]
-        public void ThenAssetDeleted()
+        public async Task ThenAssetDeleted()
         {
-            bool exists = _assetFeatureContext.Assets.ContainsKey(_assetToDelete.Name);
+            List<AssetViewModel> assets = await _context.AssetService.GetAssetsAsync(_userContext.UserId, false);
+            bool exists = assets.Any(a => a.Id == _assetToDelete.Id);
 
             exists.Should().Be(false);
         }
 
         [Then(@"asset not deleted")]
-        public void ThenAssetNotDeleted()
+        public async Task ThenAssetNotDeleted()
         {
-            bool exists = _assetFeatureContext.Assets.ContainsKey(_assetToDelete.Name);
+            List<AssetViewModel> assets = await _context.AssetService.GetAssetsAsync(_userContext.UserId, false);
+            bool exists = assets.Any(a => a.Id == _assetToDelete.Id);
 
             exists.Should().Be(true);
         }

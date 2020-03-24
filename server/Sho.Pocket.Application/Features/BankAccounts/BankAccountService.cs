@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Sho.Pocket.BankIntegration.Abstractions;
-using Sho.Pocket.BankIntegration.Models;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.BankAccounts;
 using Sho.Pocket.Core.Features.BankAccounts.Models;
+using Sho.Pocket.Core.Features.BankIntegration;
+using Sho.Pocket.Core.Features.BankIntegration.Models;
 using Sho.Pocket.Domain.Entities;
 
 namespace Sho.Pocket.Application.Features.BankAccounts

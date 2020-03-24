@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql.EntityFramework\Sho.Pocket.DataAccess.Sql.EntityFramework.csproj" />
   </ItemGroup>
 
 </Project>

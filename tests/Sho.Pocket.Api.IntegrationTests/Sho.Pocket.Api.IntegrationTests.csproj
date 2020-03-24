@@ -5,10 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.10.0" />
-    <PackageReference Include="SpecFlow" Version="3.1.82" />
-    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.1.82" />
-    <PackageReference Include="SpecFlow.xUnit" Version="3.1.82" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.1" />
+    <PackageReference Include="SpecFlow" Version="3.1.89" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.1.89" />
+    <PackageReference Include="SpecFlow.xUnit" Version="3.1.89" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -16,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\server\Sho.Pocket.Api\Sho.Pocket.Api.csproj" />
     <ProjectReference Include="..\..\server\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
+    <ProjectReference Include="..\..\server\Sho.Pocket.DataAccess.Sql.EntityFramework\Sho.Pocket.DataAccess.Sql.EntityFramework.csproj" />
   </ItemGroup>
 </Project>

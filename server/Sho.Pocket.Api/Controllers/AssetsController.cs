@@ -53,7 +53,7 @@ namespace Sho.Pocket.Api.Controllers
                 return HandleUserNotFoundResult();
             }
 
-            AssetViewModel result = await _assetService.GetAssetAsync(user.Id, id);
+            AssetViewModel result = await _assetService.GetAssetByIdAsync(user.Id, id);
 
             return HandleResult(result);
         }

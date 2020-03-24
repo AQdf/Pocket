@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Sho.Pocket.Api.IntegrationTests.Common;
 using Sho.Pocket.Api.IntegrationTests.Contexts;
 using Sho.Pocket.Core.Features.Balances.Models;
 using TechTalk.SpecFlow;
@@ -14,17 +14,14 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
     {
         private List<BalanceViewModel> _balances;
 
-        private readonly BalanceFeatureContext _balanceFeatureContext;
+        private readonly BalanceFeatureContext _context;
 
-        public GetBalancesSteps(BalanceFeatureContext balanceFeatureContext)
-        {
-            _balanceFeatureContext = balanceFeatureContext;
-        }
+        private readonly UserContext _userContext;
 
-        [BeforeTestRun]
-        public static void Cleanup()
+        public GetBalancesSteps(BalanceFeatureContext balanceFeatureContext, UserContext userContext)
         {
-            StorageCleaner.Cleanup();
+            _context = balanceFeatureContext;
+            _userContext = userContext;
         }
 
         [When(@"I get today balances")]
@@ -32,7 +29,9 @@ namespace Sho.Pocket.Api.IntegrationTests.Balances.Steps
         {
             DateTime today = DateTime.UtcNow.Date;
 
-            _balances = await _balanceFeatureContext.GetAllBalances(today);
+            BalancesViewModel balances = await _context.BalanceService.GetUserEffectiveBalancesAsync(_userContext.UserId, today);
+
+            _balances = balances.Items.ToList();
         }
         
         [Then(@"my (.*) balances returned")]
