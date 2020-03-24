@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Core.Features.BankIntegration;
 using Sho.Pocket.Core.Features.BankIntegration.Models;
 
-namespace Sho.Pocket.Application.Features.BankIntegration
+namespace Sho.Pocket.BankIntegration
 {
     public class BankService : IBankService
     {

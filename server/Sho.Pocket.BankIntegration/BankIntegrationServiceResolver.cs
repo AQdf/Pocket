@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Sho.Pocket.Core.Features.BankIntegration;
 
-namespace Sho.Pocket.Application.Features.BankIntegration
+namespace Sho.Pocket.BankIntegration
 {
     public class BankIntegrationServiceResolver : IBankIntegrationServiceResolver
     {

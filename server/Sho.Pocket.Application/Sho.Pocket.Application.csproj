@@ -7,18 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sho.Pocket.BankIntegration\Sho.Pocket.BankIntegration.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Core\Sho.Pocket.Core.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.Domain\Sho.Pocket.Domain.csproj" />
-    <ProjectReference Include="..\Sho.Pocket.ExchangeRates\Sho.Pocket.ExchangeRates.csproj" />
   </ItemGroup>
 
 </Project>

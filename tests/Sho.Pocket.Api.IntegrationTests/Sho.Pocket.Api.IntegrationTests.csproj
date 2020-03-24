@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\server\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
-    <ProjectReference Include="..\..\server\Sho.Pocket.DataAccess.Sql.EntityFramework\Sho.Pocket.DataAccess.Sql.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\server\Sho.Pocket.Api\Sho.Pocket.Api.csproj" />
   </ItemGroup>
 </Project>

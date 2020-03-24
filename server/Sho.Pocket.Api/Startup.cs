@@ -7,12 +7,10 @@ using Newtonsoft.Json.Serialization;
 using Sho.Pocket.Api.Configuration;
 using Sho.Pocket.Api.Middlewares;
 using Sho.Pocket.Api.Validation;
-using Sho.Pocket.Application.Configuration;
-using Sho.Pocket.Application.Configuration.Models;
 using Sho.Pocket.Auth.IdentityServer.Configuration;
 using Sho.Pocket.Auth.IdentityServer.Configuration.Models;
 using Sho.Pocket.Core.DataAccess.Configuration;
-using Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration;
+using Sho.Pocket.Core.Features.BankIntegration.Models;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
 namespace Sho.Pocket.Api
@@ -69,9 +67,9 @@ namespace Sho.Pocket.Api
 
             services.Configure<ExchangeRateSettings>(Configuration.GetSection("ExchangeRateSettings"));
 
+            services.AddApplicationAuth(authSettings);
             services.AddApplicationServices();
             services.AddEntityFrameworkDataAccess(dbSettings);
-            services.AddApplicationAuth(authSettings);
             services.AddExchangeRatesIntegration();
             services.AddBankIntegration(banksSettings);
 

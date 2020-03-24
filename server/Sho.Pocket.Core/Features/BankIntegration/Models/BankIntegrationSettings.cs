@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Sho.Pocket.Application.Configuration.Models
+namespace Sho.Pocket.Core.Features.BankIntegration.Models
 {
     public class BankIntegrationSettings
     {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.Features.ExchangeRates;
 using Sho.Pocket.ExchangeRates.Configuration.Models;
 
-namespace Sho.Pocket.Application.ExchangeRates
+namespace Sho.Pocket.ExchangeRates
 {
     public class ExchangeRateProviderResolver : IExchangeRateProviderResolver
     {

@@ -23,7 +23,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Sho.Pocket.Application\Sho.Pocket.Application.csproj" />
     <ProjectReference Include="..\Sho.Pocket.Auth.IdentityServer\Sho.Pocket.Auth.IdentityServer.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.BankIntegration\Sho.Pocket.BankIntegration.csproj" />
     <ProjectReference Include="..\Sho.Pocket.DataAccess.Sql.EntityFramework\Sho.Pocket.DataAccess.Sql.EntityFramework.csproj" />
+    <ProjectReference Include="..\Sho.Pocket.ExchangeRates\Sho.Pocket.ExchangeRates.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,9 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.DataAccess.Configuration;
+using Sho.Pocket.DataAccess.Sql.EntityFramework;
 using Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories;
 
-namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Configuration
+namespace Sho.Pocket.Api.Configuration
 {
     public static class ServiceCollectionExtensions
     {
