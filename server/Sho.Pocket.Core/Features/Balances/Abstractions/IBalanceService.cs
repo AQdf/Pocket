@@ -7,8 +7,6 @@ namespace Sho.Pocket.Core.Features.Balances.Abstractions
 {
     public interface IBalanceService
     {
-        Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userId);
-
         Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userId, DateTime effectiveDate);
 
         Task<BalanceViewModel> GetUserBalanceAsync(Guid userId, Guid id);

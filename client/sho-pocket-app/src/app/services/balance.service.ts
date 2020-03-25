@@ -16,10 +16,6 @@ export class BalanceService extends BaseService {
     super();
   }
 
-  getLatestBalances() {
-    return this.http.get(balancesApiUrl + 'latest', this.getDefaultOptions());
-  }
-
   getBalanceList(effectiveDate: string) {
     return this.http.get(balancesApiUrl + 'date/' + effectiveDate, this.getDefaultOptions());
   }

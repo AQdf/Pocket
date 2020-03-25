@@ -49,20 +49,6 @@ namespace Sho.Pocket.Application.Balances
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<BalancesViewModel> GetUserLatestBalancesAsync(Guid userId)
-        {
-            BalancesViewModel result = null;
-            List<DateTime> effectiveDates = await GetEffectiveDatesAsync(userId);
-
-            if (effectiveDates != null && effectiveDates.Any())
-            {
-                DateTime latestDate = effectiveDates.FirstOrDefault();
-                result = await GetUserEffectiveBalancesAsync(userId, latestDate);
-            }
-
-            return result;
-        }
-
         public async Task<BalancesViewModel> GetUserEffectiveBalancesAsync(Guid userId, DateTime effectiveDate)
         {
             IEnumerable<Balance> balances = await _balanceRepository.GetByEffectiveDateAsync(userId, effectiveDate);

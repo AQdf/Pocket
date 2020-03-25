@@ -20,25 +20,6 @@ namespace Sho.Pocket.Api.Controllers
         }
 
         /// <summary>
-        /// GET: api/balances/latest
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("latest")]
-        public async Task<ActionResult<BalancesViewModel>> GetCurrentUserLatestBalances()
-        {
-            UserViewModel user = await GetCurrentUserAsync();
-
-            if (user == null)
-            {
-                return HandleUserNotFoundResult();
-            }
-
-            BalancesViewModel result = await _balanceService.GetUserLatestBalancesAsync(user.Id);
-
-            return Ok(result);
-        }
-
-        /// <summary>
         /// GET: api/balances/date
         /// </summary>
         /// <returns></returns>
