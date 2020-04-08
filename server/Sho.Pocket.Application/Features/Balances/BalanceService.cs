@@ -59,7 +59,7 @@ namespace Sho.Pocket.Application.Balances
                 .ThenBy(i => i.Asset.Name)
                 .ToList();
 
-            if (effectiveDate == DateTime.UtcNow.Date)
+            if (effectiveDate.Date == DateTime.UtcNow.Date)
             {
                 await PopulateIsBankAccountFieldAsync(userId, items);
             }
