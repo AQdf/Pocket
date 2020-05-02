@@ -35,16 +35,27 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework
             modelBuilder.Entity<UserCurrency>().ToTable("UserCurrency");
 
             modelBuilder.Entity<Asset>().HasKey(c => c.Id);
-            modelBuilder.Entity<Asset>().HasOne<Currency>().WithMany().HasForeignKey(c => c.Currency).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Asset>().HasMany(a => a.Balances).WithOne(b => b.Asset).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Asset>(eb =>
             {
                 eb.Property(a => a.Name).HasColumnType("nvarchar(50)").IsRequired();
-                eb.Property(a => a.Currency).HasColumnType("char(3)").IsRequired();
                 eb.Property(a => a.IsActive).HasColumnType("bit").IsRequired();
                 eb.Property(a => a.UserId).HasColumnType("uniqueidentifier").IsRequired();
-                eb.Property(a => a.Value).HasColumnType("money").IsRequired().HasDefaultValue(0);
                 eb.Property(a => a.UpdatedOn).HasColumnType("datetime2(7)").IsRequired().HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            modelBuilder.Entity<Asset>().OwnsOne(o => o.Balance, b =>
+            {
+                b.Property(p => p.Value).HasColumnName("Value")
+                .HasColumnType("money")
+                .IsRequired(true)
+                .HasDefaultValue(0);
+
+                b.Property(p => p.Currency).HasColumnName("Currency")
+                .HasColumnType("char(3)")
+                .IsRequired(true);
+
+                b.HasOne<Currency>().WithMany().HasForeignKey("Currency").OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Balance>().HasKey(c => c.Id);

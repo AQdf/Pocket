@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.DataAccess.Configuration;
 using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Domain.ValueObjects;
 
 namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 {
@@ -40,7 +41,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
             return result;
         }
 
-        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
+        public async Task<Asset> CreateAsync(Guid userId, string name, Money balance, bool isActive, DateTime updatedOn)
         {
             string queryText = @"
                 DECLARE @id UNIQUEIDENTIFIER = NEWID()
@@ -49,14 +50,14 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
                 SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
-            object queryParameters = new { userId, name, currency, isActive, value, updatedOn};
+            object queryParameters = new { userId, name, balance.Currency, isActive, balance.Value, updatedOn};
 
             Asset result = await base.InsertEntity(queryText, queryParameters);
 
             return result;
         }
 
-        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
+        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, Money balance, bool isActive, DateTime updatedOn)
         {
             string queryText = @"
                 UPDATE [Asset]
@@ -69,7 +70,7 @@ namespace Sho.Pocket.DataAccess.Sql.Dapper.Repositories
 
                 SELECT * FROM [Asset] WHERE [Asset].[Id] = @id";
 
-            object queryParameters = new { userId, id, name, currency, isActive, value, updatedOn };
+            object queryParameters = new { userId, id, name, balance.Currency, isActive, balance.Value, updatedOn };
 
             Asset result = await base.UpdateEntity(queryText, queryParameters);
 

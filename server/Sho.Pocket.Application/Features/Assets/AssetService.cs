@@ -6,6 +6,7 @@ using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Domain.ValueObjects;
 
 namespace Sho.Pocket.Application.Assets
 {
@@ -51,8 +52,8 @@ namespace Sho.Pocket.Application.Assets
 
         public async Task<AssetViewModel> AddAssetAsync(Guid userId, AssetCreateModel createModel)
         {
-            Asset asset = await _assetRepository.CreateAsync(
-                userId, createModel.Name, createModel.Currency, createModel.IsActive, createModel.Value, DateTime.UtcNow);
+            Money money = new Money(createModel.Value, createModel.Currency);
+            Asset asset = await _assetRepository.CreateAsync(userId, createModel.Name, money, createModel.IsActive, DateTime.UtcNow);
             await _unitOfWork.SaveChangesAsync(); 
             AssetViewModel result = new AssetViewModel(asset);
 
@@ -70,12 +71,13 @@ namespace Sho.Pocket.Application.Assets
 
             bool balanceExists = await _balanceRepository.ExistsAssetBalanceAsync(userId, id);
 
-            if (balanceExists && asset.Currency != model.Currency)
+            if (balanceExists && !asset.Balance.Currency.Equals(model.Currency, StringComparison.OrdinalIgnoreCase))
             {
                 throw new Exception($"Can't update currency of the Asset {id} if Asset's Balance exists!");
             }
 
-            Asset result = await _assetRepository.UpdateAsync(userId, id, model.Name, model.Currency, model.IsActive, model.Value, DateTime.UtcNow);
+            Money money = new Money(model.Value, model.Currency);
+            Asset result = await _assetRepository.UpdateAsync(userId, id, model.Name, money, model.IsActive, DateTime.UtcNow);
             await _unitOfWork.SaveChangesAsync();
 
             AssetViewModel viewModel = new AssetViewModel(result);

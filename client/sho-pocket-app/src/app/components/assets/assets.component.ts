@@ -35,7 +35,14 @@ export class AssetsComponent implements OnInit {
   }
 
   showForEdit(asset: Asset) {
-    this.selectedAsset = asset;
+    this.selectedAsset = {
+      id: asset.id,
+      name: asset.name,
+      currency: asset.currency,
+      isActive: asset.isActive,
+      value: asset.value,
+      updatedOn: asset.updatedOn
+    }
   }
 
   onDelete(id: string) {

@@ -10,7 +10,7 @@ namespace Sho.Pocket.Core.Features.Balances.Models
             EffectiveDate = effectiveDate;
             AssetName = asset.Name;
             BalanceValue = balanceValue;
-            Currency = asset.Currency;
+            Currency = asset.Balance.Currency;
         }
 
         public DateTime EffectiveDate { get; set; }

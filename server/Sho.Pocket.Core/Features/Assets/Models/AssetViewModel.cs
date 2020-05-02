@@ -14,9 +14,9 @@ namespace Sho.Pocket.Core.Features.Assets.Models
         {
             Id = asset.Id;
             Name = asset.Name;
-            Currency = asset.Currency;
+            Currency = asset.Balance.Currency;
             IsActive = asset.IsActive;
-            Value = asset.Value;
+            Value = asset.Balance.Value;
             UpdatedOn = asset.UpdatedOn;
         }
 

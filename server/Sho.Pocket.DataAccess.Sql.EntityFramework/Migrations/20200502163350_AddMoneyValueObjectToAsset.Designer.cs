@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sho.Pocket.DataAccess.Sql.EntityFramework;
 
 namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Migrations
 {
     [DbContext(typeof(PocketDbContext))]
-    partial class PocketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200502163350_AddMoneyValueObjectToAsset")]
+    partial class AddMoneyValueObjectToAsset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,8 +208,7 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnName("Value")
                                 .HasColumnType("money")
-                                .HasDefaultValue(0m)
-                                .IsRequired();
+                                .HasDefaultValue(0m);
 
                             b1.HasKey("AssetId");
 

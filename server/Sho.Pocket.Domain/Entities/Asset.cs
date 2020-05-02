@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sho.Pocket.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 
 namespace Sho.Pocket.Domain.Entities
@@ -9,14 +10,13 @@ namespace Sho.Pocket.Domain.Entities
         {
         }
 
-        public Asset(Guid id, string name, string currency, bool isActive, Guid userId, decimal value, DateTime updatedOn)
+        public Asset(Guid id, string name, Money balance, bool isActive, Guid userId, DateTime updatedOn)
         {
             Id = id;
             Name = name;
-            Currency = currency;
+            Balance = balance;
             IsActive = isActive;
             UserId = userId;
-            Value = value;
             UpdatedOn = updatedOn;
         }
 
@@ -24,16 +24,14 @@ namespace Sho.Pocket.Domain.Entities
 
         public string Name { get; set; }
 
-        public string Currency { get; set; }
+        public Money Balance { get; set; }
 
         public bool IsActive { get; set; }
 
         public Guid UserId { get; set; }
 
-        public decimal Value { get; set; }
-
         public DateTime UpdatedOn { get; set; }
-
+        
         public virtual ICollection<Balance> Balances { get; set; }
     }
 }

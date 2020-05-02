@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Domain.ValueObjects;
 
 namespace Sho.Pocket.Core.DataAccess
 {
@@ -13,9 +14,9 @@ namespace Sho.Pocket.Core.DataAccess
 
         Task<Asset> GetByNameAsync(Guid userId, string name);
 
-        Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive, decimal value, DateTime updatedOn);
+        Task<Asset> CreateAsync(Guid userId, string name, Money balance, bool isActive, DateTime updatedOn);
 
-        Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive, decimal value, DateTime updatedOn);
+        Task<Asset> UpdateAsync(Guid userId, Guid id, string name, Money balance, bool isActive, DateTime updatedOn);
 
         Task RemoveAsync(Guid userId, Guid assetId);
     }

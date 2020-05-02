@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Domain.ValueObjects;
 
 namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
 {
@@ -40,21 +41,20 @@ namespace Sho.Pocket.DataAccess.Sql.EntityFramework.Repositories
             return await _set.SingleAsync(a => a.Name == name && a.UserId == userId);
         }
 
-        public async Task<Asset> CreateAsync(Guid userId, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
+        public async Task<Asset> CreateAsync(Guid userId, string name, Money balance, bool isActive, DateTime updatedOn)
         {
-            Asset asset = new Asset(Guid.NewGuid(), name, currency, isActive, userId, value, updatedOn);
+            Asset asset = new Asset(Guid.NewGuid(), name, balance, isActive, userId, updatedOn);
             EntityEntry<Asset> result = await _set.AddAsync(asset);
 
             return result.Entity;
         }
 
-        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, string currency, bool isActive, decimal value, DateTime updatedOn)
+        public async Task<Asset> UpdateAsync(Guid userId, Guid id, string name, Money balance, bool isActive, DateTime updatedOn)
         {
             Asset asset = await _set.SingleAsync(a => a.Id == id && a.UserId == userId);
             asset.Name = name;
-            asset.Currency = currency;
+            asset.Balance = balance;
             asset.IsActive = isActive;
-            asset.Value = value;
             asset.UpdatedOn = updatedOn;
             _set.Update(asset);
 

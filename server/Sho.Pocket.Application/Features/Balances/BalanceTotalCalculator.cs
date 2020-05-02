@@ -29,7 +29,7 @@ namespace Sho.Pocket.Application.Features.Balances
             decimal total = 0.0M;
             List<ExchangeRateModel> rates = await _exchangeRateService.GetExchangeRatesAsync(userId, effectiveDate);
 
-            var groups = balances.GroupBy(b => b.Asset.Currency);
+            var groups = balances.GroupBy(b => b.Asset.Balance.Currency);
 
             foreach (IGrouping<string, Balance> g in groups)
             {

@@ -4,6 +4,7 @@ using Sho.Pocket.Core.DataAccess;
 using Sho.Pocket.Core.Features.Assets.Abstractions;
 using Sho.Pocket.Core.Features.Assets.Models;
 using Sho.Pocket.Domain.Entities;
+using Sho.Pocket.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,9 +35,9 @@ namespace Sho.Pocket.Application.UnitTests.Assets
         {
             List<Asset> assets = new List<Asset>
             {
-                new Asset(Guid.NewGuid(), "Cash inactive", "USD", false, currentUserId, 30.0M, new DateTime(2019, 4, 21)),
-                new Asset(Guid.NewGuid(), "Cash active", "USD", true, currentUserId, 30.0M, new DateTime(2019, 4, 21)),
-                new Asset(Guid.NewGuid(), "Bank account active", "USD", true, currentUserId, 40.0M, new DateTime(2019, 8, 25))
+                new Asset(Guid.NewGuid(), "Cash inactive", new Money(30.0M, "USD"), false, currentUserId, new DateTime(2019, 4, 21)),
+                new Asset(Guid.NewGuid(), "Cash active", new Money(30.0M, "USD"), true, currentUserId, new DateTime(2019, 4, 21)),
+                new Asset(Guid.NewGuid(), "Bank account active", new Money(40.0M, "USD"), true, currentUserId, new DateTime(2019, 8, 25))
             };
 
             assetRepositoryMock.Setup(m => m.GetByUserIdAsync(currentUserId, true)).ReturnsAsync(assets);
