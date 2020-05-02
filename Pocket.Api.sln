@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Sql.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sho.Pocket.DataAccess.Sql.EntityFramework", "server\Sho.Pocket.DataAccess.Sql.EntityFramework\Sho.Pocket.DataAccess.Sql.EntityFramework.csproj", "{B2CFA699-D5EE-4C5F-BE55-31D2BB840285}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sho.Pocket.Application.UnitTests", "Sho.Pocket.Application.UnitTests\Sho.Pocket.Application.UnitTests.csproj", "{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -245,6 +247,22 @@ Global
 		{B2CFA699-D5EE-4C5F-BE55-31D2BB840285}.Release|x64.Build.0 = Release|Any CPU
 		{B2CFA699-D5EE-4C5F-BE55-31D2BB840285}.Release|x86.ActiveCfg = Release|Any CPU
 		{B2CFA699-D5EE-4C5F-BE55-31D2BB840285}.Release|x86.Build.0 = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|ARM.Build.0 = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|x64.Build.0 = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Debug|x86.Build.0 = Debug|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|ARM.ActiveCfg = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|ARM.Build.0 = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|x64.ActiveCfg = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|x64.Build.0 = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|x86.ActiveCfg = Release|Any CPU
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -262,6 +280,7 @@ Global
 		{23CB08CA-9D3C-4039-8C47-E4D2732DFD7D} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
 		{D58DBEAD-D387-4A76-A748-3203D2FA7274} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
 		{B2CFA699-D5EE-4C5F-BE55-31D2BB840285} = {B6299F33-8682-478B-8C2E-A37826DC9B17}
+		{0AE339FE-75C9-4F72-808A-D1D56FF48ECE} = {D14B7495-CD18-439B-9D37-50E9B134C1F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {376A0018-D67B-4B42-8296-68CACB7FEFC5}
